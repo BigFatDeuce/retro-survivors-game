@@ -1016,6 +1016,7 @@ function drawPickup(ctx, p, t) {
       for (let i = 0; i < 4; i++) { const a = t * 2.5 + i * TAU / 4; IC.draw(ctx, 'Star', p.x + Math.cos(a) * 30, p.y - 18 + Math.sin(a) * 10 + bob, 0.25); } } break;
     case 'plumec': glow('rgba(190,140,255,0.8)', 30); IC.drawFit(ctx, 'it_53_362', p.x, p.y - 14 + bob, 40); break;
     case 'fee': glow('rgba(255,120,220,0.75)', 28); IC.drawFit(ctx, 'it_74_30', p.x, p.y - 15 + bob, 46); break;
+    case 'houx': glow('rgba(120,230,140,0.7)', 28); IC.drawFit(ctx, Game.C.houx.item, p.x, p.y - 15 + bob, 44); break;   // 0.97: the Bague Houx: one more reroll
     case 'sablier': glow('rgba(140,220,255,0.65)', 30); IC.drawFit(ctx, Game.C.sablierItem || 'sp_100', p.x, p.y - 16 + bob, 50); break;   // an hourglass: time stops
     case 'manuel': { glow('rgba(255,120,255,0.8)', 32 + Math.sin(t * 6) * 3); IC.drawFit(ctx, Game.C.manuel.icon, p.x, p.y - 16 + bob, 48); // the Manuel du Tailleur: sparkles
       for (let i = 0; i < 3; i++) { const a = t * 2.2 + i * TAU / 3; IC.draw(ctx, 'Star', p.x + Math.cos(a) * 28, p.y - 18 + Math.sin(a) * 10 + bob, 0.28); } } break;
@@ -2012,7 +2013,7 @@ function drawFireWall(ctx, A, B, t) {
 }
 // screen-edge arrows (in-game arrow textures) pointing at off-screen special monsters and items
 const ARROW_SPECIAL_MOBS = new Set(['bandit_manchot', 'wabbit_gm', 'tiwabbit_kiafin', 'tofu_mutant', 'coffre_anime', 'jorbak']);
-const ARROW_ITEMS = new Set(['chest', 'dofus', 'power', 'fee', 'sablier', 'rappel', 'kamaboost', 'booster', 'tmap', 'relic', 'nowelgift', 'trool', 'manuel']);   // (0.92: the Manuel too, the Maîtres Corbacs' rewards fall anywhere)
+const ARROW_ITEMS = new Set(['chest', 'dofus', 'power', 'fee', 'sablier', 'rappel', 'kamaboost', 'booster', 'tmap', 'relic', 'nowelgift', 'trool', 'manuel', 'houx']);   // (0.92: the Manuel too, the Maîtres Corbacs' rewards fall anywhere)
 function drawEdgeArrows(ctx, R, W, H, u) {
   const IC = Game.icons, z = Game.zoom;
   const one = (wx, wy, icon, scale, base, col, pulse) => {

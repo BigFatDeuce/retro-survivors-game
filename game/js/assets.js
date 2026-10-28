@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------- asset loading
 let SPR = null; // merged sprite metadata (data/sprites.json)
 // every data / image URL carries the build: a browser never mixes files of two versions from its cache
-const BUILD = '0.96';
+const BUILD = '0.97';
 const vurl = (u) => u + (u.includes('?') ? '&' : '?') + 'v=' + BUILD;
 // 0.93: a versioned file never changes: on the published web version (https, not this machine) the browser takes its
 // cached copy without asking the server again (one revalidation round trip per file at each start); at home (the local
@@ -242,7 +242,7 @@ class CharSprite {
     this.acc = await loadAcc();
     await AccLib.ensure([this.hat, this.cape, this.pet, this.weapon, this.shield]);   // (0.44: only the accessory sheets it wears)
     if (this.disposed) { this.dispose(true); return this; }
-    this.ready = true; CharSprite.live.add(this); this._seen = performance.now();
+    this.ready = true; CharSprite.live.add(this); this._seen = performance.now(); this._hatOn = !!this.hat;   // (0.97: the hat its sheets were picked for, rehat)
     return this;
   }
   // 0.93 (stress tests, tools/checks/stress.py: a reported crash after about ten character changes and a few Astrub runs): every
@@ -261,6 +261,21 @@ class CharSprite {
     if (this.whites) for (const w of this.whites.values()) free(w);
     this._tint = {}; this.whites = new Map();
     this._unref();
+  }
+  // 0.97: a hat put on or taken off after loading (the shop's equip and preview, the travelling merchant's) keeps the
+  // sheets of before — the Iop's long hair stayed under the new hat until the next run. The class's hat sheets ('_h_…',
+  // the short hair) are loaded beside, then swapped in; the old ones are let go
+  rehat() {
+    const V = SPR.chars, hv = V[this.sid + '_h_r'] || V[this.sid + '_h_s'] || V[this.sid + '_h'];
+    if (!hv || this._swap || !this.ready || !!this.hat === this._hatOn) return;
+    this._swap = true; const n = new CharSprite(this.sid, this.colors, this.hat, this.cape, this.pet, this.shield); n.weapon = this.weapon;
+    n.load().then(() => {
+      this._swap = false;
+      if (this.disposed || !n.ready || n.disposed) { n.dispose(); return; }
+      const old = Object.assign(Object.create(CharSprite.prototype), this), keep = { hat: this.hat, cape: this.cape, pet: this.pet, shield: this.shield, weapon: this.weapon, colors: this.colors };
+      Object.assign(this, n, keep); this._hatOn = n._hatOn; CharSprite.live.delete(n); CharSprite.live.add(this);
+      old.disposed = false; old.dispose(); CharSprite.live.add(this);
+    }).catch(() => { this._swap = false; });
   }
   _unref() { const u = this._urls || []; this._urls = []; for (const [url, q] of u) CharSprite.ref(url, q, -1); }
   static ref(url, q, d) {
@@ -338,6 +353,7 @@ class CharSprite {
   // laid at that opacity once — the layers took it one by one, so the body under a cape showed through it
   draw(ctx, anim, t, x, y, scale, flip, opts = {}) {
     if (this.disposed) return;   // (0.93: let go, CharSprite.dispose)
+    if (this.ready && !!this.hat !== this._hatOn) this.rehat();
     const a = opts.alpha;
     if (a !== undefined && a < 0.999 && !opts._whole && ctx.canvas && ctx.canvas.getContext && ctx.getTransform) {
       if (a <= 0.003) return;

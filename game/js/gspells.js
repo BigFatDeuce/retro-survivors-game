@@ -23,9 +23,10 @@ Object.assign(Run.prototype, {
     return true;
   },
   // 0.95: the Pwout de Cawotte + Cawotte fusion — the Pwout's cloud (its radius, red-brown, twice its cawottes)
-  // follows the character, hurts the monsters in it and heals him (zoneHeal, every second); four Cawottes (the Cawotte's
-  // own zone, sprite and spinning cawottes, radius p.satR) spring up on the diagonals around it, follow it and hurt the
-  // monsters on them at p.satK of the cloud's blow. All five are one group (grpHit): a monster under two of them is hit
+  // follows the character, hurts the monsters in it and heals him and his summons (zoneHeal, every second); four Cawottes
+  // (the Cawotte's own zone, sprite and spinning cawottes, radius p.satR) spring up on the diagonals around where it was
+  // cast and stay there, like traps (0.97: they followed him), hurting the monsters on them at p.satK of the cloud's blow
+  // until they wither with the cloud. All five are one group (grpHit): a monster under two of them is hit
   // once a tick; a new cast replaces the last one (shorter cooldowns than the 4 s: never two clouds, two heals) and keeps
   // its hit clock and heal timer (sp.state.grp, the old cloud's healT): no second blow, no lost heal at the swap
   pwcawotte(sp) {
@@ -36,8 +37,8 @@ Object.assign(Run.prototype, {
     this.zones.push({ x: P.x, y: P.y, r, until, tick: p.tick, next: 0, dmg, color: p.color, spell: sp, born: t, follow: P, cloud: 1, fart: 1, puff: p.puff, rim: p.rim, caw: p.cawN, grp,
       heal: lerp(p.heal, p.healShop || p.heal, sp.shopT()) * (1 + st.healBonus), healT: old ? old.healT : 0.5 });
     for (let i = 0; i < p.sat; i++) {
-      const a = Math.PI / 4 + i * TAU / p.sat, d = r + sr * 0.9, ox = Math.cos(a) * d, oy = Math.sin(a) * d;
-      this.cawottes.push({ x: P.x + ox, y: P.y + oy, ox, oy, follow: P, t0: t + i * 0.08, until, heal: 0, r: sr, tick: 0, dmg: dmg * p.satK, dtick: p.tick, next: t + i * 0.08, grp, spell: sp });
+      const a = Math.PI / 4 + i * TAU / p.sat, d = r + sr * 0.9;   // (outside the cloud, apart from each other: four distinct zones)
+      this.cawottes.push({ x: P.x + Math.cos(a) * d, y: P.y + Math.sin(a) * d, t0: t + i * 0.08, until, heal: 0, r: sr, tick: 0, dmg: dmg * p.satK, dtick: p.tick, next: t + i * 0.08, grp, spell: sp });
     }
     Audio2.play('saut', 0.5, 1.2);
     return true;
@@ -60,20 +61,22 @@ Object.assign(Run.prototype, {
   },
   // one hit a tick for a monster under several areas of one group (the fusion's cloud and its Cawottes)
   grpHit(g, m) { const l = g.hit.get(m); if (l !== undefined && this.time - l < g.tick * 0.9) return false; g.hit.set(m, this.time); return true; },
-  // a zone that heals the character in it (the fusion's cloud follows him), every second
+  // a zone that heals the character in it (the fusion's cloud follows him), every second, and the summons in it that
+  // can be hurt (the taunting ones: Run.update hits them), up to the life they came with
   zoneHeal(z) {
-    const P = this.player, dx = P.x - z.x, dy = P.y - z.y; if (P.dead || dx * dx + dy * dy > z.r * z.r || P.hp >= this.stats.maxHp) return;
-    P.heal(z.heal); this.text(P.x, P.y - 70, '+' + (Math.round(z.heal * 10) / 10), '#3ddc5a', 14);
+    const P = this.player, dx = P.x - z.x, dy = P.y - z.y, r2 = z.r * z.r;
+    for (const s of this.summons) if (s.taunt && s.hp > 0 && s.hp < s.spell.p.hp && dist2(s.x, s.y, z.x, z.y) <= r2) s.hp = Math.min(s.spell.p.hp, s.hp + z.heal);
+    if (P.dead || dx * dx + dy * dy > r2 || P.hp >= this.stats.maxHp) return;
+    const d = P.heal(z.heal, true); if (d > 0) this.healText(d);   // (0.97: one number, Run.healText — heal() wrote its own too)
   },
   updateCawottes(dt) {
     const P = this.player;
     for (let i = this.cawottes.length - 1; i >= 0; i--) {
       const c = this.cawottes[i]; if (this.time > c.until) { this.cawottes.splice(i, 1); continue; }
-      if (c.follow) { c.x = c.follow.x + c.ox; c.y = c.follow.y + c.oy; }
       if (c.dmg && this.time >= c.next) { c.next = this.time + c.dtick; for (const m of this.mobsInRadius(c.x, c.y, c.r)) if (this.grpHit(c.grp, m)) this.damageMob(m, c.dmg, c.spell, true); }   // (0.95: the fusion's Cawottes)
       if (!c.heal) continue;
       const dx = (P.x - c.x) / c.r, dy = (P.y - c.y) / (c.r * 0.62);   // (0.76: a round zone, the ground's 0.62 ellipse)
-      if (dx * dx + dy * dy < 1 && !P.dead && (c.tick -= dt) <= 0) { c.tick = 1; if (P.hp < this.stats.maxHp) { P.heal(c.heal); this.text(P.x, P.y - 70, '+' + (Math.round(c.heal * 10) / 10), '#3ddc5a', 14); } }
+      if (dx * dx + dy * dy < 1 && !P.dead && (c.tick -= dt) <= 0) { c.tick = 1; if (P.hp < this.stats.maxHp) { const d = P.heal(c.heal, true); if (d > 0) this.healText(d); } }
     }
   },
   // 0.74: a '+' on the screen (not the client's X), twice as wide, the summoned Cawotte (its client idle pose, HD

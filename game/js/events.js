@@ -8,6 +8,21 @@
 // the treasure's Chouque: each of his 3 bubbles stays TM_SAY s, the last one TM_SAY + TM_LAST (0.95: twice as long, 2.2 s
 // before; 0.96: twice again, 4.4 s before)
 const TM_SAY = 8.8, TM_LAST = 2.4;
+// 0.97: a bubble's text with **names** — drawn in bold between the language's quotes, never split over two lines; rows of
+// segments {t, b, w}, each row with its width (drawTreasure centres it on that: nothing shifted)
+const QUOTES = { fr: ['« ', ' »'], de: ['„', '“'], es: ['«', '»'], it: ['«', '»'], pt: ['«', '»'], en: ['“', '”'], nl: ['“', '”'] };
+function richWrap(ctx, text, maxW, fN, fB) {
+  const q = QUOTES[LANG] || QUOTES.en, words = String(text).split(/\s+/).filter(Boolean).map(w => w.split(/\*\*(.+?)\*\*/).map((t, i) => ({ t: i % 2 ? q[0] + t + q[1] : t, b: i % 2 === 1 })).filter(s => s.t));
+  const width = segs => segs.reduce((a, s) => { ctx.font = s.b ? fB : fN; s.w = ctx.measureText(s.t).width; return a + s.w; }, 0);
+  ctx.font = fN; const sp = ctx.measureText(' ').width, rows = []; let cur = null;
+  for (const w of words) {
+    const ww = width(w);
+    if (cur && cur.w + sp + ww > maxW) { rows.push(cur); cur = null; }
+    if (!cur) cur = { segs: [...w], w: ww }; else { cur.segs.push({ t: ' ', b: false, w: sp }, ...w); cur.w += sp + ww; }
+  }
+  if (cur) rows.push(cur);
+  return rows;
+}
 Object.assign(Run.prototype, {
   initEvents() {
     const C = this.C, S = Store.data, dbg = typeof Game !== 'undefined' && Game.debug ? Game.debug : {};
@@ -86,7 +101,7 @@ Object.assign(Run.prototype, {
     if (kind === 'countdown') this.cine.dur = 3.3;
     if (kind === 'union') this.cine.dur = 3.0;   // (0.60: spell fusion, sfusions.js)
     if (kind === 'gift') this.cine.dur = 4.6;   // (0.68: Nowel's gift, nowel.js)
-    if (kind === 'treasure') { this.cine.dur = 1.4 + data.lines.length * TM_SAY + TM_LAST; Audio2.sfx('EVENT', 0.8); }   // (0.68: the dug treasure; 30.2 s for 3 bubbles: 8.6 s until 0.94, 15.8 in 0.95)
+    if (kind === 'treasure') { this.cine.dur = 1.4 + data.lines.length * TM_SAY + TM_LAST; Audio2.sfx('EVENT', 0.8); const mu = (this.C.tmap.ghost || {}).music; if (mu) Audio2.jingle(mu); }   // (0.97: his own music while he talks, C.tmap.ghost.music)   // (0.68: the dug treasure; 30.2 s for 3 bubbles: 8.6 s until 0.94, 15.8 in 0.95)
   },
   tickCine(dt) {
     const c = this.cine, P = this.player; c.t += dt;
@@ -200,13 +215,14 @@ Object.assign(Run.prototype, {
       ctx.globalAlpha = 0.5 * arr * k; gs.draw(ctx, gf, sx, sy - hov, gz, !front, tintedSheet(gs, '#7fe8ff'));
       const n = Math.floor((c.t - 1.4) / TM_SAY), line = c.t > 1.4 && D.lines[Math.min(D.lines.length - 1, n)];
       if (line) {
-        const fs = Math.round(Math.max(14, Math.min(22, W / 60))); ctx.font = 'bold ' + fs + 'px DofusBold, Verdana';
-        const lines = wrapLines(ctx, L(line), Math.min(W * 0.5, 460)), bw = Math.max(...lines.map(l => ctx.measureText(l).width)) + fs * 1.4, bh = lines.length * fs * 1.25 + fs;
+        const fs = Math.round(Math.max(14, Math.min(22, W / 60))), fN = fs + 'px Dofus, Verdana', fB = 'bold ' + fs + 'px DofusBold, Verdana';
+        const rows = richWrap(ctx, L(line), Math.min(W * 0.5, 460), fN, fB), bw = Math.max(...rows.map(r => r.w)) + fs * 1.4, bh = rows.length * fs * 1.25 + fs;
         const bx = clamp(sx - bw / 2, 8, W - bw - 8), by = clamp(sy - hov - 150 * z - bh, 30, H - bh - 8), pop = Math.min(1, (c.t - 1.4 - Math.min(D.lines.length - 1, n) * TM_SAY) / 0.15), tx = clamp(sx, bx + 20, bx + bw - 20);
         ctx.globalAlpha = k * pop; ctx.fillStyle = 'rgba(245,252,255,0.95)'; ctx.strokeStyle = '#3a6a8a'; ctx.lineWidth = 3;
         roundRectPath(ctx, bx, by, bw, bh, 12); ctx.fill(); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(tx - 10, by + bh); ctx.lineTo(tx + 10, by + bh); ctx.lineTo(tx, by + bh + 14); ctx.closePath(); ctx.fill();
-        ctx.fillStyle = '#1e3a52'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; lines.forEach((l, i) => ctx.fillText(l, bx + bw / 2, by + fs * 0.5 + i * fs * 1.25));
+        ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        rows.forEach((r, i) => { let x = bx + (bw - r.w) / 2; for (const s of r.segs) { ctx.font = s.b ? fB : fN; ctx.fillStyle = s.b ? '#0a2236' : '#1e3a52'; ctx.fillText(s.t, x, by + fs * 0.5 + i * fs * 1.25); x += s.w; } });
         ctx.font = 'bold ' + Math.round(fs * 0.75) + 'px DofusBold, Verdana'; ctx.fillStyle = '#bfe8ff'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(L(G.name || {}), bx + 10, by - 3);
       }
     }
@@ -565,7 +581,7 @@ Object.assign(Run.prototype, {
       // 0.92: his last line hints at a profile name's music easter egg (UI.NAME_EGGS), never the one of last time
       const EL = Gh.egglines || [], S = Store.data;
       if (EL.length) { let i = randi(0, EL.length - 1); if (EL.length > 1 && i === S.tmEgg) i = (i + 1 + randi(0, EL.length - 2)) % EL.length; S.tmEgg = i; Store.save(); L3.splice(2, 1, EL[i]); }
-      this.startCine('treasure', { x: Z.x, y: Z.y, k: Z.k, lines: L3, said: -1 }, () => this.treasureGold(Z));
+      this.startCine('treasure', { x: Z.x, y: Z.y, k: Z.k, lines: L3, said: -1 }, () => { Audio2.stopJingle(0.8); this.treasureGold(Z); });
     }
   },
   treasureGold(Z) {
@@ -578,6 +594,21 @@ Object.assign(Run.prototype, {
     this.banner(T('tmap_found', { k }), '#ffd700', true); this.chat(T('tmap_found', { k }), '#ffd700'); this.shake(6);
     for (let i = 0; i < 90; i++) this.particles.push({ x: Z.x, y: Z.y - 6, vx: rand(-190, 190), vy: rand(-460, -140), t: 0, life: rand(0.8, 1.5), c: pick(['#ffd700', '#ffe866', '#f0b020', '#fff6c0']), s: rand(3, 7) });
     Audio2.play('coffre', 0.8); Audio2.play('stars', 0.8); for (let i = 0; i < 12; i++) setTimeout(() => Audio2.play('pok', 0.5, 0.9 + i * 0.05), i * 80);
+    this.treasureBonus(Z);
+  },
+  // 0.97: besides the kamas, C.tmap.bonus of the chests also hold a Dofus (C.tmap.bonusDofus of them: one not found yet,
+  // dropped by the chest — its pickup plays the Dofus show) or else a shield not owned yet; when one kind is all found,
+  // the other; both: nothing more
+  treasureBonus(Z) {
+    const TM = this.C.tmap, S = Store.data; if (Math.random() >= (TM.bonus || 0)) return;
+    const dofs = (this.C.dofus || []).filter(d => !(S.dofus || {})[d.id] && !this.dofus.includes(d)), sh = this.nowelSkin(['shields']);
+    let kind = Math.random() < (TM.bonusDofus !== undefined ? TM.bonusDofus : 0.5) ? 'dofus' : 'shield';
+    if (kind === 'dofus' && !dofs.length) kind = sh ? 'shield' : null; else if (kind === 'shield' && !sh) kind = dofs.length ? 'dofus' : null;
+    if (kind === 'dofus') { this.dropPickup('dofus', Z.x + 60, Z.y + 20, pick(dofs).id); this.chat(T('tmap_dofus'), '#ffcf3a'); Audio2.sfx('EVENT', 0.6); }
+    else if (kind === 'shield') {
+      S.owned = S.owned || []; if (!S.owned.includes(sh.id)) S.owned.push(sh.id); Store.save();
+      const m = T('tmap_shield', { n: this.skinName(sh) }); this.banner(m, '#9cff6a', true); this.chat(m, '#9cff6a'); Prog.check(this);
+    }
   },
   // 0.92: the Maîtres Corbacs' reward of the minute, a Manuel du Tailleur (0.95: no more treasure maps — Jorbak is
   // their only source). A dry spot of the map away from the character and from the other pickups; the arrow at the

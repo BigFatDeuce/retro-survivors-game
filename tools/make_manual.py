@@ -162,14 +162,15 @@ Archimonstruos. Los <b>Logros</b> premian las hazañas… y los fracasos más ri
     ]
     T['controls'] = [
         (t('Se déplacer', 'Move', 'Moverse'), t('ZQSD / WASD / flèches', 'WASD / ZQSD / arrows', 'WASD / ZQSD / flechas'), t('Stick gauche / croix', 'Left stick / D-pad', 'Stick izquierdo / cruceta'), t('Glisser le doigt', 'Drag your finger', 'Deslizar el dedo')),
-        (t('Esquive (ruée)', 'Dodge (dash)', 'Esquiva (embestida)'), t('Espace', 'Space', 'Espacio'), t('A (bouton bas)', 'A (bottom button)', 'A (botón inferior)'), t('Double-tap', 'Double tap', 'Doble toque')),
-        (t('Sorts de mouvement', 'Movement spells', 'Hechizos de movimiento'), 'E', 'X / RB', t("Bouton à l'écran", 'On-screen button', 'Botón en pantalla')),
+        (t('Esquive (ruée)', 'Dodge (dash)', 'Esquiva (embestida)'), t('Espace / E', 'Space / E', 'Espacio / E'), 'RB / RT', t('Double-tap (direction du joystick)', "Double tap (the joystick's way)", 'Doble toque (dirección del joystick)')),
+        (t('Sorts de mouvement', 'Movement spells', 'Hechizos de movimiento'), t('A (AZERTY) / Q (QWERTY)', 'Q (QWERTY) / A (AZERTY)', 'Q (QWERTY) / A (AZERTY)'), 'LB / LT', t('Leur icône', 'Their icon', 'Su icono')),
         (t('Pause', 'Pause', 'Pausa'), t('Échap / P', 'Esc / P', 'Esc / P'), 'Start', t('Bouton pause', 'Pause button', 'Botón de pausa')),
         (t('Choisir une amélioration', 'Pick an upgrade', 'Elegir una mejora'), t('Flèches + Entrée / clic', 'Arrows + Enter / click', 'Flechas + Intro / clic'), t('Croix + A', 'D-pad + A', 'Cruceta + A'), t('Toucher la carte', 'Tap the card', 'Tocar la carta')),
         (t('Relancer, Bannir, Passer', 'Reroll, Banish, Skip', 'Volver a tirar, Desterrar, Saltar'), t('Boutons sous les cartes', 'Buttons under the cards', 'Botones bajo las cartas'), t('Croix + A', 'D-pad + A', 'Cruceta + A'), t('Toucher le bouton', 'Tap the button', 'Tocar el botón')),
         (t('Choix auto potion / kamas', 'Auto-pick bread / kamas', 'Elección auto pan / kamas'), 'R', 'Y', t('Case à cocher', 'Checkbox', 'Casilla')),
         (t('Menus : retour', 'Menus: back', 'Menús: volver'), t('Échap', 'Esc', 'Esc'), 'B', '×'),
         (t('Menus : onglets', 'Menus: tabs', 'Menús: pestañas'), 'Tab', 'LB / RB', t('Toucher', 'Tap', 'Tocar')),
+        (t('Mode sombre / clair', 'Dark / light mode', 'Modo oscuro / claro'), 'F1', t('R3 (clic du stick droit)', 'R3 (right stick click)', 'R3 (clic del stick derecho)'), t('Bouton du menu principal', 'Main menu button', 'Botón del menú principal')),
         (t('Faire défiler', 'Scroll', 'Desplazar'), t('Molette', 'Mouse wheel', 'Rueda del ratón'), t('Stick droit', 'Right stick', 'Stick derecho'), t('Glisser', 'Drag', 'Deslizar')),
     ]
     T['modes'] = [
@@ -205,9 +206,9 @@ Archimonstruos. Los <b>Logros</b> premian las hazañas… y los fracasos más ri
             "Between 3:00 and 6:00, a card booster appears in a corner of the map: each holds one of the 464 cards of the official card game. Keep them in the Armory's binder.",
             "Entre las 3:00 y las 6:00, aparece un sobre de cartas en una esquina del mapa: cada uno contiene una de las 464 cartas del juego de cartas oficial. Guárdalas en la carpeta de la Armería.")),
         (t('Les reliques', 'Relics', 'Las reliquias'), t(
-            "Seuls les boss et les mini-boss (grosse barre de vie) en lâchent, 6 au plus par partie. Une relique dure toute la partie.",
-            "Only bosses and mini-bosses (big life bar) drop them, 6 at most per run. A relic lasts the whole run.",
-            "Solo los jefes y minijefes (gran barra de vida) las sueltan, 6 como máximo por partida. Una reliquia dura toda la partida.")),
+            "Les boss, les mini-boss (grosse barre de vie) et parfois les élites en lâchent, 6 au plus par partie. Une relique dure toute la partie.",
+            "Bosses, mini-bosses (big life bar) and sometimes elites drop them, 6 at most per run. A relic lasts the whole run.",
+            "Los jefes, los minijefes (gran barra de vida) y a veces las élites las sueltan, 6 como máximo por partida. Una reliquia dura toda la partida.")),
         (t('Les Dofus', 'Dofus', 'Los Dofus'), t(
             "Certains boss lâchent un Dofus : son effet s'applique dans toutes vos parties suivantes.",
             "Some bosses drop a Dofus: its effect applies to all your following runs.",
@@ -342,7 +343,7 @@ def booklet():
       {h2(t("Sommaire", "Contents", "Índice"), None, "margin-top:8mm")}<ul class="toc">{"".join(f"<li>{E(x)}</li>" for x in toc)}</ul></section>''')
     th = t(['Action', 'Clavier / souris', 'Manette', 'Mobile'], ['Action', 'Keyboard / mouse', 'Controller', 'Mobile'], ['Acción', 'Teclado / ratón', 'Mando', 'Móvil'])
     pages.append(f'''<section class="page">{h2(toc[0], 'dofus_hd_' + str(next(d['icon'] for d in C['dofus'] if d['id'] == 'emeraude')))}<p>{TX["story"]}</p>
-      {h2(toc[1], None, "margin-top:5mm")}<table style="font-size:7.9pt"><tr>{"".join(f"<th>{x}</th>" for x in th)}</tr>
+      {h2(toc[1], None, "margin-top:1.5mm")}<table style="font-size:7pt"><tr>{"".join(f"<th>{x}</th>" for x in th)}</tr>
       {''.join(f"<tr><td><b>{E(a)}</b></td><td>{E(b)}</td><td>{E(c)}</td><td>{E(d)}</td></tr>" for a, b, c, d in TX['controls'])}</table>
       <p class="hint" style="margin-top:2mm">{t("Le clavier AZERTY et QWERTY sont reconnus. Les touches se consultent dans le menu « Commandes ».", "AZERTY and QWERTY keyboards are both recognised. The keys are listed in the 'Controls' menu.", "Se reconocen los teclados AZERTY y QWERTY. Las teclas se consultan en el menú «Controles».")}</p></section>''')
     scr = t([('Haut', "Barre d'expérience et niveau, chronomètre, barres de vie des boss."), ('Haut gauche', 'Vos sorts et votre arme, avec leur niveau ; dessous, vos caractéristiques.'),
@@ -457,8 +458,13 @@ def numbers(cont):
                                       f"{pc(M_.get('chance', 0.1))} of runs; Lord Crows: one a minute from 11:00; Endless bosses: {pc(I_.get('manuelP', 0.05), 1)} at 10:00, +{pc(I_.get('manuelStep', 0.025), 1)} every minute after",
                                       f"{pc(M_.get('chance', 0.1))} de las partidas; Maestros Cuerbok: uno por minuto desde las 11:00; jefes del modo Infinito: {pc(I_.get('manuelP', 0.05), 1)} a las 10:00, +{pc(I_.get('manuelStep', 0.025), 1)} por minuto después")),
         (ob, t('Carte au trésor', 'Treasure map', 'Mapa del tesoro'), t(f"Jorbak : {pc(J.get('tmap', 0.25))} ; trésor : {min(tm)} à {max(tm)} kamas", f"Jorbak: {pc(J.get('tmap', 0.25))}; treasure: {min(tm)} to {max(tm)} kamas", f"Jorbak: {pc(J.get('tmap', 0.25))}; tesoro: {min(tm)} a {max(tm)} kamas")),
+        (ob, t('Coffre du trésor', "The treasure's chest", 'Cofre del tesoro'), t(f"en plus des kamas, {pc(C['tmap'].get('bonus', 0))} : un Dofus pas encore trouvé ({pc(C['tmap'].get('bonusDofus', 0.5))}) ou un bouclier pas encore possédé",
+                                                                               f"besides the kamas, {pc(C['tmap'].get('bonus', 0))}: a Dofus not found yet ({pc(C['tmap'].get('bonusDofus', 0.5))}) or a shield not owned yet",
+                                                                               f"además de los kamas, {pc(C['tmap'].get('bonus', 0))}: un Dofus aún no encontrado ({pc(C['tmap'].get('bonusDofus', 0.5))}) o un escudo aún no conseguido")) if C['tmap'].get('bonus') else None,
+        (ob, L(C['houx']['name']), pc(C['houx']['rate'], 3) + f' {per} {luck} — ' + t('un relancement de plus', 'one more reroll', 'una tirada más')) if C.get('houx') else None,
         (t('Reliques', 'Relics', 'Reliquias'), t('Boss', 'Boss', 'Jefe'), t(f"{pc(C.get('relicRate', 0.4))} (boss final : 100 %), {C.get('relicMax', 6)} au plus par partie", f"{pc(C.get('relicRate', 0.4))} (final boss: 100 %), {C.get('relicMax', 6)} at most per run", f"{pc(C.get('relicRate', 0.4))} (jefe final: 100 %), {C.get('relicMax', 6)} como máximo por partida")),
         (t('Reliques', 'Relics', 'Reliquias'), t('Mini-boss (Tofuzmo, Jorbak, Coffre Animé)', 'Mini-bosses (Tofuzmo, Jorbak, Living Chest)', 'Minijefes (Tofuzmo, Jorbak, Cofre Animado)'), pc(C.get('relicMini', 0.5))),
+        (t('Reliques', 'Relics', 'Reliquias'), t('Élite', 'Elite', 'Élite'), pc(C['relicElite']) + ' ' + luck) if C.get('relicElite') else None,
         *[('Dofus', L(d['name']), f"{pc(d['rate'])} — " + ', '.join(dofus_from(b) for b in d['from'])) for d in C['dofus']],
         (ev, t('Porte de ToT', "ToT's door", 'Puerta de ToT'), t(f"à {R_['doorT'] // 60}:{R_['doorT'] % 60:02d} ; portail temporel : {pc(C['portal']['chance'])} des parties, sinon le Tofuzmo ({C['mutant']['hp']} PV) ou Jorbak ({J.get('hp', 3000)} PV, zone {J.get('from', 10) + 1} et après)",
                                                                f"at {R_['doorT'] // 60}:{R_['doorT'] % 60:02d}; time portal: {pc(C['portal']['chance'])} of runs, otherwise the Tofuzmo ({C['mutant']['hp']} HP) or Jorbak ({J.get('hp', 3000)} HP, zone {J.get('from', 10) + 1} and after)",
@@ -476,6 +482,7 @@ def numbers(cont):
         (md, t('Infini', 'Endless', 'Infinito'), t(f"cycles de {I_.get('cycle', 480) // 60} min ; à {I_.get('bossT', 600) // 60}:00 le boss final ×2 chaque minute", f"{I_.get('cycle', 480) // 60}-minute cycles; at {I_.get('bossT', 600) // 60}:00 the final boss ×2 every minute", f"ciclos de {I_.get('cycle', 480) // 60} min; a las {I_.get('bossT', 600) // 60}:00 el jefe final ×2 cada minuto")),
         (t('Secrets', 'Secrets', 'Secretos'), '???', t("Certaines trappes cachent plus qu'un courant d'air…", 'Some trapdoors hide more than a draught…', 'Algunas trampillas esconden algo más que una corriente de aire…')),
     ]
+    rows = [r for r in rows if r]   # (0.97: the rows of a system the game has not)
     out, th = [], t(['Domaine', 'Quoi', 'Valeur'], ['Area', 'What', 'Value'], ['Ámbito', 'Qué', 'Valor'])
     for i in range(0, len(rows), 16):
         tb = ''.join(f'<tr><td>{E(a)}</td><td><b>{E(b)}</b></td><td>{E(c)}</td></tr>' for a, b, c in rows[i:i + 16])

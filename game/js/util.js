@@ -190,6 +190,28 @@ const Store = {
     const m = this.meta(); m.cur = n; this.saveMeta(m);
     this.load(); this.data.settings = Object.assign(this.data.settings, settings); this.save();
   },
+  // 0.97: the test code GODMODE (Options > save code): everything of the game on the current profile — every zone open and
+  // won (the secret ones and Difficile too), every shop line at its top (class / global spells, characteristics, weapon
+  // masteries, scrolls), every look owned, every Dofus, relic, achievement, Archimonster soul, TTG card, unique weapon and
+  // fusion found, the bestiary seen, kamas to spare; nothing of the profile is taken away
+  godMode(C) {
+    const S = this.data, all = (list, v = 1) => Object.fromEntries((list || []).map(x => [String(x.id || x), v])), up = (o, add) => Object.assign(o || {}, add);
+    const top = (cost, fb) => (cost || fb).length, now = Date.now();
+    S.unlocked = [...new Set([...(S.unlocked || []), ...C.maps.map(m => m.id)])];
+    S.cleared = up(S.cleared, all(C.maps)); S.clearedNormal = up(S.clearedNormal, all(C.maps)); S.clearedHard = up(S.clearedHard, all(C.maps)); S.tuto = up(S.tuto, all(C.maps));
+    S.hardUnlocked = 1; S.tot = Math.max(1, S.tot || 0); S.kamas = Math.max(S.kamas || 0, 9999999);
+    const spells = [...C.classes.flatMap(c => c.spells), ...(C.globalSpells || []).map(g => g.id).filter(id => C.spells[id] && C.spells[id].t !== 'wheel')];
+    S.spellLv = up(S.spellLv, all(spells, top(C.spellCost, [0, 0, 0, 0, 0])));
+    S.passLv = up(S.passLv, all((C.passives || []).filter(p => p.max > 1 && p.stat !== 'amount'), top(C.passCost || C.spellCost, [0, 0, 0, 0, 0])));   // (the shop's: UI.shop 'traits')
+    S.mastery = up(S.mastery, all(C.weapons, top(C.masteryCost, [0, 0, 0, 0, 0])));
+    S.scrolls = up(S.scrolls, all(C.scrolls, top(C.scrollCost, [0])));
+    S.owned = [...new Set([...(S.owned || []), ...[C.hats, C.capes, C.pets, C.shields].flatMap(l => (l || []).map(it => it.id))])];
+    S.dofus = up(S.dofus, all(C.dofus)); S.relics = up(S.relics, all(C.relics)); S.ach = up(S.ach, all(C.achievements, now));
+    S.souls = up(S.souls, all(Object.values(C.archi || {}).flat())); S.ttg = up(S.ttg, all((C.ttg || {}).cards));
+    S.uniques = up(S.uniques, all(C.uniqueWeapons)); S.fusions = up(S.fusions, all(C.fusions));
+    S.seen = up(S.seen, all([...Object.keys(C.monsters), ...Object.keys(C.bosses)]));
+    this.save();
+  },
   // back to zero: every progress of the current profile is erased (the settings stay)
   reset() {
     const settings = Object.assign({}, this.data.settings);
@@ -286,34 +308,77 @@ function T(k, vars) {
 function L(obj) { if (!obj) return ''; if (typeof obj === 'string') return obj; return obj[LANG] || obj.en || obj.fr || ''; }
 function detectLang() { const n = (navigator.language || 'en').toLowerCase().slice(0, 2); return LANGS.includes(n) ? n : 'en'; }
 
+// the loading screen's tips before content.json is there (C.tips replaces them at boot; 0.97: current ones, every language)
 const TIPS = {
   fr: [
-    "N'oubliez pas de vous inscrire à un ou plusieurs métiers. (Non, ça ne sert à rien ici.)",
-    'Les Tofus sont rapides mais complètement idiots. Profitez-en.',
-    'Le Bouftou Royal adore se soigner. Frappez fort et vite.',
-    'Une Fée d\'Artifice nettoie tout l\'écran. Gardez-la pour les moments chauds !',
-    'Une Potion de Rappel attire toute l\'expérience vers vous.',
-    'À 5:00, une porte apparaît au centre de la carte. ToT vous y attend.',
-    'Chaque boss peut dropper le Dofus qu\'il droppait dans le jeu original.',
-    'Le Bandit Manchot s\'enfuit avec ses kamas. Rattrapez-le !',
-    'Les kamas servent à acheter des coiffes et des capes dans la Boutique.',
-    'Un Crâ qui reste à distance est un Crâ heureux.',
-    'Il paraît qu\'un Wabbit GM rôde sur l\'île...',
-    'Les Pious ne sont pas dangereux. Enfin, pas tout seuls.',
+    "Plus l'ambre est grosse, plus elle rapporte d'expérience. Ramassez tout : un Enutrof ne laisserait rien traîner.",
+    "Un Dofus trouvé reste actif dans toutes vos parties suivantes. Pas besoin de farmer le Dragon Cochon trois cents fois.",
+    "Les bombes du Roublard explosent en chaîne : posez-les près les unes des autres. De préférence pas sous vos pieds.",
+    "Une Fée d'Artifice nettoie tout l'écran. Gardez-la pour les moments chauds, pas pour le premier Piou venu.",
+    "Une Potion de Rappel attire toute l'expérience vers vous. Plus rapide qu'une Potion de Rappel… vers Astrub.",
+    "Dans l'eau, on avance 30 % moins vite. Même un Crâ ne marche pas sur l'eau.",
+    "Le Bouftou Royal adore se soigner. Frappez fort et vite : c'est un Bouftou, pas un Eniripsa.",
+    "Les Sacrieurs adorent prendre des coups. Vous, un peu moins : ramassez le pain, il rend de la vie.",
   ],
   en: [
-    "Don't forget to sign up for one or more jobs. (No, it's useless here.)",
-    'Tofus are fast but completely dumb. Use it.',
-    'The Royal Gobball loves to heal himself. Hit hard and fast.',
-    'A Firework Fairy clears the whole screen. Keep it for hot moments!',
-    'A Recall Potion pulls every experience crystal to you.',
-    "At 5:00, a door appears in the middle of the map. ToT is waiting.",
-    'Every boss can drop the Dofus it dropped in the original game.',
-    'The One-Armed Bandit runs off with his kamas. Catch him!',
-    'Kamas buy hats and capes in the Shop.',
-    'A Cra who keeps their distance is a happy Cra.',
-    'Rumour says a GM Wabbit roams the island...',
-    'Piwis are harmless. Well, not in groups.',
+    "The bigger the amber, the more experience it gives. Pick everything up: an Enutrof would never leave anything behind.",
+    "A Dofus you find stays active in all your next runs. No need to farm the Dragon Pig three hundred times.",
+    "The Rogue's bombs explode in a chain: lay them close together. Preferably not under your own feet.",
+    "A Firework Fairy clears the whole screen. Keep it for the tough moments, not for the first Piwi you meet.",
+    "A Recall Potion pulls all the experience to you. Faster than a Recall Potion… back to Astrub.",
+    "In water you move 30% slower. Not even a Cra walks on water.",
+    "The Royal Gobball loves healing itself. Hit hard and fast: it is a Gobball, not an Eniripsa.",
+    "Sacriers love taking hits. You, a bit less: pick up the bread, it gives life back.",
+  ],
+  de: [
+    "Je größer der Bernstein, desto mehr Erfahrung. Sammle alles ein: Ein Enutrof würde nichts liegen lassen.",
+    "Ein gefundenes Dofus bleibt in allen folgenden Runden aktiv. Kein Grund, den Schweinedrachen dreihundertmal zu farmen.",
+    "Die Bomben des Halsabschneiders explodieren in Kette: Leg sie dicht beieinander. Am besten nicht unter deine Füße.",
+    "Eine Feuerwerksfee räumt den ganzen Bildschirm. Heb sie für heiße Momente auf, nicht für den ersten Piepmatz.",
+    "Ein Rückruftrank zieht alle Erfahrung zu dir. Schneller als ein Rückruftrank… nach Astrub.",
+    "Im Wasser bist du 30 % langsamer. Nicht einmal ein Cra läuft übers Wasser.",
+    "Der Königliche Fresssack heilt sich gern. Schlag hart und schnell zu: Er ist ein Fresssack, kein Eniripsa.",
+    "Sacrieurs lieben es, Schläge einzustecken. Du etwas weniger: Sammle das Brot ein, es gibt Leben zurück.",
+  ],
+  es: [
+    "Cuanto más grande el ámbar, más experiencia da. Recógelo todo: un Anutrof no dejaría nada por ahí.",
+    "Un Dofus encontrado sigue activo en todas tus partidas siguientes. No hace falta farmear al Dragocerdo trescientas veces.",
+    "Las bombas del Tymador explotan en cadena: ponlas cerca unas de otras. Preferiblemente no bajo tus pies.",
+    "Un Hada de Artificio limpia toda la pantalla. Guárdala para los momentos calientes, no para el primer Pío que pase.",
+    "Una Poción de Regreso atrae toda la experiencia hacia ti. Más rápida que una Poción de Regreso… a Astrub.",
+    "En el agua avanzas un 30 % más lento. Ni un Ocra camina sobre el agua.",
+    "El Jalató Real adora curarse. Golpea fuerte y rápido: es un Jalató, no un Aniripsa.",
+    "A los Sacrógritos les encanta recibir golpes. A ti, algo menos: recoge el pan, devuelve vida.",
+  ],
+  it: [
+    "Più l'ambra è grande, più esperienza dà. Raccogli tutto: un Anutrof non lascerebbe niente in giro.",
+    "Un Dofus trovato resta attivo in tutte le partite successive. Niente bisogno di farmare il Drago Maiale trecento volte.",
+    "Le bombe del Ladrurbo esplodono a catena: mettile vicine tra loro. Possibilmente non sotto i tuoi piedi.",
+    "Una Fata d'Artificio ripulisce tutto lo schermo. Tienila per i momenti caldi, non per il primo Pìu che passa.",
+    "Una Pozione di Richiamo attira tutta l'esperienza verso di te. Più veloce di una Pozione di Richiamo… verso Astrub.",
+    "In acqua si avanza il 30% più lentamente. Nemmeno un Ocra cammina sull'acqua.",
+    "Il Pappatutto Reale adora curarsi. Colpisci forte e veloce: è un Pappatutto, non un Aniripsa.",
+    "Ai Sàcridi piace prendere botte. A te un po' meno: raccogli il pane, ridà vita.",
+  ],
+  nl: [
+    "Hoe groter de amber, hoe meer ervaring. Raap alles op: een Enutrof laat nooit iets liggen.",
+    "Een gevonden Dofus blijft actief in al je volgende runs. Je hoeft de Dragon Pig geen driehonderd keer te farmen.",
+    "De bommen van de Schurk ontploffen in een ketting: leg ze dicht bij elkaar. Liefst niet onder je eigen voeten.",
+    "Een Vuurwerkfee veegt het hele scherm schoon. Bewaar haar voor hete momenten, niet voor de eerste de beste Piwi.",
+    "Een Terugroepdrank trekt alle ervaring naar je toe. Sneller dan een Terugroepdrank… naar Astrub.",
+    "In het water ga je 30% trager. Zelfs een Cra loopt niet over water.",
+    "De Koninklijke Veelvraat geneest zichzelf graag. Sla hard en snel: het is een Veelvraat, geen Eniripsa.",
+    "Sacriers houden ervan klappen te krijgen. Jij iets minder: raap het brood op, het geeft leven terug.",
+  ],
+  pt: [
+    "Quanto maior o âmbar, mais experiência dá. Apanha tudo: um Enutrof nunca deixaria nada para trás.",
+    "Um Dofus encontrado fica ativo em todas as partidas seguintes. Não é preciso farmar o Dragão Porco trezentas vezes.",
+    "As bombas do Ladino explodem em cadeia: põe-nas perto umas das outras. De preferência não debaixo dos teus pés.",
+    "Uma Fada de Artifício limpa o ecrã todo. Guarda-a para os momentos quentes, não para o primeiro Piwi que aparecer.",
+    "Uma Poção de Chamada atrai toda a experiência para ti. Mais rápida que uma Poção de Chamada… para Astrub.",
+    "Na água avanças 30% mais devagar. Nem um Cra caminha sobre a água.",
+    "O Gobball Real adora curar-se. Bate com força e depressa: é um Gobball, não um Eniripsa.",
+    "Os Sacriers adoram levar pancada. Tu, um pouco menos: apanha o pão, devolve vida.",
   ],
 };
 // fullscreen on / off (menu button, gamepad SELECT). Browsers may refuse it outside a click or key press (a gamepad
@@ -335,4 +400,10 @@ function toggleFullscreen() {
 }
 // light / dark theme of the menus (Store.data.settings.theme)
 function applyTheme() { try { document.body.classList.toggle('dark', !!(Store.data && Store.data.settings && Store.data.settings.theme === 'dark')); } catch (e) { } }
+// switch it (the main menu's button, F1, a pad's R3); the main menu's switch follows
+function toggleTheme() {
+  const S = Store.data && Store.data.settings; if (!S) return;
+  S.theme = S.theme === 'dark' ? 'light' : 'dark'; Store.save(); applyTheme();
+  document.querySelectorAll('.theme-btn .switch').forEach(e => e.classList.toggle('on', S.theme === 'dark')); Audio2.blip('click');
+}
 

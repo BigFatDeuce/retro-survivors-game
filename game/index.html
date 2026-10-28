@@ -402,7 +402,7 @@ body.dark .always-sw { background: rgba(0,0,0,.25); } body.dark .always-sw .sw-t
 .window.modal.musha, .window.modal.dofawa { width: min(760px, calc(96vw / var(--uiz, 1))); }
 .musha-row { display: flex; gap: 14px; align-items: center; justify-content: center; }
 .musha-side { display: flex; flex-direction: column; gap: 10px; align-items: center; flex: 1; min-width: 0; }
-.musha-bubble { position: relative; background: #fffaf0; border: 3px solid #4b3b28; border-radius: 14px; padding: 12px 14px; font-size: 15px; line-height: 1.35; color: #2b2016; min-height: 70px; box-shadow: 0 3px 0 #4b3b28; }
+.musha-bubble { position: relative; background: #fffaf0; border: 3px solid #4b3b28; border-radius: 14px; padding: 12px 16px; font: 17px/1.4 'Lilita', 'DofusBold', sans-serif; letter-spacing: .3px; color: #2b2016; min-height: 70px; box-shadow: 0 3px 0 #4b3b28; }   /* 0.97: the scenes' lines (Musha, ToT, Ganymède, Dark Vlad) in Lilita One like the tips and the credits — Verdana before */
 .musha-bubble::before { content: ''; position: absolute; left: -16px; top: 26px; border: 8px solid transparent; border-right: 10px solid #4b3b28; }
 .window.modal.gany { width: min(660px, calc(96vw / var(--uiz, 1))); }   /* 0.95: Ganymède's scenes (UI.ganyScene) */
 .gany .gany-stage { display: block; width: 600px; max-width: 100%; height: auto; aspect-ratio: 600 / 280; margin: 0 auto 10px; border: 3px solid #4b3b28; border-radius: 12px; box-shadow: 0 3px 0 #4b3b28; }
@@ -457,7 +457,7 @@ body.dark .always-sw { background: rgba(0,0,0,.25); } body.dark .always-sw .sw-t
 .ttg-msg { font-family: 'DofusBold'; font-size: 20px; min-height: 30px; color: #3a8a2a; } .ttg-msg.dup { color: #c0392b; }
 .booster.angry { animation: angry .5s; } @keyframes angry { 20%, 60% { transform: translateX(-8px) rotate(-1deg); } 40%, 80% { transform: translateX(8px) rotate(1deg); } }
 .window.modal.musha .content, .window.modal.dofawa .content { max-height: calc(86vh / var(--uiz, 1)); overflow-y: auto; }
-@media (max-height: 560px) { .musha-row canvas { width: 130px !important; height: 150px !important; } .tmap-mini { width: 150px; } .musha-bubble { font-size: 13px; padding: 8px 10px; min-height: 0; } .musha .start-row, .dofawa .start-row { margin-top: 4px; } .ttg-stage { height: 220px; } .ttg-pack { scale: .72; } .ttg-stage .ttg-card { scale: .75; } }
+@media (max-height: 560px) { .musha-row canvas { width: 130px !important; height: 150px !important; } .tmap-mini { width: 150px; } .musha-bubble { font-size: 14px; padding: 8px 12px; min-height: 0; } .musha .start-row, .dofawa .start-row { margin-top: 4px; } .ttg-stage { height: 220px; } .ttg-pack { scale: .72; } .ttg-stage .ttg-card { scale: .75; } }
 .trool .troll-wheel { position: relative; --ws: min(340px, calc(46vh / var(--uiz, 1))); width: var(--ws); height: var(--ws); margin: 4px auto; }   /* phones: the wheel shrinks with the screen height */
 .trool .troll-wheel > canvas { width: 100% !important; height: 100% !important; border-radius: 50%; box-shadow: 0 0 0 6px #3a2410, 0 0 26px rgba(255,200,80,.45); will-change: transform; }
 .trool .troll-ptr { position: absolute; left: 50%; top: -14px; transform: translateX(-50%); width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-top: 34px solid #ffd24a; filter: drop-shadow(0 2px 0 #3a2410) drop-shadow(0 0 6px #ffb020); }
@@ -1049,7 +1049,8 @@ body.dark .up-cards .up-card.sfusion { background: linear-gradient(#3e2a52, #2a1
 .sf-row { display: grid; grid-template-columns: auto auto auto auto minmax(0, 1fr); align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,.35); border: 2px solid #c8a46a; }
 .sf-row.done { border-color: #a060e0; box-shadow: 0 0 10px rgba(176,110,255,.45); } .sf-row .sf-plus { font: 18px 'DofusBold'; color: #6a3aa0; } .sf-row .sf-txt b { display: block; font-family: 'DofusBold'; font-size: 15px; } .sf-row .sf-txt small { display: block; color: var(--muted); }
 /* 0.96: a fusion's damage and cooldown (ui.js sfStats), in the shop's green for real numbers */
-.sf-detail .sf-stats { font-weight: bold; font-size: 13px; color: #2e7d32; margin: 2px 0 5px; } .sf-detail .sf-stats small { display: block; font-weight: normal; font-size: 11px; color: var(--muted); }
+.sf-detail .sf-stats { font-weight: bold; font-size: 13px; color: #2e7d32; margin: 2px 0 5px; } .sf-detail .sf-stats .sf-heal { display: block; color: #b0204a; } body.dark .sf-detail .sf-stats .sf-heal { color: #ff8fa8; }
+.sf-detail .sf-stats small { display: block; font-weight: normal; font-size: 11px; color: var(--muted); }
 body.dark .sf-detail .sf-stats { color: #9be29f; }
 .sf-row .sf-kind { font: 10px 'DofusBold'; text-transform: uppercase; letter-spacing: 1px; color: #fff; background: #8a4ad0; border-radius: 8px; padding: 1px 7px; margin-left: 6px; }
 body.dark .sf-row { background: rgba(0,0,0,.25); }
@@ -1328,29 +1329,29 @@ body.endgame .main .menu-buttons .btn.bloody::before { z-index: 2; }   /* (0.86:
 <body>
 <canvas id="game"></canvas>
 <div id="ui"></div>
-<script src="js/util.js?v=0.96"></script>
-<script src="js/assets.js?v=0.96"></script>
-<script src="js/audio.js?v=0.96"></script>
-<script src="js/spells.js?v=0.96"></script>
-<script src="js/game.js?v=0.96"></script>
-<script src="js/extras.js?v=0.96"></script>
-<script src="js/gspells.js?v=0.96"></script>
-<script src="js/weapons.js?v=0.96"></script>
-<script src="js/events.js?v=0.96"></script>
-<script src="js/bosses.js?v=0.96"></script>
-<script src="js/juice.js?v=0.96"></script>
-<script src="js/sfusions.js?v=0.96"></script>
-<script src="js/render.js?v=0.96"></script>
-<script src="js/pixi_render.js?v=0.96"></script>
-<script src="js/progress.js?v=0.96"></script>
-<script src="js/nav.js?v=0.96"></script>
-<script src="js/ui.js?v=0.96"></script>
-<script src="js/ui_events.js?v=0.96"></script>
-<script src="js/nowel.js?v=0.96"></script>
-<script src="js/ui_armory.js?v=0.96"></script>
-<script src="js/ui_controls.js?v=0.96"></script>
-<script src="js/ui_update.js?v=0.96"></script>
-<script src="js/tot.js?v=0.96"></script>
-<script src="js/main.js?v=0.96"></script>
+<script src="js/util.js?v=0.97"></script>
+<script src="js/assets.js?v=0.97"></script>
+<script src="js/audio.js?v=0.97"></script>
+<script src="js/spells.js?v=0.97"></script>
+<script src="js/game.js?v=0.97"></script>
+<script src="js/extras.js?v=0.97"></script>
+<script src="js/gspells.js?v=0.97"></script>
+<script src="js/weapons.js?v=0.97"></script>
+<script src="js/events.js?v=0.97"></script>
+<script src="js/bosses.js?v=0.97"></script>
+<script src="js/juice.js?v=0.97"></script>
+<script src="js/sfusions.js?v=0.97"></script>
+<script src="js/render.js?v=0.97"></script>
+<script src="js/pixi_render.js?v=0.97"></script>
+<script src="js/progress.js?v=0.97"></script>
+<script src="js/nav.js?v=0.97"></script>
+<script src="js/ui.js?v=0.97"></script>
+<script src="js/ui_events.js?v=0.97"></script>
+<script src="js/nowel.js?v=0.97"></script>
+<script src="js/ui_armory.js?v=0.97"></script>
+<script src="js/ui_controls.js?v=0.97"></script>
+<script src="js/ui_update.js?v=0.97"></script>
+<script src="js/tot.js?v=0.97"></script>
+<script src="js/main.js?v=0.97"></script>
 </body>
 </html>

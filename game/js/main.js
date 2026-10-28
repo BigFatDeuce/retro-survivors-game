@@ -10,8 +10,13 @@ const Input = {
       // keyboard layout from what the letter keys type: Q position typing 'a' (or W typing 'z') = AZERTY
       if (e.key && e.key.length === 1) { const k = e.key.toLowerCase(); if ((e.code === 'KeyQ' && k === 'a') || (e.code === 'KeyW' && k === 'z')) this.layout = 'azerty'; else if ((e.code === 'KeyQ' && k === 'q') || (e.code === 'KeyW' && k === 'w')) this.layout = 'qwerty'; }
       const tag = (e.target && e.target.tagName) || '';
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code) && tag !== 'INPUT') e.preventDefault();
+      // 0.97: typing in a field (the save code's box, a name, the search): the letters stay letters — no shortcut but Échap
+      // (E pressed the window's button, P and A closed it, Space was swallowed)
+      const typing = tag === 'TEXTAREA' || tag === 'SELECT' || (tag === 'INPUT' && !/^(checkbox|radio|range|button|submit|reset)$/.test(e.target.type)) || !!(e.target && e.target.isContentEditable);
+      if (typing) { if (e.code === 'Escape') Game.onKey(e); return; }
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'F1'].includes(e.code)) e.preventDefault();   // (F1: not the browser's help page)
       this.keys.add(e.code);
+      if (e.code === 'F1' && !e.repeat) { toggleTheme(); return; }   // 0.97: F1 = light / dark menus, anywhere (R3 on a pad: Nav.poll)
       if (Nav.key(e)) return;
       const live = Game.state === 'run' && Game.run && !Game.paused && !UI.modalOpen() && !e.repeat;
       if (live && (e.code === 'Space' || e.code === 'KeyE')) Game.run.player.dodge();           // dash: Space or E
@@ -31,11 +36,11 @@ const Input = {
         // tap on the movement-spell icon (left of the heart): switch those spells on / off
         if (Game.run && !UI.modalOpen() && Game.run.hudHit(t.clientX * Game.dpr, t.clientY * Game.dpr)) { Game.run.toggleMoveSpells(); continue; }
         { const A = Game.run && Game.run.hudAuto, x = t.clientX * Game.dpr, y = t.clientY * Game.dpr; if (A && !UI.modalOpen() && Math.hypot(x - A.x, y - A.y) < A.r * 1.3) { Game.toggleAutoPick(); continue; } }   // (0.34: the bread / kamas icon)
-        // double tap: dash towards the tapped spot
+        // double tap: dash the way the touch joystick points, as a pad's stick does (0.97: it went towards the tapped spot);
+        // no joystick held: the last direction walked (Player.dodge)
         const now = performance.now();
         if (this._lastTap && now - this._lastTap.t < 300 && Math.hypot(t.clientX - this._lastTap.x, t.clientY - this._lastTap.y) < 60 && Game.run && !UI.modalOpen()) {
-          const R = Game.run, px = (R.player.x - R.cam.x) * Game.zoom + Game.cw / 2, py = (R.player.y - 30 - R.cam.y) * Game.zoom + Game.ch / 2;
-          R.player.dodge(t.clientX * Game.dpr - px, t.clientY * Game.dpr - py); this._lastTap = null;
+          Game.run.player.dodge(); this._lastTap = null;
         }
         else this._lastTap = { t: now, x: t.clientX, y: t.clientY };
         if (this.touch.id === null) { this.touch = { active: true, used: true, id: t.identifier, sx: t.clientX * Game.dpr, sy: t.clientY * Game.dpr, dx: 0, dy: 0 }; }
@@ -203,6 +208,8 @@ const Game = {
       const S = Store.data, vis = C.maps.filter(m => !m.hidden); let top = -1;
       vis.forEach((m, i) => { if (S.unlocked.includes(m.id)) top = i; });
       let ch = false; for (let i = 0; i <= top; i++) if (!S.unlocked.includes(vis[i].id)) { S.unlocked.push(vis[i].id); ch = true; }
+      const nf = vis.findIndex(m => m.id === 'frigost');   // (0.97: Frigost came after Grobe: a profile that already won Grobe finds it open)
+      if (nf > 0 && (S.cleared || {})[vis[nf - 1].id] && !S.unlocked.includes('frigost')) { S.unlocked.push('frigost'); ch = true; }
       if (ch) Store.save();
     }
     UI.loading(0.5);
@@ -281,7 +288,7 @@ const Game = {
   setFxFlags() { const l = this.fxLevel(); this.lowFx = this.Q().fx === 0 || l !== 'full'; this.minFx = l === 'min'; },
   setFx(v) { Store.data.settings.fx = v; Store.save(); this.setFxFlags(); },
   // 0.95: three camera distances in the options, 10 % further / the usual one / 10 % closer, eased in ~0.4 s
-  zoomK() { const S = Store.data && Store.data.settings, z = S && S.zoom; return z === 'far' ? 0.9 : z === 'close' ? 1.1 : 1; },
+  zoomK() { const S = Store.data && Store.data.settings, z = S && S.zoom; return z === 'far' ? 0.8 : z === 'close' ? 1.2 : 1; },   // (0.97: ±20 %, was ±10 %)
   setZoom(v) { Store.data.settings.zoom = v; Store.save(); },
   applyZoom() { this.zoom = this.zoomBase * this._zk; this.viewW = this.cw / this.zoom; this.viewH = this.ch / this.zoom; },
   easeZoom(dt) { const k = this.zoomK(); if (this._zk === k) return; this._zk = Math.abs(k - this._zk) < 0.002 ? k : this._zk + (k - this._zk) * Math.min(1, dt * 9); this.applyZoom(); },

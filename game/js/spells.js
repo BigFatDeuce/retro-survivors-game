@@ -6,6 +6,7 @@ function spellParams(def, level) {
   for (let i = 0; i < level && i < def.lv.length; i++) Object.assign(p, def.lv[i]);
   return p;
 }
+const PULSE_LEECH_CAP = 0.12;   // a pulse's life steal heals at most this share of the max HP a wave (ui.js sfStats says it)
 const MAX_SPELL_LV = 4;   // (0.81: spells and weapons have 4 levels, was 6 — patch_081 merged their level steps)
 // the attacks whose rhythm ramps up during a run (lasting things — orbits, summons, traps, glyphs, auras, buffs — keep theirs)
 const RAMPED = new Set(['projectile', 'strike', 'melee', 'slam', 'line', 'beam', 'cone', 'pulse', 'bomb', 'toss', 'leap', 'dash', 'detonate']);
@@ -298,7 +299,7 @@ class SpellInst {
           else { m.kx += dx / d * kb * 4; m.ky += dy / d * kb * 4; }
           if (p.stun) m.stunUntil = Math.max(m.stunUntil, R.time + p.stun * (m.boss ? 0.2 : 1));
         }
-        if (p.leech && drained > 0) P.leechHeal(Math.min(st.maxHp * 0.12, drained * p.leech * (1 + st.healBonus)));
+        if (p.leech && drained > 0) P.leechHeal(Math.min(st.maxHp * PULSE_LEECH_CAP, drained * p.leech * (1 + st.healBonus)));
         R.rings.push({ x: P.x, y: P.y, r0: 10, r1: r, t0: R.time, dur: 0.48, color: p.color || (p.leech ? '#e0204a' : p.knock < 0 ? '#e04a2b' : '#ffcc33'), fill: 1 });   // (0.79: each class's own colour, content)
         R.fxAt(this.def.fx[0], P.x, P.y, { fit: r });
         if (p.shake) R.shake(p.shake);

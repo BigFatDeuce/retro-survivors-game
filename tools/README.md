@@ -75,7 +75,7 @@ Shared rules for builders:
 | tool | what it does |
 |---|---|
 | `patch_v20.py` | the base: applies v2.0 to `work/content_v19.json` (the published v1.9 content) |
-| `patch_020.py` … `patch_095.py` | one per version, each imports the previous one and changes `C` in memory; only the one run as a script writes content.json. Their docstrings say what each version changed |
+| `patch_020.py` … `patch_097.py` | one per version, each imports the previous one and changes `C` in memory; only the one run as a script writes content.json. Their docstrings say what each version changed |
 | `weapons060.py` | the 40 weapons (5 per type, real Retro names) |
 | `fusions060.py` | the spell fusions (3 per class) and their damage factors `CAL` |
 | `calib_fusions060.py [rounds]` | recomputes `CAL` in `fusions060.py` from the spell bench (`checks/sim_node.js BENCH=`) |
@@ -84,10 +84,12 @@ Shared rules for builders:
 | `text46_[abcd].json` | the short descriptions of 0.46 (spells, passives, items…) in 7 languages, read by `patch_041.py` |
 | `newzones20.py` | the Île des Naufragés and the helpers later zones use (`mon()`, `boss()`, `make_map`) |
 | `kwaknest068.py` | the secret Kwak nest zone (data; its world is `assets/build_flat068.py kwaknest`) |
+| `chouque097.py` | the treasure's Chouque (a pirate killed by Kack Sparo): his lines and his hints at the profile names (`**name**` drawn bold, quoted) |
+| `frigost097.py` | the Île de Frigost zone after Grobe: its monsters, bosses, waves (imported by `patch_097.py`; its world is `assets/build_frigost097.py`) |
 | `calc_amber081.py` | computes the amber XP curve (`run.amber`) — computed, not simulated |
 
 To change content: add the change to the newest patch if it belongs to the version being prepared, or create
-`patch_<new version>.py` (copy the header of `patch_095.py`: `import patch_095 as P`, `C, G, T, put_ui = P.C, …`,
+`patch_<new version>.py` (copy the header of `patch_097.py`: `import patch_097 as P`, `C, G, T, put_ui = P.C, …`,
 the `if __name__ == '__main__':` dump at the end). UI strings: `put_ui({'key': T(fr, en, de, es, it, nl, pt)})`. Never
 edit content.json by hand: the next run overwrites it.
 
@@ -153,7 +155,7 @@ Bestiary, cards, worlds, sound:
 | tool | what it does |
 |---|---|
 | `build_art21.py [A] [+gfx,…]`, `build_art38.py [gfx…]`, `build_ttg34.py` | bestiary artworks from client vectors / from the sprite when there is no artwork; TTG cards. Never stop `build_art21` during its repack (it deletes the atlases first: `git checkout -- game/assets/art/`) |
-| `RES=3.0 build_worlds20.py <world>…` | worlds rendered from client maps (4096-px tiles + `SPR.worlds`); `build_vlad51.py`, `build_grobe54.py`, `build_flat068.py zone…` compose the hand-made plains |
+| `RES=3.0 build_worlds20.py <world>…` | worlds rendered from client maps (4096-px tiles + `SPR.worlds`); `build_vlad51.py`, `build_grobe54.py`, `build_flat068.py zone…` compose the hand-made plains; `build_frigost097.py` the Île de Frigost (laid out by hand in quarters from the client's snow pieces, toned down) |
 | `decormask087.py <world>\|all` | each world's decor mask and depth map (ground effects under the scenery, characters behind trees) |
 | `build_minis071.py [world…]` | the zones' mini maps |
 | `build_sfx060.py [music names]` | sound effects (and whole music tracks) from the up-to-date client |

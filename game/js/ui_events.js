@@ -269,7 +269,7 @@ Object.assign(UI, {
   dofawaScene() {
     const D = Game.C.dofawa; if (!this.dofawaReady()) return;
     const stage = sheetStage(Game.C.totSprite, 300, 320, [['staticR'], ['walkR'], ['staticF'], ['runS'], ['staticR'], ['walkF']]);
-    const bubble = h('div', { class: 'musha-bubble tot' }), egg = h('div', { class: 'dofawa-egg' }, iconImg(D.icon, 96));
+    const bubble = h('div', { class: 'musha-bubble totb' }), egg = h('div', { class: 'dofawa-egg' }, iconImg(D.icon, 96));   // (0.97: 'totb', not 'tot': the ToT screen's '.tot { padding: 0 }' took the bubble's margins)
     const bar = h('i', { class: 'skip-bar' }), next = btn([T('dofawa_next'), bar], () => { if (!next.classList.contains('disabled')) say(i + 1); }, 'orange');
     let i = -1, timer = 0;
     const say = (n) => {

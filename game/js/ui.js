@@ -281,7 +281,8 @@ const UI = {
   // 0.92: some profile names play a little clip when saved or picked (assets/audio/fx, the music paused
   // meanwhile: Audio2.jingle fx). The whole name compared, without case, accents, spaces, hyphens or apostrophes
   NAME_EGGS: { bardella: 'bardella', jordan: 'bardella', lassalle: 'lassalle', zemmour: 'zemmour', meluche: 'meluche', jeanluc: 'meluche',
-    sardoche: 'sardoche', lisnard: 'lisnard', sarkozy: 'sarkozy', hollande: 'hollande', lepen: 'lepen', marine: 'marine', ntm: 'marine', macron: 'macron' },
+    sardoche: 'sardoche', lisnard: 'lisnard', sarkozy: 'sarkozy', hollande: 'hollande', lepen: 'lepen', marine: 'marine', ntm: 'marine', macron: 'macron',
+    messi: 'messi', morsay: 'morsay', booba: 'booba', biden: 'biden', trump: 'trump', wallah: 'wallah' },   // (0.97)
   nameKey(name) { return String(name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim().replace(/[\s\-'’_.]+/g, ''); },
   nameEgg(name) {
     const k = this.nameKey(name), clip = this.NAME_EGGS[k]; if (k === 'goultard') this.nameEggAch(); if (!clip) return false;   // (Goultard: his own egg, the menu — the achievement too)
@@ -334,17 +335,14 @@ const UI = {
   // closes the game: the desktop build closes its window; a browser only lets a script close a tab it opened itself
   quitGame() {
     Audio2.blip('click');
-    if (window.RSAndroid) { RSAndroid.quit(); return; }   // (0.94: the Android app, tools/android/MainActivity.java)
+    if (window.RSAndroid) { Audio2.halt(); RSAndroid.quit(); return; }   // (0.94: the Android app, tools/android/MainActivity.java)
     try { window.close(); } catch (e) { }
     setTimeout(() => { if (!window.closed) toast(T('quit_tab')); }, 250);
   },
   themeToggle() {
-    const S = Store.data, dark = () => S.settings.theme === 'dark';
-    const sw = h('span', { class: 'switch' + (dark() ? ' on' : '') });
+    const sw = h('span', { class: 'switch' + (Store.data.settings.theme === 'dark' ? ' on' : '') });
     const lab = h('span', {}, T('theme_dark'));
-    return h('button', { class: 'theme-btn', 'data-nav-x': 'home', title: T('theme_hint'), onclick: () => {
-      S.settings.theme = dark() ? 'light' : 'dark'; Store.save(); applyTheme(); sw.classList.toggle('on', dark()); Audio2.blip('click');
-    } }, lab, sw);
+    return h('button', { class: 'theme-btn', 'data-nav-x': 'home', title: T('theme_hint'), onclick: () => toggleTheme() }, lab, sw);   // (toggleTheme: F1 / R3 too)
   },
   flags() {
     return h('div', { class: 'flags', title: T('flags_hint') }, ...LANGS.map(lg => {
@@ -845,14 +843,16 @@ const UI = {
       Audio2.blip('click');
     }, 'orange');
     const use = btn('⌨ ' + T('save_code_use'), async () => {
+      if (pending === 'god') { Store.godMode(Game.C); pending = null; Audio2.blip('click'); toast(T('god_mode_on')); setTimeout(() => location.reload(), 900); return; }
       if (pending) { Store.importData(pending); pending = null; Audio2.blip('click'); toast(T('save_imported')); setTimeout(() => location.reload(), 700); return; }
+      if (/^\s*godmode\s*$/i.test(box.value)) { pending = 'god'; use.textContent = '⚠ ' + T('god_mode_confirm', { p: Store.pname(Store.prof) }); use.classList.add('danger'); return; }   // (0.97: the test code, Store.godMode)
       const r = await Store.parseCode(box.value);
       if (r.err) { Audio2.blip('wrong'); toast(T(r.err)); return; }
       pending = r.data; use.textContent = '⚠ ' + T('save_confirm', { p: Store.pname(Store.prof) }); use.classList.add('danger');
     });
     box.addEventListener('input', () => { if (pending) { pending = null; use.textContent = '⌨ ' + T('save_code_use'); use.classList.remove('danger'); } });
     const el = h('div', { class: 'window modal savecode' }, h('div', { class: 'title' }, '🔢 ' + T('save_code')),
-      h('div', { class: 'content' }, info, box, h('div', { class: 'start-row' }, copy, use, btn(T('back'), () => this.closeModal()))));
+      h('div', { class: 'content' }, info, box, h('div', { class: 'start-row' }, copy, use, (() => { const b = btn(T('back'), () => this.closeModal()); b.setAttribute('data-back', ''); return b; })())));
     box.placeholder = T('save_code_paste'); this.openModal(el);
   },
   // ------------------------------------------------ controls: keyboard, controller and touch, side by side
@@ -1397,14 +1397,18 @@ function shopSpellReal(sp, cls, lv, next) {
 }
 // 0.96: a fusion's damage and cooldown in the Armurerie, the game's own numbers (menuSpellParams at its spells' best
 // shop level, as SpellInst.shopK; a fusion is always at its top): per blow, x its count, per tick for an area, the reach of
-// its explosion, and a line when its effects add damage of their own (riders, the Cawottes)
+// its explosion, and a line when its effects add damage of their own (riders, the Cawottes); 0.97: its life steal (a
+// share of the damage dealt, a pulse's cap a wave) and its heal over time (a second in its cloud, while it lasts)
 const SF_EXTRA = ['rBurn', 'rPoison', 'rBleed', 'rBlast', 'rWeb', 'rCloud', 'rRock', 'rCraq', 'rChaos', 'sat'];
 function sfStats(f, cls) {
   const C = Game.C, SL = (Store.data && Store.data.spellLv) || {}, sp = C.spells[f.id], p = menuSpellParams(sp, cls, Math.max(...f.src.map(k => SL[k] || 0)));
   const n = x => (Math.round(x * 10) / 10).toLocaleString(LANG), parts = [];
   if (p.dmg) parts.push(`${T('p_dmg')} ${n(p.dmg)}${p.count > 1 ? ' × ' + p.count : ''}${p.tick ? ' / ' + n(p.tick) + '\u00a0s' : ''}${p.aoe ? ' (' + T('p_aoe') + ' ' + Math.round(p.aoe) + ')' : ''}`);
   if (p.perm) parts.push(`${T('p_duration')} ${T('permanent')}`); else if (p.cd) parts.push(`${T('p_cd')} ${n(p.cd)}\u00a0s`);
-  return h('div', { class: 'sf-stats' }, parts.join(' · '), SF_EXTRA.some(k => p[k]) ? h('small', null, T('sf_extra')) : null);
+  const pc = x => n(x * 100) + ' %', heal = [];
+  if (p.leech) heal.push(T('sf_leech', { n: pc(p.leech) }) + (sp.t === 'pulse' ? ' (' + T('sf_leech_cap', { n: pc(PULSE_LEECH_CAP) }) + ')' : ''));
+  if (p.heal && sp.t === 'pwcawotte') heal.push(T('sf_hot', { n: n(p.heal), d: n(p.duration) }));
+  return h('div', { class: 'sf-stats' }, parts.join(' · '), heal.length ? h('span', { class: 'sf-heal' }, heal.join(' · ')) : null, SF_EXTRA.some(k => p[k]) ? h('small', null, T('sf_extra')) : null);
 }
 // 0.60 (shop): one level of a characteristic in a run, at this shop level → the next one
 function passiveShopReal(p, lv, next) {

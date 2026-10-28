@@ -27,7 +27,7 @@ tools with UTF-8 (`python -X utf8 …` or `PYTHONUTF8=1`): the older ones open f
 ## Content pipeline → `game/data/content.json`
 
 ```
-work/content_v19.json → patch_v20 → patch_020 → patch_023 → … → patch_091 → patch_094 → patch_095 → content.json
+work/content_v19.json → patch_v20 → patch_020 → patch_023 → … → patch_091 → patch_094 → patch_095 → patch_096 → patch_097 → content.json
                         (tools/content/; each imports the previous one and changes C in memory)
 ```
 
@@ -38,7 +38,7 @@ work/content_v19.json → patch_v20 → patch_020 → patch_023 → … → patc
   only `if __name__ == '__main__':` writes the file. Data too big for a patch lives in a data module next to it
   (`weapons060.py`, `fusions060.py`, `credits079.py`…).
 - To change content: put the change in the newest patch when it belongs to the version being prepared, else add
-  `tools/content/patch_<version>.py` that imports the newest one (copy `patch_095.py`'s header and footer). Describe the
+  `tools/content/patch_<version>.py` that imports the newest one (copy `patch_097.py`'s header and footer). Describe the
   change in its docstring. Balance numbers are design decisions: change them only when asked.
 
 ## Asset pipeline → `game/assets/` + `game/data/sprites.json`
@@ -54,7 +54,7 @@ cropped, packed into atlases (≤ 4096 px) and described in `sprites.json` (writ
 | spell effects | `build_fx060`, `build_fxhd061`, `build_fist073`, `build_moon34`, `fix_whip54`, `build_aura20` | `assets/fx/`, `SPR.fx` |
 | icons | `build_icons20` (+ `merge`), `build_iconhd091`, `build_spellicons21`, `build_fusionicons060`, `build_globalicons*`, `build_staticons*`, … | `assets/ui/icons3*.webp` (pages), `icons2.webp`, `ui/hd/` |
 | bestiary, cards | `build_art21`, `build_art38`, `build_ttg34` | `assets/art/`, `assets/ttg/` |
-| worlds | `build_worlds20` (client maps), `build_vlad51`, `build_grobe54`, `build_flat068` (composed plains), `decormask087`, `build_minis071` | `assets/worlds/<world>_<x>_<y>.webp` (4096-px tiles), `_decor` / `_depth` masks, `SPR.worlds` |
+| worlds | `build_worlds20` (client maps), `build_vlad51`, `build_grobe54`, `build_flat068`, `build_frigost097` (composed plains), `decormask087`, `build_minis071` | `assets/worlds/<world>_<x>_<y>.webp` (4096-px tiles), `_decor` / `_depth` masks, `SPR.worlds` |
 | sounds, music | `build_sfx060`, `fix_sounds27` (+ `lib/sndanim27`), `music55` | `assets/audio/`, `data/sounds.json` |
 
 Order for a class sprite rebuild (e.g. after a client change): `build_move060 chars <sid>` → `build_still063 <sid>` →
@@ -68,7 +68,7 @@ Order for a class sprite rebuild (e.g. after a client change): `build_move060 ch
   window with a wavy cross-fade (`seam_alpha`), `fix_ground`, `blend_open_sea`, then objects sorted by depth.
   Dofus cell geometry: CW 53, CHW 26.5, CHH 13.5, LH 20.
 - `WATER` worlds redraw their water from the client's own pieces (`client_water`); the slow-water mask is
-  `SPR.worlds[w].water`. Vlad, Goultard, Grobe, Koalak, Otomaï jungle, Pandala, Nowel and the Kwak nest are **composed
+  `SPR.worlds[w].water`. Vlad, Goultard, Grobe, Koalak, Otomaï jungle, Pandala, Nowel, Frigost and the Kwak nest are **composed
   plains** made of client pieces (`inset` keeps the player out of the forest border).
 - `decormask087.py` writes each world's decor mask (tall objects: ground effects go under them) and depth map
   (characters behind trees) — the world builders call it for their objects.

@@ -83,7 +83,8 @@ Last, the script offers the public repository's **Releases** page for the versio
   and the three manuals; a build of another version is not offered, and a build older than the last committed change
   to `game/` is flagged (rebuild it first if that change should be in);
 - the release `v<version>` is created (a pre-release, the beta) with the changelog's section of that version and how to
-  install on each system; when it exists, only the files it lacks are sent (an upload cut off is sent again);
+  install on each system (0.97: the game's French names in it — spells, classes, monsters, zones, items — become their
+  official English names from content.json, `english_names`; the accented words left are listed on screen); when it exists, only the files it lacks are sent (an upload cut off is sent again);
 - the login: GitHub CLI (`gh`) when installed, else the one Git already keeps for github.com (Git Credential Manager),
   never shown nor saved. If GitHub refuses it: `winget install GitHub.cli`, `gh auth login`, run again.
 About 3 GB to send for a full release: it takes a while. `--no-release` skips this part.

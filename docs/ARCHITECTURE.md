@@ -7,7 +7,7 @@ How the game in `game/` works and where to change what. The data it reads is mad
 
 - A *Vampire Survivors*-like made with the assets of the **Dofus Retro** client (Ankama). The player picks one of 15
   Dofus classes (Féca, Osamodas, Enutrof, Sram, Xélor, Ecaflip, Eniripsa, Iop, Crâ, Sadida, Sacrieur, Pandawa,
-  Roublard, Brigandin = id `bandit`, Otomaï) and one of 19 zones, and survives 10 minutes of monster waves. Spells cast
+  Roublard, Brigandin = id `bandit`, Otomaï) and one of 20 zones, and survives 10 minutes of monster waves. Spells cast
   themselves; every level-up offers a choice (spell, weapon, characteristic, fusion…). Bosses, Dofus eggs, relics,
   random events, ToT's quiz, a shop, achievements, Hard and Endless modes. The UI is translated into 7 languages
   (fr, en, de, es, it, nl, pt).
@@ -196,7 +196,7 @@ forgotten migration breaks players' profiles. Export / import: Options → profi
 | `passives[]` | characteristics: `id, name, icon, max, stat, per` (or `perShop`), `desc` |
 | `weapons[]`, `uniqueWeapons[]`, `weaponEvo` | the 8 weapon types; 40 unique weapons (`of` = type, `blood` = vampiric) |
 | `monsters{id}`, `bosses{id}` | `hp, dmg, speed, xp, beh, sprite (sheet key), gfx, scale, attacks, abilities…` — 223 / 64 |
-| `maps[]` | 19 zones: `id, name, world, music, boss_music, lvl, waves, events, bosses, tier, hidden, unlockBy, hardOnly…` |
+| `maps[]` | 20 zones: `id, name, world, music, boss_music, lvl, waves, events, bosses, tier, hidden, unlockBy, hardOnly…` |
 | `run` | the global balance of a run (duration, growth, ambers, caps…) — balance is a design decision |
 | `ui{lang:{key:text}}`, `tips` | ~650 strings × 7 languages; loading tips |
 | `relics, dofus, achievements (85), scrolls, drops, randEvents, archi, infinite, elites, tmap, ttg, portal, merchant, hard, shields, hats, capes, pets…` | the other systems |
@@ -222,6 +222,10 @@ forgotten migration breaks players' profiles. Export / import: Options → profi
 `spells=fouet:4,prouts` (spells at a level), `lv=`, `hat=16_7&cape=17_48&pet=18_1&shield=…`, `tot=1`, `portal=1`,
 `tmap=1|<zone>`, `drago=1`, `manuel=1`, `cd=1` (keep the countdown with autostart), `q=sd|hd|uhd|k4`, `pixi=0|1`,
 `kwak=1`, `tofu=1`, `bot=1`, `nodraw=1`, `speed=`, `fx=full|low|min`, `gany=<zone|hard>` (a Ganymède scene), `tuto=1` (the zone tutorial in an autostart run).
+
+The test code **GODMODE** (Options > save code, `Store.godMode`) gives the current profile everything: every zone open
+and won (secret ones, Difficile), every shop line at its top, every look, Dofus, relic, achievement, soul, TTG card,
+unique weapon and fusion, the bestiary seen, 9 999 999 kamas. It adds, it takes nothing away.
 
 ## Known traps (already paid for)
 

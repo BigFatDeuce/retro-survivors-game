@@ -1,7 +1,65 @@
 # Changelog (player-visible changes)
 
 From the Git history and the technical notes. The version shown in
-game is **0.96** (0.94 was never released on its own: its changes come with 0.95).
+game is **0.97** (0.94 was never released on its own: its changes come with 0.95).
+
+## 0.97
+
+New zone
+- **Île de Frigost** (zone 17, right after L'île de Grobe, opens when Grobe is won — already open if you won Grobe
+  before): a snowy island at Grobe's difficulty, a little over it. A village with its keep, ice towers and crystal lamps,
+  a frozen lake, the lost pines' wood and a crevasse of ice blocks. Its monsters are Frigost's from the Dofus Retro
+  files: the Boufmouths (Bouftonmouth, Boufmouth, Boufmouth de guerre), the Bulbeneige, the Épouvantail de Frostiz,
+  the Tremble Ensorcelé, the Craqueboule d'Obsidienne, the Dévoreur de Poisskaille, with the Kanigrou hivernal and the
+  Sakai Firefoux; its bosses the Boufmouth légendaire, the Abominable Yiti and Royalmouth. Its own music, its own
+  boss music, a treasure for Musha's maps.
+
+Treasures
+- **The Chouque's ghost** has a new story: a pirate captain thrown overboard by a certain Kack Sparo, who hid his
+  treasures all over the World of Twelve. New lines, his own music while he talks, and his hints are easier to read.
+- A dug treasure now also holds, one time in two, a **shield** or a **Dofus** you don't have yet.
+- More profile names hide a little secret.
+
+Gameplay
+- **Bague Houx**, a new rare object on the ground (three times rarer than a spell scroll like Flamiche): picked up, it
+  gives one more reroll for your level-up choices, on top of the ones you have.
+
+Look and feel
+- The dialogue bubbles of ToT, Ganymède, Musha and Dark Vlad use the rounded font of the tips, and ToT's bubble has
+  its margins back (its text touched the edges).
+- Heals that land together show one green number that adds up (the Cawotte's heals wrote two numbers on top of each
+  other).
+- A hat put on in the shop or bought from the travelling merchant gives the Iop his short hair at once (his long hair
+  stayed until the next run).
+
+Texts
+- Tips brought up to date: the Dofus drop from a few bosses each, elites can drop relics, the treasure maps come from
+  Jorbak, a fusion only needs your weapon at its top level. The loading screen's first tips are current ones, in every
+  language.
+- Translations added where they were missing (a few hats, pets, shields, Archimonsters and a TTG card in German,
+  Italian, Dutch or Portuguese; the Frigost monsters in Dutch and Portuguese).
+
+Android
+- Closing the app stops the music and the sounds at once (they went on for a few seconds).
+
+Options
+- Typing in the save code box (or any text field) no longer triggers the keyboard shortcuts: E, P, A no longer press a
+  button or close the window; Échap closes it.
+- **Camera**: the far and close settings zoom 20 % out / in (they did 10 %).
+
+Controls
+- **Phone / tablet**: the double tap dashes the way the joystick points, as a controller's stick does (it went towards
+  the tapped spot); with no joystick held, the way you last walked.
+- **F1** (keyboard) and **R3** (the right stick's click, controller) switch between the light and dark menus.
+
+Gameplay
+- **Potagew Pwoutant** (Pwout de Cawotte + Cawotte fusion): its four Cawottes now stay planted where they spring up,
+  like traps, instead of following you. It comes back half as often (10.5 s), and each of its blows and heals is twice
+  as strong (same damage and healing over a minute). Its cloud also heals your summons that monsters can hurt.
+
+Armoury
+- **Fusions tab**: the fusions that heal show it — life steal (Mot Drainant, Transfert de Vie: a share of the damage
+  dealt) and heal over time (Potagew Pwoutant: HP a second in its cloud).
 
 ## 0.96
 

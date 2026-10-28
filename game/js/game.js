@@ -99,7 +99,8 @@ class Player {
     const st = this.run.stats; const before = this.hp;
     this.hp = Math.min(st.maxHp, this.hp + h);
     const d = this.hp - before;
-    if (d >= 1 && !quiet) this.run.text(this.x, this.y - 70, '+' + Math.round(d), '#3ddc5a', 15);
+    if (d >= 1 && !quiet) this.run.healText(d);
+    return d;
   }
   update(dt, input) {
     const R = this.run, st = R.stats;
@@ -451,6 +452,13 @@ class Run {
   // ------------------------------------------------ helpers
   chat(msg, color = '#fff') { const l = this.chats[this.chats.length - 1]; if (l && l.msg === msg && l.t === this.time) return; this.chats.push({ msg, color, t: this.time }); if (this.chats.length > 7) this.chats.shift(); }
   text(x, y, s, color, size = 14, life = 0.9) { if (this.texts.length < ((typeof Game !== 'undefined' && Game.lowFx) ? (Game.minFx ? 30 : 45) : typeof Game !== 'undefined' && Game.Q && Game.Q().fx === 1 ? 70 : 100)) { const o = { x, y, s, color, size, t: 0, life }; this.texts.push(o); return o; } return null; }
+  // 0.97: the heals that land together (the Cawotte's tick, Potagew Pwoutant's cloud, a potion…) add up in one green number
+  // over the character for 0.4 s — each wrote its own at the same spot, and the Cawotte's two (heal + its own) overlapped
+  healText(v) {
+    const P = this.player, o = this._hText, f = n => '+' + (n < 10 ? Math.round(n * 10) / 10 : Math.round(n));
+    if (o && o.t < 0.4 && this.texts.includes(o)) { o.v += v; o.s = f(o.v); o.x = P.x; return o; }
+    const n = this.text(P.x, P.y - 70, f(v), '#3ddc5a', 15); if (n) n.v = v; this._hText = n; return n;
+  }
   shake(a) { if (Store.data.settings.shake) this.shakeAmt = Math.min(7, this.shakeAmt + a * 0.5); }   // 0.22: half as strong
   fxAt(id, x, y, o = {}) {
     const sh = FxSheets.get(id); if (!sh) return;
@@ -775,6 +783,7 @@ class Run {
     if (Math.random() < 0.0012 * IK) this.dropPickup('rappel', m.x, m.y);
     if (Math.random() < 0.0008 * IK) this.dropPickup('fee', m.x, m.y);
     if (Math.random() < 0.0009 * IK) this.dropPickup('sablier', m.x, m.y);
+    { const H = this.C.houx; if (H && Math.random() < H.rate * IK) this.dropPickup('houx', m.x, m.y); }   // 0.97: the Bague Houx (C.houx.rate: a third of a spell scroll's)
     for (const k in this.C.drops) { const dr = this.C.drops[k]; if (Math.random() < dr.rate * IK && !this.pickups.some(p => p.kind === 'power' && p.v === k)) this.dropPickup('power', m.x, m.y, k); }
     if (m.elite && !m.noChest) { this.dropPickup('chest', m.x, m.y, 1); }
     if (m.elite) this.maybeEliteRelic(m);   // 0.60: elites may drop a relic (extras.js)
@@ -1581,6 +1590,7 @@ class Run {
         this.chat(prize.kind === 'kamas' ? T('tailor_kamas', { n: prize.v }) : T('tailor_got', { n: L(prize.item.name) }), '#ff9cf0');
         Audio2.ui('item', 0.8); if (typeof Game !== 'undefined' && Game.tailorWin) Game.tailorWin(prize);
       } break;
+      case 'houx': this.rerolls++; this.chat(T('houx_got', { n: this.rerolls }), '#7fe08a'); this.banner(L(this.C.houx.name), '#7fe08a'); Audio2.ui('item', 0.8); break;   // 0.97: one more reroll, added to the run's (UI.levelUpMenu)
       case 'sablier': this.freezeUntil = this.time + 8; this.chat(T('sandglass'), '#9fe0ff'); this.banner(T('time_stops'), '#9fe0ff'); Audio2.spell(this.C.spells.sablier_xelor, 0.8); break;
       case 'power': this.activatePower(p.v); break;
       case 'dofus': {   // 0.26: the 'item get' show first, then the Dofus (events.js)
@@ -1944,7 +1954,7 @@ const SFX_DIE = {
   tikokoko: 'Palmifleur_Die', kokoko: 'Palmifleur_Die', nodkoko: 'Palmifleur_Die', boomba: 'Musafa_Die', nakunbra: 'Sergent_Zoth_Die', canon: 'Tonneau_Die', coffre: 'Tonneau_Die',
 };
 // 0.92: a drop's room on the ground (world px, its picture's half-size), Run.placeDrop
-const DROP_R = { kama: 8, bread: 11, chest: 22, nowelgift: 30, booster: 18, manuel: 18, tmap: 16, dofus: 16, relic: 16, power: 13, plumec: 14, trool: 16, kamaboost: 13, rappel: 13, fee: 13, sablier: 13 };
+const DROP_R = { kama: 8, bread: 11, chest: 22, nowelgift: 30, booster: 18, manuel: 18, tmap: 16, dofus: 16, relic: 16, power: 13, plumec: 14, trool: 16, kamaboost: 13, rappel: 13, fee: 13, sablier: 13, houx: 13 };
 const SFX_BOSS_DIE = { le_chouque: 'Le_Flib_Die', flib_capitaine: 'Le_Flib_Die', boombata: 'Musafa_Die', chene_mou: 'Fecorce_Die', minotoror: 'Kimbo_Die', minotot: 'Kimbo_Die', dark_vlad: 'Tynril_Die', wa_wabbit: 'Rasboul_Majeur_Die', dragon_cochon: 'Kimbo_Die', bouftou_royal: 'Bitouf_Des_Plaines_Die' };
 const SFX_DIE_ALL = [...new Set([...Object.values(SFX_DIE), ...Object.values(SFX_BOSS_DIE), 'Kralamour_Die', 'Tynril_Die'])];
 function dieSoundFor(d) {

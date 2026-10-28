@@ -10,6 +10,15 @@ const Audio2 = {
       this.sfxGain = this.ctx.createGain(); this.sfxGain.gain.value = this.sfxVol; this.sfxGain.connect(this.ctx.destination);
     } catch (e) { this.ctx = null; }
   },
+  // 0.97 (the APK's music went on ~5 s after the app was closed): every sound stops at once, nothing faded — a fade
+  // runs on requestAnimationFrame, which stops with a hidden page, so a track fading out kept playing; resume() brings
+  // the wanted music back (a class theme playing is dropped, the music it ducked comes back instead)
+  halt() {
+    try { if (this.ctx && this.ctx.state === 'running') this.ctx.suspend(); } catch (e) { }
+    const j = this._jingle; if (j) { this._jingle = null; j._want = false; this._ducked = false; }
+    for (const a of this._els || []) { a._fadeTok = (a._fadeTok || 0) + 1; try { a.pause(); } catch (e) { } }
+  },
+  track(a) { const s = (this._els = this._els || new Set()); for (const e of s) if (e.paused && !e._want && e !== this.music) s.delete(e); s.add(a); return a; },   // (the media elements alive, for halt)
   resume() { if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); if (this.music && this.music.paused && this.wantMusic && !this._ducked) { this.music._want = true; this.music.play().catch(() => { }); } },
   setVolumes(m, s) {
     this.musicVol = m; this.sfxVol = s;
@@ -191,7 +200,7 @@ const Audio2 = {
   // minor arpeggio on soft bells over a dark string pad, in a little reverb) and two last heartbeats, the second weaker
   // 0.71: a one-off sound file (assets/audio/fx/<name>.mp3) at the effects' volume (the Goultard laugh, the death easter egg)
   fxFile(name, vol = 1) {
-    try { const a = new Audio('assets/audio/fx/' + name + '.mp3?v=' + (typeof BUILD !== 'undefined' ? BUILD : '')); a.volume = Math.max(0, Math.min(1, vol * (this.sfxVol === undefined ? 1 : this.sfxVol))); const p = a.play(); if (p) p.catch(() => { }); } catch (e) { }
+    try { const a = this.track(new Audio('assets/audio/fx/' + name + '.mp3?v=' + (typeof BUILD !== 'undefined' ? BUILD : ''))); a.volume = Math.max(0, Math.min(1, vol * (this.sfxVol === undefined ? 1 : this.sfxVol))); const p = a.play(); if (p) p.catch(() => { }); } catch (e) { }
   },
   deathSfx() {
     if (Math.random() < 1 / 15) { this.fxFile('death_cough', 1); return; }   // (0.71: an easter egg one death in 15)
@@ -337,7 +346,7 @@ const Audio2 = {
   },
   // media element with a blob: fallback for sandboxes that refuse direct media loads
   mediaEl(url) {
-    const a = new Audio(); a.preload = 'auto'; a._want = false;
+    const a = this.track(new Audio()); a.preload = 'auto'; a._want = false;
     let triedBlob = false;
     a.addEventListener('error', () => {
       if (triedBlob) return; triedBlob = true;

@@ -34,7 +34,7 @@ enough, to face the bosses, the Archmonsters and the events the zone throws at y
 the kamas you earned to grow stronger for the next run.
 
 Everything you see and hear comes from the Dofus Retro client: the classes' animations, the monsters, the maps, the
-spells' effects, the sounds and the music.
+spells' effects, the sounds and the music. The Dofus music is by **Guillaume Pladys**.
 
 | | |
 |:---:|:---:|
@@ -49,8 +49,8 @@ spells' effects, the sounds and the music.
 
 - **15 classes** — Feca, Osamodas, Enutrof, Sram, Xelor, Ecaflip, Eniripsa, Iop, Cra, Sadida, Sacrier, Pandawa, Rogue,
   Imp and Otomai — each with its own spells, passive and playstyle (**145 spells** in all).
-- **19 zones**, from Astrub's plains to Pandala, Otomai's island, the Minotoror's labyrinth and beyond, each with its own
-  monsters, boss and music; **224 monsters**, **64 bosses** and **142 Archmonsters** to hunt.
+- **20 zones**, from Astrub's plains to Pandala, Otomai's island, the Minotoror's labyrinth and beyond, each with its own
+  monsters, boss and music; **234 monsters**, **67 bosses** and **142 Archmonsters** to hunt.
 - **Spell fusions**, **10 global spells**, **40 unique weapons**, **20 relics**, the **6 Dofus** to find, scrolls and
   characteristics to raise between runs.
 - **Random events**: eclipses, invasions, kama rains, time stops… and rare visitors such as the Tofuzmo or Jorbak, the
@@ -59,6 +59,8 @@ spells' effects, the sounds and the music.
 - **A shop** of more than **1,000 cosmetics** — 369 hats, 272 capes, 241 shields and 172 pets — with a live preview.
 - **Keyboard, gamepad or touch**; a bestiary, an armoury, statistics, leaderboards, a hard mode and an endless mode.
 - **7 languages**: English, Français, Deutsch, Español, Italiano, Nederlands, Português.
+- **A lot of content, and a lot of secrets**: hidden zones, rare encounters and Easter eggs everywhere — some of them
+  you will only find by looking where nobody looks.
 
 <p align="center">
   <img src="media/classes.jpg" alt="Choose your class and your zone" width="49%">
@@ -116,7 +118,8 @@ before sending one.
 
 - **Retro Survivors** is an **unofficial fan project**, free and non-commercial. It is not affiliated with or endorsed
   by Ankama.
-- **Dofus**, **Dofus Retro**, their universe, characters, pictures, sounds and music are © **Ankama Games**.
+- **Dofus**, **Dofus Retro**, their universe, characters, pictures, sounds and music are © **Ankama Games**. The Dofus
+  music was composed by **Guillaume Pladys**.
 - The **code** of this repository is released under the [MIT licence](LICENSE). The licence does not cover Ankama's
   assets found in `game/assets/` and `work/`.
 - [PixiJS](https://github.com/pixijs/pixijs) (MIT), the [Cinzel](https://fonts.google.com/specimen/Cinzel) and

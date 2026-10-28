@@ -9,6 +9,7 @@ const CTL_ACT = {   // action -> colour, label key
   move: ['#4caf50', 'ctl_move'], dash: ['#f08c1e', 'ctl_dash'], spells: ['#9b59d0', 'ctl_movespells'], pause: ['#d64545', 'ctl_pause'],
   levelup: ['#3d8ee0', 'ctl_levelup'], reroll: ['#d9a400', 'ctl_reroll'], menus: ['#2a9d8f', 'ctl_menus'], full: ['#8a7a66', 'ctl_fullscreen'],
   auto: ['#c0662b', 'ctl_auto'],   // 0.34: the bread / kamas auto-choice
+  theme: ['#6f8fa8', 'ctl_theme'],   // 0.97: light / dark menus (F1, R3)
 };
 // physical keys (event.code, width in key units); the game reads codes, so the AZERTY / QWERTY switch only renames
 const KB_ROWS = [
@@ -20,12 +21,12 @@ const KB_ROWS = [
   [['Fn', 1], ['ControlLeft', 1], ['AltLeft', 1], ['MetaLeft', 1.25], ['Space', 5], ['MetaRight', 1.25], ['AltRight', 1], ['ArrowLeft', 1], ['ArrowUD', 1], ['ArrowRight', 1]],
 ];
 const KB_USE = { KeyW: 'move', KeyA: 'move', KeyS: 'move', KeyD: 'move', ArrowLeft: 'move', ArrowUp: 'move', ArrowDown: 'move', ArrowRight: 'move',
-  Space: 'dash', KeyE: 'dash', KeyQ: 'spells', Escape: 'pause', KeyP: 'pause', KeyR: 'auto', KeyF: 'full', Enter: 'menus' };   // (R: auto-choice in a run, reroll on the level-up screen)
+  Space: 'dash', KeyE: 'dash', KeyQ: 'spells', Escape: 'pause', KeyP: 'pause', KeyR: 'auto', KeyF: 'full', Enter: 'menus', F1: 'theme' };   // (R: auto-choice in a run, reroll on the level-up screen)
 const KB_AZ = { KeyQ: 'A', KeyW: 'Z', KeyA: 'Q', KeyZ: 'W' };
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 function kbLabel(code, az) {
   if (code === 'Space') return T('ctl_space'); if (code === 'Escape') return T('ctl_esc'); if (code === 'Enter') return T('ctl_enter') + ' ↵';
-  if (code.startsWith('Digit')) return code.slice(5); if (code.startsWith('Key')) return (az && KB_AZ[code]) || code.slice(3);
+  if (/^F\d+$/.test(code)) return code; if (code.startsWith('Digit')) return code.slice(5); if (code.startsWith('Key')) return (az && KB_AZ[code]) || code.slice(3);
   return { ArrowLeft: '◀', ArrowRight: '▶', ArrowUp: '▲', ArrowDown: '▼' }[code] || '';
 }
 // a darker shade of a #rrggbb colour (the keys' and buttons' sides)
@@ -100,7 +101,7 @@ function padSvg() {
   <rect x="404" y="290" width="46" height="30" rx="15" fill="#24241f" stroke="#0e0e0c" stroke-width="3.5"/><text x="427" y="313" class="w s" style="fill:${c('full')}">⧉</text>
   <rect x="550" y="290" width="46" height="30" rx="15" fill="#24241f" stroke="#0e0e0c" stroke-width="3.5"/><text x="573" y="313" class="w s" style="fill:${c('pause')}">≡</text>
   ${stick(255, 300, c('move'))}
-  ${stick(640, 440, null)}
+  ${stick(640, 440, c('theme'))}<text x="640" y="451" class="w s" style="fill:${c('theme')}">R3</text>
   <circle cx="362" cy="440" r="80" fill="#1e2414" stroke="#0e1208" stroke-width="5"/>
   <path d="M340 382 h44 v36 h36 v44 h-36 v36 h-44 v-36 h-36 v-44 h36 z" fill="#2c2c28" stroke="${c('move')}" stroke-width="6" stroke-linejoin="round"/>
   <path d="M340 382 h44 v36 h36 v10 h-116 v-10 h36 z" fill="#fff" opacity=".12"/>
@@ -130,7 +131,8 @@ function phoneHtml() {
       <circle cx="345" cy="640" r="62" fill="${c('move')}" stroke="#fff" stroke-width="6"/>
       <path d="M352 700 q34 72 18 160 l-72 0 q-10 -52 -34 -88 q-10 -24 14 -28 q18 0 28 16 l0 -88 q0 -24 23 -24 q23 0 23 24 z" fill="#ffe0c0" stroke="#5a3a20" stroke-width="7"/>
       <circle cx="1150" cy="520" r="34" fill="${c('dash')}" stroke="#fff" stroke-width="5"/><circle cx="1150" cy="520" r="66" fill="none" stroke="${c('dash')}" stroke-width="8"/><circle cx="1150" cy="520" r="98" fill="none" stroke="${c('dash')}" stroke-width="6" opacity=".55"/>
-      <path d="M1100 500 L 900 470" stroke="${c('dash')}" stroke-width="8" stroke-linecap="round" stroke-dasharray="4 18"/>
+      <path d="M900 450 L 1050 314" stroke="#fff" stroke-width="24" stroke-linecap="round"/><path d="M900 450 L 1050 314" stroke="${c('dash')}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M1085 282 L1067 344 L1021 294 Z" fill="${c('dash')}" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
     </svg></div></div>`;
 }
 Object.assign(UI, {
@@ -149,13 +151,13 @@ Object.assign(UI, {
         const fill = () => { legend.innerHTML = ''; legend.append(
           leg('move', k(...mv()), k('/'), k('▲', '◀', '▼', '▶'), txt(' · ' + T('ctl_mouse'))), leg('dash', k(T('ctl_space'), '/', 'E')), leg('spells', k(az ? 'A' : 'Q'), txt(' · ' + T('ctl_clickicon'))),
           leg('pause', k(T('ctl_esc'), '/', 'P')), leg('levelup', k('▲', '◀', '▼', '▶'), txt(' · '), k(T('ctl_enter'))), leg('auto', k('R'), txt(' · ' + T('ctl_clickicon'))),
-          leg('full', k('F')), leg('menus', k(...mv()), k('/'), k('▲', '▼'), txt(' · '), k(T('ctl_enter')), txt(' · ' + T('ctl_back') + ' '), k(az ? 'A' : 'Q', '/', T('ctl_esc')))); };
+          leg('full', k('F')), leg('theme', k('F1')), leg('menus', k(...mv()), k('/'), k('▲', '▼'), txt(' · '), k(T('ctl_enter')), txt(' · ' + T('ctl_back') + ' '), k(az ? 'A' : 'Q', '/', T('ctl_esc')))); };
         const sw = h('div', { class: 'ctl-switch' }, ...['AZERTY', 'QWERTY'].map(n => { const b = btn(n, () => { az = n === 'AZERTY'; Input.layout = az ? 'azerty' : 'qwerty'; dev.innerHTML = kbSvg(az); fill(); sw.querySelectorAll('.btn').forEach(e => e.classList.toggle('active', e === b)); }, (n === 'AZERTY') === az ? 'active' : ''); return b; }));
         fill(); body.append(h('div', { class: 'ctl-kbrow' }, sw, dev, art(mouseSvg(), 'ctl-mouse')), legend);
       },
       pad: () => body.append(h('div', { class: 'ctl-side' }, art(padSvg()), h('div', { class: 'ctl-legend' },
         leg('move', txt(T('ctl_lstick')), k('/'), txt(T('ctl_dpad'))), leg('dash', k('RB', '/', 'RT')), leg('spells', k('LB', '/', 'LT')), leg('pause', k('Menu ≡')),
-        leg('levelup', k('A')), leg('auto', k('Y'), txt(' (' + T('ctl_inrun') + ')')), leg('menus', k('A'), txt(' · ' + T('ctl_back') + ' '), k('B'), txt(' · ' + T('ctl_tabs') + ' '), k('LB', 'RB')), leg('full', k('View ⧉'))))),
+        leg('levelup', k('A')), leg('auto', k('Y'), txt(' (' + T('ctl_inrun') + ')')), leg('menus', k('A'), txt(' · ' + T('ctl_back') + ' '), k('B'), txt(' · ' + T('ctl_tabs') + ' '), k('LB', 'RB')), leg('full', k('View ⧉')), leg('theme', k('R3'))))),
       touch: () => body.append(h('div', { class: 'ctl-side phone' }, art(phoneHtml()), h('div', { class: 'ctl-legend' },
         leg('move', txt(T('ctl_drag'))), leg('dash', txt(T('ctl_dtap'))), leg('spells', txt(T('ctl_icon'))), leg('pause', txt(T('ctl_pausebtn'))), leg('levelup', txt(T('ctl_card'))), leg('auto', txt(T('ctl_autotap')))))),
     };

@@ -118,11 +118,26 @@ public class MainActivity extends Activity {
         return super.onKeyDown(code, e);
     }
 
-    // in the background: the run paused, the sounds stopped (the game's own pause on a hidden page, Audio2)
+    // in the background: the run paused, every sound stopped at once (Audio2.halt: the music, a track still fading out, a
+    // class theme, the one-off clips, Web Audio — 0.97: only the current track was paused, the others played on)
+    static final String HALT = "(()=>{try{if(window.Game&&Game.autoPause)Game.autoPause();if(window.Audio2)Audio2.halt();}catch(e){}})()";
     @Override
     protected void onPause() {
-        web.evaluateJavascript("(()=>{try{if(window.Game&&Game.autoPause)Game.autoPause();if(window.Audio2){if(Audio2.ctx)Audio2.ctx.suspend();if(Audio2.music)Audio2.music.pause();}}catch(e){}})()", null);
-        web.onPause(); super.onPause();
+        if (web != null) { web.evaluateJavascript(HALT, null); web.onPause(); }
+        super.onPause();
+    }
+
+    // 0.97 (the music went on ~5 s after the app was closed): the activity is gone, so is its WebView — destroyed now, its
+    // media players with it, instead of playing on until Android ends the process
+    @Override
+    protected void onDestroy() {
+        if (web != null) {
+            web.evaluateJavascript(HALT, null);
+            web.stopLoading(); web.loadUrl("about:blank"); web.onPause();
+            if (web.getParent() instanceof android.view.ViewGroup) ((android.view.ViewGroup) web.getParent()).removeView(web);
+            web.removeAllViews(); web.destroy(); web = null;
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -134,6 +149,6 @@ public class MainActivity extends Activity {
     // the game's 'Quitter' button (UI.quitGame) closes the app
     class Bridge {
         @JavascriptInterface
-        public void quit() { runOnUiThread(() -> finishAndRemoveTask()); }
+        public void quit() { runOnUiThread(() -> { if (web != null) { web.evaluateJavascript(HALT, null); web.onPause(); } finishAndRemoveTask(); }); }
     }
 }

@@ -167,7 +167,7 @@ const Nav = {
     if (UI.modal) {
       if (Game.state === 'run' && Game.paused) { Game.togglePause(); return; }
       if (UI.levelUpOpen) { if (UI._luBack) UI._luBack(); return; }   // (0.60: the cards' window: B never rerolls / picks)
-      const c = UI.modal.querySelector('.close, .btn:not(.orange)');
+      const c = UI.modal.querySelector('.close') || UI.modal.querySelector('[data-back]') || UI.modal.querySelector('.btn:not(.orange)');   // (0.97: a window's own 'back' first — the save code's Échap pressed 'Load this code')
       if (c) c.click(); return;
     }
     const cl = document.querySelector('#ui .window .close'); if (cl) cl.click(); else UI.back();
@@ -197,6 +197,7 @@ const Nav = {
     else this._sdir = sdir;
     if (!sdir) this._sdir = null;
     const sel = b(8); if (sel && !this._sel) toggleFullscreen(); this._sel = sel;
+    const r3 = b(11); if (r3 && !this._r3) toggleTheme(); this._r3 = r3;   // 0.97: the right stick's button = light / dark menus (F1 on a keyboard)
     const sd = sdir || '';
     const st = { a: b(0), b: b(1), lb: b(4), rb: b(5), start: b(9), up: b(12) || sd.startsWith('up'), down: b(13) || sd.startsWith('down'), left: b(14) || sd.endsWith('left'), right: b(15) || sd.endsWith('right') };
     const was = this._st || {}; this._st = st;
@@ -229,7 +230,8 @@ const Nav = {
   },
   key(e) {
     if (!this.active()) return false;
-    const tg = e.target && e.target.tagName; if (tg === 'INPUT' && e.target.type === 'text') return false;
+    // (0.97: every field one types in — the save code's box too: E pressed its button, W/A/S/D moved away while typing GODMODE)
+    const tg = e.target && e.target.tagName; if (tg === 'TEXTAREA' || (tg === 'INPUT' && !/^(checkbox|radio|range|button|submit|reset)$/.test(e.target.type)) || (e.target && e.target.isContentEditable)) return false;
     // physical keys: W/S/A/D is ZQSD on an AZERTY keyboard and WASD on a QWERTY one
     const m = { ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0], KeyW: [0, -1], KeyS: [0, 1], KeyA: [-1, 0], KeyD: [1, 0] }[e.code];
     if (m) { if ((m[0]) && this.adjust(m[0])) return true; this.move(m[0], m[1]); return true; }
