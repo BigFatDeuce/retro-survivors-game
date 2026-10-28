@@ -1,0 +1,68 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- Booster pack template (Retro Survivors). Rendered by build_boosters.py: every value in {{...}} comes from boosters.json.
+     Swappable slots (for the Dofus Retro assets later):
+       #art   : the big central illustration  (json "art": path to a transparent PNG; default = built-in creature)
+       #logo  : the range logo                (json "logo": path to a PNG; default = text logo)
+     Background decoration: json "pattern" (rays, hex, stars, swirl, diamonds, waves, bubbles, halftone, cracks, clouds,
+     confetti, lowpoly, synthgrid, burst, scales, zigzag); "rings": false hides the two rings around the character. -->
+<style>
+{{fonts}}
+  html, body { margin: 0; background: transparent; }
+  .stage { width: 700px; height: 1100px; display: flex; align-items: center; justify-content: center; }
+  .pack { position: relative; width: 600px; height: 1000px; filter: drop-shadow(0 24px 30px rgba(0,0,0,.45)); }
+  .pack svg.shape { position: absolute; inset: 0; }
+  .content { position: absolute; inset: 0; clip-path: url(#packclip); }
+  .bg { position: absolute; inset: 0; background: radial-gradient(circle at 50% 42%, {{c_light}} 0%, {{c_mid}} 38%, {{c_dark}} 100%); }
+  .rays { position: absolute; inset: -200px; background: repeating-conic-gradient(from 0deg at 50% 46%, rgba(255,255,255,.13) 0deg 7deg, rgba(255,255,255,0) 7deg 18deg); }
+  .pat { position: absolute; left: 0; top: 0; width: 600px; height: 1000px; }
+  .foil { position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,0) 20%, rgba(255,255,255,.38) 32%, rgba(255,255,255,0) 44%, rgba(255,255,255,0) 60%, rgba(255,255,255,.22) 70%, rgba(255,255,255,0) 80%); mix-blend-mode: soft-light; }
+  .holo { position: absolute; inset: 0; opacity: {{holo}}; mix-blend-mode: color-dodge;
+          background: linear-gradient(125deg, #ff5f9e 0%, #ffd35f 18%, #6dffb0 36%, #5fc8ff 54%, #b07bff 72%, #ff5f9e 90%); }
+  .sparkle { position: absolute; width: 18px; height: 18px; background: radial-gradient(circle, #fff 0 18%, rgba(255,255,255,0) 60%); }
+  .sparkle::before, .sparkle::after { content: ''; position: absolute; left: 50%; top: 50%; background: #fff; transform: translate(-50%,-50%); border-radius: 2px; }
+  .sparkle::before { width: 2px; height: 34px; } .sparkle::after { width: 34px; height: 2px; }
+  .crimp { position: absolute; left: 0; right: 0; height: 70px; background: linear-gradient({{c_dark}}, {{c_mid}});
+           background-image: repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 3px, rgba(255,255,255,.12) 3px 6px), linear-gradient(#d9d9e0, #9da0aa 45%, #e9e9ef); }
+  .crimp.top { top: 0; } .crimp.bottom { bottom: 0; }
+  .band { position: absolute; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, {{c_accent}}, #fff6c8, {{c_accent}}); }
+  #logo { position: absolute; top: 92px; left: 0; right: 0; text-align: center; }
+  #logo .l1 { font: 66px/1 'Lilita One', sans-serif; color: #fff7d6; letter-spacing: 1px;
+              -webkit-text-stroke: 3px #3b1d07; paint-order: stroke fill; text-shadow: 0 5px 0 #3b1d07, 0 0 22px rgba(255,220,120,.6); }
+  #logo .l2 { display: inline-block; margin-top: 10px; padding: 5px 18px; border-radius: 999px; font: 900 18px 'Nunito', sans-serif; letter-spacing: 4px;
+              color: #3b1d07; background: linear-gradient(#fff3b0, #f2b63c); border: 3px solid #3b1d07; }
+  #logo img { max-width: 470px; max-height: 150px; }
+  #art { position: absolute; left: 50px; right: 50px; top: 250px; height: 500px; display: flex; align-items: center; justify-content: center; }
+  #art img { max-width: 100%; max-height: 100%; filter: drop-shadow(0 14px 14px rgba(0,0,0,.4)); }
+  .halo { position: absolute; left: 50%; top: 500px; width: 470px; height: 470px; transform: translate(-50%,-50%); border-radius: 50%;
+          background: radial-gradient(circle, rgba(255,255,255,.55), rgba(255,255,255,0) 65%); }
+  .fine { position: absolute; left: 0; right: 0; bottom: 80px; text-align: center; font: 800 12px 'Nunito', sans-serif; color: rgba(255,255,255,.75); letter-spacing: 1px; }
+  .tear { position: absolute; left: 22px; right: 22px; top: 76px; border-top: 2px dashed rgba(255,255,255,.45); }
+  .ribbon { position: absolute; left: 0; right: 0; bottom: 120px; text-align: center; }
+  .ribbon span { display: inline-block; padding: 10px 34px; font: 30px 'Lilita One', sans-serif; letter-spacing: 3px; color: #fff7d6;
+                 -webkit-text-stroke: 2px #3b1d07; paint-order: stroke fill; text-shadow: 0 3px 0 #3b1d07;
+                 background: linear-gradient({{c_mid}}, {{c_dark}}); border: 4px solid #fff3b0; border-radius: 16px;
+                 box-shadow: 0 6px 14px rgba(0,0,0,.4), inset 0 2px 0 rgba(255,255,255,.35); }
+  .ring { position: absolute; left: 50%; top: 500px; width: 520px; height: 520px; transform: translate(-50%,-50%); border-radius: 50%;
+          border: 6px solid rgba(255,255,255,.35); box-shadow: 0 0 40px rgba(255,255,255,.35), inset 0 0 40px rgba(255,255,255,.25); }
+  .ring.r2 { width: 600px; height: 600px; border-width: 2px; border-style: dashed; }
+</style></head>
+<body><div class="stage"><div class="pack">
+  <svg class="shape" width="600" height="1000" viewBox="0 0 600 1000">
+    <defs><clipPath id="packclip"><path d="{{shape}}"/></clipPath></defs>
+  </svg>
+  <div class="content">
+    <div class="bg"></div>{{pattern}}
+    <div class="holo"></div>
+    <div class="halo"></div>{{rings}}
+    <div id="art">{{art}}</div>
+    <div class="foil"></div>
+    {{sparkles}}
+    <div class="crimp top"></div><div class="band" style="top:70px"></div>
+    <div class="crimp bottom"></div><div class="band" style="bottom:70px"></div>
+    <div class="tear"></div>
+    <div id="logo">{{logo}}</div>
+    <div class="ribbon"><span>10 CARTES</span></div>
+    <div class="fine">{{fine}}</div>
+  </div>
+</div></div></body></html>

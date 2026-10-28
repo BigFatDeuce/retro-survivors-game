@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 0.94: the Android app (tools/make_apk.py fills the version from game/js/assets.js BUILD). Turns with the phone, both
+     ways (configChanges: a turn does not restart the game). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.retrosurvivors.app">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.hardware.gamepad" android:required="false" />
+    <application android:label="Retro Survivors" android:icon="@mipmap/ic_launcher" android:hardwareAccelerated="true"
+        android:largeHeap="true" android:allowBackup="true" android:isGame="true" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+        <activity android:name=".MainActivity" android:exported="true" android:screenOrientation="fullUser" android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode|density">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

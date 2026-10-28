@@ -1,0 +1,6 @@
+url('')
+time.sleep(5)
+shot('d1_menu')
+url('autostart=1&fresh=1&cls=feca&map=cania&t=30')
+time.sleep(8)
+shot('d2_run')

@@ -1,0 +1,10 @@
+url('autostart=1&fresh=1&cls=sram&sex=0&map=naufrages&hat=16_7&cape=17_48&pet=18_1&t=40&lv=12')
+time.sleep(8)
+pg.keyboard.down('ArrowRight'); time.sleep(1.0); shot('10_run'); pg.keyboard.up('ArrowRight')
+time.sleep(0.5); shot('10b_idle')
+pg.keyboard.press('Escape'); time.sleep(1)
+shot('11_pause')
+r = pg.evaluate("(() => { const c = document.querySelector('.modal .content'); return c ? [c.scrollHeight, c.clientHeight] : null; })()")
+print('PAUSE SCROLL', r)
+# profiles: write in profile 1, switch to 2, back
+print('PROF', pg.evaluate("(() => { const a = Store.info ? Store.info(0) : null; return JSON.stringify({cur: Store.cur, a}); })()"))

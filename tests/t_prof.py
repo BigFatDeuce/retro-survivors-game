@@ -1,0 +1,7 @@
+url('')
+time.sleep(4)
+print('A', pg.evaluate("(() => { Store.data.kamas = 1234; Store.data.runs = 5; Store.save(); Store.switchTo(2); const k2 = Store.data.kamas; Store.data.kamas = 77; Store.save(); Store.switchTo(1); const k1 = Store.data.kamas; Store.reset(); const kr = Store.data.kamas; Store.switchTo(2); return JSON.stringify({k2, k1, kr, now2: Store.data.kamas, i1: Store.info(1), i3: Store.info(3), lang: Store.data.settings.lang}); })()"))
+pg.evaluate("UI.profilesMenu()"); time.sleep(1)
+shot('12_profiles')
+pg.evaluate("UI.options()"); time.sleep(1)
+shot('13_options')

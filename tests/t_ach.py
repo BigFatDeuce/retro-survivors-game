@@ -1,0 +1,6 @@
+url('')
+time.sleep(4)
+pg.evaluate("UI.achievements()"); time.sleep(1.5)
+shot('ach')
+pg.evaluate("document.querySelector('.ach-grid').scrollTop = 2000"); time.sleep(0.5)
+shot('ach2')

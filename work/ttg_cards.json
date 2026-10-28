@@ -1,0 +1,3714 @@
+[
+{
+"item": 15001,
+"no": 1,
+"name": "Mineur Sombre",
+"rarity": 0,
+"family": "Bandits",
+"img": "/images/TTG/imagecarteTTG/Bandits/1_carte_mineur_sombre.png"
+},
+{
+"item": 15002,
+"no": 2,
+"name": "Forgeron Sombre",
+"rarity": 0,
+"family": "Bandits",
+"img": "/images/TTG/imagecarteTTG/Bandits/2_carte_forgeron_sombre.png"
+},
+{
+"item": 15003,
+"no": 3,
+"name": "Boulanger Sombre",
+"rarity": 0,
+"family": "Bandits",
+"img": "/images/TTG/imagecarteTTG/Bandits/3_carte_boulanger_sombre.png"
+},
+{
+"item": 15004,
+"no": 4,
+"name": "Bandit du clan des Roublards",
+"rarity": 0,
+"family": "Bandits",
+"img": "/images/TTG/imagecarteTTG/Bandits/4_carte_bandit_du_clan_des_roublards.png"
+},
+{
+"item": 15005,
+"no": 5,
+"name": "Bandit Manchot",
+"rarity": 1,
+"family": "Bandits",
+"img": "/images/TTG/imagecarteTTG/Bandits/5_carte_bandit_manchot.png"
+},
+{
+"item": 15006,
+"no": 6,
+"name": "Braconnier",
+"rarity": 1,
+"family": "Bandits",
+"img": "/images/TTG/imagecarteTTG/Bandits/6_carte_braconnier.png"
+},
+{
+"item": 15007,
+"no": 7,
+"name": "Krtek",
+"rarity": 2,
+"family": "Bandits",
+"img": "/images/TTG/imagecarteTTG/Bandits/7_carte_krtek.png"
+},
+{
+"item": 15008,
+"no": 8,
+"name": "Vil Smisse",
+"rarity": 3,
+"family": "Bandits",
+"img": "/images/TTG/imagecarteTTG/Bandits/8_carte_vil_smisse.png"
+},
+{
+"item": 15009,
+"no": 9,
+"name": "Bwork Mage",
+"rarity": 0,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/9_carte_bwork_mage.png"
+},
+{
+"item": 15010,
+"no": 10,
+"name": "Chevaucheur de Karne",
+"rarity": 0,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/10_carte_chevaucheur_de_karne.png"
+},
+{
+"item": 15011,
+"no": 11,
+"name": "Bwork Archer",
+"rarity": 0,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/11_carte_bwork_archer.png"
+},
+{
+"item": 15012,
+"no": 12,
+"name": "Gobelin",
+"rarity": 0,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/12_carte_gobelin.png"
+},
+{
+"item": 15013,
+"no": 13,
+"name": "Bwork",
+"rarity": 0,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/13_carte_bwork.png"
+},
+{
+"item": 15014,
+"no": 14,
+"name": "Bworkette",
+"rarity": 1,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/14_carte_bworkette.png"
+},
+{
+"item": 15015,
+"no": 15,
+"name": "Mama Bwork",
+"rarity": 2,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/15_carte_mama_bwork.png"
+},
+{
+"item": 15016,
+"no": 16,
+"name": "Bwork Elémental de Feu",
+"rarity": 2,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/16_carte_bwork_elemental_de_feu.png"
+},
+{
+"item": 15017,
+"no": 17,
+"name": "Bwork Elémental d'Eau",
+"rarity": 2,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/17_carte_bwork_elemental_d_eau.png"
+},
+{
+"item": 15018,
+"no": 18,
+"name": "Bwork Elémental d'Air",
+"rarity": 2,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/18_carte_bwork_elemental_d_air.png"
+},
+{
+"item": 15019,
+"no": 19,
+"name": "Bwork Elémental de Terre",
+"rarity": 2,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/19_carte_bwork_elemental_de_terre.png"
+},
+{
+"item": 15020,
+"no": 20,
+"name": "Cybwork",
+"rarity": 2,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/20_carte_cybwork.png"
+},
+{
+"item": 15021,
+"no": 21,
+"name": "Bworker",
+"rarity": 3,
+"family": "Bworks",
+"img": "/images/TTG/imagecarteTTG/Bworks/21_carte_bworker.png"
+},
+{
+"item": 15022,
+"no": 22,
+"name": "Wabbit",
+"rarity": 0,
+"family": "Wabbits",
+"img": "/images/TTG/imagecarteTTG/Wabbits/22_carte_wabbit.png"
+},
+{
+"item": 15023,
+"no": 23,
+"name": "Black Wabbit",
+"rarity": 0,
+"family": "Wabbits",
+"img": "/images/TTG/imagecarteTTG/Wabbits/23_carte_black_wabbit.png"
+},
+{
+"item": 15024,
+"no": 24,
+"name": "Black Tiwabbit",
+"rarity": 0,
+"family": "Wabbits",
+"img": "/images/TTG/imagecarteTTG/Wabbits/24_carte_black_tiwabbit.png"
+},
+{
+"item": 15025,
+"no": 25,
+"name": "Tiwabbit Kiafin",
+"rarity": 0,
+"family": "Wabbits",
+"img": "/images/TTG/imagecarteTTG/Wabbits/25_carte_tiwabbit_kiafin.png"
+},
+{
+"item": 15026,
+"no": 26,
+"name": "Tiwabbit",
+"rarity": 0,
+"family": "Wabbits",
+"img": "/images/TTG/imagecarteTTG/Wabbits/26_carte_tiwabbit.png"
+},
+{
+"item": 15027,
+"no": 27,
+"name": "Wo Wabbit",
+"rarity": 1,
+"family": "Wabbits",
+"img": "/images/TTG/imagecarteTTG/Wabbits/27_carte_wo_wabbit.png"
+},
+{
+"item": 15028,
+"no": 28,
+"name": "Grand Pa Wabbit",
+"rarity": 1,
+"family": "Wabbits",
+"img": "/images/TTG/imagecarteTTG/Wabbits/28_carte_grand_pa_wabbit.png"
+},
+{
+"item": 15029,
+"no": 29,
+"name": "Wabbit Squelette",
+"rarity": 1,
+"family": "Wabbits",
+"img": "/images/TTG/imagecarteTTG/Wabbits/29_carte_wabbit_squelette.png"
+},
+{
+"item": 15030,
+"no": 30,
+"name": "Wobot",
+"rarity": 2,
+"family": "Wabbits",
+"img": "/images/TTG/imagecarteTTG/Wabbits/30_carte_wobot.png"
+},
+{
+"item": 15031,
+"no": 31,
+"name": "Wabbit Gm",
+"rarity": 2,
+"family": "Wabbits",
+"img": "/images/TTG/imagecarteTTG/Wabbits/31_carte_wabbit_gm.png"
+},
+{
+"item": 15032,
+"no": 32,
+"name": "Wa Wabbit",
+"rarity": 3,
+"family": "Wabbits",
+"img": "/images/TTG/imagecarteTTG/Wabbits/32_carte_wa_wabbit.png"
+},
+{
+"item": 15033,
+"no": 33,
+"name": "DragOeuf Doré immature",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/33_carte_dragoeuf_dore_immature.png"
+},
+{
+"item": 15034,
+"no": 34,
+"name": "DragOeuf Blanc",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/34_carte_dragoeuf_blanc.png"
+},
+{
+"item": 15035,
+"no": 35,
+"name": "DragOeuf Noir immature",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/35_carte_dragoeuf_noir_immature.png"
+},
+{
+"item": 15036,
+"no": 36,
+"name": "DragOeuf Doré",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/36_carte_dragoeuf_dore.png"
+},
+{
+"item": 15037,
+"no": 37,
+"name": "DragOeuf de Saphir",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/37_carte_dragoeuf_de_saphir.png"
+},
+{
+"item": 15038,
+"no": 38,
+"name": "DragOeuf Noir",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/38_carte_dragoeuf_noir.png"
+},
+{
+"item": 15039,
+"no": 39,
+"name": "DragOeuf Blanc immature",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/39_carte_dragoeuf_blanc_immature.png"
+},
+{
+"item": 15040,
+"no": 40,
+"name": "DragOeuf Noir Eveillé",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/40_carte_dragoeuf_noir_eveille.png"
+},
+{
+"item": 15041,
+"no": 41,
+"name": "DragOeuf Blanc éveillé",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/41_carte_dragoeuf_blanc_eveille.png"
+},
+{
+"item": 15042,
+"no": 42,
+"name": "DragOeuf Doré éveillé",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/42_carte_dragoeuf_dore_eveille.png"
+},
+{
+"item": 15043,
+"no": 43,
+"name": "DragOeuf de Saphir éveillé",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/43_carte_dragoeuf_de_saphir_eveille.png"
+},
+{
+"item": 15044,
+"no": 44,
+"name": "Coquille Explosive",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/44_carte_coquille_explosive.png"
+},
+{
+"item": 15045,
+"no": 45,
+"name": "DragOeuf de Saphir immature",
+"rarity": 0,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/45_carte_dragoeuf_de_saphir_immature.png"
+},
+{
+"item": 15046,
+"no": 46,
+"name": "Dragoss Noir",
+"rarity": 1,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/46_carte_dragoss_noir.png"
+},
+{
+"item": 15047,
+"no": 47,
+"name": "Dragoss Noir Eveillé",
+"rarity": 1,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/47_carte_dragoss_noir_eveille.png"
+},
+{
+"item": 15048,
+"no": 48,
+"name": "Dragoss Blanc Eveillé",
+"rarity": 1,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/48_carte_dragoss_blanc_eveille.png"
+},
+{
+"item": 15049,
+"no": 49,
+"name": "Dragoss Doré Eveillé",
+"rarity": 1,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/49_carte_dragoss_dore_eveille.png"
+},
+{
+"item": 15050,
+"no": 50,
+"name": "Dragoss de Saphir",
+"rarity": 1,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/50_carte_dragoss_de_saphir.png"
+},
+{
+"item": 15051,
+"no": 51,
+"name": "Dragoss Blanc",
+"rarity": 1,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/51_carte_dragoss_blanc.png"
+},
+{
+"item": 15052,
+"no": 52,
+"name": "Dragoss Doré",
+"rarity": 1,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/52_carte_dragoss_dore.png"
+},
+{
+"item": 15053,
+"no": 53,
+"name": "Dragoss de Saphir Eveillé",
+"rarity": 1,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/53_carte_dragoss_de_saphir_eveille.png"
+},
+{
+"item": 15054,
+"no": 54,
+"name": "Dragoeuf Guerrier",
+"rarity": 2,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/54_carte_dragoeuf_guerrier.png"
+},
+{
+"item": 15055,
+"no": 55,
+"name": "Dragueuse",
+"rarity": 2,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/55_carte_dragueuse.png"
+},
+{
+"item": 15056,
+"no": 56,
+"name": "Dragoeuf Volant",
+"rarity": 2,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/56_carte_dragoeuf_volant.png"
+},
+{
+"item": 15057,
+"no": 57,
+"name": "Crocabulia",
+"rarity": 3,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/57_carte_crocabulia.png"
+},
+{
+"item": 15058,
+"no": 58,
+"name": "Grozilla",
+"rarity": 3,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/58_carte_grozilla.png"
+},
+{
+"item": 15059,
+"no": 59,
+"name": "Grasmera",
+"rarity": 3,
+"family": "Dragoeufs",
+"img": "/images/TTG/imagecarteTTG/Dragoeufs/59_carte_grasmera.png"
+},
+{
+"item": 15060,
+"no": 60,
+"name": "Gelée Bleue",
+"rarity": 0,
+"family": "Gelées",
+"img": "/images/TTG/imagecarteTTG/Gelées/60_carte_gelee_bleue.png"
+},
+{
+"item": 15061,
+"no": 61,
+"name": "Gelée Menthe",
+"rarity": 0,
+"family": "Gelées",
+"img": "/images/TTG/imagecarteTTG/Gelées/61_carte_gelee_menthe.png"
+},
+{
+"item": 15062,
+"no": 62,
+"name": "Gelée Fraise",
+"rarity": 0,
+"family": "Gelées",
+"img": "/images/TTG/imagecarteTTG/Gelées/62_carte_gelee_fraise.png"
+},
+{
+"item": 15063,
+"no": 63,
+"name": "Gelée Citron",
+"rarity": 1,
+"family": "Gelées",
+"img": "/images/TTG/imagecarteTTG/Gelées/63_carte_gelee_citron.png"
+},
+{
+"item": 15064,
+"no": 64,
+"name": "Gelée Royale Bleue",
+"rarity": 2,
+"family": "Gelées",
+"img": "/images/TTG/imagecarteTTG/Gelées/64_carte_gelee_royale_bleue.png"
+},
+{
+"item": 15065,
+"no": 65,
+"name": "Gelée Royale Menthe",
+"rarity": 2,
+"family": "Gelées",
+"img": "/images/TTG/imagecarteTTG/Gelées/65_carte_gelee_royale_menthe.png"
+},
+{
+"item": 15066,
+"no": 66,
+"name": "Gelée Royale Fraise",
+"rarity": 2,
+"family": "Gelées",
+"img": "/images/TTG/imagecarteTTG/Gelées/66_carte_gelee_royale_fraise.png"
+},
+{
+"item": 15067,
+"no": 67,
+"name": "Gelée Royale Citron",
+"rarity": 3,
+"family": "Gelées",
+"img": "/images/TTG/imagecarteTTG/Gelées/67_carte_gelee_royale_citron.png"
+},
+{
+"item": 15068,
+"no": 68,
+"name": "Tofu Maléfique",
+"rarity": 0,
+"family": "Monstres de la nuit",
+"img": "/images/TTG/imagecarteTTG/Monstres de la nuit/68_carte_tofu_malefique.png"
+},
+{
+"item": 15069,
+"no": 69,
+"name": "Vampire",
+"rarity": 0,
+"family": "Monstres de la nuit",
+"img": "/images/TTG/imagecarteTTG/Monstres de la nuit/69_carte_vampire.png"
+},
+{
+"item": 15070,
+"no": 70,
+"name": "Souris Grise",
+"rarity": 0,
+"family": "Monstres de la nuit",
+"img": "/images/TTG/imagecarteTTG/Monstres de la nuit/70_carte_souris_grise.png"
+},
+{
+"item": 15071,
+"no": 71,
+"name": "La Ouassingue",
+"rarity": 0,
+"family": "Monstres des Tourbières",
+"img": "/images/TTG/imagecarteTTG/Monstres des Tourbières/71_carte_la_ouassingue.png"
+},
+{
+"item": 15072,
+"no": 72,
+"name": "Le Ouassingue",
+"rarity": 0,
+"family": "Monstres des Tourbières",
+"img": "/images/TTG/imagecarteTTG/Monstres des Tourbières/72_carte_le_ouassingue.png"
+},
+{
+"item": 15073,
+"no": 73,
+"name": "Gargrouille",
+"rarity": 0,
+"family": "Monstres de la nuit",
+"img": "/images/TTG/imagecarteTTG/Monstres de la nuit/73_carte_gargrouille.png"
+},
+{
+"item": 15074,
+"no": 74,
+"name": "Citwouille",
+"rarity": 1,
+"family": "Monstres de la nuit",
+"img": "/images/TTG/imagecarteTTG/Monstres de la nuit/74_carte_citwouille.png"
+},
+{
+"item": 15075,
+"no": 75,
+"name": "Oni",
+"rarity": 1,
+"family": "Monstres de la nuit",
+"img": "/images/TTG/imagecarteTTG/Monstres de la nuit/75_carte_oni.png"
+},
+{
+"item": 15076,
+"no": 76,
+"name": "Maître Vampire",
+"rarity": 1,
+"family": "Monstres de la nuit",
+"img": "/images/TTG/imagecarteTTG/Monstres de la nuit/76_carte_maitre_vampire.png"
+},
+{
+"item": 15077,
+"no": 77,
+"name": "Noeul",
+"rarity": 1,
+"family": "Monstres de la nuit",
+"img": "/images/TTG/imagecarteTTG/Monstres de la nuit/77_carte_noeul.png"
+},
+{
+"item": 15078,
+"no": 78,
+"name": "Kwoan",
+"rarity": 1,
+"family": "Monstres de la nuit",
+"img": "/images/TTG/imagecarteTTG/Monstres de la nuit/78_carte_kwoan.png"
+},
+{
+"item": 15079,
+"no": 79,
+"name": "Vampire Dupyr",
+"rarity": 2,
+"family": "Monstres de la nuit",
+"img": "/images/TTG/imagecarteTTG/Monstres de la nuit/79_carte_vampire_dupyr.png"
+},
+{
+"item": 15080,
+"no": 80,
+"name": "Dark Vlad",
+"rarity": 3,
+"family": "Monstres de la nuit",
+"img": "/images/TTG/imagecarteTTG/Monstres de la nuit/80_carte_dark_vlad.png"
+},
+{
+"item": 15081,
+"no": 81,
+"name": "Bouftou",
+"rarity": 0,
+"family": "Bouftous",
+"img": "/images/TTG/imagecarteTTG/Bouftous/81_carte_bouftou.png"
+},
+{
+"item": 15082,
+"no": 82,
+"name": "Boufton Blanc",
+"rarity": 0,
+"family": "Bouftous",
+"img": "/images/TTG/imagecarteTTG/Bouftous/82_carte_boufton_blanc.png"
+},
+{
+"item": 15083,
+"no": 83,
+"name": "Boufton Noir",
+"rarity": 0,
+"family": "Bouftous",
+"img": "/images/TTG/imagecarteTTG/Bouftous/83_carte_boufton_noir.png"
+},
+{
+"item": 15084,
+"no": 84,
+"name": "Chef de Guerre Bouftou",
+"rarity": 1,
+"family": "Bouftous",
+"img": "/images/TTG/imagecarteTTG/Bouftous/84_carte_chef_de_guerre_bouftou.png"
+},
+{
+"item": 15085,
+"no": 85,
+"name": "Bouftou d'Halouine",
+"rarity": 2,
+"family": "Bouftous",
+"img": "/images/TTG/imagecarteTTG/Bouftous/85_carte_bouftou_d_halouine.png"
+},
+{
+"item": 15086,
+"no": 86,
+"name": "Ballotin le Bouftou",
+"rarity": 2,
+"family": "Bouftous",
+"img": "/images/TTG/imagecarteTTG/Bouftous/86_carte_ballotin_le_bouftou.png"
+},
+{
+"item": 15087,
+"no": 87,
+"name": "Bouftou Royal",
+"rarity": 3,
+"family": "Bouftous",
+"img": "/images/TTG/imagecarteTTG/Bouftous/87_carte_bouftou_royal.png"
+},
+{
+"item": 15088,
+"no": 88,
+"name": "Bouftou des Cavernes",
+"rarity": 1,
+"family": "Bouftous",
+"img": "/images/TTG/imagecarteTTG/Bouftous/88_carte_bouftou_des_cavernes.png"
+},
+{
+"item": 15089,
+"no": 89,
+"name": "Boufcoul",
+"rarity": 1,
+"family": "Bouftous",
+"img": "/images/TTG/imagecarteTTG/Bouftous/89_carte_boufcoul.png"
+},
+{
+"item": 15090,
+"no": 90,
+"name": "Tournesol Sauvage",
+"rarity": 0,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/90_carte_tournesol_sauvage.png"
+},
+{
+"item": 15091,
+"no": 91,
+"name": "Rose Démoniaque",
+"rarity": 0,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/91_carte_rose_demoniaque.png"
+},
+{
+"item": 15092,
+"no": 92,
+"name": "Pissenlit Diabolique",
+"rarity": 0,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/92_carte_pissenlit_diabolique.png"
+},
+{
+"item": 15093,
+"no": 93,
+"name": "Rose Obscure",
+"rarity": 2,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/93_carte_rose_obscure.png"
+},
+{
+"item": 15094,
+"no": 94,
+"name": "Tournesol Affamé",
+"rarity": 3,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/94_carte_tournesol_affame.png"
+},
+{
+"item": 15095,
+"no": 95,
+"name": "Piou Violet",
+"rarity": 0,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/95_carte_piou_violet.png"
+},
+{
+"item": 15096,
+"no": 96,
+"name": "Piou Rouge",
+"rarity": 0,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/96_carte_piou_rouge.png"
+},
+{
+"item": 15097,
+"no": 97,
+"name": "Piou Vert",
+"rarity": 0,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/97_carte_piou_vert.png"
+},
+{
+"item": 15098,
+"no": 98,
+"name": "Piou Bleu",
+"rarity": 0,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/98_carte_piou_bleu.png"
+},
+{
+"item": 15099,
+"no": 99,
+"name": "Piou Rose",
+"rarity": 1,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/99_carte_piou_rose.png"
+},
+{
+"item": 15100,
+"no": 100,
+"name": "Piou Jaune",
+"rarity": 0,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/100_carte_piou_jaune.png"
+},
+{
+"item": 15101,
+"no": 101,
+"name": "Larve Bleue",
+"rarity": 0,
+"family": "Larves",
+"img": "/images/TTG/imagecarteTTG/Larves/101_carte_larve_bleue.png"
+},
+{
+"item": 15102,
+"no": 102,
+"name": "Larve Verte",
+"rarity": 0,
+"family": "Larves",
+"img": "/images/TTG/imagecarteTTG/Larves/102_carte_larve_verte.png"
+},
+{
+"item": 15103,
+"no": 103,
+"name": "Larve Orange",
+"rarity": 0,
+"family": "Larves",
+"img": "/images/TTG/imagecarteTTG/Larves/103_carte_larve_orange.png"
+},
+{
+"item": 15104,
+"no": 104,
+"name": "Larve Saphir",
+"rarity": 1,
+"family": "Larves",
+"img": "/images/TTG/imagecarteTTG/Larves/104_carte_larve_saphir.png"
+},
+{
+"item": 15105,
+"no": 105,
+"name": "Larve Rubis",
+"rarity": 1,
+"family": "Larves",
+"img": "/images/TTG/imagecarteTTG/Larves/105_carte_larve_rubis.png"
+},
+{
+"item": 15106,
+"no": 106,
+"name": "Larve Emeraude",
+"rarity": 1,
+"family": "Larves",
+"img": "/images/TTG/imagecarteTTG/Larves/106_carte_larve_emeraude.png"
+},
+{
+"item": 15107,
+"no": 107,
+"name": "Larve Dorée",
+"rarity": 1,
+"family": "Larves",
+"img": "/images/TTG/imagecarteTTG/Larves/107_carte_larve_doree.png"
+},
+{
+"item": 15108,
+"no": 108,
+"name": "Shin Larve",
+"rarity": 3,
+"family": "Larves",
+"img": "/images/TTG/imagecarteTTG/Larves/108_carte_shin_larve.png"
+},
+{
+"item": 15109,
+"no": 109,
+"name": "Bwak de feu",
+"rarity": 0,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/109_carte_bwak_de_feu.png"
+},
+{
+"item": 15110,
+"no": 110,
+"name": "Bwak de terre",
+"rarity": 0,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/110_carte_bwak_de_terre.png"
+},
+{
+"item": 15111,
+"no": 111,
+"name": "Bwak d'air",
+"rarity": 0,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/111_carte_bwak_d_air.png"
+},
+{
+"item": 15112,
+"no": 112,
+"name": "Bwak d'eau",
+"rarity": 0,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/112_carte_bwak_d_eau.png"
+},
+{
+"item": 15113,
+"no": 113,
+"name": "Kwak du Vent",
+"rarity": 1,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/113_carte_kwak_du_vent.png"
+},
+{
+"item": 15114,
+"no": 114,
+"name": "Kwak de Flamme",
+"rarity": 1,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/114_carte_kwak_de_flamme.png"
+},
+{
+"item": 15115,
+"no": 115,
+"name": "Kwak de Glace",
+"rarity": 1,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/115_carte_kwak_de_glace.png"
+},
+{
+"item": 15116,
+"no": 116,
+"name": "Kwak de Terre",
+"rarity": 1,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/116_carte_kwak_de_terre.png"
+},
+{
+"item": 15117,
+"no": 117,
+"name": "Craqueboule",
+"rarity": 0,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/117_carte_craqueboule.png"
+},
+{
+"item": 15118,
+"no": 118,
+"name": "Craqueleur",
+"rarity": 1,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/118_carte_craqueleur.png"
+},
+{
+"item": 15119,
+"no": 119,
+"name": "Craqueleur des plaines",
+"rarity": 1,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/119_carte_craqueleur_des_plaines.png"
+},
+{
+"item": 15120,
+"no": 120,
+"name": "Méga Craqueleur",
+"rarity": 2,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/120_carte_mega_craqueleur.png"
+},
+{
+"item": 15121,
+"no": 121,
+"name": "Craqueleur Légendaire",
+"rarity": 3,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/121_carte_craqueleur_legendaire.png"
+},
+{
+"item": 15122,
+"no": 122,
+"name": "Cochon de Lait",
+"rarity": 0,
+"family": "Cochons",
+"img": "/images/TTG/imagecarteTTG/Cochons/122_carte_cochon_de_lait.png"
+},
+{
+"item": 15123,
+"no": 123,
+"name": "Cochon de Farle",
+"rarity": 0,
+"family": "Cochons",
+"img": "/images/TTG/imagecarteTTG/Cochons/123_carte_cochon_de_farle.png"
+},
+{
+"item": 15124,
+"no": 124,
+"name": "Don Duss Ang",
+"rarity": 1,
+"family": "Cochons",
+"img": "/images/TTG/imagecarteTTG/Cochons/124_carte_don_duss_ang.png"
+},
+{
+"item": 15125,
+"no": 125,
+"name": "Don Dorgan",
+"rarity": 1,
+"family": "Cochons",
+"img": "/images/TTG/imagecarteTTG/Cochons/125_carte_don_dorgan.png"
+},
+{
+"item": 15126,
+"no": 126,
+"name": "Dragon Cochon",
+"rarity": 3,
+"family": "Cochons",
+"img": "/images/TTG/imagecarteTTG/Cochons/126_carte_dragon_cochon.png"
+},
+{
+"item": 15127,
+"no": 127,
+"name": "Chafer",
+"rarity": 0,
+"family": "Chafers",
+"img": "/images/TTG/imagecarteTTG/Chafers/127_carte_chafer.png"
+},
+{
+"item": 15128,
+"no": 128,
+"name": "Chafer Archer",
+"rarity": 0,
+"family": "Chafers",
+"img": "/images/TTG/imagecarteTTG/Chafers/128_carte_chafer_archer.png"
+},
+{
+"item": 15129,
+"no": 129,
+"name": "Rib",
+"rarity": 1,
+"family": "Chafers",
+"img": "/images/TTG/imagecarteTTG/Chafers/129_carte_rib.png"
+},
+{
+"item": 15130,
+"no": 130,
+"name": "Chafer Invisible",
+"rarity": 1,
+"family": "Chafers",
+"img": "/images/TTG/imagecarteTTG/Chafers/130_carte_chafer_invisible.png"
+},
+{
+"item": 15131,
+"no": 131,
+"name": "Chafer Lancier",
+"rarity": 1,
+"family": "Chafers",
+"img": "/images/TTG/imagecarteTTG/Chafers/131_carte_chafer_lancier.png"
+},
+{
+"item": 15132,
+"no": 132,
+"name": "Chafer d'élite",
+"rarity": 1,
+"family": "Chafers",
+"img": "/images/TTG/imagecarteTTG/Chafers/132_carte_chafer_d_elite.png"
+},
+{
+"item": 15133,
+"no": 133,
+"name": "Chafer Fantassin",
+"rarity": 1,
+"family": "Chafers",
+"img": "/images/TTG/imagecarteTTG/Chafers/133_carte_chafer_fantassin.png"
+},
+{
+"item": 15134,
+"no": 134,
+"name": "Chafer Archer Maudit",
+"rarity": 2,
+"family": "Chafers",
+"img": "/images/TTG/imagecarteTTG/Chafers/134_carte_chafer_archer_maudit.png"
+},
+{
+"item": 15135,
+"no": 135,
+"name": "Chafer Lamicel",
+"rarity": 3,
+"family": "Chafers",
+"img": "/images/TTG/imagecarteTTG/Chafers/135_carte_chafer_lamicel.png"
+},
+{
+"item": 15136,
+"no": 136,
+"name": "Chafer Maudit",
+"rarity": 2,
+"family": "Chafers",
+"img": "/images/TTG/imagecarteTTG/Chafers/136_carte_chafer_maudit.png"
+},
+{
+"item": 15137,
+"no": 137,
+"name": "Aboub",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/137_carte_aboub.png"
+},
+{
+"item": 15138,
+"no": 138,
+"name": "Amlub",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/138_carte_amlub.png"
+},
+{
+"item": 15139,
+"no": 139,
+"name": "Codem",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/139_carte_codem.png"
+},
+{
+"item": 15140,
+"no": 140,
+"name": "Gink",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/140_carte_gink.png"
+},
+{
+"item": 15141,
+"no": 141,
+"name": "Kirevam",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/141_carte_kirevam.png"
+},
+{
+"item": 15142,
+"no": 142,
+"name": "Let Emoliug",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/142_carte_let_emoliug.png"
+},
+{
+"item": 15143,
+"no": 143,
+"name": "Nebgib",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/143_carte_nebgib.png"
+},
+{
+"item": 15144,
+"no": 144,
+"name": "Nipul",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/144_carte_nipul.png"
+},
+{
+"item": 15145,
+"no": 145,
+"name": "Osurc",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/145_carte_osurc.png"
+},
+{
+"item": 15146,
+"no": 146,
+"name": "Susej",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/146_carte_susej.png"
+},
+{
+"item": 15147,
+"no": 147,
+"name": "Idemas",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/147_carte_idemas.png"
+},
+{
+"item": 15148,
+"no": 148,
+"name": "Teilemrak",
+"rarity": 1,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/148_carte_teilemrak.png"
+},
+{
+"item": 15149,
+"no": 149,
+"name": "Dopeul Dark Vlad",
+"rarity": 3,
+"family": "Dopeuls",
+"img": "/images/TTG/imagecarteTTG/Dopeuls/149_carte_dopeul_dark_vlad.png"
+},
+{
+"item": 15150,
+"no": 150,
+"name": "Fourbasse",
+"rarity": 0,
+"family": "Monstres de la forêt de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la forêt de Moon/150_carte_fourbasse.png"
+},
+{
+"item": 15151,
+"no": 151,
+"name": "Trukikol",
+"rarity": 1,
+"family": "Monstres de la forêt de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la forêt de Moon/151_carte_trukikol.png"
+},
+{
+"item": 15152,
+"no": 152,
+"name": "Gloutovore",
+"rarity": 1,
+"family": "Monstres de la forêt de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la forêt de Moon/152_carte_gloutovore.png"
+},
+{
+"item": 15153,
+"no": 153,
+"name": "Kanniboul Archer",
+"rarity": 2,
+"family": "Monstres de la forêt de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la forêt de Moon/153_carte_kanniboul_archer.png"
+},
+{
+"item": 15154,
+"no": 154,
+"name": "Kanniboul Thierry",
+"rarity": 2,
+"family": "Monstres de la forêt de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la forêt de Moon/154_carte_kanniboul_thierry.png"
+},
+{
+"item": 15155,
+"no": 155,
+"name": "Kanniboul Jav",
+"rarity": 2,
+"family": "Monstres de la forêt de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la forêt de Moon/155_carte_kanniboul_jav.png"
+},
+{
+"item": 15156,
+"no": 156,
+"name": "Kanniboul Sarbak",
+"rarity": 2,
+"family": "Monstres de la forêt de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la forêt de Moon/156_carte_kanniboul_sarbak.png"
+},
+{
+"item": 15157,
+"no": 157,
+"name": "Darkli Moon",
+"rarity": 2,
+"family": "Monstres de la forêt de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la forêt de Moon/157_carte_darkli_moon.png"
+},
+{
+"item": 15158,
+"no": 158,
+"name": "Moon",
+"rarity": 3,
+"family": "Monstres de la forêt de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la forêt de Moon/158_carte_moon.png"
+},
+{
+"item": 15159,
+"no": 159,
+"name": "Tikokoko",
+"rarity": 0,
+"family": "Monstres de la plage de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la plage de Moon/159_carte_tikokoko.png"
+},
+{
+"item": 15160,
+"no": 160,
+"name": "Kokoko",
+"rarity": 0,
+"family": "Monstres de la plage de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la plage de Moon/160_carte_kokoko.png"
+},
+{
+"item": 15161,
+"no": 161,
+"name": "NodKoko",
+"rarity": 0,
+"family": "Monstres de la plage de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la plage de Moon/161_carte_nodkoko.png"
+},
+{
+"item": 15162,
+"no": 162,
+"name": "Tortue Rouge",
+"rarity": 1,
+"family": "Monstres de la plage de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la plage de Moon/162_carte_tortue_rouge.png"
+},
+{
+"item": 15163,
+"no": 163,
+"name": "Tortue Bleue",
+"rarity": 1,
+"family": "Monstres de la plage de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la plage de Moon/163_carte_tortue_bleue.png"
+},
+{
+"item": 15164,
+"no": 164,
+"name": "Tortue Verte",
+"rarity": 1,
+"family": "Monstres de la plage de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la plage de Moon/164_carte_tortue_verte.png"
+},
+{
+"item": 15165,
+"no": 165,
+"name": "Tortue Jaune",
+"rarity": 1,
+"family": "Monstres de la plage de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la plage de Moon/165_carte_tortue_jaune.png"
+},
+{
+"item": 15166,
+"no": 166,
+"name": "Boomba",
+"rarity": 2,
+"family": "Monstres de la plage de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la plage de Moon/166_carte_boomba.png"
+},
+{
+"item": 15167,
+"no": 167,
+"name": "Nakunbra",
+"rarity": 2,
+"family": "Monstres de la plage de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la plage de Moon/167_carte_nakunbra.png"
+},
+{
+"item": 15168,
+"no": 168,
+"name": "Canon Dorf",
+"rarity": 2,
+"family": "Monstres de la plage de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la plage de Moon/168_carte_canon_dorf.png"
+},
+{
+"item": 15169,
+"no": 169,
+"name": "Le Chouque",
+"rarity": 3,
+"family": "Monstres de la plage de Moon",
+"img": "/images/TTG/imagecarteTTG/Monstres de la plage de Moon/169_carte_le_chouque.png"
+},
+{
+"item": 15170,
+"no": 170,
+"name": "Abraknyde",
+"rarity": 0,
+"family": "Abraknydiens",
+"img": "/images/TTG/imagecarteTTG/Abraknydiens/170_carte_abraknyde.png"
+},
+{
+"item": 15171,
+"no": 171,
+"name": "Tronknyde",
+"rarity": 0,
+"family": "Abraknydiens",
+"img": "/images/TTG/imagecarteTTG/Abraknydiens/171_carte_tronknyde.png"
+},
+{
+"item": 15172,
+"no": 172,
+"name": "Abrakne",
+"rarity": 0,
+"family": "Abraknydiens",
+"img": "/images/TTG/imagecarteTTG/Abraknydiens/172_carte_abrakne.png"
+},
+{
+"item": 15173,
+"no": 173,
+"name": "Araknotron",
+"rarity": 0,
+"family": "Abraknydiens",
+"img": "/images/TTG/imagecarteTTG/Abraknydiens/173_carte_araknotron.png"
+},
+{
+"item": 15174,
+"no": 174,
+"name": "Abraknyde Sombre",
+"rarity": 1,
+"family": "Abraknydiens",
+"img": "/images/TTG/imagecarteTTG/Abraknydiens/174_carte_abraknyde_sombre.png"
+},
+{
+"item": 15175,
+"no": 175,
+"name": "Abrakne Sombre",
+"rarity": 1,
+"family": "Abraknydiens",
+"img": "/images/TTG/imagecarteTTG/Abraknydiens/175_carte_abrakne_sombre.png"
+},
+{
+"item": 15176,
+"no": 176,
+"name": "Branche Invocatrice",
+"rarity": 2,
+"family": "Abraknydiens",
+"img": "/images/TTG/imagecarteTTG/Abraknydiens/176_carte_branche_invocatrice.png"
+},
+{
+"item": 15177,
+"no": 177,
+"name": "Branche Soignante",
+"rarity": 2,
+"family": "Abraknydiens",
+"img": "/images/TTG/imagecarteTTG/Abraknydiens/177_carte_branche_soignante.png"
+},
+{
+"item": 15178,
+"no": 178,
+"name": "Abraknyde Ancestral",
+"rarity": 2,
+"family": "Abraknydiens",
+"img": "/images/TTG/imagecarteTTG/Abraknydiens/178_carte_abraknyde_ancestral.png"
+},
+{
+"item": 15179,
+"no": 179,
+"name": "Chêne Mou",
+"rarity": 3,
+"family": "Abraknydiens",
+"img": "/images/TTG/imagecarteTTG/Abraknydiens/179_carte_chene_mou.png"
+},
+{
+"item": 15180,
+"no": 180,
+"name": "Blop Coco",
+"rarity": 0,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/180_carte_blop_coco.png"
+},
+{
+"item": 15181,
+"no": 181,
+"name": "Blop Indigo",
+"rarity": 0,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/181_carte_blop_indigo.png"
+},
+{
+"item": 15182,
+"no": 182,
+"name": "Blop Griotte",
+"rarity": 0,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/182_carte_blop_griotte.png"
+},
+{
+"item": 15183,
+"no": 183,
+"name": "Blop Reinette",
+"rarity": 0,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/183_carte_blop_reinette.png"
+},
+{
+"item": 15184,
+"no": 184,
+"name": "Biblop Indigo",
+"rarity": 0,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/184_carte_biblop_indigo.png"
+},
+{
+"item": 15185,
+"no": 185,
+"name": "Biblop Coco",
+"rarity": 0,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/185_carte_biblop_coco.png"
+},
+{
+"item": 15186,
+"no": 186,
+"name": "Biblop Griotte",
+"rarity": 0,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/186_carte_biblop_griotte.png"
+},
+{
+"item": 15187,
+"no": 187,
+"name": "Biblop Reinette",
+"rarity": 0,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/187_carte_biblop_reinette.png"
+},
+{
+"item": 15188,
+"no": 188,
+"name": "Gloutoblop",
+"rarity": 1,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/188_carte_gloutoblop.png"
+},
+{
+"item": 15189,
+"no": 189,
+"name": "Blopignon",
+"rarity": 1,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/189_carte_blopignon.png"
+},
+{
+"item": 15190,
+"no": 190,
+"name": "Tronkoblop",
+"rarity": 1,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/190_carte_tronkoblop.png"
+},
+{
+"item": 15191,
+"no": 191,
+"name": "Blop Coco Royal",
+"rarity": 2,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/191_carte_blop_coco_royal.png"
+},
+{
+"item": 15192,
+"no": 192,
+"name": "Blop Griotte Royal",
+"rarity": 2,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/192_carte_blop_griotte_royal.png"
+},
+{
+"item": 15193,
+"no": 193,
+"name": "Blop Indigo Royal",
+"rarity": 2,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/193_carte_blop_indigo_royal.png"
+},
+{
+"item": 15194,
+"no": 194,
+"name": "Blop Reinette Royal",
+"rarity": 2,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/194_carte_blop_reinette_royal.png"
+},
+{
+"item": 15195,
+"no": 195,
+"name": "Blop Multicolore Royal",
+"rarity": 3,
+"family": "Blops",
+"img": "/images/TTG/imagecarteTTG/Blops/195_carte_blop_multicolore_royal.png"
+},
+{
+"item": 15196,
+"no": 196,
+"name": "Serpentin",
+"rarity": 0,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/196_carte_serpentin.png"
+},
+{
+"item": 15197,
+"no": 197,
+"name": "Cavalier Porkass",
+"rarity": 0,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/197_carte_cavalier_porkass.png"
+},
+{
+"item": 15198,
+"no": 198,
+"name": "Berger Porkass",
+"rarity": 0,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/198_carte_berger_porkass.png"
+},
+{
+"item": 15199,
+"no": 199,
+"name": "Souris verte",
+"rarity": 1,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/199_carte_souris_verte.png"
+},
+{
+"item": 15200,
+"no": 200,
+"name": "Sanglier Des Plaines",
+"rarity": 1,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/200_carte_sanglier_des_plaines.png"
+},
+{
+"item": 15201,
+"no": 201,
+"name": "Kanigrou",
+"rarity": 2,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/201_carte_kanigrou.png"
+},
+{
+"item": 15202,
+"no": 202,
+"name": "Garde Havou",
+"rarity": 0,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/202_carte_garde_havou.png"
+},
+{
+"item": 15203,
+"no": 203,
+"name": "Tireur d'Élite",
+"rarity": 0,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/203_carte_tireur_d_elite.png"
+},
+{
+"item": 15204,
+"no": 204,
+"name": "Disciple de Turorte",
+"rarity": 0,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/204_carte_disciple_de_turorte.png"
+},
+{
+"item": 15205,
+"no": 205,
+"name": "Palidane le Platiné",
+"rarity": 1,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/205_carte_palidane_le_platine.png"
+},
+{
+"item": 15206,
+"no": 206,
+"name": "Mage Céleste",
+"rarity": 0,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/206_carte_mage_celeste.png"
+},
+{
+"item": 15207,
+"no": 207,
+"name": "Craqueleur Céleste",
+"rarity": 1,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/207_carte_craqueleur_celeste.png"
+},
+{
+"item": 15208,
+"no": 208,
+"name": "Cramody",
+"rarity": 2,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/208_carte_cramody.png"
+},
+{
+"item": 15209,
+"no": 209,
+"name": "Mihssih",
+"rarity": 2,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/209_carte_mihssih.png"
+},
+{
+"item": 15210,
+"no": 210,
+"name": "Haras",
+"rarity": 2,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/210_carte_haras.png"
+},
+{
+"item": 15211,
+"no": 211,
+"name": "Yllib",
+"rarity": 2,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/211_carte_yllib.png"
+},
+{
+"item": 15212,
+"no": 212,
+"name": "Ilyzaelle",
+"rarity": 3,
+"family": "Créatures de Cania",
+"img": "/images/TTG/imagecarteTTG/Créatures de Cania/212_carte_ilyzaelle.png"
+},
+{
+"item": 15213,
+"no": 213,
+"name": "Scorbute",
+"rarity": 0,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/213_carte_scorbute.png"
+},
+{
+"item": 15214,
+"no": 214,
+"name": "Croc Gland",
+"rarity": 0,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/214_carte_croc_gland.png"
+},
+{
+"item": 15215,
+"no": 215,
+"name": "Kolérat",
+"rarity": 0,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/215_carte_kolerat.png"
+},
+{
+"item": 15216,
+"no": 216,
+"name": "Ouginak",
+"rarity": 0,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/216_carte_ouginak.png"
+},
+{
+"item": 15217,
+"no": 217,
+"name": "Croc Gland enragé",
+"rarity": 1,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/217_carte_croc_gland_enrage.png"
+},
+{
+"item": 15218,
+"no": 218,
+"name": "Fantôme Ardent",
+"rarity": 2,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/218_carte_fantome_ardent.png"
+},
+{
+"item": 15219,
+"no": 219,
+"name": "Fantôme Brave",
+"rarity": 2,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/219_carte_fantome_brave.png"
+},
+{
+"item": 15220,
+"no": 220,
+"name": "Fantôme Arepo",
+"rarity": 2,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/220_carte_fantome_arepo.png"
+},
+{
+"item": 15221,
+"no": 221,
+"name": "Qu'Tan",
+"rarity": 3,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/221_carte_qu_tan.png"
+},
+{
+"item": 15222,
+"no": 222,
+"name": "Petit Démon Rapide",
+"rarity": 0,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/222_carte_petit_demon_rapide.png"
+},
+{
+"item": 15223,
+"no": 223,
+"name": "Envoyé des Abysses",
+"rarity": 1,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/223_carte_envoye_des_abysses.png"
+},
+{
+"item": 15224,
+"no": 224,
+"name": "Sorcier Démon",
+"rarity": 1,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/224_carte_sorcier_demon.png"
+},
+{
+"item": 15225,
+"no": 225,
+"name": "Sbire de Qu'Tan",
+"rarity": 1,
+"family": "Sidimonstres",
+"img": "/images/TTG/imagecarteTTG/Sidimonstres/225_carte_sbire_de_qu_tan.png"
+},
+{
+"item": 15226,
+"no": 226,
+"name": "Rat d'Egoutant",
+"rarity": 0,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/226_carte_rat_d_egoutant.png"
+},
+{
+"item": 15227,
+"no": 227,
+"name": "Chaman d'Egoutant",
+"rarity": 0,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/227_carte_chaman_d_egoutant.png"
+},
+{
+"item": 15228,
+"no": 228,
+"name": "Rat d'Egoutant malade",
+"rarity": 0,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/228_carte_rat_d_egoutant_malade.png"
+},
+{
+"item": 15229,
+"no": 229,
+"name": "Milirat d'Egoutant malade",
+"rarity": 0,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/229_carte_milirat_d_egoutant_malade.png"
+},
+{
+"item": 15230,
+"no": 230,
+"name": "Rat d'Hyoactif",
+"rarity": 1,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/230_carte_rat_d_hyoactif.png"
+},
+{
+"item": 15231,
+"no": 231,
+"name": "Rat de Marais",
+"rarity": 1,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/231_carte_rat_de_marais.png"
+},
+{
+"item": 15232,
+"no": 232,
+"name": "Rat Batteur",
+"rarity": 1,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/232_carte_rat_batteur.png"
+},
+{
+"item": 15233,
+"no": 233,
+"name": "Rat Klure",
+"rarity": 1,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/233_carte_rat_klure.png"
+},
+{
+"item": 15234,
+"no": 234,
+"name": "Rat Basher",
+"rarity": 1,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/234_carte_rat_basher.png"
+},
+{
+"item": 15235,
+"no": 235,
+"name": "Rat Bajoie",
+"rarity": 1,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/235_carte_rat_bajoie.png"
+},
+{
+"item": 15236,
+"no": 236,
+"name": "Rat Croc",
+"rarity": 1,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/236_carte_rat_croc.png"
+},
+{
+"item": 15237,
+"no": 237,
+"name": "Rat Noir",
+"rarity": 2,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/237_carte_rat_noir.png"
+},
+{
+"item": 15238,
+"no": 238,
+"name": "Rat Blanc",
+"rarity": 2,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/238_carte_rat_blanc.png"
+},
+{
+"item": 15239,
+"no": 239,
+"name": "Raphaela",
+"rarity": 2,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/239_carte_raphaela.png"
+},
+{
+"item": 15240,
+"no": 240,
+"name": "Donatella",
+"rarity": 2,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/240_carte_donatella.png"
+},
+{
+"item": 15241,
+"no": 241,
+"name": "Michelangela",
+"rarity": 2,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/241_carte_michelangela.png"
+},
+{
+"item": 15242,
+"no": 242,
+"name": "Leonardawa",
+"rarity": 2,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/242_carte_leonardawa.png"
+},
+{
+"item": 15243,
+"no": 243,
+"name": "Sphincter Cell",
+"rarity": 3,
+"family": "Rats",
+"img": "/images/TTG/imagecarteTTG/Rats/243_carte_sphincter_cell.png"
+},
+{
+"item": 15244,
+"no": 244,
+"name": "Frakacia Leukocytine",
+"rarity": 0,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/244_carte_frakacia_leukocytine.png"
+},
+{
+"item": 15245,
+"no": 245,
+"name": "Ogivol Scalarcin",
+"rarity": 0,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/245_carte_ogivol_scalarcin.png"
+},
+{
+"item": 15246,
+"no": 246,
+"name": "Fouduglen L'écureuil",
+"rarity": 0,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/246_carte_fouduglen_l_ecureuil.png"
+},
+{
+"item": 15247,
+"no": 247,
+"name": "Marzwel le Gobelin",
+"rarity": 0,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/247_carte_marzwel_le_gobelin.png"
+},
+{
+"item": 15248,
+"no": 248,
+"name": "Aermyne 'Braco' Scalptaras",
+"rarity": 1,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/248_carte_aermyne_braco_scalpataras.png"
+},
+{
+"item": 15249,
+"no": 249,
+"name": "Padgref Demoël",
+"rarity": 1,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/249_carte_padgref_demoel.png"
+},
+{
+"item": 15250,
+"no": 250,
+"name": "Rok Gnorok",
+"rarity": 1,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/250_carte_rok_gnorok.png"
+},
+{
+"item": 15251,
+"no": 251,
+"name": "Musha L'Oni",
+"rarity": 1,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/251_carte_musha_l_oni.png"
+},
+{
+"item": 15252,
+"no": 252,
+"name": "Eratz le Revendicateur",
+"rarity": 2,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/252_carte_eratz_le_revendicateur.png"
+},
+{
+"item": 15253,
+"no": 253,
+"name": "Nomekop Le Crapoteur",
+"rarity": 2,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/253_carte_nomekop_le_capoteur.png"
+},
+{
+"item": 15254,
+"no": 254,
+"name": "Edasse Le Trouble Fête",
+"rarity": 2,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/254_carte_edasse_le_trouble_fete.png"
+},
+{
+"item": 15255,
+"no": 255,
+"name": "Qil Bil",
+"rarity": 2,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/255_carte_qil_bil.png"
+},
+{
+"item": 15256,
+"no": 256,
+"name": "Zatoïshwan",
+"rarity": 2,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/256_carte_zatoishwan.png"
+},
+{
+"item": 15257,
+"no": 257,
+"name": "Uk'Not'Allag",
+"rarity": 3,
+"family": "Avis de recherche",
+"img": "/images/TTG/imagecarteTTG/Avis de recherche/257_carte_uk_not_allag.png"
+},
+{
+"item": 15258,
+"no": 258,
+"name": "Scarafeuille Rouge",
+"rarity": 0,
+"family": "Scarafeuilles",
+"img": "/images/TTG/imagecarteTTG/Scarafeuilles/258_carte_scarafeuille_rouge.png"
+},
+{
+"item": 15259,
+"no": 259,
+"name": "Scarafeuille Bleu",
+"rarity": 0,
+"family": "Scarafeuilles",
+"img": "/images/TTG/imagecarteTTG/Scarafeuilles/259_carte_scarafeuille_bleu.png"
+},
+{
+"item": 15260,
+"no": 260,
+"name": "Scarafeuille Vert",
+"rarity": 0,
+"family": "Scarafeuilles",
+"img": "/images/TTG/imagecarteTTG/Scarafeuilles/260_carte_scarafeuille_vert.png"
+},
+{
+"item": 15261,
+"no": 261,
+"name": "Scarafeuille Blanc",
+"rarity": 0,
+"family": "Scarafeuilles",
+"img": "/images/TTG/imagecarteTTG/Scarafeuilles/261_carte_scarafeuille_blanc.png"
+},
+{
+"item": 15262,
+"no": 262,
+"name": "Flammèche Feu",
+"rarity": 0,
+"family": "Scarafeuilles",
+"img": "/images/TTG/imagecarteTTG/Scarafeuilles/262_carte_flammeche_feu.png"
+},
+{
+"item": 15263,
+"no": 263,
+"name": "Flammèche Eau",
+"rarity": 0,
+"family": "Scarafeuilles",
+"img": "/images/TTG/imagecarteTTG/Scarafeuilles/263_carte_flammeche_eau.png"
+},
+{
+"item": 15264,
+"no": 264,
+"name": "Flammèche Terre",
+"rarity": 0,
+"family": "Scarafeuilles",
+"img": "/images/TTG/imagecarteTTG/Scarafeuilles/264_carte_flammeche_terre.png"
+},
+{
+"item": 15265,
+"no": 265,
+"name": "Flammèche Air",
+"rarity": 0,
+"family": "Scarafeuilles",
+"img": "/images/TTG/imagecarteTTG/Scarafeuilles/265_carte_flammeche_air.png"
+},
+{
+"item": 15266,
+"no": 266,
+"name": "Scarafeuille Noir",
+"rarity": 1,
+"family": "Scarafeuilles",
+"img": "/images/TTG/imagecarteTTG/Scarafeuilles/266_carte_scarafeuille_noir.png"
+},
+{
+"item": 15267,
+"no": 267,
+"name": "Scarafeuille Immature",
+"rarity": 1,
+"family": "Scarafeuilles",
+"img": "/images/TTG/imagecarteTTG/Scarafeuilles/267_carte_scarafeuille_immature.png"
+},
+{
+"item": 15268,
+"no": 268,
+"name": "Scarabosse Doré",
+"rarity": 3,
+"family": "Scarafeuilles",
+"img": "/images/TTG/imagecarteTTG/Scarafeuilles/268_carte_scarabosse_dore.png"
+},
+{
+"item": 15269,
+"no": 269,
+"name": "Gardienne des Egouts",
+"rarity": 3,
+"family": "Araknes",
+"img": "/images/TTG/imagecarteTTG/Araknes/269_carte_gardienne_des_egouts.png"
+},
+{
+"item": 15270,
+"no": 270,
+"name": "Araknawa",
+"rarity": 0,
+"family": "Araknes",
+"img": "/images/TTG/imagecarteTTG/Araknes/270_carte_araknawa.png"
+},
+{
+"item": 15271,
+"no": 271,
+"name": "Touchparak",
+"rarity": 2,
+"family": "Araknes",
+"img": "/images/TTG/imagecarteTTG/Araknes/271_carte_touchparak.png"
+},
+{
+"item": 15272,
+"no": 272,
+"name": "Arakne",
+"rarity": 0,
+"family": "Araknes",
+"img": "/images/TTG/imagecarteTTG/Araknes/272_carte_arakne.png"
+},
+{
+"item": 15273,
+"no": 273,
+"name": "Arakne Malade",
+"rarity": 0,
+"family": "Araknes",
+"img": "/images/TTG/imagecarteTTG/Araknes/273_carte_arakne_malade.png"
+},
+{
+"item": 15274,
+"no": 274,
+"name": "Arakne Agressive",
+"rarity": 1,
+"family": "Araknes",
+"img": "/images/TTG/imagecarteTTG/Araknes/274_carte_arakne_agressive.png"
+},
+{
+"item": 15275,
+"no": 275,
+"name": "Arakne Majeure",
+"rarity": 1,
+"family": "Araknes",
+"img": "/images/TTG/imagecarteTTG/Araknes/275_carte_arakne_majeure.png"
+},
+{
+"item": 15276,
+"no": 276,
+"name": "Milimulou",
+"rarity": 0,
+"family": "Canidés et animaux de la forêt",
+"img": "/images/TTG/imagecarteTTG/Canidés et animaux de la forêt/276_carte_milimulou.png"
+},
+{
+"item": 15277,
+"no": 277,
+"name": "Mulou",
+"rarity": 1,
+"family": "Canidés et animaux de la forêt",
+"img": "/images/TTG/imagecarteTTG/Canidés et animaux de la forêt/277_carte_mulou.png"
+},
+{
+"item": 15278,
+"no": 278,
+"name": "Trooll",
+"rarity": 2,
+"family": "Canidés et animaux de la forêt",
+"img": "/images/TTG/imagecarteTTG/Canidés et animaux de la forêt/278_carte_trooll.png"
+},
+{
+"item": 15279,
+"no": 279,
+"name": "Meulou",
+"rarity": 3,
+"family": "Canidés et animaux de la forêt",
+"img": "/images/TTG/imagecarteTTG/Canidés et animaux de la forêt/279_carte_meulou.png"
+},
+{
+"item": 15280,
+"no": 280,
+"name": "Prespic",
+"rarity": 0,
+"family": "Canidés et animaux de la forêt",
+"img": "/images/TTG/imagecarteTTG/Canidés et animaux de la forêt/280_carte_prespic.png"
+},
+{
+"item": 15281,
+"no": 281,
+"name": "Sanglier",
+"rarity": 0,
+"family": "Canidés et animaux de la forêt",
+"img": "/images/TTG/imagecarteTTG/Canidés et animaux de la forêt/281_carte_sanglier.png"
+},
+{
+"item": 15282,
+"no": 282,
+"name": "Moskito",
+"rarity": 0,
+"family": "Vermines des champs",
+"img": "/images/TTG/imagecarteTTG/Vermines des champs/282_carte_moskito.png"
+},
+{
+"item": 15283,
+"no": 283,
+"name": "L'homme Ours",
+"rarity": 1,
+"family": "Canidés et animaux de la forêt",
+"img": "/images/TTG/imagecarteTTG/Canidés et animaux de la forêt/283_carte_l_homme_ours.png"
+},
+{
+"item": 15284,
+"no": 284,
+"name": "Milimilou",
+"rarity": 1,
+"family": "Canidés et animaux de la forêt",
+"img": "/images/TTG/imagecarteTTG/Canidés et animaux de la forêt/284_carte_milimilou.png"
+},
+{
+"item": 15285,
+"no": 285,
+"name": "Crocodaille",
+"rarity": 0,
+"family": "Gadouilleux",
+"img": "/images/TTG/imagecarteTTG/Gadouilleux/285_carte_crocodaille.png"
+},
+{
+"item": 15286,
+"no": 286,
+"name": "Boo",
+"rarity": 0,
+"family": "Gadouilleux",
+"img": "/images/TTG/imagecarteTTG/Gadouilleux/286_carte_boo.png"
+},
+{
+"item": 15287,
+"no": 287,
+"name": "Chef Crocodaille",
+"rarity": 2,
+"family": "Gadouilleux",
+"img": "/images/TTG/imagecarteTTG/Gadouilleux/287_carte_chef_crocodaille.png"
+},
+{
+"item": 15288,
+"no": 288,
+"name": "Crocoburio",
+"rarity": 3,
+"family": "Gadouilleux",
+"img": "/images/TTG/imagecarteTTG/Gadouilleux/288_carte_crocoburio.png"
+},
+{
+"item": 15289,
+"no": 289,
+"name": "Fantôme Crocodaille",
+"rarity": 1,
+"family": "Gadouilleux",
+"img": "/images/TTG/imagecarteTTG/Gadouilleux/289_carte_fantome_crocodaille.png"
+},
+{
+"item": 15290,
+"no": 290,
+"name": "Champ Champ",
+"rarity": 0,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/290_carte_champ_champ.png"
+},
+{
+"item": 15291,
+"no": 291,
+"name": "Champa Vert",
+"rarity": 0,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/291_carte_champa_vert.png"
+},
+{
+"item": 15292,
+"no": 292,
+"name": "Champa Rouge",
+"rarity": 0,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/292_carte_champa_rouge.png"
+},
+{
+"item": 15293,
+"no": 293,
+"name": "Champa Bleu",
+"rarity": 0,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/293_carte_champa_bleu.png"
+},
+{
+"item": 15294,
+"no": 294,
+"name": "Champa Marron",
+"rarity": 0,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/294_carte_champa_marron.png"
+},
+{
+"item": 15295,
+"no": 295,
+"name": "Maître Bolet",
+"rarity": 1,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/295_carte_maitre_bolet.png"
+},
+{
+"item": 15296,
+"no": 296,
+"name": "Tromperelle",
+"rarity": 2,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/296_carte_tromperelle.png"
+},
+{
+"item": 15297,
+"no": 297,
+"name": "Champaknyde",
+"rarity": 2,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/297_carte_champaknyde.png"
+},
+{
+"item": 15298,
+"no": 298,
+"name": "Champodonte",
+"rarity": 2,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/298_carte_champodonte.png"
+},
+{
+"item": 15299,
+"no": 299,
+"name": "Champmane",
+"rarity": 2,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/299_carte_champmane.png"
+},
+{
+"item": 15300,
+"no": 300,
+"name": "Champbis",
+"rarity": 2,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/300_carte_champbis.png"
+},
+{
+"item": 15301,
+"no": 301,
+"name": "Champ à Gnons",
+"rarity": 2,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/301_carte_champ_a_gnons.png"
+},
+{
+"item": 15302,
+"no": 302,
+"name": "Ougah",
+"rarity": 3,
+"family": "Champignons",
+"img": "/images/TTG/imagecarteTTG/Champignons/302_carte_ougah.png"
+},
+{
+"item": 15303,
+"no": 303,
+"name": "Tofu",
+"rarity": 0,
+"family": "Tofus",
+"img": "/images/TTG/imagecarteTTG/Tofus/303_carte_tofu.png"
+},
+{
+"item": 15304,
+"no": 304,
+"name": "Tofu Malade",
+"rarity": 0,
+"family": "Tofus",
+"img": "/images/TTG/imagecarteTTG/Tofus/304_carte_tofu_malade.png"
+},
+{
+"item": 15305,
+"no": 305,
+"name": "Tofu Noir",
+"rarity": 1,
+"family": "Tofus",
+"img": "/images/TTG/imagecarteTTG/Tofus/305_carte_tofu_noir.png"
+},
+{
+"item": 15306,
+"no": 306,
+"name": "Tofoune",
+"rarity": 1,
+"family": "Tofus",
+"img": "/images/TTG/imagecarteTTG/Tofus/306_carte_tofoune.png"
+},
+{
+"item": 15307,
+"no": 307,
+"name": "Tofukaz",
+"rarity": 1,
+"family": "Tofus",
+"img": "/images/TTG/imagecarteTTG/Tofus/307_carte_tofukaz.png"
+},
+{
+"item": 15308,
+"no": 308,
+"name": "Tofuzmo",
+"rarity": 1,
+"family": "Tofus",
+"img": "/images/TTG/imagecarteTTG/Tofus/308_carte_tofuzmo.png"
+},
+{
+"item": 15309,
+"no": 309,
+"name": "Tofu Ventripotent",
+"rarity": 1,
+"family": "Tofus",
+"img": "/images/TTG/imagecarteTTG/Tofus/309_carte_tofu_ventripotent.png"
+},
+{
+"item": 15310,
+"no": 310,
+"name": "Tofu d'Halouine",
+"rarity": 2,
+"family": "Tofus",
+"img": "/images/TTG/imagecarteTTG/Tofus/310_carte_tofu_d_halouine.png"
+},
+{
+"item": 15311,
+"no": 311,
+"name": "Batofu",
+"rarity": 2,
+"family": "Tofus",
+"img": "/images/TTG/imagecarteTTG/Tofus/311_carte_batofu.png"
+},
+{
+"item": 15312,
+"no": 312,
+"name": "Tofu Royal",
+"rarity": 3,
+"family": "Tofus",
+"img": "/images/TTG/imagecarteTTG/Tofus/312_carte_tofu_royal.png"
+},
+{
+"item": 15313,
+"no": 313,
+"name": "Corbac",
+"rarity": 0,
+"family": "Corbacs",
+"img": "/images/TTG/imagecarteTTG/Corbacs/313_carte_corbac.png"
+},
+{
+"item": 15314,
+"no": 314,
+"name": "Corbac Apprivoisé",
+"rarity": 1,
+"family": "Corbacs",
+"img": "/images/TTG/imagecarteTTG/Corbacs/314_carte_corbac_apprivoise.png"
+},
+{
+"item": 15315,
+"no": 315,
+"name": "Buveur",
+"rarity": 1,
+"family": "Corbacs",
+"img": "/images/TTG/imagecarteTTG/Corbacs/315_carte_buveur.png"
+},
+{
+"item": 15316,
+"no": 316,
+"name": "Renarbo",
+"rarity": 1,
+"family": "Corbacs",
+"img": "/images/TTG/imagecarteTTG/Corbacs/316_carte_renarbo.png"
+},
+{
+"item": 15317,
+"no": 317,
+"name": "Maître Corbac",
+"rarity": 3,
+"family": "Corbacs",
+"img": "/images/TTG/imagecarteTTG/Corbacs/317_carte_maitre_corbac.png"
+},
+{
+"item": 15318,
+"no": 318,
+"name": "Dragodinde Amande Sauvage",
+"rarity": 0,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/318_carte_dragodinde_amande_sauvage.png"
+},
+{
+"item": 15319,
+"no": 319,
+"name": "Dragodinde Rousse Sauvage",
+"rarity": 0,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/319_carte_dragodinde_rousse_sauvage.png"
+},
+{
+"item": 15320,
+"no": 320,
+"name": "Dragodinde Dorée Sauvage",
+"rarity": 2,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/320_carte_dragodinde_doree_sauvage.png"
+},
+{
+"item": 15321,
+"no": 321,
+"name": "DoK Alako",
+"rarity": 0,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/321_carte_dok_alako.png"
+},
+{
+"item": 15322,
+"no": 322,
+"name": "Koalak Immature",
+"rarity": 0,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/322_carte_koalak_immature.png"
+},
+{
+"item": 15323,
+"no": 323,
+"name": "Koalak Indigo",
+"rarity": 0,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/323_carte_koalak_indigo.png"
+},
+{
+"item": 15324,
+"no": 324,
+"name": "Koalak Coco",
+"rarity": 0,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/324_carte_koalak_coco.png"
+},
+{
+"item": 15325,
+"no": 325,
+"name": "Koalak Griotte",
+"rarity": 0,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/325_carte_koalak_griotte.png"
+},
+{
+"item": 15326,
+"no": 326,
+"name": "Koalak Reinette",
+"rarity": 0,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/326_carte_koalak_reinette.png"
+},
+{
+"item": 15327,
+"no": 327,
+"name": "Mama Koalak",
+"rarity": 0,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/327_carte_mama_koalak.png"
+},
+{
+"item": 15328,
+"no": 328,
+"name": "Warko Marron",
+"rarity": 1,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/328_carte_warko_marron.png"
+},
+{
+"item": 15329,
+"no": 329,
+"name": "Workette",
+"rarity": 1,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/329_carte_workette.png"
+},
+{
+"item": 15330,
+"no": 330,
+"name": "Piralak",
+"rarity": 1,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/330_carte_piralak.png"
+},
+{
+"item": 15331,
+"no": 331,
+"name": "Koalak Forestier",
+"rarity": 1,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/331_carte_koalak_forestier.png"
+},
+{
+"item": 15332,
+"no": 332,
+"name": "Pékeualak",
+"rarity": 1,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/332_carte_pekeualak.png"
+},
+{
+"item": 15333,
+"no": 333,
+"name": "Drakoalak",
+"rarity": 2,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/333_carte_drakoalak.png"
+},
+{
+"item": 15334,
+"no": 334,
+"name": "Fauchalak",
+"rarity": 1,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/334_carte_fauchalak.png"
+},
+{
+"item": 15335,
+"no": 335,
+"name": "Koulosse",
+"rarity": 3,
+"family": "Koalaks",
+"img": "/images/TTG/imagecarteTTG/Koalaks/335_carte_koulosse.png"
+},
+{
+"item": 15336,
+"no": 336,
+"name": "Guerrier Koalak",
+"rarity": 0,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/336_carte_guerrier_koalak.png"
+},
+{
+"item": 15337,
+"no": 337,
+"name": "Maître Koalak",
+"rarity": 1,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/337_carte_maitre_koalak.png"
+},
+{
+"item": 15338,
+"no": 338,
+"name": "Chevaucheur Koalak",
+"rarity": 1,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/338_carte_chevaucheur_koalak.png"
+},
+{
+"item": 15339,
+"no": 339,
+"name": "Momie Koalak",
+"rarity": 1,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/339_carte_momie_koalak.png"
+},
+{
+"item": 15340,
+"no": 340,
+"name": "Fossoyeur Koalak",
+"rarity": 1,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/340_carte_fossoyeur_koalak.png"
+},
+{
+"item": 15341,
+"no": 341,
+"name": "Koalak Sanguin",
+"rarity": 0,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/341_carte_koalak_sanguin.png"
+},
+{
+"item": 15342,
+"no": 342,
+"name": "Warko Violet",
+"rarity": 0,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/342_carte_warko_violet.png"
+},
+{
+"item": 15343,
+"no": 343,
+"name": "Koalak Farouche",
+"rarity": 0,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/343_carte_koalak_farouche.png"
+},
+{
+"item": 15344,
+"no": 344,
+"name": "Emeraude",
+"rarity": 2,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/344_carte_emeraude.png"
+},
+{
+"item": 15345,
+"no": 345,
+"name": "Saphira",
+"rarity": 2,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/345_carte_saphira.png"
+},
+{
+"item": 15346,
+"no": 346,
+"name": "Dégelée",
+"rarity": 1,
+"family": "Minos",
+"img": "/images/TTG/imagecarteTTG/Minos/346_carte_degelee.png"
+},
+{
+"item": 15347,
+"no": 347,
+"name": "Rubise",
+"rarity": 2,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/347_carte_rubise.png"
+},
+{
+"item": 15348,
+"no": 348,
+"name": "Diamantine",
+"rarity": 2,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/348_carte_diamantine.png"
+},
+{
+"item": 15349,
+"no": 349,
+"name": "Skeunk",
+"rarity": 3,
+"family": "Koalaks mortels",
+"img": "/images/TTG/imagecarteTTG/Koalaks mortels/349_carte_skeunk.png"
+},
+{
+"item": 15350,
+"no": 350,
+"name": "Gamino",
+"rarity": 1,
+"family": "Minos",
+"img": "/images/TTG/imagecarteTTG/Minos/350_carte_gamino.png"
+},
+{
+"item": 15351,
+"no": 351,
+"name": "Serpiplume",
+"rarity": 1,
+"family": "Minos",
+"img": "/images/TTG/imagecarteTTG/Minos/351_carte_serpiplume.png"
+},
+{
+"item": 15352,
+"no": 352,
+"name": "Scaratos",
+"rarity": 1,
+"family": "Minos",
+"img": "/images/TTG/imagecarteTTG/Minos/352_carte_scaratos.png"
+},
+{
+"item": 15353,
+"no": 353,
+"name": "Minoskito",
+"rarity": 1,
+"family": "Minos",
+"img": "/images/TTG/imagecarteTTG/Minos/353_carte_minoskito.png"
+},
+{
+"item": 15354,
+"no": 354,
+"name": "Mandrine",
+"rarity": 1,
+"family": "Minos",
+"img": "/images/TTG/imagecarteTTG/Minos/354_carte_mandrine.png"
+},
+{
+"item": 15355,
+"no": 355,
+"name": "Kraméléhon",
+"rarity": 1,
+"family": "Minos",
+"img": "/images/TTG/imagecarteTTG/Minos/355_carte_kramelehon.png"
+},
+{
+"item": 15356,
+"no": 356,
+"name": "Mominotor",
+"rarity": 2,
+"family": "Minos",
+"img": "/images/TTG/imagecarteTTG/Minos/356_carte_mominotor.png"
+},
+{
+"item": 15357,
+"no": 357,
+"name": "Déminoboule",
+"rarity": 2,
+"family": "Minos",
+"img": "/images/TTG/imagecarteTTG/Minos/357_carte_deminoboule.png"
+},
+{
+"item": 15358,
+"no": 358,
+"name": "Minotoror",
+"rarity": 2,
+"family": "Minos",
+"img": "/images/TTG/imagecarteTTG/Minos/358_carte_minotoror.png"
+},
+{
+"item": 15359,
+"no": 359,
+"name": "Minotot",
+"rarity": 3,
+"family": "Minos",
+"img": "/images/TTG/imagecarteTTG/Minos/359_carte_minotot.png"
+},
+{
+"item": 15360,
+"no": 360,
+"name": "Crabe",
+"rarity": 0,
+"family": "Monstres des plages",
+"img": "/images/TTG/imagecarteTTG/Monstres des plages/360_carte_crabe.png"
+},
+{
+"item": 15361,
+"no": 361,
+"name": "Pichon Orange",
+"rarity": 0,
+"family": "Monstres des plages",
+"img": "/images/TTG/imagecarteTTG/Monstres des plages/361_carte_pichon_orange.png"
+},
+{
+"item": 15362,
+"no": 362,
+"name": "Pichon Bleu",
+"rarity": 0,
+"family": "Monstres des plages",
+"img": "/images/TTG/imagecarteTTG/Monstres des plages/362_carte_pichon_bleu.png"
+},
+{
+"item": 15363,
+"no": 363,
+"name": "Pichon Blanc",
+"rarity": 0,
+"family": "Monstres des plages",
+"img": "/images/TTG/imagecarteTTG/Monstres des plages/363_carte_pichon_blanc.png"
+},
+{
+"item": 15364,
+"no": 364,
+"name": "Pichon Vert",
+"rarity": 0,
+"family": "Monstres des plages",
+"img": "/images/TTG/imagecarteTTG/Monstres des plages/364_carte_pichon_vert.png"
+},
+{
+"item": 15365,
+"no": 365,
+"name": "Etoile de la Mer d'Asse",
+"rarity": 0,
+"family": "Monstres des plages",
+"img": "/images/TTG/imagecarteTTG/Monstres des plages/365_carte_etoile_de_la_mer_d_asse.png"
+},
+{
+"item": 15366,
+"no": 366,
+"name": "Pichon Kloune",
+"rarity": 1,
+"family": "Monstres des plages",
+"img": "/images/TTG/imagecarteTTG/Monstres des plages/366_carte_pichon_kloune.png"
+},
+{
+"item": 15367,
+"no": 367,
+"name": "Raul Mops",
+"rarity": 1,
+"family": "Monstres des plages",
+"img": "/images/TTG/imagecarteTTG/Monstres des plages/367_carte_raul_mops.png"
+},
+{
+"item": 15368,
+"no": 368,
+"name": "Moumoule",
+"rarity": 2,
+"family": "Monstres des plages",
+"img": "/images/TTG/imagecarteTTG/Monstres des plages/368_carte_moumoule.png"
+},
+{
+"item": 15369,
+"no": 369,
+"name": "Mob l'Eponge",
+"rarity": 3,
+"family": "Monstres des plages",
+"img": "/images/TTG/imagecarteTTG/Monstres des plages/369_carte_mob_l_eponge.png"
+},
+{
+"item": 15370,
+"no": 370,
+"name": "Bitouf des Plaines",
+"rarity": 0,
+"family": "Herboricoles",
+"img": "/images/TTG/imagecarteTTG/Herboricoles/370_carte_bitouf_des_plaines.png"
+},
+{
+"item": 15371,
+"no": 371,
+"name": "Craqueleur Poli",
+"rarity": 0,
+"family": "Herboricoles",
+"img": "/images/TTG/imagecarteTTG/Herboricoles/371_carte_craqueleur_poli.png"
+},
+{
+"item": 15372,
+"no": 372,
+"name": "Craqueboule Poli",
+"rarity": 0,
+"family": "Herboricoles",
+"img": "/images/TTG/imagecarteTTG/Herboricoles/372_carte_craqueboule_poli.png"
+},
+{
+"item": 15373,
+"no": 373,
+"name": "Mufafah",
+"rarity": 1,
+"family": "Herboricoles",
+"img": "/images/TTG/imagecarteTTG/Herboricoles/373_carte_mufafah.png"
+},
+{
+"item": 15374,
+"no": 374,
+"name": "Kido",
+"rarity": 1,
+"family": "Herboricoles",
+"img": "/images/TTG/imagecarteTTG/Herboricoles/374_carte_kido.png"
+},
+{
+"item": 15375,
+"no": 375,
+"name": "Kilibriss",
+"rarity": 1,
+"family": "Herboricoles",
+"img": "/images/TTG/imagecarteTTG/Herboricoles/375_carte_kilibriss.png"
+},
+{
+"item": 15376,
+"no": 376,
+"name": "Silf le Rasboul Majeur",
+"rarity": 3,
+"family": "Herboricoles",
+"img": "/images/TTG/imagecarteTTG/Herboricoles/376_carte_silf_le_rasboul_majeur.png"
+},
+{
+"item": 15377,
+"no": 377,
+"name": "Crustorail Kouraçao",
+"rarity": 0,
+"family": "Colonie du Magistral",
+"img": "/images/TTG/imagecarteTTG/Colonie du Magistral/377_carte_crustorail_kouracao.png"
+},
+{
+"item": 15378,
+"no": 378,
+"name": "Crustorail Malibout",
+"rarity": 0,
+"family": "Colonie du Magistral",
+"img": "/images/TTG/imagecarteTTG/Colonie du Magistral/378_carte_crustorail_malibout.png"
+},
+{
+"item": 15379,
+"no": 379,
+"name": "Crustorail Passaoh",
+"rarity": 0,
+"family": "Colonie du Magistral",
+"img": "/images/TTG/imagecarteTTG/Colonie du Magistral/379_carte_crustorail_passaoh.png"
+},
+{
+"item": 15380,
+"no": 380,
+"name": "Crustorail Morito",
+"rarity": 0,
+"family": "Colonie du Magistral",
+"img": "/images/TTG/imagecarteTTG/Colonie du Magistral/380_carte_crustorail_morito.png"
+},
+{
+"item": 15381,
+"no": 381,
+"name": "Palmifleur Kouraçao",
+"rarity": 0,
+"family": "Colonie du Magistral",
+"img": "/images/TTG/imagecarteTTG/Colonie du Magistral/381_carte_palmifleur_kouracao.png"
+},
+{
+"item": 15382,
+"no": 382,
+"name": "Palmifleur Malibout",
+"rarity": 0,
+"family": "Colonie du Magistral",
+"img": "/images/TTG/imagecarteTTG/Colonie du Magistral/382_carte_palmifleur_malibout.png"
+},
+{
+"item": 15383,
+"no": 383,
+"name": "Palmifleur Passaoh",
+"rarity": 0,
+"family": "Colonie du Magistral",
+"img": "/images/TTG/imagecarteTTG/Colonie du Magistral/383_carte_palmifleur_passaoh.png"
+},
+{
+"item": 15384,
+"no": 384,
+"name": "Palmifleur Morito",
+"rarity": 0,
+"family": "Colonie du Magistral",
+"img": "/images/TTG/imagecarteTTG/Colonie du Magistral/384_carte_palmifleur_morito.png"
+},
+{
+"item": 15385,
+"no": 385,
+"name": "Corailleur",
+"rarity": 1,
+"family": "Colonie du Magistral",
+"img": "/images/TTG/imagecarteTTG/Colonie du Magistral/385_carte_corailleur.png"
+},
+{
+"item": 15386,
+"no": 386,
+"name": "Corailleur Magistral",
+"rarity": 3,
+"family": "Colonie du Magistral",
+"img": "/images/TTG/imagecarteTTG/Colonie du Magistral/386_carte_corailleur_magistral.png"
+},
+{
+"item": 15387,
+"no": 387,
+"name": "Tourbassingue",
+"rarity": 1,
+"family": "Monstres des Tourbières",
+"img": "/images/TTG/imagecarteTTG/Monstres des Tourbières/387_carte_tourbassingue.png"
+},
+{
+"item": 15388,
+"no": 388,
+"name": "Bourbassingue",
+"rarity": 1,
+"family": "Monstres des Tourbières",
+"img": "/images/TTG/imagecarteTTG/Monstres des Tourbières/388_carte_bourbassingue.png"
+},
+{
+"item": 15389,
+"no": 389,
+"name": "Le Ouassingue Entourbé",
+"rarity": 1,
+"family": "Monstres des Tourbières",
+"img": "/images/TTG/imagecarteTTG/Monstres des Tourbières/389_carte_le_ouassingue_entourbe.png"
+},
+{
+"item": 15390,
+"no": 390,
+"name": "Roissingue",
+"rarity": 2,
+"family": "Monstres des Tourbières",
+"img": "/images/TTG/imagecarteTTG/Monstres des Tourbières/390_carte_roissingue.png"
+},
+{
+"item": 15391,
+"no": 391,
+"name": "Kralamoure Géant",
+"rarity": 3,
+"family": "Monstres des Tourbières",
+"img": "/images/TTG/imagecarteTTG/Monstres des Tourbières/391_carte_kralamoure_geant.png"
+},
+{
+"item": 15392,
+"no": 392,
+"name": "Floribonde",
+"rarity": 1,
+"family": "Florifaune obscure",
+"img": "/images/TTG/imagecarteTTG/Florifaune obscure/392_carte_floribonde.png"
+},
+{
+"item": 15393,
+"no": 393,
+"name": "Bitouf Sombre",
+"rarity": 1,
+"family": "Florifaune obscure",
+"img": "/images/TTG/imagecarteTTG/Florifaune obscure/393_carte_bitouf_sombre.png"
+},
+{
+"item": 15394,
+"no": 394,
+"name": "Brouture",
+"rarity": 1,
+"family": "Florifaune obscure",
+"img": "/images/TTG/imagecarteTTG/Florifaune obscure/394_carte_brouture.png"
+},
+{
+"item": 15395,
+"no": 395,
+"name": "Fécorce",
+"rarity": 1,
+"family": "Florifaune obscure",
+"img": "/images/TTG/imagecarteTTG/Florifaune obscure/395_carte_fecorce.png"
+},
+{
+"item": 15396,
+"no": 396,
+"name": "Chiendent",
+"rarity": 1,
+"family": "Florifaune obscure",
+"img": "/images/TTG/imagecarteTTG/Florifaune obscure/396_carte_chiendent.png"
+},
+{
+"item": 15397,
+"no": 397,
+"name": "Abrakleur Sombre",
+"rarity": 2,
+"family": "Florifaune obscure",
+"img": "/images/TTG/imagecarteTTG/Florifaune obscure/397_carte_abrakleur_sombre.png"
+},
+{
+"item": 15398,
+"no": 398,
+"name": "Nerbe",
+"rarity": 2,
+"family": "Florifaune obscure",
+"img": "/images/TTG/imagecarteTTG/Florifaune obscure/398_carte_nerbe.png"
+},
+{
+"item": 15399,
+"no": 399,
+"name": "Tynril Consterné",
+"rarity": 3,
+"family": "Florifaune obscure",
+"img": "/images/TTG/imagecarteTTG/Florifaune obscure/399_carte_tynril_consterne.png"
+},
+{
+"item": 15400,
+"no": 400,
+"name": "Tynril Déconcerté",
+"rarity": 3,
+"family": "Florifaune obscure",
+"img": "/images/TTG/imagecarteTTG/Florifaune obscure/400_carte_tynril_deconcerte.png"
+},
+{
+"item": 15401,
+"no": 401,
+"name": "Tynril Perfide",
+"rarity": 3,
+"family": "Florifaune obscure",
+"img": "/images/TTG/imagecarteTTG/Florifaune obscure/401_carte_tynril_perfide.png"
+},
+{
+"item": 15402,
+"no": 402,
+"name": "Tynril Ahuri",
+"rarity": 3,
+"family": "Florifaune obscure",
+"img": "/images/TTG/imagecarteTTG/Florifaune obscure/402_carte_tynril_ahuri.png"
+},
+{
+"item": 15403,
+"no": 403,
+"name": "Bitouf Aérien",
+"rarity": 1,
+"family": "Peuple de l'Arbre",
+"img": "/images/TTG/imagecarteTTG/Peuple de l'Arbre/403_carte_bitouf_aerien.png"
+},
+{
+"item": 15404,
+"no": 404,
+"name": "Poolay",
+"rarity": 1,
+"family": "Peuple de l'Arbre",
+"img": "/images/TTG/imagecarteTTG/Peuple de l'Arbre/404_carte_poolay.png"
+},
+{
+"item": 15405,
+"no": 405,
+"name": "Abrakleur Clair",
+"rarity": 1,
+"family": "Peuple de l'Arbre",
+"img": "/images/TTG/imagecarteTTG/Peuple de l'Arbre/405_carte_abrakleur_clair.png"
+},
+{
+"item": 15406,
+"no": 406,
+"name": "Kaskargo",
+"rarity": 2,
+"family": "Peuple de l'Arbre",
+"img": "/images/TTG/imagecarteTTG/Peuple de l'Arbre/406_carte_kaskargo.png"
+},
+{
+"item": 15407,
+"no": 407,
+"name": "Meupette",
+"rarity": 2,
+"family": "Peuple de l'Arbre",
+"img": "/images/TTG/imagecarteTTG/Peuple de l'Arbre/407_carte_meupette.png"
+},
+{
+"item": 15408,
+"no": 408,
+"name": "Kimbo",
+"rarity": 3,
+"family": "Peuple de l'Arbre",
+"img": "/images/TTG/imagecarteTTG/Peuple de l'Arbre/408_carte_kimbo.png"
+},
+{
+"item": 15409,
+"no": 409,
+"name": "Sparo",
+"rarity": 1,
+"family": "Pirates de l'Arche d'Otomaï",
+"img": "/images/TTG/imagecarteTTG/Pirates de l'Arche d'Otomaï/409_carte_sparo.png"
+},
+{
+"item": 15410,
+"no": 410,
+"name": "Barbroussa",
+"rarity": 1,
+"family": "Pirates de l'Arche d'Otomaï",
+"img": "/images/TTG/imagecarteTTG/Pirates de l'Arche d'Otomaï/410_carte_barbroussa.png"
+},
+{
+"item": 15411,
+"no": 411,
+"name": "Le Flib",
+"rarity": 1,
+"family": "Pirates de l'Arche d'Otomaï",
+"img": "/images/TTG/imagecarteTTG/Pirates de l'Arche d'Otomaï/411_carte_le_flib.png"
+},
+{
+"item": 15412,
+"no": 412,
+"name": "Gourlo le Terrible",
+"rarity": 3,
+"family": "Pirates de l'Arche d'Otomaï",
+"img": "/images/TTG/imagecarteTTG/Pirates de l'Arche d'Otomaï/412_carte_gourlo_le_terrible.png"
+},
+{
+"item": 15413,
+"no": 413,
+"name": "Gamine Zoth",
+"rarity": 1,
+"family": "Zoths",
+"img": "/images/TTG/imagecarteTTG/Zoths/413_carte_gamine_zoth.png"
+},
+{
+"item": 15414,
+"no": 414,
+"name": "Guerrier Zoth",
+"rarity": 1,
+"family": "Zoths",
+"img": "/images/TTG/imagecarteTTG/Zoths/414_carte_guerrier_zoth.png"
+},
+{
+"item": 15415,
+"no": 415,
+"name": "Disciple Zoth",
+"rarity": 1,
+"family": "Zoths",
+"img": "/images/TTG/imagecarteTTG/Zoths/415_carte_disciple_zoth.png"
+},
+{
+"item": 15416,
+"no": 416,
+"name": "Sergent Zoth",
+"rarity": 1,
+"family": "Zoths",
+"img": "/images/TTG/imagecarteTTG/Zoths/416_carte_sergent_zoth.png"
+},
+{
+"item": 15417,
+"no": 417,
+"name": "Maître Zoth",
+"rarity": 2,
+"family": "Zoths",
+"img": "/images/TTG/imagecarteTTG/Zoths/417_carte_maitre_zoth.png"
+},
+{
+"item": 15418,
+"no": 418,
+"name": "Manitou Zoth",
+"rarity": 3,
+"family": "Zoths",
+"img": "/images/TTG/imagecarteTTG/Zoths/418_carte_manitou_zoth.png"
+},
+{
+"item": 15419,
+"no": 419,
+"name": "Cooleuvre",
+"rarity": 0,
+"family": "Plantes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Plantes de Pandala/419_carte_cooleuvre.png"
+},
+{
+"item": 15420,
+"no": 420,
+"name": "Bulbiflore",
+"rarity": 0,
+"family": "Plantes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Plantes de Pandala/420_carte_bulbiflore.png"
+},
+{
+"item": 15421,
+"no": 421,
+"name": "Bulbuisson",
+"rarity": 0,
+"family": "Plantes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Plantes de Pandala/421_carte_bulbuisson.png"
+},
+{
+"item": 15422,
+"no": 422,
+"name": "Bambouto",
+"rarity": 0,
+"family": "Plantes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Plantes de Pandala/422_carte_bambouto.png"
+},
+{
+"item": 15423,
+"no": 423,
+"name": "Bulbambou",
+"rarity": 0,
+"family": "Plantes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Plantes de Pandala/423_carte_bulbambou.png"
+},
+{
+"item": 15424,
+"no": 424,
+"name": "Bulbig",
+"rarity": 3,
+"family": "Plantes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Plantes de Pandala/424_carte_bulbig.png"
+},
+{
+"item": 15425,
+"no": 425,
+"name": "Bambouto Sacré",
+"rarity": 2,
+"family": "Plantes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Plantes de Pandala/425_carte_bambouto_sacre.png"
+},
+{
+"item": 15426,
+"no": 426,
+"name": "Tanuki Chan",
+"rarity": 2,
+"family": "Kitsous",
+"img": "/images/TTG/imagecarteTTG/Kitsous/426_carte_tanuki_chan.png"
+},
+{
+"item": 15427,
+"no": 427,
+"name": "Kitsou Nakwa",
+"rarity": 0,
+"family": "Kitsous",
+"img": "/images/TTG/imagecarteTTG/Kitsous/427_carte_kitsou_nakwa.png"
+},
+{
+"item": 15428,
+"no": 428,
+"name": "Kitsou Nere",
+"rarity": 0,
+"family": "Kitsous",
+"img": "/images/TTG/imagecarteTTG/Kitsous/428_carte_kitsou_nere.png"
+},
+{
+"item": 15429,
+"no": 429,
+"name": "Kitsou Nae",
+"rarity": 0,
+"family": "Kitsous",
+"img": "/images/TTG/imagecarteTTG/Kitsous/429_carte_kitsou_nae.png"
+},
+{
+"item": 15430,
+"no": 430,
+"name": "Kitsou Nufeu",
+"rarity": 1,
+"family": "Kitsous",
+"img": "/images/TTG/imagecarteTTG/Kitsous/430_carte_kitsou_nufeu.png"
+},
+{
+"item": 15431,
+"no": 431,
+"name": "Pandawa Ivre",
+"rarity": 0,
+"family": "Kitsous",
+"img": "/images/TTG/imagecarteTTG/Kitsous/431_carte_pandawa_ivre.png"
+},
+{
+"item": 15432,
+"no": 432,
+"name": "Pandalette Ivre",
+"rarity": 0,
+"family": "Kitsous",
+"img": "/images/TTG/imagecarteTTG/Kitsous/432_carte_pandalette_ivre.png"
+},
+{
+"item": 15433,
+"no": 433,
+"name": "Tanukouï San",
+"rarity": 3,
+"family": "Kitsous",
+"img": "/images/TTG/imagecarteTTG/Kitsous/433_carte_tanukoui_san.png"
+},
+{
+"item": 15434,
+"no": 434,
+"name": "Pandit",
+"rarity": 0,
+"family": "Pandissidans",
+"img": "/images/TTG/imagecarteTTG/Pandissidans/434_carte_pandit.png"
+},
+{
+"item": 15435,
+"no": 435,
+"name": "Pandikaze aérien",
+"rarity": 1,
+"family": "Pandissidans",
+"img": "/images/TTG/imagecarteTTG/Pandissidans/435_carte_pandikaze_aerien.png"
+},
+{
+"item": 15436,
+"no": 436,
+"name": "Pandikaze vertige",
+"rarity": 1,
+"family": "Pandissidans",
+"img": "/images/TTG/imagecarteTTG/Pandissidans/436_carte_pandikaze_vertige.png"
+},
+{
+"item": 15437,
+"no": 437,
+"name": "Pandikwakaze",
+"rarity": 1,
+"family": "Pandissidans",
+"img": "/images/TTG/imagecarteTTG/Pandissidans/437_carte_pandikwakaze.png"
+},
+{
+"item": 15438,
+"no": 438,
+"name": "Pandulkaze",
+"rarity": 1,
+"family": "Pandissidans",
+"img": "/images/TTG/imagecarteTTG/Pandissidans/438_carte_pandulkaze.png"
+},
+{
+"item": 15439,
+"no": 439,
+"name": "Guerrier Pandikaze",
+"rarity": 1,
+"family": "Pandissidans",
+"img": "/images/TTG/imagecarteTTG/Pandissidans/439_carte_guerrier_pandikaze.png"
+},
+{
+"item": 15440,
+"no": 440,
+"name": "Pandule",
+"rarity": 0,
+"family": "Pandissidans",
+"img": "/images/TTG/imagecarteTTG/Pandissidans/440_carte_pandule.png"
+},
+{
+"item": 15441,
+"no": 441,
+"name": "Pandikaze",
+"rarity": 0,
+"family": "Pandissidans",
+"img": "/images/TTG/imagecarteTTG/Pandissidans/441_carte_pandikaze.png"
+},
+{
+"item": 15442,
+"no": 442,
+"name": "Maître Pandore",
+"rarity": 3,
+"family": "Pandissidans",
+"img": "/images/TTG/imagecarteTTG/Pandissidans/442_carte_maitre_pandore.png"
+},
+{
+"item": 15443,
+"no": 443,
+"name": "Pandore",
+"rarity": 2,
+"family": "Pandissidans",
+"img": "/images/TTG/imagecarteTTG/Pandissidans/443_carte_pandore.png"
+},
+{
+"item": 15444,
+"no": 444,
+"name": "Zilla",
+"rarity": 0,
+"family": "Firefoux",
+"img": "/images/TTG/imagecarteTTG/Firefoux/444_carte_zilla.png"
+},
+{
+"item": 15445,
+"no": 445,
+"name": "Yokai Firefoux",
+"rarity": 1,
+"family": "Firefoux",
+"img": "/images/TTG/imagecarteTTG/Firefoux/445_carte_yokai_firefoux.png"
+},
+{
+"item": 15446,
+"no": 446,
+"name": "Soryo Firefoux",
+"rarity": 1,
+"family": "Firefoux",
+"img": "/images/TTG/imagecarteTTG/Firefoux/446_carte_soryo_firefoux.png"
+},
+{
+"item": 15447,
+"no": 447,
+"name": "Maho Firefoux",
+"rarity": 1,
+"family": "Firefoux",
+"img": "/images/TTG/imagecarteTTG/Firefoux/447_carte_maho_firefoux.png"
+},
+{
+"item": 15448,
+"no": 448,
+"name": "Léopardo",
+"rarity": 0,
+"family": "Firefoux",
+"img": "/images/TTG/imagecarteTTG/Firefoux/448_carte_leopardo.png"
+},
+{
+"item": 15449,
+"no": 449,
+"name": "Péki Péki",
+"rarity": 3,
+"family": "Firefoux",
+"img": "/images/TTG/imagecarteTTG/Firefoux/449_carte_peki_peki.png"
+},
+{
+"item": 15450,
+"no": 450,
+"name": "Fantôme Pandikaze",
+"rarity": 1,
+"family": "Fantômes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Fantômes de Pandala/450_carte_fantome_pandikaze.png"
+},
+{
+"item": 15451,
+"no": 451,
+"name": "Fantôme Maho Firefoux",
+"rarity": 2,
+"family": "Fantômes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Fantômes de Pandala/451_carte_fantome_maho_firefoux.png"
+},
+{
+"item": 15452,
+"no": 452,
+"name": "Fantôme Soryo Firefoux",
+"rarity": 2,
+"family": "Fantômes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Fantômes de Pandala/452_carte_fantome_soryo_firefoux.png"
+},
+{
+"item": 15453,
+"no": 453,
+"name": "Fantôme Léopardo",
+"rarity": 1,
+"family": "Fantômes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Fantômes de Pandala/453_carte_fantome_leopardo.png"
+},
+{
+"item": 15454,
+"no": 454,
+"name": "Fantôme Yokai Firefoux",
+"rarity": 2,
+"family": "Fantômes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Fantômes de Pandala/454_carte_fantome_yokai_firefoux.png"
+},
+{
+"item": 15455,
+"no": 455,
+"name": "Fantôme Tanukouï San",
+"rarity": 2,
+"family": "Fantômes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Fantômes de Pandala/455_carte_fantome_tanukoui_san.png"
+},
+{
+"item": 15456,
+"no": 456,
+"name": "Fantôme Pandule",
+"rarity": 1,
+"family": "Fantômes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Fantômes de Pandala/456_carte_fantome_pandule.png"
+},
+{
+"item": 15457,
+"no": 457,
+"name": "Fantôme Tanuki Chan",
+"rarity": 2,
+"family": "Fantômes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Fantômes de Pandala/457_carte_fantome_tanuki_chan.png"
+},
+{
+"item": 15458,
+"no": 458,
+"name": "Fantôme Pandore",
+"rarity": 3,
+"family": "Fantômes de Pandala",
+"img": "/images/TTG/imagecarteTTG/Fantômes de Pandala/458_carte_fantome_pandore.png"
+},
+{
+"item": 15459,
+"no": 459,
+"name": "Coffre Maudit du Flib",
+"rarity": 1,
+"family": "Pirates de l'Arche d'Otomaï",
+"img": "/images/TTG/imagecarteTTG/Pirates de l'Arche d'Otomaï/459_carte_coffre_maudit_du_flib.png"
+},
+{
+"item": 15460,
+"no": 460,
+"name": "Sanglier d'Halouine",
+"rarity": 0,
+"family": "Canidés et animaux de la forêt",
+"img": "/images/TTG/imagecarteTTG/Canidés et animaux de la forêt/460_carte_sanglier_d_halouine.png"
+},
+{
+"item": 15461,
+"no": 461,
+"name": "Craqueleur d'Halouine",
+"rarity": 2,
+"family": "Kwaks et Craqueleurs",
+"img": "/images/TTG/imagecarteTTG/Kwaks et Craqueleurs/461_carte_craqueleur_d_halouine.png"
+},
+{
+"item": 15462,
+"no": 462,
+"name": "Abraknyde d'Halouine",
+"rarity": 1,
+"family": "Abraknydiens",
+"img": "/images/TTG/imagecarteTTG/Abraknydiens/462_carte_abraknyde_d_halouine.png"
+},
+{
+"item": 15463,
+"no": 463,
+"name": "Chafer Fantassin d'Halouine",
+"rarity": 2,
+"family": "Chafers",
+"img": "/images/TTG/imagecarteTTG/Chafers/463_carte_chafer_fantassin_d_halouine.png"
+},
+{
+"item": 15464,
+"no": 464,
+"name": "Mulou d'Halouine",
+"rarity": 2,
+"family": "Canidés et animaux de la forêt",
+"img": "/images/TTG/imagecarteTTG/Canidés et animaux de la forêt/464_carte_mulou_d_halouine.png"
+}
+]

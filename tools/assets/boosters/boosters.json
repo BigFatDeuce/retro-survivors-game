@@ -1,0 +1,410 @@
+{
+ "_doc": "One entry per booster. Slots to fill with Dofus Retro assets later (transparent PNGs, paths from the repo root): art (the character in the middle), logo (optional). pattern = background decoration, rings = rings around the character, holo = rainbow foil under the character (0..1), look / crest only shape the placeholder creature.",
+ "packs": [
+  {
+   "id": "booster_1",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "holo": 0.12,
+   "crest": "feu",
+   "colors": {
+    "c_light": "#ffe08a",
+    "c_mid": "#f0602a",
+    "c_dark": "#5e0f12",
+    "c_accent": "#ffb321",
+    "c_body": "#ff8a4c"
+   }
+  },
+  {
+   "id": "booster_2",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "holo": 0.12,
+   "crest": "eau",
+   "colors": {
+    "c_light": "#c8f6ff",
+    "c_mid": "#2f8fe0",
+    "c_dark": "#0b1f5c",
+    "c_accent": "#5fe3ff",
+    "c_body": "#6cc4ff"
+   }
+  },
+  {
+   "id": "booster_3",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "holo": 0.12,
+   "crest": "terre",
+   "colors": {
+    "c_light": "#eaffb8",
+    "c_mid": "#4fa83a",
+    "c_dark": "#163212",
+    "c_accent": "#c6ec4a",
+    "c_body": "#8fd060"
+   }
+  },
+  {
+   "id": "booster_4",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "holo": 0.14,
+   "crest": "air",
+   "colors": {
+    "c_light": "#fff6c8",
+    "c_mid": "#e8a93a",
+    "c_dark": "#5a2c10",
+    "c_accent": "#fff07a",
+    "c_body": "#ffd36a"
+   }
+  },
+  {
+   "id": "booster_5",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "holo": 0.5,
+   "crest": "couronne",
+   "colors": {
+    "c_light": "#ffffff",
+    "c_mid": "#8a63ff",
+    "c_dark": "#1c0d45",
+    "c_accent": "#ffd35f",
+    "c_body": "#c9a6ff"
+   }
+  },
+  {
+   "id": "booster_6",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "waves",
+   "rings": true,
+   "holo": 0.1,
+   "look": {
+    "body": "bean",
+    "crest": "plume",
+    "eyes": "round",
+    "mouth": "smile"
+   },
+   "colors": {
+    "c_light": "#d4fff6",
+    "c_mid": "#17b3a3",
+    "c_dark": "#053d47",
+    "c_accent": "#ffe066",
+    "c_body": "#ff9f80"
+   }
+  },
+  {
+   "id": "booster_7",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "burst",
+   "rings": false,
+   "holo": 0.1,
+   "look": {
+    "body": "round",
+    "crest": "cornes",
+    "eyes": "fierce",
+    "mouth": "fang"
+   },
+   "colors": {
+    "c_light": "#ffb0a0",
+    "c_mid": "#d0213f",
+    "c_dark": "#2b0510",
+    "c_accent": "#fff1c9",
+    "c_body": "#ffcf5c"
+   }
+  },
+  {
+   "id": "booster_8",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "stars",
+   "rings": true,
+   "holo": 0.14,
+   "look": {
+    "body": "ghost",
+    "crest": "bulle",
+    "eyes": "star",
+    "mouth": "open"
+   },
+   "colors": {
+    "c_light": "#a9b8ff",
+    "c_mid": "#3a3fb0",
+    "c_dark": "#060824",
+    "c_accent": "#7df9ff",
+    "c_body": "#b9f3ff"
+   }
+  },
+  {
+   "id": "booster_9",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "confetti",
+   "rings": true,
+   "holo": 0.12,
+   "look": {
+    "body": "square",
+    "crest": "antennes",
+    "eyes": "happy",
+    "mouth": "cat"
+   },
+   "colors": {
+    "c_light": "#ffe0f0",
+    "c_mid": "#ff5fa8",
+    "c_dark": "#5a0b3a",
+    "c_accent": "#fff07a",
+    "c_body": "#8ff0c8"
+   }
+  },
+  {
+   "id": "booster_10",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "halftone",
+   "rings": true,
+   "holo": 0.1,
+   "look": {
+    "body": "drop",
+    "crest": "piquants",
+    "eyes": "cyclope",
+    "mouth": "grin"
+   },
+   "colors": {
+    "c_light": "#f6ffbf",
+    "c_mid": "#8fd12a",
+    "c_dark": "#203a08",
+    "c_accent": "#ff6ad5",
+    "c_body": "#c38bff"
+   }
+  },
+  {
+   "id": "booster_11",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "lowpoly",
+   "rings": true,
+   "holo": 0.16,
+   "look": {
+    "body": "round",
+    "crest": "cristal",
+    "eyes": "sleepy",
+    "mouth": "smile"
+   },
+   "colors": {
+    "c_light": "#ffffff",
+    "c_mid": "#8fd3ff",
+    "c_dark": "#1b3a6b",
+    "c_accent": "#3fb6ff",
+    "c_body": "#eef9ff"
+   }
+  },
+  {
+   "id": "booster_12",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "cracks",
+   "rings": true,
+   "holo": 0.08,
+   "look": {
+    "body": "drop",
+    "crest": "feu",
+    "eyes": "fierce",
+    "mouth": "fang"
+   },
+   "colors": {
+    "c_light": "#ffb347",
+    "c_mid": "#c8321c",
+    "c_dark": "#120505",
+    "c_accent": "#ff8a1f",
+    "c_body": "#ffd447"
+   }
+  },
+  {
+   "id": "booster_13",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "diamonds",
+   "rings": true,
+   "holo": 0.18,
+   "look": {
+    "body": "bean",
+    "crest": "couronne",
+    "eyes": "star",
+    "mouth": "grin"
+   },
+   "colors": {
+    "c_light": "#fff2b0",
+    "c_mid": "#b8892a",
+    "c_dark": "#140d05",
+    "c_accent": "#ffd35f",
+    "c_body": "#fff3c4"
+   }
+  },
+  {
+   "id": "booster_14",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "synthgrid",
+   "rings": false,
+   "holo": 0.1,
+   "look": {
+    "body": "round",
+    "crest": "oreilles",
+    "eyes": "round",
+    "mouth": "smile"
+   },
+   "colors": {
+    "c_light": "#ffb3e6",
+    "c_mid": "#7b2cff",
+    "c_dark": "#12052e",
+    "c_accent": "#ff4fd8",
+    "c_body": "#7cf0ff"
+   }
+  },
+  {
+   "id": "booster_15",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "scales",
+   "rings": true,
+   "holo": 0.1,
+   "look": {
+    "body": "round",
+    "crest": "fleur",
+    "eyes": "happy",
+    "mouth": "cat"
+   },
+   "colors": {
+    "c_light": "#dff5a8",
+    "c_mid": "#5f8f2a",
+    "c_dark": "#22170a",
+    "c_accent": "#ff7eb6",
+    "c_body": "#ffb26b"
+   }
+  },
+  {
+   "id": "booster_16",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "clouds",
+   "rings": true,
+   "holo": 0.1,
+   "look": {
+    "body": "bean",
+    "crest": "air",
+    "eyes": "happy",
+    "mouth": "open"
+   },
+   "colors": {
+    "c_light": "#ffffff",
+    "c_mid": "#5cb8ff",
+    "c_dark": "#1d4f9c",
+    "c_accent": "#ffd36b",
+    "c_body": "#fff2d6"
+   }
+  },
+  {
+   "id": "booster_17",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "bubbles",
+   "rings": true,
+   "holo": 0.14,
+   "look": {
+    "body": "drop",
+    "crest": "aureole",
+    "eyes": "star",
+    "mouth": "smile"
+   },
+   "colors": {
+    "c_light": "#fff1e2",
+    "c_mid": "#f0907a",
+    "c_dark": "#6b2530",
+    "c_accent": "#fff1b8",
+    "c_body": "#7fd6c2"
+   }
+  },
+  {
+   "id": "booster_18",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "hex",
+   "rings": true,
+   "holo": 0.12,
+   "look": {
+    "body": "square",
+    "crest": "etoile",
+    "eyes": "fierce",
+    "mouth": "grin"
+   },
+   "colors": {
+    "c_light": "#c4ffe0",
+    "c_mid": "#0fa35a",
+    "c_dark": "#03301c",
+    "c_accent": "#ff9f43",
+    "c_body": "#ffe66d"
+   }
+  },
+  {
+   "id": "booster_19",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "zigzag",
+   "rings": true,
+   "holo": 0.32,
+   "look": {
+    "body": "round",
+    "crest": "ailes",
+    "eyes": "fierce",
+    "mouth": "fang"
+   },
+   "colors": {
+    "c_light": "#ffffff",
+    "c_mid": "#9aa6b6",
+    "c_dark": "#262d38",
+    "c_accent": "#b8f5ff",
+    "c_body": "#6c7cff"
+   }
+  },
+  {
+   "id": "booster_20",
+   "title": "Retro Survivors",
+   "subtitle": "CARTES À COLLECTIONNER",
+   "fine": "SÉRIE 1",
+   "pattern": "swirl",
+   "rings": true,
+   "holo": 0.6,
+   "look": {
+    "body": "ghost",
+    "crest": "cristal",
+    "eyes": "star",
+    "mouth": "open"
+   },
+   "colors": {
+    "c_light": "#ffffff",
+    "c_mid": "#ff6ad5",
+    "c_dark": "#2a0b4a",
+    "c_accent": "#7df9ff",
+    "c_body": "#fff3a8"
+   }
+  }
+ ]
+}

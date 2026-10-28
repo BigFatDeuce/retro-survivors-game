@@ -1,0 +1,34 @@
+# Python / Node caches
+__pycache__/
+*.pyc
+node_modules/
+
+# build outputs of the make_* scripts (exe, AppImage, APK, web) and the downloads they cache
+dist/
+
+# temporary files the tools leave behind
+*.tmp
+*.part
+*.log
+*.lock
+
+# test outputs (tools/qa.py, tools/checks/pw_test.py, tools/checks/stress.py)
+tests/*/
+tests/*.png
+work/qa/
+work/stress/
+work/perf/
+
+# the Dofus Retro client files and the scratch folders of the picture builders (not part of this repository)
+raw/
+ffdec/
+work/*/
+!work/lang_json/
+!work/lang_new/
+
+# editors and systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

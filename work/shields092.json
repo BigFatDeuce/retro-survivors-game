@@ -1,0 +1,4142 @@
+[
+{
+"sym": "82_1",
+"gfx": 1,
+"lvl": 3,
+"item": 9016,
+"name": {
+"fr": "Bouclier du Mont Kipou",
+"en": "Mount Stinkky Shield",
+"de": "Schild des O'Stinkus Mons",
+"es": "Escudo del Monte Puaj",
+"it": "Scudo del Monte Kepuz",
+"nl": "Rijdier Stinkkend Schild",
+"pt": "Escudo Monte Fedorento"
+}
+},
+{
+"sym": "82_2",
+"gfx": 2,
+"lvl": 4,
+"item": 9019,
+"name": {
+"fr": "Bouclier du Bawbawe",
+"en": "Bawbawian Shield",
+"de": "Schild des Bawbawen",
+"es": "Escudo del Báwbawo",
+"it": "Scudo del Bawbawo",
+"nl": "Bawbaaws Schild",
+"pt": "Escudo Bawbawian"
+}
+},
+{
+"sym": "82_3",
+"gfx": 3,
+"lvl": 3,
+"item": 9020,
+"name": {
+"fr": "Derma Tho",
+"en": "Derma Tho",
+"de": "Derma Tho",
+"es": "Derma Thólobo",
+"it": "Derma Tho",
+"nl": "Derma Tho",
+"pt": "Derma Tho"
+}
+},
+{
+"sym": "82_4",
+"gfx": 4,
+"lvl": 2,
+"item": 9015,
+"name": {
+"fr": "Bouclier du Bûcheron",
+"en": "Lumberjack Shield",
+"de": "Schild des Holzfällers",
+"es": "Escudo del Leñador",
+"it": "Scudo del Taglialegna",
+"nl": "Lumberjack Schild",
+"pt": "Escudo Lenhador"
+}
+},
+{
+"sym": "82_5",
+"gfx": 5,
+"lvl": 5,
+"item": 9002,
+"name": {
+"fr": "Ftalmo",
+"en": "Phtalmo",
+"de": "O Ftalmo!",
+"es": "Ftalmo",
+"it": "Ftalmo",
+"nl": "Phtalmo",
+"pt": "Phtalmo"
+}
+},
+{
+"sym": "82_6",
+"gfx": 6,
+"lvl": 4,
+"item": 9003,
+"name": {
+"fr": "Bouclier Taverne",
+"en": "Inn Shield",
+"de": "Schild der Taverne",
+"es": "Escudo Taberna",
+"it": "Scudo Taverna",
+"nl": "Inn Schild",
+"pt": "Escudo Taverna"
+}
+},
+{
+"sym": "82_7",
+"gfx": 7,
+"lvl": 4,
+"item": 9018,
+"name": {
+"fr": "Le Karde Coeur",
+"en": "Heart Quarter",
+"de": "Herz-Quartschen",
+"es": "El Corazón Partido",
+"it": "Il Kuart Icuore",
+"nl": "Hart kwartier",
+"pt": "Coração em Quatro"
+}
+},
+{
+"sym": "82_8",
+"gfx": 8,
+"lvl": 5,
+"item": 9001,
+"name": {
+"fr": "Bouclier de Sidimote",
+"en": "Sidimote Shield",
+"de": "Schild von Sidimot",
+"es": "Escudo de Sidimote",
+"it": "Scudo di Sidimote",
+"nl": "Sidimote Schild",
+"pt": "Escudo de Sidimote"
+}
+},
+{
+"sym": "82_9",
+"gfx": 9,
+"lvl": 7,
+"item": 9017,
+"name": {
+"fr": "Bouclier des Brigandins",
+"en": "Imp Shield",
+"de": "Schild der Brigandiner",
+"es": "Escudo de los Salteadorillos",
+"it": "Scudo dei Brigandini",
+"nl": "Imp Schild",
+"pt": "Escudo Diabinho"
+}
+},
+{
+"sym": "82_10",
+"gfx": 10,
+"lvl": 1,
+"item": 7077,
+"name": {
+"fr": "Bouclier en Mousse",
+"en": "Sponghield",
+"de": "Schwammiger Spongischild",
+"es": "Escubob",
+"it": "Scudo di Spugna",
+"nl": "Sponghield",
+"pt": "Esponjaescudo"
+}
+},
+{
+"sym": "82_11",
+"gfx": 11,
+"lvl": 9,
+"item": 9005,
+"name": {
+"fr": "Bouclier Ventaille",
+"en": "Fan Shield",
+"de": "Schildfächer",
+"es": "Escudo Ventiloso",
+"it": "Scudo Ventaglio",
+"nl": "Fan Schild",
+"pt": "Escudo Ventilador"
+}
+},
+{
+"sym": "82_12",
+"gfx": 12,
+"lvl": 7,
+"item": 9006,
+"name": {
+"fr": "Bouclier du Sadida",
+"en": "Sadida Shield",
+"de": "Schild des Sadida",
+"es": "Escudo del sadida",
+"it": "Scudo di Sadida",
+"nl": "Sadida Schild",
+"pt": "Escudo Sadida"
+}
+},
+{
+"sym": "82_13",
+"gfx": 13,
+"lvl": 6,
+"item": 9007,
+"name": {
+"fr": "Bouclier en Slip",
+"en": "Shield in Briefs",
+"de": "Schlüpferschild",
+"es": "Escudo Slip",
+"it": "Scudo di Mutande",
+"nl": "Schild met Instructies",
+"pt": "Escudo em Cueca"
+}
+},
+{
+"sym": "82_14",
+"gfx": 14,
+"lvl": 10,
+"item": 9021,
+"name": {
+"fr": "Bouclier du Captain Amakna",
+"en": "Captain Amakna Shield",
+"de": "Schild von Captain Amakna",
+"es": "Escudo del Capitán Amakna",
+"it": "Scudo del Capitano Amakna",
+"nl": "Amakna Kapitein Schild",
+"pt": "Escudo Capitão Amakna"
+}
+},
+{
+"sym": "82_15",
+"gfx": 15,
+"lvl": 5,
+"item": 9022,
+"name": {
+"fr": "Kloume",
+"en": "Kloome",
+"de": "Kloom",
+"es": "Klum",
+"it": "Klum",
+"nl": "Kloome",
+"pt": "Kloome"
+}
+},
+{
+"sym": "82_16",
+"gfx": 16,
+"lvl": 8,
+"item": 9008,
+"name": {
+"fr": "Bouclier d'Asse",
+"en": "Asse Shield",
+"de": "Schild der Assel",
+"es": "Escudo Rano",
+"it": "Scudo di Asse",
+"nl": "Asse Schild",
+"pt": "Escudo Asse"
+}
+},
+{
+"sym": "82_17",
+"gfx": 17,
+"lvl": 1,
+"item": 9023,
+"name": {
+"fr": "Bouclier Volant",
+"en": "Flying Shield",
+"de": "Fliegenschild",
+"es": "Escudo Cometa",
+"it": "Scudo Volante",
+"nl": "Vliegend Schild",
+"pt": "Escudo Voador"
+}
+},
+{
+"sym": "82_18",
+"gfx": 18,
+"lvl": 7,
+"item": 9024,
+"name": {
+"fr": "Bouclier du Chouque",
+"en": "LeChouque's Shield",
+"de": "Le Tschucks Schild",
+"es": "Escudo de Le Chuko",
+"it": "Scudo del Chuko",
+"nl": "Chouque Schil",
+"pt": "Escudo Chouque"
+}
+},
+{
+"sym": "82_19",
+"gfx": 19,
+"lvl": 3,
+"item": 9009,
+"name": {
+"fr": "Bouclier Abraknyde",
+"en": "Treechnid Shield",
+"de": "Schild des Astaknyden",
+"es": "Escudo Abráknido",
+"it": "Scudo Alberagno",
+"nl": "Boomchnid Schild",
+"pt": "Escudo de Treechnid"
+}
+},
+{
+"sym": "82_20",
+"gfx": 20,
+"lvl": 1,
+"item": 9025,
+"name": {
+"fr": "Bouclier du Bouftou",
+"en": "Gobball Shield",
+"de": "Schild des Fresssacks",
+"es": "Escudo del Jalató",
+"it": "Scudo del Pappatutto",
+"nl": "Gobball Schild",
+"pt": "Escudo Gobball"
+}
+},
+{
+"sym": "82_21",
+"gfx": 21,
+"lvl": 4,
+"item": 9026,
+"name": {
+"fr": "Bouclier de Bowisse",
+"en": "Bowisse's Shield",
+"de": "Bowissen-Schild",
+"es": "Escudo de Bowis",
+"it": "Scudo di Bowis",
+"nl": "Bowisse's Schild",
+"pt": "Escudo de Bowisse"
+}
+},
+{
+"sym": "82_22",
+"gfx": 22,
+"lvl": 3,
+"item": 9010,
+"name": {
+"fr": "Bouclier Pandawa",
+"en": "Pandawa Shield",
+"de": "Schild des Pandawa",
+"es": "Escudo Pandawa",
+"it": "Scudo Pandawa",
+"nl": "Pandawa Schild",
+"pt": "Escudo Pandawa"
+}
+},
+{
+"sym": "82_23",
+"gfx": 23,
+"lvl": 3,
+"item": 9027,
+"name": {
+"fr": "Bouclier du Craqueleur",
+"en": "Crackler Shield",
+"de": "Schild des Krachlers",
+"es": "Escudo del Crujidor",
+"it": "Scudo del Croccaroc",
+"nl": "Crackler Schild",
+"pt": "Escudo do Smagador"
+}
+},
+{
+"sym": "82_24",
+"gfx": 24,
+"lvl": 2,
+"item": 9011,
+"name": {
+"fr": "Cadran de Feu",
+"en": "Fire Dial",
+"de": "Feurige Scheibe",
+"es": "Esfera de Fuego",
+"it": "Quadrante di Fuoco",
+"nl": "Vuur Wijzerplaat",
+"pt": "Disco de Fogo"
+}
+},
+{
+"sym": "82_25",
+"gfx": 25,
+"lvl": 1,
+"item": 9014,
+"name": {
+"fr": "Cadran d'Eau",
+"en": "Water Dial",
+"de": "Wäßrige Scheibe",
+"es": "Esfera de Agua",
+"it": "Quadrante di Acqua",
+"nl": "Water Wijzerplaat",
+"pt": "Disco de Água"
+}
+},
+{
+"sym": "82_26",
+"gfx": 26,
+"lvl": 2,
+"item": 9012,
+"name": {
+"fr": "Cadran d'Air",
+"en": "Air Dial",
+"de": "Luftige Scheibe",
+"es": "Esfera de Aire",
+"it": "Quadrante di Aria",
+"nl": "Lucht Wijzerplaat",
+"pt": "Disco de Ar"
+}
+},
+{
+"sym": "82_27",
+"gfx": 27,
+"lvl": 1,
+"item": 9013,
+"name": {
+"fr": "Cadran de Terre",
+"en": "Earth Dial",
+"de": "Irdene Scheibe",
+"es": "Esfera de Tierra",
+"it": "Quadrante di Terra",
+"nl": "Aarde Kiesschijf",
+"pt": "Disco de Terra"
+}
+},
+{
+"sym": "82_30",
+"gfx": 30,
+"lvl": 5,
+"item": 9030,
+"name": {
+"fr": "Bouclier Aerdala",
+"en": "Aerdala Shield",
+"de": "Aerdala-Schild",
+"es": "Escudo Airedala",
+"it": "Scudo Erdala",
+"nl": "Aerdala Schild",
+"pt": "Escudo Aerdala"
+}
+},
+{
+"sym": "82_31",
+"gfx": 31,
+"lvl": 3,
+"item": 9004,
+"name": {
+"fr": "Bouclier Akwadala",
+"en": "Akwadala Shield",
+"de": "Akwadala-Schild",
+"es": "Escudo Akwadala",
+"it": "Scudo Akwadala",
+"nl": "Akwadala Schild",
+"pt": "Escudo Akwadala"
+}
+},
+{
+"sym": "82_32",
+"gfx": 32,
+"lvl": 4,
+"item": 9028,
+"name": {
+"fr": "Bouclier Terrdala",
+"en": "Terrdala Shield",
+"de": "Teradala-Schild",
+"es": "Escudo Tierradala",
+"it": "Scudo Terradala",
+"nl": "Terrdala Schild",
+"pt": "Escudo de Terrdala"
+}
+},
+{
+"sym": "82_33",
+"gfx": 33,
+"lvl": 6,
+"item": 9029,
+"name": {
+"fr": "Bouclier Feudala",
+"en": "Feudala Shield",
+"de": "Feudala-Schild",
+"es": "Escudo Fuegodala",
+"it": "Scudo Focodala",
+"nl": "Feudala Schild",
+"pt": "Escudo Feudala"
+}
+},
+{
+"sym": "82_34",
+"gfx": 34,
+"lvl": 1,
+"item": 9566,
+"name": {
+"fr": "Bouclier Pararayon",
+"en": "Raydi Shield",
+"de": "Schutz-Schild",
+"es": "Pararrayo cósmico",
+"it": "Scudo Anti-impatto",
+"nl": "Raydi Schild",
+"pt": "Escudo Pára-Raios"
+}
+},
+{
+"sym": "82_35",
+"gfx": 35,
+"lvl": 11,
+"item": 8855,
+"name": {
+"fr": "Bouclier Fi'Squale",
+"en": "Sharkal Shield",
+"de": "S'Teuer-Schild",
+"es": "Escudo Fi'Squal",
+"it": "Scudo Fi'Squal",
+"nl": "Sharkal Schild",
+"pt": "Escudo Sharkal"
+}
+},
+{
+"sym": "82_36",
+"gfx": 36,
+"lvl": 1,
+"item": 9481,
+"name": {
+"fr": "Poshoclier",
+"en": "Poshield",
+"de": "Posh-Schild",
+"es": "Poshoscudo",
+"it": "Poshoscudo",
+"nl": "Poschild",
+"pt": "Poescudo"
+}
+},
+{
+"sym": "82_37",
+"gfx": 37,
+"lvl": 1,
+"item": 9482,
+"name": {
+"fr": "Cigaloclier",
+"en": "Shield Kada",
+"de": "Zika-Schild",
+"es": "Cigarrescudo",
+"it": "Cicaloscudo",
+"nl": "Schild Kada",
+"pt": "Escudo Kada"
+}
+},
+{
+"sym": "82_38",
+"gfx": 38,
+"lvl": 1,
+"item": 9483,
+"name": {
+"fr": "Bouclier Boh-Bihn",
+"en": "Boh-Bihn Shield",
+"de": "Schild Wondaroll",
+"es": "Escudo Boh-Bihna",
+"it": "Scudo Boh-Bihn",
+"nl": "Boh-Bihn Schild",
+"pt": "Escudo Boh-Bihn"
+}
+},
+{
+"sym": "82_39",
+"gfx": 39,
+"lvl": 1,
+"item": 9484,
+"name": {
+"fr": "Bouclier Tigré",
+"en": "Pac-Tiger Shield",
+"de": "Geschiegerter Tilt",
+"es": "Escudo Atigrado",
+"it": "Scudo Tigrato",
+"nl": "Gestreept Schild",
+"pt": "Escudo Listrado"
+}
+},
+{
+"sym": "82_40",
+"gfx": 40,
+"lvl": 10,
+"item": 10076,
+"name": {
+"fr": "Bouclier hispanique unique",
+"en": "Unique Hispanian Shield",
+"de": "Einzigartiger Schild von HispaÑia",
+"es": "Escudo HispáÑico Único",
+"it": "Scudo Ispanico Unico",
+"nl": "Uniek Hispaniaans Schild",
+"pt": "Escudo Único EspaÑol"
+}
+},
+{
+"sym": "82_41",
+"gfx": 41,
+"lvl": 1,
+"item": 10169,
+"name": {
+"fr": "Chispouclier",
+"en": "Chisp Shield",
+"de": "Chisp-Schild",
+"es": "Chisprotección",
+"it": "Chispcudo",
+"nl": "Chisp Shield",
+"pt": "Escudo de Chisp"
+}
+},
+{
+"sym": "82_42",
+"gfx": 42,
+"lvl": 1,
+"item": 10182,
+"name": {
+"fr": "Bouclier solaire",
+"en": "Solaris Shield",
+"de": "Sonnenschild",
+"es": "Escudo solar",
+"it": "Scudo Solare",
+"nl": "Solaris Shield",
+"pt": "Escudo Solaris"
+}
+},
+{
+"sym": "82_43",
+"gfx": 43,
+"lvl": 1,
+"item": 10158,
+"name": {
+"fr": "Bouclier trophée du Dark Vlad",
+"en": "Trophy Dark Vlad Shield",
+"de": "Trophäenschild des Dark Vlads",
+"es": "Escudo-trofeo de Dark Vlad",
+"it": "Scudo trofeo del Dark Vlad",
+"nl": "Trofee Duistere Vlad Schild",
+"pt": "Troféu Escudo de Dark Vlad"
+}
+},
+{
+"sym": "82_44",
+"gfx": 44,
+"lvl": 1,
+"item": 10159,
+"name": {
+"fr": "Bouclier trophée du Moon",
+"en": "Trophy Moon Shield",
+"de": "Moon-Trophäenschild",
+"es": "Escudo-trofeo de Moon",
+"it": "Scudo trofeo del Moon",
+"nl": "Trofee Moon Schild",
+"pt": "Troféu Escudo da Lua"
+}
+},
+{
+"sym": "82_45",
+"gfx": 45,
+"lvl": 1,
+"item": 10160,
+"name": {
+"fr": "Bouclier trophée du Chêne Mou",
+"en": "Trophy Soft Oak Shield",
+"de": "Weich-Eichs-Trophäenschild",
+"es": "Escudo-trofeo del Roble Blando",
+"it": "Scudo trofeo della Quercia Molle",
+"nl": "Trofee Zachte Eik Schild",
+"pt": "Troféu Carvalho Mole"
+}
+},
+{
+"sym": "82_46",
+"gfx": 46,
+"lvl": 1,
+"item": 10161,
+"name": {
+"fr": "Bouclier trophée du Dragon Cochon",
+"en": "Trophy Dragon Pig Shield",
+"de": "Trophäenschild des Schweinedrachens",
+"es": "Escudo-trofeo del Dragocerdo",
+"it": "Scudo trofeo del Drago Maiale",
+"nl": "Trofee Dragon Pig Schild",
+"pt": "Troféu Escudo de Dragão Porco"
+}
+},
+{
+"sym": "82_47",
+"gfx": 47,
+"lvl": 1,
+"item": 10162,
+"name": {
+"fr": "Bouclier trophée du Minotoror",
+"en": "Trophy Minotoror Shield",
+"de": "Minotoror-Trophäenschild",
+"es": "Escudo-trofeo del Minotauroro",
+"it": "Scudo trofeo del Minotoror",
+"nl": "Trofee Minotoror Schild",
+"pt": "Troféu Escudo de Minotororo"
+}
+},
+{
+"sym": "82_48",
+"gfx": 48,
+"lvl": 1,
+"item": 10163,
+"name": {
+"fr": "Bouclier trophée du Kimbo",
+"en": "Trophy Kimbo Shield",
+"de": "Kimbo-Trophäenschild",
+"es": "Escudo-trofeo del Kimbo",
+"it": "Scudo trofeo del Kimbo",
+"nl": "Trofee Kimbo Schild",
+"pt": "Troféu Escudo de Kimbo"
+}
+},
+{
+"sym": "82_49",
+"gfx": 49,
+"lvl": 1,
+"item": 10164,
+"name": {
+"fr": "Bouclier trophée du Wa Wabbit",
+"en": "Trophy Wa Wabbit Shield",
+"de": "Trophäenschild des Wa Wabbits",
+"es": "Escudo-trofeo del Wey Wabbit",
+"it": "Scudo trofeo del We Wabbit",
+"nl": "Trofee Wa Wabbit Schild",
+"pt": "Troféu Escudo de Wa Wabbit"
+}
+},
+{
+"sym": "82_50",
+"gfx": 50,
+"lvl": 1,
+"item": 10165,
+"name": {
+"fr": "Bouclier trophée du Koulosse",
+"en": "Trophy Koolich Shield",
+"de": "Kuhloss-Trophäenschild",
+"es": "Escudo-trofeo del Trankitronko",
+"it": "Scudo trofeo del Culosse",
+"nl": "Trofee Koolich Schild",
+"pt": "Troféu Escudo de Koolich"
+}
+},
+{
+"sym": "82_51",
+"gfx": 51,
+"lvl": 1,
+"item": 10906,
+"name": {
+"fr": "Bouclier Draconique",
+"en": "Scale Shield",
+"de": "Schuppenschild",
+"es": "Escudo dragónico",
+"it": "Scudo Dragonico",
+"nl": "Schaalschild",
+"pt": "Escudo de Escama"
+}
+},
+{
+"sym": "82_52",
+"gfx": 52,
+"lvl": 1,
+"item": 10167,
+"name": {
+"fr": "Bouclier trophée du Bworker",
+"en": "Trophy Bworker Shield",
+"de": "Bworker-Trophäenschild",
+"es": "Escudo-trofeo del Bworker",
+"it": "Scudo trofeo del Bworker",
+"nl": "Trofee Bworker Schild",
+"pt": "Troféu Escudo de Bworker"
+}
+},
+{
+"sym": "82_53",
+"gfx": 53,
+"lvl": 1,
+"item": 10556,
+"name": {
+"fr": "Bouclier des Bouftons Rouges",
+"en": "Lamechester United Shield",
+"de": "Arsenal Roter Fresssack-Schild",
+"es": "Escudo del Sporting Jalatín",
+"it": "Scudo del Pappaton United",
+"nl": "Lamechester United Schild",
+"pt": "Escudo da Seleção Lusiwawa"
+}
+},
+{
+"sym": "82_54",
+"gfx": 54,
+"lvl": 1,
+"item": 10555,
+"name": {
+"fr": "Bouclier du Real Boitar",
+"en": "Real Gobbly Shield",
+"de": "FC Humpelstilz-Schild",
+"es": "Escudo del Atleticojos de Bonta",
+"it": "Scudo del Real Zopp",
+"nl": "Real Gobbly Schild",
+"pt": "Escudo da Seleção Brasiwawa"
+}
+},
+{
+"sym": "82_57",
+"gfx": 57,
+"lvl": 1,
+"item": 10954,
+"name": {
+"fr": "Bouclier du Bricoleur Primordial",
+"en": "Master Handyman's Shield",
+"de": "Schild des ehrwürdigen Bastlers",
+"es": "Escudo del manitas primordial",
+"it": "Scudo del Mastro Tuttofare",
+"nl": "Meester Klusjesman's Schild",
+"pt": "Escudo do Mestre Marceneiro"
+}
+},
+{
+"sym": "82_58",
+"gfx": 58,
+"lvl": 1,
+"item": 10953,
+"name": {
+"fr": "Bouclier du Costumage Primordial",
+"en": "Master Costumagus' Shield",
+"de": "Schild des ehrwürdigen Kleidsamagiers",
+"es": "Escudo del sastremago primordial",
+"it": "Scudo del Mastro Vestimago",
+"nl": "Meester Kostumagier's Schild",
+"pt": "Escudo do Mestre Alfaiate Mágico"
+}
+},
+{
+"sym": "82_59",
+"gfx": 59,
+"lvl": 1,
+"item": 10952,
+"name": {
+"fr": "Bouclier du Joaillomage Primordial",
+"en": "Master Jewelmagus' Shield",
+"de": "Schild des ehrwürdigen Schmuckmagiers",
+"es": "Escudo del joyeromago primordial",
+"it": "Scudo del Mastro Gioielmago",
+"nl": "Meester Juweelmagier's Schild",
+"pt": "Escudo do Mestre Joalheiro Mágico"
+}
+},
+{
+"sym": "82_60",
+"gfx": 60,
+"lvl": 1,
+"item": 10951,
+"name": {
+"fr": "Bouclier du Cordomage Primordial",
+"en": "Master Shoemagus' Shield",
+"de": "Schild des ehrwürdigen Schuhmagiers",
+"es": "Escudo del zapateromago primordial",
+"it": "Scudo del Mastro Calzimago",
+"nl": "Meester Schoenmagier's Schild",
+"pt": "Escudo do Mestre Sapateiro Mágico"
+}
+},
+{
+"sym": "82_61",
+"gfx": 61,
+"lvl": 1,
+"item": 10950,
+"name": {
+"fr": "Bouclier du Forgeur de Boucliers Primordial",
+"en": "Master Shield Smith's Shield",
+"de": "Schild des ehrwürdigen Schildschmieds",
+"es": "Escudo del herrero de escudos primordial",
+"it": "Scudo del Mastro Forgiatore di Scudi",
+"nl": "Meester Schild Smid's Schild",
+"pt": "Escudo do Mestre Ferreiro de Escudo"
+}
+},
+{
+"sym": "82_62",
+"gfx": 62,
+"lvl": 1,
+"item": 10949,
+"name": {
+"fr": "Bouclier du Poissonnier Primordial",
+"en": "Master Fishmonger's Shield",
+"de": "Schild des ehrwürdigen Fischhändlers",
+"es": "Escudo del pescadero primordial",
+"it": "Scudo del Mastro Pescivendolo",
+"nl": "Meester Visboer's Schild",
+"pt": "Escudo do Mestre Peixeiro"
+}
+},
+{
+"sym": "82_63",
+"gfx": 63,
+"lvl": 1,
+"item": 10948,
+"name": {
+"fr": "Bouclier du Boucher Primordial",
+"en": "Master Butcher's Shield",
+"de": "Schild des ehrwürdigen Metzgers",
+"es": "Escudo del carnicero primordial",
+"it": "Scudo del Mastro Macellaio",
+"nl": "Meester Slager's Schild",
+"pt": "Escudo do Mestre Açougueiro"
+}
+},
+{
+"sym": "82_64",
+"gfx": 64,
+"lvl": 1,
+"item": 10947,
+"name": {
+"fr": "Bouclier du Sculptemage de Bâtons Primordial",
+"en": "Master Staff Carvmagus' Shield",
+"de": "Schild des ehrwürdigen Schnitzmagiers für Stecken",
+"es": "Escudo del escultomago de bastones primordial",
+"it": "Scudo del Mastro Intagliamago di Bastoni",
+"nl": "Meester Stafsnijmagier's Schild",
+"pt": "Escudo do Mestre Escultor Mágico de Cajado"
+}
+},
+{
+"sym": "82_65",
+"gfx": 65,
+"lvl": 1,
+"item": 10946,
+"name": {
+"fr": "Bouclier du Sculptemage de Baguettes Primordial",
+"en": "Master Wand Carvmagus' Shield",
+"de": "Schild des ehrwürdigen Schnitzmagiers für Stäbe",
+"es": "Escudo del escultomago de varitas primordial",
+"it": "Scudo del Mastro Intagliamago di Bacchette",
+"nl": "Meester Wand Snijmagier's Schild",
+"pt": "Escudo do Mestre Escultor Mágico de Varinha"
+}
+},
+{
+"sym": "82_66",
+"gfx": 66,
+"lvl": 1,
+"item": 10945,
+"name": {
+"fr": "Bouclier du Sculptemage d'Arcs Primordial",
+"en": "Master Bow Carvmagus' Shield",
+"de": "Schild des ehrwürdigen Schnitzmagiers für Bögen",
+"es": "Escudo del escultomago de arcos primordial",
+"it": "Scudo del Mastro Intagliamago di Archi",
+"nl": "Meester Boog Snijmagier's Schild",
+"pt": "Escudo do Mestre Escultor Mágico de Arco"
+}
+},
+{
+"sym": "82_67",
+"gfx": 67,
+"lvl": 1,
+"item": 10941,
+"name": {
+"fr": "Bouclier du Forgemage d'Épées Primordial",
+"en": "Master Sword Smithmagus' Shield",
+"de": "Schild des ehrwürdigen Schmiedmagiers für Schwerter",
+"es": "Escudo del forjamago de espadas primordial",
+"it": "Scudo del Mastro Forgimago di Spade",
+"nl": "Meester Zwaard Smidmagier's Schild",
+"pt": "Escudo do Mestre Ferreiro Mágico de Espada"
+}
+},
+{
+"sym": "82_68",
+"gfx": 68,
+"lvl": 1,
+"item": 10940,
+"name": {
+"fr": "Bouclier du Forgemage de Dagues Primordial",
+"en": "Master Dagger Smithmagus' Shield",
+"de": "Schild des ehrwürdigen Schmiedmagiers für Dolche",
+"es": "Escudo del forjamago de dagas primordial",
+"it": "Scudo del Mastro Forgimago di Daghe",
+"nl": "Meester Dolken Smidmagier's Schild",
+"pt": "Escudo do Mestre Ferreiro Mágico de Adaga"
+}
+},
+{
+"sym": "82_69",
+"gfx": 69,
+"lvl": 1,
+"item": 10939,
+"name": {
+"fr": "Bouclier du Chasseur Primordial",
+"en": "Master Hunter's Shield",
+"de": "Schild des ehrwürdigen Jägers",
+"es": "Escudo del cazador primordial",
+"it": "Scudo del Mastro Cacciatore",
+"nl": "Meester Jager's Schild",
+"pt": "Escudo do Mestre Caçador"
+}
+},
+{
+"sym": "82_70",
+"gfx": 70,
+"lvl": 1,
+"item": 10938,
+"name": {
+"fr": "Bouclier du Pêcheur Primordial",
+"en": "Master Fisherman's Shield",
+"de": "Schild des ehrwürdigen Fischers",
+"es": "Escudo del pescador primordial",
+"it": "Scudo del Mastro Pescatore",
+"nl": "Meester Visser's Schild",
+"pt": "Escudo do Mestre Pescador"
+}
+},
+{
+"sym": "82_71",
+"gfx": 71,
+"lvl": 1,
+"item": 10937,
+"name": {
+"fr": "Bouclier du Forgeur de Haches Primordial",
+"en": "Master Axe Smith's Shield",
+"de": "Schild des ehrwürdigen Axtschmieds",
+"es": "Escudo del forjador de hachas primordial",
+"it": "Scudo del Mastro Forgiatore di Asce",
+"nl": "Meester Bijl Smid's Schild",
+"pt": "Escudo do Mestre Ferreiro de Machado"
+}
+},
+{
+"sym": "82_72",
+"gfx": 72,
+"lvl": 1,
+"item": 10936,
+"name": {
+"fr": "Bouclier du Paysan Primordial",
+"en": "Master Farmer's Shield",
+"de": "Schild des ehrwürdigen Bauers",
+"es": "Escudo del campesino primordial",
+"it": "Scudo del Mastro Contadino",
+"nl": "Meester Boer's Schild",
+"pt": "Escudo do Mestre Fazendeiro"
+}
+},
+{
+"sym": "82_73",
+"gfx": 73,
+"lvl": 1,
+"item": 10935,
+"name": {
+"fr": "Bouclier du Tailleur Primordial",
+"en": "Master Tailor's Shield",
+"de": "Schild des ehrwürdigen Schneiders",
+"es": "Escudo del sastre primordial",
+"it": "Scudo del Mastro Sarto",
+"nl": "Meester Kleermaker's Schild",
+"pt": "Escudo do Mestre Alfaiate"
+}
+},
+{
+"sym": "82_74",
+"gfx": 74,
+"lvl": 1,
+"item": 10934,
+"name": {
+"fr": "Bouclier de l'Alchimiste Primordial",
+"en": "Master Alchemist's Shield",
+"de": "Schild des ehrwürdigen Alchemisten",
+"es": "Escudo del alquimista primordial",
+"it": "Scudo del Mastro Alchimista",
+"nl": "Meester Alchemist's Schild",
+"pt": "Escudo do Mestre Alquimista"
+}
+},
+{
+"sym": "82_75",
+"gfx": 75,
+"lvl": 1,
+"item": 10933,
+"name": {
+"fr": "Bouclier du Boulanger Primordial",
+"en": "Master Baker's Shield",
+"de": "Schild des ehrwürdigen Bäckers",
+"es": "Escudo del panadero primordial",
+"it": "Scudo del Mastro Panettiere",
+"nl": "Meester Bakker's Schild",
+"pt": "Escudo do Mestre Padeiro"
+}
+},
+{
+"sym": "82_76",
+"gfx": 76,
+"lvl": 1,
+"item": 10932,
+"name": {
+"fr": "Bouclier du Mineur Primordial",
+"en": "Master Miner's Shield",
+"de": "Schild des ehrwürdigen Bergmannns",
+"es": "Escudo del minero primordial",
+"it": "Scudo del Mastro Minatore",
+"nl": "Meester Mijnwerker's Schild",
+"pt": "Escudo do Mestre Minerador"
+}
+},
+{
+"sym": "82_77",
+"gfx": 77,
+"lvl": 1,
+"item": 10931,
+"name": {
+"fr": "Bouclier du Forgeur de Pelles Primordial",
+"en": "Master Shovel Smith's Shield",
+"de": "Schild des ehrwürdigen Schaufelschmieds",
+"es": "Escudo del forjador de palas primordial",
+"it": "Scudo del Mastro Forgiatore di Pale",
+"nl": "Meester Schep Smid's Schild",
+"pt": "Escudo do Mestre Ferreiro de Pá"
+}
+},
+{
+"sym": "82_78",
+"gfx": 78,
+"lvl": 1,
+"item": 10930,
+"name": {
+"fr": "Bouclier du Sculpteur de Baguettes Primordial",
+"en": "Master Wand Carver's Shield",
+"de": "Schild des ehrwürdigen Schnitzmagiers für Stäbe",
+"es": "Escudo del escultor de varitas primordial",
+"it": "Scudo del Mastro Intagliatore di Bacchette",
+"nl": "Meester Wand Snijder's Schild",
+"pt": "Escudo do Mestre Escultor de Varinha"
+}
+},
+{
+"sym": "82_79",
+"gfx": 79,
+"lvl": 1,
+"item": 10929,
+"name": {
+"fr": "Bouclier du Sculpteur de Bâtons Primordial",
+"en": "Master Staff Carver's Shield",
+"de": "Schild des ehrwürdigen Schnitzmagiers für Stecken",
+"es": "Escudo del escultor de bastones primordial",
+"it": "Scudo del Mastro Intagliatore di Bastoni",
+"nl": "Meester Stok Snijder's Schild",
+"pt": "Escudo do Mestre Escultor de Cajado"
+}
+},
+{
+"sym": "82_80",
+"gfx": 80,
+"lvl": 1,
+"item": 10928,
+"name": {
+"fr": "Bouclier du Forgeur de Dagues Primordial",
+"en": "Master Dagger Smith's Shield",
+"de": "Schild des ehrwürdigen Dolchschmieds",
+"es": "Escudo del forjador de dagas primordial",
+"it": "Scudo del Mastro Forgiatore di Daghe",
+"nl": "Meester Dolken Smid's Schild",
+"pt": "Escudo do Mestre Ferreiro de Adaga"
+}
+},
+{
+"sym": "82_81",
+"gfx": 81,
+"lvl": 1,
+"item": 10927,
+"name": {
+"fr": "Bouclier du Bijoutier Primordial",
+"en": "Master Jeweller's Shield",
+"de": "Schild des ehrwürdigen Juweliers",
+"es": "Escudo del joyero primordial",
+"it": "Scudo del Mastro Orefice",
+"nl": "Meester Juwelier's Schild",
+"pt": "Escudo do Mestre Joalheiro"
+}
+},
+{
+"sym": "82_82",
+"gfx": 82,
+"lvl": 1,
+"item": 10926,
+"name": {
+"fr": "Bouclier du Cordonnier Primordial",
+"en": "Master Shoemaker's Shield",
+"de": "Schild des ehrwürdigen Schusters",
+"es": "Escudo del zapatero primordial",
+"it": "Scudo del Mastro Ciabattino",
+"nl": "Meester Schoenmaker's Schild",
+"pt": "Escudo do Mestre Sapateiro"
+}
+},
+{
+"sym": "82_83",
+"gfx": 83,
+"lvl": 1,
+"item": 10924,
+"name": {
+"fr": "Bouclier du Sculpteur d'Arcs Primordial",
+"en": "Master Bow Carver's Shield",
+"de": "Schild des ehrwürdigen Bogenschnitzers",
+"es": "Escudo del escultor de arcos primordial",
+"it": "Scudo del Mastro Intagliatore di Archi",
+"nl": "Meester Boog Snijder's Schild",
+"pt": "Escudo do Mestre Escultor de Arco"
+}
+},
+{
+"sym": "82_84",
+"gfx": 84,
+"lvl": 1,
+"item": 10923,
+"name": {
+"fr": "Bouclier du Forgeur d'Épées Primordial",
+"en": "Master Sword Smith's Shield",
+"de": "Schild des ehrwürdigen Schwertschmieds",
+"es": "Escudo del forjador de espadas primordial",
+"it": "Scudo del Mastro Forgiatore di Spade",
+"nl": "Meester Zwaard Smid's Schild",
+"pt": "Escudo do Mestre Ferreiro de Espada"
+}
+},
+{
+"sym": "82_85",
+"gfx": 85,
+"lvl": 1,
+"item": 10922,
+"name": {
+"fr": "Bouclier du Bûcheron Primordial",
+"en": "Master Lumberjack's Shield",
+"de": "Schild des ehrwürdigen Holzfällers",
+"es": "Escudo del leñador primordial",
+"it": "Scudo del Mastro Taglialegna",
+"nl": "Meester Houthakker's Schild",
+"pt": "Escudo do Mestre Lenhador"
+}
+},
+{
+"sym": "82_86",
+"gfx": 86,
+"lvl": 1,
+"item": 10925,
+"name": {
+"fr": "Bouclier du Forgeur de Marteaux Primordial",
+"en": "Master Hammer Smith's Shield",
+"de": "Schild des ehrwürdigen Hammerschmieds",
+"es": "Escudo del forjador de martillos primordial",
+"it": "Scudo del Mastro Forgiatore di Martelli",
+"nl": "Meester Hamer Smid's Schild",
+"pt": "Escudo do Mestre Ferreiro de Martelo"
+}
+},
+{
+"sym": "82_87",
+"gfx": 87,
+"lvl": 1,
+"item": 10944,
+"name": {
+"fr": "Bouclier du Forgemage de Haches Primordial",
+"en": "Master Axe Smithmagus' Shield",
+"de": "Schild des ehrwürdigen Schmiedmagiers für Äxte",
+"es": "Escudo del forjamago de hachas primordial",
+"it": "Scudo del Mastro Forgimago di Asce",
+"nl": "Meester Bijl Smidmagier's Schild",
+"pt": "Escudo do Mestre Ferreiro Mágico de Machado"
+}
+},
+{
+"sym": "82_88",
+"gfx": 88,
+"lvl": 1,
+"item": 10943,
+"name": {
+"fr": "Bouclier du Forgemage de Pelles Primordial",
+"en": "Master Shovel Smithmagus' Shield",
+"de": "Schild des ehrwürdigen Schmiedmagiers für Schaufeln",
+"es": "Escudo del forjamago de palas primordial",
+"it": "Scudo del Mastro Forgimago di Pale",
+"nl": "Meester Schep Smidmagier's Schild",
+"pt": "Escudo do Mestre Ferreiro Mágico de Pá"
+}
+},
+{
+"sym": "82_90",
+"gfx": 90,
+"lvl": 1,
+"item": 10942,
+"name": {
+"fr": "Bouclier du Forgemage de Marteaux Primordial",
+"en": "Master Hammer Smithmagus' Shield",
+"de": "Schild des ehrwürdigen Schmiedmagiers für Hämmer",
+"es": "Escudo del forjamago de martillos primordial",
+"it": "Scudo del Mastro Forgimago di Martelli",
+"nl": "Meester Hamer Smidmagier's Schild",
+"pt": "Escudo do Mestre Ferreiro Mágico de Martelo"
+}
+},
+{
+"sym": "82_91",
+"gfx": 91,
+"lvl": 1,
+"item": 11472,
+"name": {
+"fr": "Bouclier Hitche",
+"en": "Twit Shield",
+"de": "Zwitschild",
+"es": "Escudo Tewich",
+"it": "Scudo del Tuicciatore",
+"nl": "Twit Shield",
+"pt": "Escudo Twit"
+}
+},
+{
+"sym": "82_92",
+"gfx": 92,
+"lvl": 1,
+"item": 11556,
+"name": {
+"fr": "Bouclier Dragarmure",
+"en": "Dragarmour Shield",
+"de": "Schild der Drachrüstung",
+"es": "Escudo de dragoarmadura",
+"it": "Scudo Dragarmatura",
+"nl": "Dragarmour Shield",
+"pt": "Escudo de Dragarmadura"
+}
+},
+{
+"sym": "82_93",
+"gfx": 93,
+"lvl": 1,
+"item": 11621,
+"name": {
+"fr": "Bouclier Draconique Polykrome",
+"en": "Polykrome Scale Shield",
+"de": "Polykrom-Schuppenschild",
+"es": "Escudo dragontino polikromo",
+"it": "Scudo Draconico Polikromo",
+"nl": "Schaalschild",
+"pt": "Escudo Dragontino Polikromático"
+}
+},
+{
+"sym": "82_94",
+"gfx": 94,
+"lvl": 1,
+"item": 11710,
+"name": {
+"fr": "Bouclier du Cherchogrine",
+"en": "Ogrine Digger's Shield",
+"de": "Ogrinenjagd-Schild",
+"es": "Escudo de buscaogrinas",
+"it": "Scudo del Cercogrin",
+"nl": "Ogrine Digger's Shield",
+"pt": "Escudo do Caçogrina"
+}
+},
+{
+"sym": "82_95",
+"gfx": 95,
+"lvl": 1,
+"item": 11714,
+"name": {
+"fr": "Écu du Pirate",
+"en": "Pirate Shield",
+"de": "Wappenschild des Piraten",
+"es": "Escudo de pirata",
+"it": "Scudo del Pirata",
+"nl": "Pirate Shield",
+"pt": "Escudo do Pirata"
+}
+},
+{
+"sym": "82_96",
+"gfx": 96,
+"lvl": 1,
+"item": 11732,
+"name": {
+"fr": "Écu qui pète",
+"en": "Wicked Shield",
+"de": "Boah-Wappenschild",
+"es": "Esculo Cargador",
+"it": "Scudo sorridente",
+"nl": "Wicked Shield",
+"pt": "Proteção Ventosa"
+}
+},
+{
+"sym": "82_97",
+"gfx": 97,
+"lvl": 1,
+"item": 11733,
+"name": {
+"fr": "Bouclier qui pète du Sapik",
+"en": "Wicked Itzting Protector",
+"de": "Pi-Sack-Boahschild",
+"es": "Escudo Chachi del Pikabeto",
+"it": "Scudo che se la tira del Punzek",
+"nl": "Wicked Itzting Protector",
+"pt": "Escudo Bufante da Spinho"
+}
+},
+{
+"sym": "82_98",
+"gfx": 98,
+"lvl": 1,
+"item": 11734,
+"name": {
+"fr": "Bouclier qui pète du Papa Nowel",
+"en": "Wicked Father Kwismas Protector",
+"de": "Weißnachtsmann-Boahschild",
+"es": "Escudo Chachi del Chanta Klaus",
+"it": "Scudo che se la tira di Babbo Nawal",
+"nl": "Wicked Father Kwismas Protector",
+"pt": "Escudo Bufante de Papai Nowel"
+}
+},
+{
+"sym": "82_99",
+"gfx": 99,
+"lvl": 1,
+"item": 11735,
+"name": {
+"fr": "Bouclier qui pète du Père Fwetar",
+"en": "Wicked Father Whupper Protector",
+"de": "Rubrächer, der Knechter-Boahschild",
+"es": "Escudo Chachi del Papa No-es",
+"it": "Scudo che se la tira di Papy Pawty",
+"nl": "Wicked Father Whupper Protector",
+"pt": "Escudo Bufante de Papai Cruel"
+}
+},
+{
+"sym": "82_100",
+"gfx": 100,
+"lvl": 1,
+"item": 11724,
+"name": {
+"fr": "Floconclier Tooshuss",
+"en": "Tooschuss Flakeshield",
+"de": "Schwingschwung-Schildflocke",
+"es": "Copoescudo esquidinámico",
+"it": "Fioccoscudo Etciù",
+"nl": "Tooschuss Flakeshield",
+"pt": "Floquescudo Vaptvupt"
+}
+},
+{
+"sym": "82_101",
+"gfx": 101,
+"lvl": 1,
+"item": 11749,
+"name": {
+"fr": "Bouclier de la Baston",
+"en": "Bash up Shield",
+"de": "Schild der Prügelei",
+"es": "Escuedo de la Pelea",
+"it": "Scudo della Baruffa",
+"nl": "Bash up Shield",
+"pt": "Escudo da Pancadaria"
+}
+},
+{
+"sym": "82_102",
+"gfx": 102,
+"lvl": 1,
+"item": 11750,
+"name": {
+"fr": "Écu-qui-pique",
+"en": "Escuwertcheon",
+"de": "Piks-Wappenschild",
+"es": "Escudo pinchudo",
+"it": "Scudo Punzecchiante",
+"nl": "Escuwertcheon",
+"pt": "Escudo Picadinha"
+}
+},
+{
+"sym": "82_103",
+"gfx": 103,
+"lvl": 1,
+"item": 11751,
+"name": {
+"fr": "Bouclier Sbrouffe",
+"en": "Poe Kerfay Shield",
+"de": "Angeberschild",
+"es": "Escudo Xulería",
+"it": "Scudo Bluffatore",
+"nl": "Poe Kerfay Shield",
+"pt": "Escudo Doblefe"
+}
+},
+{
+"sym": "82_104",
+"gfx": 104,
+"lvl": 1,
+"item": 12150,
+"name": {
+"fr": "Bouclier du Valeureux",
+"en": "Shield of the Valiant",
+"de": "Helm des Tapferen",
+"es": "Escudo de valeroso",
+"it": "Scudo del Valoroso",
+"nl": "Meester Klusjesman's Schild",
+"pt": "Escudo do Bravo"
+}
+},
+{
+"sym": "82_105",
+"gfx": 105,
+"lvl": 1,
+"item": 11754,
+"name": {
+"fr": "Bouclier Temps-Mort",
+"en": "Time-Out Shield",
+"de": "Auszeit-Schild",
+"es": "Escudo Tiempo Muerto",
+"it": "Scudo Tempo Morto",
+"nl": "Time-Out Shield",
+"pt": "Escudo Dá-Trégua"
+}
+},
+{
+"sym": "82_106",
+"gfx": 106,
+"lvl": 1,
+"item": 11756,
+"name": {
+"fr": "Bouclier Ternel",
+"en": "Eternashield",
+"de": "Ewigkeits-Schild",
+"es": "Escudoeterno",
+"it": "Scudeterno",
+"nl": "Eternashield",
+"pt": "Égide Terna"
+}
+},
+{
+"sym": "82_107",
+"gfx": 107,
+"lvl": 1,
+"item": 11757,
+"name": {
+"fr": "Bouclier Jyde",
+"en": "Aegishield",
+"de": "Jide-Schild",
+"es": "Escudo de Gidah",
+"it": "Scudo Gida",
+"nl": "Aegishield",
+"pt": "Escudo de Jyde"
+}
+},
+{
+"sym": "82_108",
+"gfx": 108,
+"lvl": 1,
+"item": 11760,
+"name": {
+"fr": "Bouclier du Grand Pa Wabbit",
+"en": "Gwandpa Wabbit Shield",
+"de": "Schild des Grand Pa Wabbit",
+"es": "Escudo de awelito wabbit",
+"it": "Scudo del Nonno Wabbit",
+"nl": "Gwandpa Wabbit Shield",
+"pt": "Escudo do Vovô Wabbit"
+}
+},
+{
+"sym": "82_109",
+"gfx": 109,
+"lvl": 1,
+"item": 11771,
+"name": {
+"fr": "Cacaoclier",
+"en": "Cocoa Shield",
+"de": "Kakao-Schild",
+"es": "Cacaoscudo",
+"it": "Cacauscudo",
+"nl": "Cocoa Shield",
+"pt": "Cacauscudo"
+}
+},
+{
+"sym": "82_110",
+"gfx": 110,
+"lvl": 1,
+"item": 11774,
+"name": {
+"fr": "Bouclier Zoth",
+"en": "Zoth Shield",
+"de": "Zoth-Schild",
+"es": "Escudo zoth",
+"it": "Scudo Zoth",
+"nl": "Zoth Shield",
+"pt": "Escudo de Zoth"
+}
+},
+{
+"sym": "82_111",
+"gfx": 111,
+"lvl": 1,
+"item": 11812,
+"name": {
+"fr": "Écu Cornu",
+"en": "Horned Shield",
+"de": "Gehörnter Wappenschild",
+"es": "Escudo cornudo",
+"it": "Scudo Cornuto",
+"nl": "Horned Shield",
+"pt": "Broquel Chifrudo"
+}
+},
+{
+"sym": "82_112",
+"gfx": 112,
+"lvl": 1,
+"item": 12734,
+"name": {
+"fr": "Boucarnam",
+"en": "Carnam Shield",
+"de": "Schildarnam",
+"es": "Escudarnam",
+"it": "Escudarnam",
+"nl": "Carnam Shield",
+"pt": "Scudarnam"
+}
+},
+{
+"sym": "82_113",
+"gfx": 113,
+"lvl": 1,
+"item": 12746,
+"name": {
+"fr": "Coeur de Cible",
+"en": "Bullseye Shield",
+"de": "Mitten ins Herz",
+"es": "Objetivo certero",
+"it": "Centro del bersaglio",
+"nl": "Bullseye Shield",
+"pt": "Coração de Alvo"
+}
+},
+{
+"sym": "82_114",
+"gfx": 114,
+"lvl": 1,
+"item": 12755,
+"name": {
+"fr": "Pavois du Paladin",
+"en": "Paladin's Pavise",
+"de": "Pavese des kühnen Ritters",
+"es": "Pavés de paladín",
+"it": "Palvese del Paladino",
+"nl": "Paladin's Pavise",
+"pt": "Broquel do Paladino"
+}
+},
+{
+"sym": "82_115",
+"gfx": 115,
+"lvl": 1,
+"item": 12756,
+"name": {
+"fr": "Plan K",
+"en": "Plan K",
+"de": "K-Plan",
+"es": "Plan K",
+"it": "Mappa K",
+"nl": "Plan K",
+"pt": "Plano K"
+}
+},
+{
+"sym": "82_116",
+"gfx": 116,
+"lvl": 1,
+"item": 12757,
+"name": {
+"fr": "Bouclier Gri-gri",
+"en": "Gris-Gris Shield",
+"de": "Gri-Gri-Schild",
+"es": "Escudo grisgrís",
+"it": "Scudo Amuleto",
+"nl": "Gris-Gris Shield",
+"pt": "Escudo Talismã"
+}
+},
+{
+"sym": "82_117",
+"gfx": 117,
+"lvl": 1,
+"item": 12758,
+"name": {
+"fr": "Protection Chaulair",
+"en": "SPF Shield",
+"de": "Hitzebeständiger Luftschild",
+"es": "Protección veraniega",
+"it": "Protezione Solarsura",
+"nl": "SPF Shield",
+"pt": "Protetor Calorar"
+}
+},
+{
+"sym": "82_118",
+"gfx": 118,
+"lvl": 1,
+"item": 12766,
+"name": {
+"fr": "Rempart du Guerrier sanctifié",
+"en": "Blessed Warrior's Shield",
+"de": "Bollwerk des geweihten Kriegers",
+"es": "Baluarte de guerrero santificado",
+"it": "Baluardo del Guerriero Santificato",
+"nl": "Blessed Warrior's Shield",
+"pt": "Muralha do Guerreiro Santificado"
+}
+},
+{
+"sym": "82_119",
+"gfx": 119,
+"lvl": 1,
+"item": 12781,
+"name": {
+"fr": "Bouclier Totem",
+"en": "Totem Shield",
+"de": "Totem-Schild",
+"es": "Escudo Tótem",
+"it": "Scudo Totem",
+"nl": "Totem Shield",
+"pt": "Escudo Totem"
+}
+},
+{
+"sym": "82_120",
+"gfx": 120,
+"lvl": 1,
+"item": 12794,
+"name": {
+"fr": "L'Ossuaire",
+"en": "Ossuary",
+"de": "Das Ossuarium",
+"es": "Osario",
+"it": "L'Ossario",
+"nl": "Ossuary",
+"pt": "O Ossuário"
+}
+},
+{
+"sym": "82_121",
+"gfx": 121,
+"lvl": 1,
+"item": 12795,
+"name": {
+"fr": "L'Empaleur",
+"en": "Impaler",
+"de": "Der Aufspießer",
+"es": "Empalador",
+"it": "L'Impalatore",
+"nl": "Impaler",
+"pt": "O Empalador"
+}
+},
+{
+"sym": "82_122",
+"gfx": 122,
+"lvl": 1,
+"item": 12798,
+"name": {
+"fr": "Boucl'Iop",
+"en": "Ioprotector",
+"de": "Iop‘Schild",
+"es": "Yopuscudo",
+"it": "Scud'Yop",
+"nl": "Ioprotector",
+"pt": "Escud'Iop"
+}
+},
+{
+"sym": "82_123",
+"gfx": 123,
+"lvl": 1,
+"item": 12801,
+"name": {
+"fr": "Providence Bontarienne",
+"en": "Bontarian Providence",
+"de": "Bonta-Vorsehung",
+"es": "Providencia bontariana",
+"it": "Provvidenza di Bonta",
+"nl": "Bontarian Providence",
+"pt": "Providência Bontariana"
+}
+},
+{
+"sym": "82_124",
+"gfx": 124,
+"lvl": 1,
+"item": 12811,
+"name": {
+"fr": "Trool de Bouclier",
+"en": "Shield Trool",
+"de": "Trooliger Schild",
+"es": "Trool de escudo",
+"it": "Trooll di Scudo",
+"nl": "Shield Trool",
+"pt": "Trool de Escudo"
+}
+},
+{
+"sym": "82_125",
+"gfx": 125,
+"lvl": 1,
+"item": 12812,
+"name": {
+"fr": "Bouclipocrate",
+"en": "Hippocrashield",
+"de": "Hippocrashield",
+"es": "Escudocrático",
+"it": "Hippocrashield",
+"nl": "Hippocrashield",
+"pt": "Escudócrates"
+}
+},
+{
+"sym": "82_126",
+"gfx": 126,
+"lvl": 1,
+"item": 12816,
+"name": {
+"fr": "Broche du Dark Vlad",
+"en": "Dark Vlad's Brooch",
+"de": "Dark-Vlad-Brosche",
+"es": "Broche de Dark Vlad",
+"it": "Spuntone del Dark Vlad",
+"nl": "Dark Vlad's Brooch",
+"pt": "Broquel do Vlad Sombrio"
+}
+},
+{
+"sym": "82_127",
+"gfx": 127,
+"lvl": 1,
+"item": 12835,
+"name": {
+"fr": "Lame d'Eykards",
+"en": "Hard Uthakard's Shield",
+"de": "Herzenkarts Klinge",
+"es": "Alma de Kártaro",
+"it": "Lama d'Ellecarte",
+"nl": "Hard Uthakard's Shield",
+"pt": "Escudalma Daskartas"
+}
+},
+{
+"sym": "82_128",
+"gfx": 128,
+"lvl": 1,
+"item": 12838,
+"name": {
+"fr": "Scutum du Bel Huert",
+"en": "Best Iyarius Scutum",
+"de": "Glad Iators Scutum",
+"es": "Scutum de Bel Huario",
+"it": "Scutum del Dom Atore",
+"nl": "Best Iyarius Scutum",
+"pt": "Scutum do Belo Ário"
+}
+},
+{
+"sym": "82_129",
+"gfx": 129,
+"lvl": 1,
+"item": 12963,
+"name": {
+"fr": "Bouclier de Combattant",
+"en": "Combatant Shield",
+"de": "Schild des Kämpfers",
+"es": "Escudo de combatiente",
+"it": "Scudo di Combattente",
+"nl": "Combatant Shield",
+"pt": "Escudo de Combatente"
+}
+},
+{
+"sym": "82_130",
+"gfx": 130,
+"lvl": 1,
+"item": 12846,
+"name": {
+"fr": "Bouclier Belliciste",
+"en": "Bellicose Shield",
+"de": "Schild des Bellizisten",
+"es": "Escudo belicista",
+"it": "Scudo Bellicista",
+"nl": "Bellicose Shield",
+"pt": "Escudo Beligerante"
+}
+},
+{
+"sym": "82_131",
+"gfx": 131,
+"lvl": 1,
+"item": 12852,
+"name": {
+"fr": "Bouclier Olarj",
+"en": "Seawerd Shield",
+"de": "Küsten-Schild",
+"es": "Escudo Enaltamar",
+"it": "Scudo Allargo",
+"nl": "Seawerd Shield",
+"pt": "Escudo Altomar"
+}
+},
+{
+"sym": "82_132",
+"gfx": 132,
+"lvl": 1,
+"item": 12855,
+"name": {
+"fr": "Bouclier La Moyette",
+"en": "Strawcrow Shield",
+"de": "Strohvogel-Schild",
+"es": "Escudo La Moyeta",
+"it": "Scudo Covone",
+"nl": "Strawcrow Shield",
+"pt": "Escudo Meda"
+}
+},
+{
+"sym": "82_133",
+"gfx": 133,
+"lvl": 1,
+"item": 12858,
+"name": {
+"fr": "Bouclier Ocharbon",
+"en": "Dirtywerk Shield",
+"de": "Kohlewerk-Schild",
+"es": "Escudo Alcarbón",
+"it": "Copricapo Carbonaia",
+"nl": "Dirtywerk Shield",
+"pt": "Chapéu Darduro"
+}
+},
+{
+"sym": "82_134",
+"gfx": 134,
+"lvl": 1,
+"item": 12861,
+"name": {
+"fr": "Gardien du Savoir",
+"en": "Guardian of Knowledge",
+"de": "Wächter des Wissens",
+"es": "Guardián del conocimiento",
+"it": "Guardiano del Sapere",
+"nl": "Guardian of Knowledge",
+"pt": "Guardião do Conhecimento"
+}
+},
+{
+"sym": "82_135",
+"gfx": 135,
+"lvl": 1,
+"item": 12864,
+"name": {
+"fr": "Bouclier Charde",
+"en": "Splinter Shield",
+"de": "Holzsplitter-Schild",
+"es": "Astilloso",
+"it": "Scudo Skeggia",
+"nl": "Splinter Shield",
+"pt": "Escudo Farpado"
+}
+},
+{
+"sym": "82_136",
+"gfx": 136,
+"lvl": 1,
+"item": 12867,
+"name": {
+"fr": "Bouclier du Braconnier",
+"en": "Poacher Shield",
+"de": "Wilderer-Schild",
+"es": "Escudo de cazador furtivo",
+"it": "Scudo del Bracconiere",
+"nl": "Poacher Shield",
+"pt": "Escudo do Caçador Ilegal"
+}
+},
+{
+"sym": "82_137",
+"gfx": 137,
+"lvl": 1,
+"item": 12870,
+"name": {
+"fr": "Gousset de l'Homme Mystère",
+"en": "Mystery Man Pocket Watch",
+"de": "Taschenuhr des Geheimnisvollen Mannes",
+"es": "Reloj de bolsillo de Enigmático",
+"it": "Orologio da Taschino dell'Uomo Misterioso",
+"nl": "Mystery Man Pocket Watch",
+"pt": "Relógio do Homem Misterioso"
+}
+},
+{
+"sym": "82_138",
+"gfx": 138,
+"lvl": 1,
+"item": 12872,
+"name": {
+"fr": "Bouclier Grand Bleu",
+"en": "Big Blue Shield",
+"de": "Schild Blauer",
+"es": "Escudo Gran azul",
+"it": "Scudo Grande Blu",
+"nl": "Big Blue Shield",
+"pt": "Escudo Imenso Azul"
+}
+},
+{
+"sym": "82_139",
+"gfx": 139,
+"lvl": 1,
+"item": 12875,
+"name": {
+"fr": "Bouclier Patrokuit",
+"en": "Baykurz Shield",
+"de": "Schild Brandteig",
+"es": "Escudo Nomuyhecho",
+"it": "Scudo Pokokotto",
+"nl": "Baykurz Shield",
+"pt": "Escudo Malpassado"
+}
+},
+{
+"sym": "82_140",
+"gfx": 140,
+"lvl": 1,
+"item": 12878,
+"name": {
+"fr": "Bouclier Carat",
+"en": "Carat Shield",
+"de": "Schild Karat",
+"es": "Escudo Quilate",
+"it": "Scudo Carato",
+"nl": "Carat Shield",
+"pt": "Escudo de Quilate"
+}
+},
+{
+"sym": "82_141",
+"gfx": 141,
+"lvl": 1,
+"item": 12881,
+"name": {
+"fr": "Bouclier Tanneur",
+"en": "Tanner Shield",
+"de": "Schild Gerber",
+"es": "Escudo Curtidor",
+"it": "Scudo Conciatore",
+"nl": "Tanner Shield",
+"pt": "Escudo de Curtidor"
+}
+},
+{
+"sym": "82_142",
+"gfx": 142,
+"lvl": 1,
+"item": 12941,
+"name": {
+"fr": "Pavois galvanisé",
+"en": "Galvanised Pavise",
+"de": "Galvanisierte Pavese",
+"es": "Escudo galvanizado",
+"it": "Palvese Galvanizzato",
+"nl": "Galvanised Pavise",
+"pt": "Pavês Galvanizado"
+}
+},
+{
+"sym": "82_143",
+"gfx": 143,
+"lvl": 1,
+"item": 12944,
+"name": {
+"fr": "Bouclier Toutenboua",
+"en": "Wooderful Shield",
+"de": "Holzgeschnitzter Schild",
+"es": "Escudo Tododemadera",
+"it": "Scudo Tuttinlegn",
+"nl": "Wooderful Shield",
+"pt": "Escudo Dimadêra"
+}
+},
+{
+"sym": "82_144",
+"gfx": 144,
+"lvl": 1,
+"item": 12947,
+"name": {
+"fr": "Bouclier à quatre épingles",
+"en": "Only Pin Deep Shield",
+"de": "Piekfeiner Schild",
+"es": "Escudo de cuatro alfileres",
+"it": "Scudo in Ghingheri",
+"nl": "Only Pin Deep Shield",
+"pt": "Escudo Alinhavado"
+}
+},
+{
+"sym": "82_145",
+"gfx": 145,
+"lvl": 1,
+"item": 12950,
+"name": {
+"fr": "Bouclier de Brikébrok",
+"en": "Odds'n'ends Shield",
+"de": "Zusammengewürfelter Schild",
+"es": "Escudo de Manitrastos",
+"it": "Scudo di Rifforaffa",
+"nl": "Odds'n'ends Shield",
+"pt": "Escudo de Brikolêro"
+}
+},
+{
+"sym": "82_146",
+"gfx": 146,
+"lvl": 1,
+"item": 12953,
+"name": {
+"fr": "Bouclier R'Unique",
+"en": "R'unique Shield",
+"de": "Runmaliger Schild",
+"es": "Escudo R'único",
+"it": "Scudo R'unico",
+"nl": "R'unique Shield",
+"pt": "Escudo Runânime"
+}
+},
+{
+"sym": "82_147",
+"gfx": 147,
+"lvl": 1,
+"item": 12957,
+"name": {
+"fr": "Bouclier du Touitcheur",
+"en": "Tweecher Shield",
+"de": "Schild des Touitcheur",
+"es": "Schild des Touitcheur",
+"it": "Scudo del Tuitcher",
+"nl": "Tweecher Shield",
+"pt": "Escudo do Tuitcher"
+}
+},
+{
+"sym": "82_149",
+"gfx": 149,
+"lvl": 1,
+"item": 12960,
+"name": {
+"fr": "Bouclier runique",
+"en": "Runic Shield",
+"de": "Runenschild",
+"es": "Escudo rúnico",
+"it": "Scudo Runico",
+"nl": "Runic Shield",
+"pt": "Escudo Rúnico"
+}
+},
+{
+"sym": "82_150",
+"gfx": 150,
+"lvl": 1,
+"item": 13017,
+"name": {
+"fr": "Bouclasalar",
+"en": "Salarshield",
+"de": "Salarschild",
+"es": "Escudosalar",
+"it": "Scudasalar",
+"nl": "Salarshield",
+"pt": "Escudosalar"
+}
+},
+{
+"sym": "82_151",
+"gfx": 151,
+"lvl": 1,
+"item": 13021,
+"name": {
+"fr": "Bouclondakal",
+"en": "Dardondashield",
+"de": "Dondakalschild",
+"es": "Escudondakal",
+"it": "Scudondakal",
+"nl": "Dardondashield",
+"pt": "Escudonkadal"
+}
+},
+{
+"sym": "82_152",
+"gfx": 152,
+"lvl": 1,
+"item": 13025,
+"name": {
+"fr": "Bouclerafal",
+"en": "Aerafashield",
+"de": "Aerafalschild",
+"es": "Escuderafal",
+"it": "Scuderafal",
+"nl": "Aerafashield",
+"pt": "Escuderafal"
+}
+},
+{
+"sym": "82_153",
+"gfx": 153,
+"lvl": 1,
+"item": 13029,
+"name": {
+"fr": "Bouclabrial",
+"en": "Briashield",
+"de": "Brialschild",
+"es": "Escudabrial",
+"it": "Scudabrial",
+"nl": "Briashield",
+"pt": "Escudabrial"
+}
+},
+{
+"sym": "82_154",
+"gfx": 154,
+"lvl": 1,
+"item": 13033,
+"name": {
+"fr": "Bouclakourial",
+"en": "Kouriashield",
+"de": "Kourialschild",
+"es": "Escudakurial",
+"it": "Scudakurial",
+"nl": "Kouriashield",
+"pt": "Escudakurial"
+}
+},
+{
+"sym": "82_155",
+"gfx": 155,
+"lvl": 1,
+"item": 13037,
+"name": {
+"fr": "Bouclemikhal",
+"en": "Mikhashield",
+"de": "Mikhalschild",
+"es": "Escudemikhal",
+"it": "Scudemikhal",
+"nl": "Mikhashield",
+"pt": "Escudemikhal"
+}
+},
+{
+"sym": "82_156",
+"gfx": 156,
+"lvl": 1,
+"item": 13043,
+"name": {
+"fr": "Bouclier de Goultard",
+"en": "Goultard's Shield",
+"de": "Goultards Schild",
+"es": "Escudo de Gúltar",
+"it": "Goultard's Shield",
+"nl": "Goultard's Shield",
+"pt": "Escudo de Gultar"
+}
+},
+{
+"sym": "82_158",
+"gfx": 158,
+"lvl": 1,
+"item": 13123,
+"name": {
+"fr": "Bouclier du Héros Divin",
+"en": "Divine Hero's Shield",
+"de": "Divine Hero's Shield",
+"es": "Escudo de héroe divino",
+"it": "Divine Hero's Shield",
+"nl": "Divine Hero's Shield",
+"pt": "Escudo de herói divino"
+}
+},
+{
+"sym": "82_159",
+"gfx": 159,
+"lvl": 1,
+"item": 13126,
+"name": {
+"fr": "Bouclier du Héros Sanglant",
+"en": "Bloody Hero's Shield",
+"de": "Bloody Hero's Shield",
+"es": "Escudo de héroe Sangriento",
+"it": "Bloody Hero's Shield",
+"nl": "Bloody Hero's Shield",
+"pt": "Escudo de herói sangrento"
+}
+},
+{
+"sym": "82_160",
+"gfx": 160,
+"lvl": 1,
+"item": 13116,
+"name": {
+"fr": "Bouclier Chovkipeu",
+"en": "Runfoyalyf Shield",
+"de": "Umhang der Sensenfrau",
+"es": "Huyescudo",
+"it": "Scudo Calvikipuò",
+"nl": "Runfoyalyf Shield",
+"pt": "Escudo Salvekempudé"
+}
+},
+{
+"sym": "82_162",
+"gfx": 162,
+"lvl": 1,
+"item": 13046,
+"name": {
+"fr": "Bouclier de Prestance Volatile",
+"en": "Volatile Panache Shield",
+"de": "Stattlicher flüchtiger Schild",
+"es": "Escudo Prestancia Volátil",
+"it": "Scudo della Prestanza Volatile",
+"nl": "Volatile Panache Shield",
+"pt": "Escudo de Presença Volátil"
+}
+},
+{
+"sym": "82_163",
+"gfx": 163,
+"lvl": 1,
+"item": 13051,
+"name": {
+"fr": "Bouclier de Prestance Aqueuse",
+"en": "Aqueous Panache Shield",
+"de": "Stattlicher wässriger Schild",
+"es": "Escudo Prestancia Acuosa",
+"it": "Scudo della Prestanza Acquosa",
+"nl": "Aqueous Panache Shield",
+"pt": "Escudo de Presença Aquosa"
+}
+},
+{
+"sym": "82_164",
+"gfx": 164,
+"lvl": 1,
+"item": 13056,
+"name": {
+"fr": "Bouclier de Prestance Ignée",
+"en": "Fiery Panache Shield",
+"de": "Stattlicher feuriger Schild",
+"es": "Escudo Prestancia Ígnea",
+"it": "Scudo della Prestanza Ignea",
+"nl": "Fiery Panache Shield",
+"pt": "Escudo de Presença Ígnea"
+}
+},
+{
+"sym": "82_165",
+"gfx": 165,
+"lvl": 1,
+"item": 13061,
+"name": {
+"fr": "Bouclier de Prestance Végétale",
+"en": "Botanic Panache Shield",
+"de": "Stattlicher pflanzlicher Schild",
+"es": "Escudo Prestancia Vegetal",
+"it": "Scudo della Prestanza Vegetale",
+"nl": "Botanic Panache Shield",
+"pt": "Escudo de Presença Vegetal"
+}
+},
+{
+"sym": "82_166",
+"gfx": 166,
+"lvl": 1,
+"item": 13066,
+"name": {
+"fr": "Bouc'lyrique",
+"en": "Singflower Shield",
+"de": "Schild‘ranke",
+"es": "Liricscudo",
+"it": "Scud'lirico",
+"nl": "Singflower Shield",
+"pt": "Escudo Lírico"
+}
+},
+{
+"sym": "82_167",
+"gfx": 167,
+"lvl": 1,
+"item": 13370,
+"name": {
+"fr": "Verrouclier",
+"en": "Shielock",
+"de": "Shielock",
+"es": "Adargandado",
+"it": "-",
+"nl": "Shielock",
+"pt": "Tranquescudo"
+}
+},
+{
+"sym": "82_168",
+"gfx": 168,
+"lvl": 1,
+"item": 13592,
+"name": {
+"fr": "Bouclier des âmes",
+"en": "Shield of Souls",
+"de": "Seelenschild",
+"es": "Escudo de almas",
+"it": "Shield of Souls",
+"nl": "Shield of Souls",
+"pt": "Escudo das Almas"
+}
+},
+{
+"sym": "82_169",
+"gfx": 169,
+"lvl": 1,
+"item": 13099,
+"name": {
+"fr": "Bouclier Primordial",
+"en": "Primordial Shield",
+"de": "Ur-Schild",
+"es": "Escudo primordial",
+"it": "Scudo Primordiale",
+"nl": "Primordial Shield",
+"pt": "Escudo Primordial"
+}
+},
+{
+"sym": "82_170",
+"gfx": 170,
+"lvl": 1,
+"item": 13113,
+"name": {
+"fr": "Bouclizaap",
+"en": "Zaapshield",
+"de": "Zaapschild",
+"es": "Zaapescudo",
+"it": "Scudozaap",
+"nl": "Zaapshield",
+"pt": "Zaapescudo"
+}
+},
+{
+"sym": "82_171",
+"gfx": 171,
+"lvl": 1,
+"item": 13131,
+"name": {
+"fr": "Fécu",
+"en": "Fecabuckler",
+"de": "Fecabuckler",
+"es": "Fescudo",
+"it": "Fecabuckler",
+"nl": "Fecabuckler",
+"pt": "Fescudo"
+}
+},
+{
+"sym": "82_172",
+"gfx": 172,
+"lvl": 1,
+"item": 13133,
+"name": {
+"fr": "Bouclier d'orichor",
+"en": "Orichor Shield",
+"de": "Orichor Shield",
+"es": "Escudo de oricor",
+"it": "Orichor Shield",
+"nl": "Orichor Shield",
+"pt": "Escudo de Oricor"
+}
+},
+{
+"sym": "82_173",
+"gfx": 173,
+"lvl": 1,
+"item": 13134,
+"name": {
+"fr": "Bouclier trophée du Crocabulia",
+"en": "Trophy Crocabulia Shield",
+"de": "Crocabulia-Trophäenschild",
+"es": "Escudo-trofeo del Crocabulia",
+"it": "Scudo trofeo del Crocabulia",
+"nl": "Trofee Crocabulia Schild",
+"pt": "Troféu Escudo de Crocabulia"
+}
+},
+{
+"sym": "82_174",
+"gfx": 174,
+"lvl": 1,
+"item": 13137,
+"name": {
+"fr": "Bouclier Pikaglass",
+"en": "Icepik Shield",
+"de": "Icepik Shield",
+"es": "Escudo Pikahielo",
+"it": "Icepik Shield",
+"nl": "Icepik Shield",
+"pt": "Escudo Pikagelo"
+}
+},
+{
+"sym": "82_175",
+"gfx": 175,
+"lvl": 1,
+"item": 13140,
+"name": {
+"fr": "Bouclier du Dragonnet doré",
+"en": "Golden Wyrmling Shield",
+"de": "Golden Wyrmling Shield",
+"es": "Escudo de dragonito dorado",
+"it": "Golden Wyrmling Shield",
+"nl": "Golden Wyrmling Shield",
+"pt": "Escudo do Draconiano dourado"
+}
+},
+{
+"sym": "82_176",
+"gfx": 176,
+"lvl": 1,
+"item": 13146,
+"name": {
+"fr": "Bouclier Stromoss",
+"en": "Stromoss Shield",
+"de": "Stromoss Shield",
+"es": "Escudo Onstruomusgo",
+"it": "Stromoss Shield",
+"nl": "Stromoss Shield",
+"pt": "Escudo Stromoss"
+}
+},
+{
+"sym": "82_177",
+"gfx": 177,
+"lvl": 1,
+"item": 13148,
+"name": {
+"fr": "Bouclier Krosfighter",
+"en": "Krosfighter Shield",
+"de": "Schild Krosfighter",
+"es": "Escudo Krosfighter",
+"it": "Krosfighter Shield",
+"nl": "Krosfighter Shield",
+"pt": "Escudo Krosfighter"
+}
+},
+{
+"sym": "82_178",
+"gfx": 178,
+"lvl": 1,
+"item": 13150,
+"name": {
+"fr": "Bouclier trophée du Rasboul",
+"en": "Trophy Bherb Shield",
+"de": "Trophy Bherb Shield",
+"es": "Escudo-trofeo del Rasgabola",
+"it": "Trophy Bherb Shield",
+"nl": "Trophy Bherb Shield",
+"pt": "Troféu Escudo de Bherb"
+}
+},
+{
+"sym": "82_180",
+"gfx": 180,
+"lvl": 1,
+"item": 13155,
+"name": {
+"fr": "Bouclier Corrompu",
+"en": "Corrupted Shield",
+"de": "Corrupted Shield",
+"es": "Escudo corrupto",
+"it": "Corrupted Shield",
+"nl": "Corrupted Shield",
+"pt": "Escudo Corrompido"
+}
+},
+{
+"sym": "82_181",
+"gfx": 181,
+"lvl": 1,
+"item": 13157,
+"name": {
+"fr": "Bouclier trophée du Rat Noir corrompu",
+"en": "Trophy Corrupted Black Rat Shield",
+"de": "Trophy Corrupted Black Rat Shield",
+"es": "Escudo-trofeo de Rata Negra",
+"it": "Trophy Corrupted Black Rat Shield",
+"nl": "Trophy Corrupted Black Rat Shield",
+"pt": "Troféu Escudo de Rato Preto"
+}
+},
+{
+"sym": "82_182",
+"gfx": 182,
+"lvl": 1,
+"item": 10166,
+"name": {
+"fr": "Bouclier trophée du Sphincter Cell",
+"en": "Trophy Sphincter Cell Shield",
+"de": "Spincter-Cells-Trophäenschild",
+"es": "Escudo-trofeo de Sfinter Cell",
+"it": "Scudo trofeo dello Sfinter Cell",
+"nl": "Trofee Sphincter Cell Schild",
+"pt": "Troféu Escudo de Sphicter Cell"
+}
+},
+{
+"sym": "82_183",
+"gfx": 183,
+"lvl": 1,
+"item": 13159,
+"name": {
+"fr": "Bouclier trophée de l'Abraknyde Ancestral",
+"en": "Trophy Ancestral Treechnid Shield",
+"de": "Trophy Ancestral Treechnid Shield",
+"es": "Escudo-trofeo de Abráknido Ancestral",
+"it": "Trophy Ancestral Treechnid Shield",
+"nl": "Trophy Ancestral Treechnid Shield",
+"pt": "Troféu Escudo de Treechnid Ancestral"
+}
+},
+{
+"sym": "82_184",
+"gfx": 184,
+"lvl": 1,
+"item": 13160,
+"name": {
+"fr": "Bouclier trophée du Chêne Mou Krollector",
+"en": "Krollector Trophy Soft Oak Shield",
+"de": "Krollector Trophy Soft Oak Shield",
+"es": "Escudo-trofeo de Roble Blando Krollector",
+"it": "Krollector Trophy Soft Oak Shield",
+"nl": "Krollector Trophy Soft Oak Shield",
+"pt": "Troféu Escudo de Carvalho Mole Krollector"
+}
+},
+{
+"sym": "82_185",
+"gfx": 185,
+"lvl": 1,
+"item": 13161,
+"name": {
+"fr": "Bouclier trophée du Dragon Cochon Krollector",
+"en": "Krollector Trophy Dragon Pig Shield",
+"de": "Krollector Trophy Dragon Pig Shield",
+"es": "Escudo-trofeo de Dragocerdo Krollector",
+"it": "Krollector Trophy Dragon Pig Shield",
+"nl": "Krollector Trophy Dragon Pig Shield",
+"pt": "Troféu Escudo de Dragão Porco Krollector"
+}
+},
+{
+"sym": "82_186",
+"gfx": 186,
+"lvl": 11,
+"item": 13171,
+"name": {
+"fr": "Le Grobouclier",
+"en": "Nolifishield",
+"de": "Nolifishield",
+"es": "El Grobescudo",
+"it": "Nolifishield",
+"nl": "Nolifishield",
+"pt": "Grobescudo"
+}
+},
+{
+"sym": "82_187",
+"gfx": 187,
+"lvl": 1,
+"item": 13195,
+"name": {
+"fr": "Bouclier du Grobebuster",
+"en": "Nolifisbuster Shield",
+"de": "Nolifisbuster Shield",
+"es": "Escudo de cazagrobenses",
+"it": "Nolifisbuster Shield",
+"nl": "Nolifisbuster Shield",
+"pt": "Escudo do Grobebuster"
+}
+},
+{
+"sym": "82_188",
+"gfx": 188,
+"lvl": 1,
+"item": 13199,
+"name": {
+"fr": "Bouclier trophée du Wa Wabbit Krollector",
+"en": "Krollector Trophy Wa Wabbit Shield",
+"de": "Krollector Trophy Wa Wabbit Shield",
+"es": "Escudo-trofeo de Wey Wabbit Krollector",
+"it": "Krollector Trophy Wa Wabbit Shield",
+"nl": "Krollector Trophy Wa Wabbit Shield",
+"pt": "Troféu Escudo de Wabbit Krollector"
+}
+},
+{
+"sym": "82_189",
+"gfx": 189,
+"lvl": 1,
+"item": 13200,
+"name": {
+"fr": "Bouclier trophée du Koulosse Krollector",
+"en": "Krollector Trophy Koolich Shield",
+"de": "Krollector Trophy Koolich Shield",
+"es": "Escudo-trofeo de Trankitronko Krollector",
+"it": "Krollector Trophy Koolich Shield",
+"nl": "Krollector Trophy Koolich Shield",
+"pt": "Troféu Escudo de Tronkoso Krollector"
+}
+},
+{
+"sym": "82_190",
+"gfx": 190,
+"lvl": 1,
+"item": 13201,
+"name": {
+"fr": "Bouclier trophée du Sphincter Cell Krollector",
+"en": "Krollector Trophy Sphincter Cell Shield",
+"de": "Krollector Trophy Sphincter Cell Shield",
+"es": "Escudo-trofeo de Sfincter Cell Krollector",
+"it": "Krollector Trophy Sphincter Cell Shield",
+"nl": "Krollector Trophy Sphincter Cell Shield",
+"pt": "Troféu Escudo de Sphincter Cell Krollector"
+}
+},
+{
+"sym": "82_191",
+"gfx": 191,
+"lvl": 1,
+"item": 13202,
+"name": {
+"fr": "Bouclier trophée du Bworker Krollector",
+"en": "Krollector Trophy Bworker Shield",
+"de": "Krollector Trophy Bworker Shield",
+"es": "Escudo-trofeo del Bworker Krollector",
+"it": "Krollector Trophy Bworker Shield",
+"nl": "Krollector Trophy Bworker Shield",
+"pt": "Troféu Escudo de Bworker Krollector"
+}
+},
+{
+"sym": "82_192",
+"gfx": 192,
+"lvl": 1,
+"item": 13227,
+"name": {
+"fr": "Rondache du Magicien Arcanique",
+"en": "Arcane Magician Roundel",
+"de": "Arcane Magician Roundel",
+"es": "Rodela del mago arcano",
+"it": "-",
+"nl": "Arcane Magician Roundel",
+"pt": "Broquel do Mago Arcano"
+}
+},
+{
+"sym": "82_193",
+"gfx": 193,
+"lvl": 1,
+"item": 13231,
+"name": {
+"fr": "Poing du Mekadiateur",
+"en": "Mekadiator Fist",
+"de": "Mekadiator Fist",
+"es": "Puño de mekadiador",
+"it": "-",
+"nl": "Mekadiator Fist",
+"pt": "Punho do Mekadiator"
+}
+},
+{
+"sym": "82_194",
+"gfx": 194,
+"lvl": 1,
+"item": 13233,
+"name": {
+"fr": "Boul'clier de Nowel",
+"en": "Kwismas Globe Shield",
+"de": "Kwismas Globe Shield",
+"es": "Bolascudo de Nawidad",
+"it": "-",
+"nl": "Kwismas Globe Shield",
+"pt": "Bolescudo de Nataw"
+}
+},
+{
+"sym": "82_195",
+"gfx": 195,
+"lvl": 1,
+"item": 13234,
+"name": {
+"fr": "Bouclier trophée du Tynril Consterné",
+"en": "Trophy Dismayed Tynril Shield",
+"de": "Trophy Dismayed Tynril Shield",
+"es": "Escudo trofeo de Tynril Estupefacto",
+"it": "Trophy Dismayed Tynril Shield",
+"nl": "Trophy Dismayed Tynril Shield",
+"pt": "Troféu Escudo do Tynril Desmaiado"
+}
+},
+{
+"sym": "82_196",
+"gfx": 196,
+"lvl": 1,
+"item": 13235,
+"name": {
+"fr": "Bouclier trophée du Tynril Déconcerté",
+"en": "Trophy Disconcerted Tynril Shield",
+"de": "Trophy Disconcerted Tynril Shield",
+"es": "Escudo trofeo de Tynril Absorto",
+"it": "Trophy Disconcerted Tynril Shield",
+"nl": "Trophy Disconcerted Tynril Shield",
+"pt": "Troféu Escudo do Tynril Desconcertado"
+}
+},
+{
+"sym": "82_197",
+"gfx": 197,
+"lvl": 1,
+"item": 13236,
+"name": {
+"fr": "Bouclier trophée du Tynril Perfide",
+"en": "Trophy Perfidious Tynril Shield",
+"de": "Trophy Perfidious Tynril Shield",
+"es": "Escudo trofeo de Tynril Pérfido",
+"it": "Trophy Perfidious Tynril Shield",
+"nl": "Trophy Perfidious Tynril Shield",
+"pt": "Troféu Escudo do Perfidious Tynril"
+}
+},
+{
+"sym": "82_198",
+"gfx": 198,
+"lvl": 1,
+"item": 13237,
+"name": {
+"fr": "Bouclier trophée du Tynril Ahuri",
+"en": "Trophy Stunned Tynril Shield",
+"de": "Trophy Stunned Tynril Shield",
+"es": "Escudo trofeo de Tynril Atónito",
+"it": "Trophy Stunned Tynril Shield",
+"nl": "Trophy Stunned Tynril Shield",
+"pt": "Troféu Escudo do Tynril Surpreso"
+}
+},
+{
+"sym": "82_199",
+"gfx": 199,
+"lvl": 1,
+"item": 13241,
+"name": {
+"fr": "Bouclier trophée du Scarabosse Doré",
+"en": "Trophy Golden Scarabugly Shield",
+"de": "Trophy Golden Scarabugly Shield",
+"es": "Escudo trofeo de Escarajefe Dorado",
+"it": "Trophy Golden Scarabugly Shield",
+"nl": "Trophy Golden Scarabugly Shield",
+"pt": "Troféu Escudo do Escarafeio Dourado"
+}
+},
+{
+"sym": "82_200",
+"gfx": 200,
+"lvl": 1,
+"item": 13242,
+"name": {
+"fr": "Bouclier trophée du Tanukouï San",
+"en": "Trophy Tanukouï San Shield",
+"de": "Trophy Tanukouï San Shield",
+"es": "Escudo trofeo de Tanukui San",
+"it": "Trophy Tanukouï San Shield",
+"nl": "Trophy Tanukouï San Shield",
+"pt": "Troféu Escudo do Tanukouï San"
+}
+},
+{
+"sym": "82_201",
+"gfx": 201,
+"lvl": 1,
+"item": 13243,
+"name": {
+"fr": "Bouclier trophée du Corailleur Magistral",
+"en": "Trophy Great Coralator Shield",
+"de": "Trophy Great Coralator Shield",
+"es": "Escudo trofeo del Coralador Magistral",
+"it": "Trophy Great Coralator Shield",
+"nl": "Trophy Great Coralator Shield",
+"pt": "Troféu Escudo do Grande Coralator"
+}
+},
+{
+"sym": "82_202",
+"gfx": 202,
+"lvl": 1,
+"item": 13244,
+"name": {
+"fr": "Bouclier trophée du Meulou",
+"en": "Trophy Moowolf Shield",
+"de": "Trophy Moowolf Shield",
+"es": "Escudo trofeo de Maxilubo",
+"it": "Trophy Moowolf Shield",
+"nl": "Trophy Moowolf Shield",
+"pt": "Troféu Escudo do MooLobo"
+}
+},
+{
+"sym": "82_203",
+"gfx": 203,
+"lvl": 1,
+"item": 13245,
+"name": {
+"fr": "Bouclier trophée de la Bworkette",
+"en": "Trophy Bworkette Shield",
+"de": "Trophy Bworkette Shield",
+"es": "Escudo trofeo de Bworka",
+"it": "Trophy Bworkette Shield",
+"nl": "Trophy Bworkette Shield",
+"pt": "Troféu Escudo da Bworka"
+}
+},
+{
+"sym": "82_204",
+"gfx": 204,
+"lvl": 1,
+"item": 13249,
+"name": {
+"fr": "Bouclier du Traillarde",
+"en": "Traiharrd Shield",
+"de": "Traiharrd Shield",
+"es": "Escudo del Intentón",
+"it": "Traiharrd Shield",
+"nl": "Traiharrd Shield",
+"pt": "Escudo de Tryhard"
+}
+},
+{
+"sym": "82_205",
+"gfx": 205,
+"lvl": 1,
+"item": 13265,
+"name": {
+"fr": "Rempart gelé de Harebourg",
+"en": "Harebourg's Frozen Rampart",
+"de": "Harebourg's Frozen Rampart",
+"es": "Baluarte helado de Kontatrás",
+"it": "Harebourg's Frozen Rampart",
+"nl": "Harebourg's Frozen Rampart",
+"pt": "Muralha Gelada de Traspafrent"
+}
+},
+{
+"sym": "82_206",
+"gfx": 206,
+"lvl": 1,
+"item": 13272,
+"name": {
+"fr": "Méfiance du Dragon Noir",
+"en": "Black Dragon's Mistrust",
+"de": "Black Dragon's Mistrust",
+"es": "Sospecha de dragón negro",
+"it": "Black Dragon's Mistrust",
+"nl": "Black Dragon's Mistrust",
+"pt": "Desconfiança do Dragão Negro"
+}
+},
+{
+"sym": "82_207",
+"gfx": 207,
+"lvl": 1,
+"item": 13276,
+"name": {
+"fr": "Bouclier de résident du givre",
+"en": "Permafrost Resident Shield",
+"de": "Permafrost Resident Shield",
+"es": "Escudo de residente de la escarcha",
+"it": "Permafrost Resident Shield",
+"nl": "Permafrost Resident Shield",
+"pt": "Escudo de Residente do Gelo"
+}
+},
+{
+"sym": "82_208",
+"gfx": 208,
+"lvl": 1,
+"item": 13268,
+"name": {
+"fr": "Portail de l'Eliacube",
+"en": "Eliacube Portal",
+"de": "Eliacube Portal",
+"es": "Portal de selacubo",
+"it": "Eliacube Portal",
+"nl": "Eliacube Portal",
+"pt": "Portal do Eliacubo"
+}
+},
+{
+"sym": "82_209",
+"gfx": 209,
+"lvl": 1,
+"item": 13260,
+"name": {
+"fr": "Écu de Mercenaire",
+"en": "Mercenary Shield",
+"de": "Mercenary Shield",
+"es": "Escudo de mercenario",
+"it": "Mercenary Shield",
+"nl": "Mercenary Shield",
+"pt": "Escudo de Mercenário"
+}
+},
+{
+"sym": "82_210",
+"gfx": 210,
+"lvl": 1,
+"item": 13293,
+"name": {
+"fr": "Boukinder",
+"en": "Kindershield",
+"de": "Kindershield",
+"es": "Escukinder",
+"it": "-",
+"nl": "Kindershield",
+"pt": "Eskinder"
+}
+},
+{
+"sym": "82_211",
+"gfx": 211,
+"lvl": 1,
+"item": 13284,
+"name": {
+"fr": "Rempart d'Astrub",
+"en": "Astrub Rampart",
+"de": "Astrub Rampart",
+"es": "Escudo de Astrub",
+"it": "-",
+"nl": "Astrub Rampart",
+"pt": "Muralha de Astrub"
+}
+},
+{
+"sym": "82_212",
+"gfx": 212,
+"lvl": 1,
+"item": 13290,
+"name": {
+"fr": "Bouclier amaknéen",
+"en": "Amaknian Shield",
+"de": "Amaknian Shield",
+"es": "Escudo amakneano",
+"it": "-",
+"nl": "Amaknian Shield",
+"pt": "Escudo Amakniano"
+}
+},
+{
+"sym": "82_213",
+"gfx": 213,
+"lvl": 1,
+"item": 13307,
+"name": {
+"fr": "Symbole de l'ancien chef",
+"en": "Old Boss Symbol",
+"de": "Old Boss Symbol",
+"es": "Símbolo del antiguo jefe",
+"it": "-",
+"nl": "Old Boss Symbol",
+"pt": "Símbolo do Chefe Antigo"
+}
+},
+{
+"sym": "82_214",
+"gfx": 214,
+"lvl": 1,
+"item": 13352,
+"name": {
+"fr": "L'Écu de la Discorde",
+"en": "Shield O'Discord",
+"de": "Shield O'Discord",
+"es": "Escudo de la discordia",
+"it": "Shield O'Discord",
+"nl": "Shield O'Discord",
+"pt": "Escudo da Discórdia"
+}
+},
+{
+"sym": "82_215",
+"gfx": 215,
+"lvl": 1,
+"item": 13357,
+"name": {
+"fr": "Bouclisceau",
+"en": "Sealshield",
+"de": "Sealshield",
+"es": "Escusello",
+"it": "-",
+"nl": "Sealshield",
+"pt": "Seloscudo"
+}
+},
+{
+"sym": "82_216",
+"gfx": 216,
+"lvl": 1,
+"item": 13358,
+"name": {
+"fr": "Briseur",
+"en": "Breaker",
+"de": "Breaker",
+"es": "Destructor",
+"it": "-",
+"nl": "Breaker",
+"pt": "Quebrascudo"
+}
+},
+{
+"sym": "82_217",
+"gfx": 217,
+"lvl": 1,
+"item": 13382,
+"name": {
+"fr": "Bouclier du Crâne",
+"en": "Skull Shield",
+"de": "Skull Shield",
+"es": "Escudo de cráneo",
+"it": "-",
+"nl": "Skull Shield",
+"pt": "Escudo do Crânio"
+}
+},
+{
+"sym": "82_218",
+"gfx": 218,
+"lvl": 1,
+"item": 13386,
+"name": {
+"fr": "Bouclier de l'amitié",
+"en": "Friendship Shield",
+"de": "Friendship Shield",
+"es": "Escudo de la amistad",
+"it": "-",
+"nl": "Friendship Shield",
+"pt": "Escudo da Amizade"
+}
+},
+{
+"sym": "82_219",
+"gfx": 219,
+"lvl": 1,
+"item": 13460,
+"name": {
+"fr": "Bouclier trophée du Sapik",
+"en": "Trophy Itzting Shield",
+"de": "Trophy Itzting Shield",
+"es": "Escudo-trofeo del Pikabeto",
+"it": "Trophy Itzting Shield",
+"nl": "Trophy Itzting Shield",
+"pt": "Escudo-Troféu do Itzting"
+}
+},
+{
+"sym": "82_220",
+"gfx": 220,
+"lvl": 1,
+"item": 13461,
+"name": {
+"fr": "Bouclier trophée du Papa Nowel",
+"en": "Trophy Father Kwismas Shield",
+"de": "Trophy Father Kwismas Shield",
+"es": "Escudo-trofeo de Chanta Klaus",
+"it": "Trophy Father Kwismas Shield",
+"nl": "Trophy Father Kwismas Shield",
+"pt": "Escudo-Troféu do Papai Nowel"
+}
+},
+{
+"sym": "82_221",
+"gfx": 221,
+"lvl": 1,
+"item": 13462,
+"name": {
+"fr": "Bouclier trophée du Père Fwetar",
+"en": "Trophy Father Whupper Shield",
+"de": "Trophy Father Whupper Shield",
+"es": "Escudo-trofeo de Papa No-es",
+"it": "Trophy Father Whupper Shield",
+"nl": "Trophy Father Whupper Shield",
+"pt": "Escudo-Troféu do Pai Whupper"
+}
+},
+{
+"sym": "82_222",
+"gfx": 222,
+"lvl": 1,
+"item": 13421,
+"name": {
+"fr": "Bouclier brumeux",
+"en": "Foggy Shield",
+"de": "Foggy Shield",
+"es": "Escudo brumoso",
+"it": "-",
+"nl": "Foggy Shield",
+"pt": "Escudo Brumoso"
+}
+},
+{
+"sym": "82_223",
+"gfx": 223,
+"lvl": 1,
+"item": 13426,
+"name": {
+"fr": "Bouclier Porte-à-Faux",
+"en": "Scything Shield",
+"de": "Scything Shield",
+"es": "Escudo voladizo",
+"it": "-",
+"nl": "Scything Shield",
+"pt": "Escudo em Falso"
+}
+},
+{
+"sym": "82_224",
+"gfx": 224,
+"lvl": 1,
+"item": 13429,
+"name": {
+"fr": "Bouclier osseux",
+"en": "Bony Shield",
+"de": "Bony Shield",
+"es": "Escudo huesudo",
+"it": "-",
+"nl": "Bony Shield",
+"pt": "Escudo Ósseo"
+}
+},
+{
+"sym": "82_225",
+"gfx": 225,
+"lvl": 1,
+"item": 13433,
+"name": {
+"fr": "Bouclier Double Tranchant",
+"en": "Double-Edged Shield",
+"de": "Double-Edged Shield",
+"es": "Escudo doble filo",
+"it": "-",
+"nl": "Double-Edged Shield",
+"pt": "Escudo de Dois Gumes"
+}
+},
+{
+"sym": "82_226",
+"gfx": 226,
+"lvl": 1,
+"item": 13453,
+"name": {
+"fr": "Patoune des glaces",
+"en": "Snow Bow Meow Pawshield",
+"de": "Snow Bow Meow Pawshield",
+"es": "Patita de las nieves",
+"it": "-",
+"nl": "Snow Bow Meow Pawshield",
+"pt": "Patinha de Gelo"
+}
+},
+{
+"sym": "82_227",
+"gfx": 227,
+"lvl": 1,
+"item": 13441,
+"name": {
+"fr": "Bouclier de javian",
+"en": "Javian Shield",
+"de": "Javian Shield",
+"es": "Escudo de javián",
+"it": "-",
+"nl": "Javian Shield",
+"pt": "Escudo de Javian"
+}
+},
+{
+"sym": "82_228",
+"gfx": 228,
+"lvl": 1,
+"item": 13463,
+"name": {
+"fr": "Bouclier trophée du Blop Reinette Royal",
+"en": "Trophy Royal Pippin Blop Shield",
+"de": "Trophy Royal Pippin Blop Shield",
+"es": "Escudo-trofeo del Blop Reineta Real",
+"it": "Trophy Royal Pippin Blop Shield",
+"nl": "Trophy Royal Pippin Blop Shield",
+"pt": "Escudo-Troféu do Blop Maçã Real"
+}
+},
+{
+"sym": "82_229",
+"gfx": 229,
+"lvl": 1,
+"item": 13465,
+"name": {
+"fr": "Bouclier trophée du Blop Griotte Royal",
+"en": "Trophy Royal Cherry Blop Shield",
+"de": "Trophy Royal Cherry Blop Shield",
+"es": "Escudo-trofeo del Blop Guinda Real",
+"it": "Trophy Royal Cherry Blop Shield",
+"nl": "Trophy Royal Cherry Blop Shield",
+"pt": "Escudo-Troféu do Blop Cereja Real"
+}
+},
+{
+"sym": "82_230",
+"gfx": 230,
+"lvl": 1,
+"item": 13464,
+"name": {
+"fr": "Bouclier trophée du Blop Indigo Royal",
+"en": "Trophy Royal Indigo Blop Shield",
+"de": "Trophy Royal Indigo Blop Shield",
+"es": "Escudo-trofeo del Blop Índigo Real",
+"it": "Trophy Royal Indigo Blop Shield",
+"nl": "Trophy Royal Indigo Blop Shield",
+"pt": "Escudo-Troféu do Blop Índigo Real"
+}
+},
+{
+"sym": "82_231",
+"gfx": 231,
+"lvl": 1,
+"item": 13466,
+"name": {
+"fr": "Bouclier trophée du Blop Coco Royal",
+"en": "Trophy Royal Coco Blop Shield",
+"de": "Trophy Royal Coco Blop Shield",
+"es": "Escudo-trofeo del Blop Coco Real",
+"it": "Trophy Royal Coco Blop Shield",
+"nl": "Trophy Royal Coco Blop Shield",
+"pt": "Escudo-Troféu do Blop Coco Real"
+}
+},
+{
+"sym": "82_232",
+"gfx": 232,
+"lvl": 1,
+"item": 13467,
+"name": {
+"fr": "Bouclier trophée du Blop Multicolore Royal",
+"en": "Trophy Royal Rainbow Blop Shield",
+"de": "Trophy Royal Rainbow Blop Shield",
+"es": "Escudo-trofeo del Blop Multicolor Real",
+"it": "Trophy Royal Rainbow Blop Shield",
+"nl": "Trophy Royal Rainbow Blop Shield",
+"pt": "Escudo-Troféu do Blop Arco-Íris Real"
+}
+},
+{
+"sym": "82_233",
+"gfx": 233,
+"lvl": 1,
+"item": 13445,
+"name": {
+"fr": "Bouclier Corsé",
+"en": "Bark Shield",
+"de": "Bark Shield",
+"es": "Escudo duro",
+"it": "-",
+"nl": "Bark Shield",
+"pt": "Escudo Encorpado"
+}
+},
+{
+"sym": "82_234",
+"gfx": 234,
+"lvl": 1,
+"item": 13449,
+"name": {
+"fr": "Écu Foudroyant",
+"en": "Lightning Bolt-ckler",
+"de": "Lightning Bolt-ckler",
+"es": "Escudo fulminante",
+"it": "-",
+"nl": "Lightning Bolt-ckler",
+"pt": "Escudo Fulminante"
+}
+},
+{
+"sym": "82_235",
+"gfx": 235,
+"lvl": 1,
+"item": 13628,
+"name": {
+"fr": "Bouclier ornemental de Rosal",
+"en": "Rosal Ornamental Shield",
+"de": "Rosal Ornamental Shield",
+"es": "Escudo ornamental de Rosal",
+"it": "-",
+"nl": "Rosal Ornamental Shield",
+"pt": "Escudo Ornamental de Rosal"
+}
+},
+{
+"sym": "82_236",
+"gfx": 236,
+"lvl": 1,
+"item": 13470,
+"name": {
+"fr": "Bouclier trophée du Maître Pandore",
+"en": "Trophy Master Pandora Shield",
+"de": "Trophy Master Pandora Shield",
+"es": "Escudo-trofeo del Maestro Pandora",
+"it": "Trophy Master Pandora Shield",
+"nl": "Trophy Master Pandora Shield",
+"pt": "Escudo-Troféu do Mestre Pandora"
+}
+},
+{
+"sym": "82_237",
+"gfx": 237,
+"lvl": 1,
+"item": 13469,
+"name": {
+"fr": "Bouclier trophée du Rat Blanc",
+"en": "Trophy White Rat Shield",
+"de": "Trophy White Rat Shield",
+"es": "Escudo-trofeo de la Rata Blanca",
+"it": "Trophy White Rat Shield",
+"nl": "Trophy White Rat Shield",
+"pt": "Escudo-Troféu do Rato Branco"
+}
+},
+{
+"sym": "82_238",
+"gfx": 238,
+"lvl": 1,
+"item": 13468,
+"name": {
+"fr": "Bouclier trophée du Bulbig",
+"en": "Trophy Bulbig Shield",
+"de": "Trophy Bulbig Shield",
+"es": "Escudo-trofeo de Bulbig",
+"it": "Trophy Bulbig Shield",
+"nl": "Trophy Bulbig Shield",
+"pt": "Escudo-Troféu do Bulbig"
+}
+},
+{
+"sym": "82_239",
+"gfx": 239,
+"lvl": 1,
+"item": 13471,
+"name": {
+"fr": "Bouclier trophée d'Ilyzaelle",
+"en": "Trophy Ilyzaelle Shield",
+"de": "Trophy Ilyzaelle Shield",
+"es": "Escudo-trofeo de Ilyzaelle",
+"it": "Trophy Ilyzaelle Shield",
+"nl": "Trophy Ilyzaelle Shield",
+"pt": "Escudo-Troféu de Ilyzaelle"
+}
+},
+{
+"sym": "82_240",
+"gfx": 240,
+"lvl": 1,
+"item": 13472,
+"name": {
+"fr": "Bouclier trophée du Qu'Tan",
+"en": "Trophy Qu'Tan Shield",
+"de": "Trophy Qu'Tan Shield",
+"es": "Escudo-trofeo de Qu'Tan",
+"it": "Trophy Qu'Tan Shield",
+"nl": "Trophy Qu'Tan Shield",
+"pt": "Escudo-Troféu do Qu'Tan"
+}
+},
+{
+"sym": "82_241",
+"gfx": 241,
+"lvl": 1,
+"item": 13473,
+"name": {
+"fr": "Bouclier trophée du Mob l'Éponge",
+"en": "Trophy Sponge Mob Shield",
+"de": "Trophy Sponge Mob Shield",
+"es": "Escudo-trofeo de Mob Lasponja",
+"it": "Trophy Sponge Mob Shield",
+"nl": "Trophy Sponge Mob Shield",
+"pt": "Escudo-Troféu do Mob Esponja"
+}
+},
+{
+"sym": "82_242",
+"gfx": 242,
+"lvl": 1,
+"item": 13474,
+"name": {
+"fr": "Bouclier trophée du Gourlo le Terrible",
+"en": "Trophy Gourlo the Terrible Shield",
+"de": "Trophy Gourlo the Terrible Shield",
+"es": "Escudo-trofeo de Gurlo el Terrible",
+"it": "Trophy Gourlo the Terrible Shield",
+"nl": "Trophy Gourlo the Terrible Shield",
+"pt": "Escudo-Troféu de Gourlo, o Apavorante"
+}
+},
+{
+"sym": "82_243",
+"gfx": 243,
+"lvl": 1,
+"item": 13475,
+"name": {
+"fr": "Bouclier trophée du Tofu Royal",
+"en": "Trophy Royal Tofu Shield",
+"de": "Trophy Royal Tofu Shield",
+"es": "Escudo-trofeo del Tofu Real",
+"it": "Trophy Royal Tofu Shield",
+"nl": "Trophy Royal Tofu Shield",
+"pt": "Escudo-Troféu do Tofu Real"
+}
+},
+{
+"sym": "82_244",
+"gfx": 244,
+"lvl": 1,
+"item": 13478,
+"name": {
+"fr": "Ankarogo",
+"en": "Ankarogo",
+"de": "Ankarogo",
+"es": "Ankarogo",
+"it": "-",
+"nl": "Ankarogo",
+"pt": "Ankarogo"
+}
+},
+{
+"sym": "82_245",
+"gfx": 245,
+"lvl": 1,
+"item": 13482,
+"name": {
+"fr": "Bouclier Atiredel",
+"en": "Flyhaway Shield",
+"de": "Flyhaway Shield",
+"es": "Escudo Atodovuelo",
+"it": "-",
+"nl": "Flyhaway Shield",
+"pt": "Escudo Alado"
+}
+},
+{
+"sym": "82_247",
+"gfx": 247,
+"lvl": 1,
+"item": 13532,
+"name": {
+"fr": "Ankhlier",
+"en": "Shankh",
+"de": "Shankh",
+"es": "Ankhspis",
+"it": "-",
+"nl": "Shankh",
+"pt": "Ankhescudo"
+}
+},
+{
+"sym": "82_248",
+"gfx": 248,
+"lvl": 1,
+"item": 13585,
+"name": {
+"fr": "Bouclier Démonastre",
+"en": "Demoon Shield",
+"de": "Demoon Shield",
+"es": "Escudo Demonstruo",
+"it": "-",
+"nl": "Demoon Shield",
+"pt": "Escudo Demonastro"
+}
+},
+{
+"sym": "82_249",
+"gfx": 249,
+"lvl": 1,
+"item": 13536,
+"name": {
+"fr": "Bouclier Truqué",
+"en": "Rigged Shield",
+"de": "Rigged Shield",
+"es": "Escudo trucado",
+"it": "-",
+"nl": "Rigged Shield",
+"pt": "Escudo Viciado"
+}
+},
+{
+"sym": "82_250",
+"gfx": 250,
+"lvl": 1,
+"item": 13570,
+"name": {
+"fr": "Écu Aux Milles Succès",
+"en": "Thousand Achievement Shield",
+"de": "Thousand Achievement Shield",
+"es": "Escudo de los mil logros",
+"it": "-",
+"nl": "Thousand Achievement Shield",
+"pt": "Escudo dos Mil Sucessos"
+}
+},
+{
+"sym": "82_251",
+"gfx": 251,
+"lvl": 1,
+"item": 13576,
+"name": {
+"fr": "Bouc'ailleux",
+"en": "Scaly Shield",
+"de": "Scaly Shield",
+"es": "Escamoscudo",
+"it": "-",
+"nl": "Scaly Shield",
+"pt": "Escudofrio"
+}
+},
+{
+"sym": "82_252",
+"gfx": 252,
+"lvl": 1,
+"item": 13590,
+"name": {
+"fr": "Bouclier de la Bouk",
+"en": "Goaty Shield",
+"de": "Goaty Shield",
+"es": "Escudo del aro",
+"it": "-",
+"nl": "Goaty Shield",
+"pt": "Escudo Caprino"
+}
+},
+{
+"sym": "82_253",
+"gfx": 253,
+"lvl": 1,
+"item": 13593,
+"name": {
+"fr": "L'Écu Ksai Métier",
+"en": "Profession Excescutcheon",
+"de": "Profession Excescutcheon",
+"es": "El Broquelogro de oficio",
+"it": "-",
+"nl": "Profession Excescutcheon",
+"pt": "Sucescudo de Profissão"
+}
+},
+{
+"sym": "82_254",
+"gfx": 254,
+"lvl": 1,
+"item": 13594,
+"name": {
+"fr": "L'Écu Ksai Exploration",
+"en": "Exploration Excescutcheon",
+"de": "Exploration Excescutcheon",
+"es": "El Broquelogro de exploración",
+"it": "-",
+"nl": "Exploration Excescutcheon",
+"pt": "Sucescudo de Exploração"
+}
+},
+{
+"sym": "82_255",
+"gfx": 255,
+"lvl": 1,
+"item": 13595,
+"name": {
+"fr": "L'Écu Ksai Élevage",
+"en": "Breeding Excescutcheon",
+"de": "Breeding Excescutcheon",
+"es": "El Broquelogro de ganadería",
+"it": "-",
+"nl": "Breeding Excescutcheon",
+"pt": "Sucescudo de Criação"
+}
+},
+{
+"sym": "82_256",
+"gfx": 256,
+"lvl": 1,
+"item": 13596,
+"name": {
+"fr": "L'Écu Ksai Quête",
+"en": "Quest Excescutcheon",
+"de": "Quest Excescutcheon",
+"es": "El Broquelogro de misión",
+"it": "-",
+"nl": "Quest Excescutcheon",
+"pt": "Sucescudo de Missão"
+}
+},
+{
+"sym": "82_257",
+"gfx": 257,
+"lvl": 1,
+"item": 13597,
+"name": {
+"fr": "L'Écu Ksai Donjon",
+"en": "Dungeon Excescutcheon",
+"de": "Dungeon Excescutcheon",
+"es": "El Broquelogro de mazmorra",
+"it": "-",
+"nl": "Dungeon Excescutcheon",
+"pt": "Sucescudo de Calabouço"
+}
+},
+{
+"sym": "82_258",
+"gfx": 258,
+"lvl": 1,
+"item": 13598,
+"name": {
+"fr": "L'Écu Ksai Monstre",
+"en": "Monster Excescutcheon",
+"de": "Monster Excescutcheon",
+"es": "El Broquelogro de monstruo",
+"it": "-",
+"nl": "Monster Excescutcheon",
+"pt": "Sucescudo de Monstro"
+}
+},
+{
+"sym": "82_260",
+"gfx": 260,
+"lvl": 1,
+"item": 13620,
+"name": {
+"fr": "Volclier",
+"en": "Vokwark",
+"de": "Vokwark",
+"es": "Volcudo",
+"it": "-",
+"nl": "Vokwark",
+"pt": "Vulscudo"
+}
+},
+{
+"sym": "82_261",
+"gfx": 261,
+"lvl": 1,
+"item": 13616,
+"name": {
+"fr": "Blason du Subtilame",
+"en": "Subtiblade Blazon",
+"de": "Subtiblade Blazon",
+"es": "Blasón del sutilama",
+"it": "-",
+"nl": "Subtiblade Blazon",
+"pt": "Brasão do Sutilâmina"
+}
+},
+{
+"sym": "82_262",
+"gfx": 262,
+"lvl": 1,
+"item": 13612,
+"name": {
+"fr": "Bouclier du Brutarbare",
+"en": "Brutabarian Shield",
+"de": "Brutabarian Shield",
+"es": "Escudo del brutárbaro",
+"it": "-",
+"nl": "Brutabarian Shield",
+"pt": "Escudo do Brutárbaro"
+}
+},
+{
+"sym": "82_263",
+"gfx": 263,
+"lvl": 1,
+"item": 13640,
+"name": {
+"fr": "Bouclier Anathor",
+"en": "Anathor Shield",
+"de": "Anathor Shield",
+"es": "Escudo anator",
+"it": "-",
+"nl": "Anathor Shield",
+"pt": "Escudo Anathor"
+}
+},
+{
+"sym": "82_264",
+"gfx": 264,
+"lvl": 1,
+"item": 13633,
+"name": {
+"fr": "Bouclier trophée du Rasboul corrompu",
+"en": "Trophy Corrupted Bherb Shield",
+"de": "Trophy Corrupted Bherb Shield",
+"es": "Escudo-trofeo de Rasgabola Corrupto",
+"it": "Trophy Corrupted Bherb Shield",
+"nl": "Trophy Corrupted Bherb Shield",
+"pt": "Escudo-Troféu de Bherb Corrompido"
+}
+},
+{
+"sym": "82_265",
+"gfx": 265,
+"lvl": 1,
+"item": 13632,
+"name": {
+"fr": "Bouclier trophée du Dragon Cochon corrompu",
+"en": "Trophy Corrupted Dragon Pig Shield",
+"de": "Trophy Corrupted Dragon Pig Shield",
+"es": "Escudo-trofeo de Dragocerdo Corrupto",
+"it": "Trophy Corrupted Dragon Pig Shield",
+"nl": "Trophy Corrupted Dragon Pig Shield",
+"pt": "Escudo-Troféu do Dragão Porco Corrompido"
+}
+},
+{
+"sym": "82_266",
+"gfx": 266,
+"lvl": 1,
+"item": 13631,
+"name": {
+"fr": "Bouclier trophée du Bulbig corrompu",
+"en": "Trophy Corrupted Bulbig Shield",
+"de": "Trophy Corrupted Bulbig Shield",
+"es": "Escudo-trofeo de Bulbig Corrupto",
+"it": "Trophy Corrupted Bulbig Shield",
+"nl": "Trophy Corrupted Bulbig Shield",
+"pt": "Escudo-Troféu do Bulbig Corrompido"
+}
+},
+{
+"sym": "82_267",
+"gfx": 267,
+"lvl": 1,
+"item": 13630,
+"name": {
+"fr": "Bouclier trophée du Koulosse corrompu",
+"en": "Trophy Corrupted Koolich Shield",
+"de": "Trophy Corrupted Koolich Shield",
+"es": "Escudo-trofeo de Trankitronko Corrupto",
+"it": "Trophy Corrupted Koolich Shield",
+"nl": "Trophy Corrupted Koolich Shield",
+"pt": "Escudo-Troféu de Koolich Corrompido"
+}
+},
+{
+"sym": "82_268",
+"gfx": 268,
+"lvl": 1,
+"item": 13660,
+"name": {
+"fr": "Pampre de Pouchecot",
+"en": "Pouchecot Pampre",
+"de": "Pouchecot Pampre",
+"es": "Pámpano de Pouchecot",
+"it": "-",
+"nl": "Pouchecot Pampre",
+"pt": "Ramo de Pouchecot"
+}
+},
+{
+"sym": "82_269",
+"gfx": 269,
+"lvl": 1,
+"item": 13656,
+"name": {
+"fr": "Bouclier Démoniaque",
+"en": "Demonic Shield",
+"de": "Demonic Shield",
+"es": "Escudo demoníaco",
+"it": "-",
+"nl": "Demonic Shield",
+"pt": "Escudo Demoníaco"
+}
+},
+{
+"sym": "82_270",
+"gfx": 270,
+"lvl": 1,
+"item": 13712,
+"name": {
+"fr": "Pavois du Mascarin",
+"en": "Pavois du Mascarin",
+"de": "Pavois du Mascarin",
+"es": "Pavois du Mascarin",
+"it": "-",
+"nl": "Pavois du Mascarin",
+"pt": "Pavois du Mascarin"
+}
+},
+{
+"sym": "82_271",
+"gfx": 271,
+"lvl": 1,
+"item": 13644,
+"name": {
+"fr": "Bouclier de l'exterminateur",
+"en": "Exterminator Shield",
+"de": "Exterminator Shield",
+"es": "Escudo del exterminador",
+"it": "-",
+"nl": "Exterminator Shield",
+"pt": "Escudo do Exterminador"
+}
+},
+{
+"sym": "82_272",
+"gfx": 272,
+"lvl": 1,
+"item": 7196,
+"name": {
+"fr": "Bouclier Pandawushuka",
+"en": "Pandawushuka Shield",
+"de": "Schild des Pandawushuka",
+"es": "Escudo Pandawushuka",
+"it": "Pandawushuka Shield",
+"nl": "Pandawushuka Schild",
+"pt": "Escudo Pandawushuka"
+}
+},
+{
+"sym": "82_274",
+"gfx": 274,
+"lvl": 1,
+"item": 13410,
+"name": {
+"fr": "Bouclier d'Annivers'Or",
+"en": "Golden'versary Shield",
+"de": "Golden'versary Shield",
+"es": "Escudo de aniversáureo",
+"it": "Golden'versary Shield",
+"nl": "Golden'versary Shield",
+"pt": "Escudo de Anivers'Ouro"
+}
+},
+{
+"sym": "82_275",
+"gfx": 275,
+"lvl": 1,
+"item": 13672,
+"name": {
+"fr": "Dernière Sommation",
+"en": "Final Warning",
+"de": "Final Warning",
+"es": "Última Intimación",
+"it": "-",
+"nl": "Final Warning",
+"pt": "Última Intimação"
+}
+},
+{
+"sym": "82_276",
+"gfx": 276,
+"lvl": 1,
+"item": 13648,
+"name": {
+"fr": "Faille Terrestre",
+"en": "Earthly Rift",
+"de": "Earthly Rift",
+"es": "Falla terrestre",
+"it": "-",
+"nl": "Earthly Rift",
+"pt": "Falha Terrestre"
+}
+},
+{
+"sym": "82_277",
+"gfx": 277,
+"lvl": 1,
+"item": 13682,
+"name": {
+"fr": "Tentaclier Kralamouresque",
+"en": "Kralovesque Tentashield",
+"de": "Kralovesque Tentashield",
+"es": "Tentascudo Kralamaresco",
+"it": "-",
+"nl": "Kralovesque Tentashield",
+"pt": "Tentascudo Kralamoresco"
+}
+},
+{
+"sym": "82_278",
+"gfx": 278,
+"lvl": 1,
+"item": 13686,
+"name": {
+"fr": "Aquabouclier",
+"en": "Aquashield",
+"de": "Aquashield",
+"es": "Aquascudo",
+"it": "-",
+"nl": "Aquashield",
+"pt": "Escud'água"
+}
+},
+{
+"sym": "82_279",
+"gfx": 279,
+"lvl": 1,
+"item": 13700,
+"name": {
+"fr": "Apologie du combat",
+"en": "Combat Codex",
+"de": "Combat Codex",
+"es": "Apología del Combate",
+"it": "-",
+"nl": "Combat Codex",
+"pt": "Apologia ao Combate"
+}
+},
+{
+"sym": "82_280",
+"gfx": 280,
+"lvl": 1,
+"item": 13704,
+"name": {
+"fr": "Pentaclier",
+"en": "Pentaclipeus",
+"de": "Pentaclipeus",
+"es": "Pentascudo",
+"it": "-",
+"nl": "Pentaclipeus",
+"pt": "Pentascudo"
+}
+},
+{
+"sym": "82_281",
+"gfx": 281,
+"lvl": 1,
+"item": 13679,
+"name": {
+"fr": "Bouclier trophée du Kralamour Géant",
+"en": "Trophy Giant Kralove Shield",
+"de": "Trophy Giant Kralove Shield",
+"es": "Escudo-trofeo del Kralamar Gigante",
+"it": "Trophy Giant Kralove Shield",
+"nl": "Trophy Giant Kralove Shield",
+"pt": "Escudo-Troféu do Kralamor Gigante"
+}
+},
+{
+"sym": "82_282",
+"gfx": 282,
+"lvl": 1,
+"item": 13690,
+"name": {
+"fr": "Égide de Sagesse",
+"en": "Aegis of Wisdom",
+"de": "Aegis of Wisdom",
+"es": "Égida de la Sabiduría",
+"it": "-",
+"nl": "Aegis of Wisdom",
+"pt": "Égide de Sabedoria"
+}
+},
+{
+"sym": "82_283",
+"gfx": 283,
+"lvl": 1,
+"item": 13716,
+"name": {
+"fr": "Bouclier de Zi",
+"en": "Zi Shield",
+"de": "Zi Shield",
+"es": "Escudo de Zi",
+"it": "-",
+"nl": "Zi Shield",
+"pt": "Escudo de Zi"
+}
+},
+{
+"sym": "82_284",
+"gfx": 284,
+"lvl": 1,
+"item": 13755,
+"name": {
+"fr": "Bouclier Marmite",
+"en": "Bouclier Marmite",
+"de": "Bouclier Marmite",
+"es": "Bouclier Marmite",
+"it": "-",
+"nl": "Bouclier Marmite",
+"pt": "Bouclier Marmite"
+}
+},
+{
+"sym": "82_286",
+"gfx": 286,
+"lvl": 1,
+"item": 13784,
+"name": {
+"fr": "Cadran Élémentaire Polykrome",
+"en": "Polykrome Elemental Dial",
+"de": "Polykrome Elemental Dial",
+"es": "Esfera elemental polikroma",
+"it": "-",
+"nl": "Polykrome Elemental Dial",
+"pt": "Quadrante Elementar Polikromático"
+}
+},
+{
+"sym": "82_287",
+"gfx": 287,
+"lvl": 1,
+"item": 13805,
+"name": {
+"fr": "Bouclier K-nine",
+"en": "Bouclier K-nine",
+"de": "Bouclier K-nine",
+"es": "Bouclier K-nine",
+"it": "-",
+"nl": "Bouclier K-nine",
+"pt": "Bouclier K-nine"
+}
+},
+{
+"sym": "82_290",
+"gfx": 290,
+"lvl": 1,
+"item": 13798,
+"name": {
+"fr": "Bouclier de Welsh",
+"en": "Bouclier de Welsh",
+"de": "Bouclier de Welsh",
+"es": "Bouclier de Welsh",
+"it": "-",
+"nl": "Bouclier de Welsh",
+"pt": "Bouclier de Welsh"
+}
+},
+{
+"sym": "82_291",
+"gfx": 291,
+"lvl": 1,
+"item": 13809,
+"name": {
+"fr": "Ombre de Zabelle",
+"en": "Ombre de Zabelle",
+"de": "Ombre de Zabelle",
+"es": "Ombre de Zabelle",
+"it": "-",
+"nl": "Ombre de Zabelle",
+"pt": "Ombre de Zabelle"
+}
+}
+]

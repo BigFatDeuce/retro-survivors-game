@@ -1,0 +1,8 @@
+url('')
+time.sleep(5)
+shot('p1_menu')
+pg.evaluate("Store.data.kamas = 2000000; UI._shopKind = 'hats'; UI.shop()"); time.sleep(2.5)
+shot('p2_shop')
+url('autostart=1&fresh=1&cls=iop&map=naufrages&hat=16_7&t=40&lv=8')
+time.sleep(9)
+shot('p3_run')

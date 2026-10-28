@@ -1,0 +1,46 @@
+# 0.59: the profile's save as a file (Options): Exporter downloads it, Importer reads it back (after one confirmation)
+# and reloads; a file that is not a save, or comes from a newer save format, is refused. Prints FAIL lines.
+# usage: python tools/checks/pw_test.py tests/t_save.py <out>
+import json, os
+fails = []
+def menu():
+    pg.wait_for_function("typeof Game !== 'undefined' && Game.state === 'menu' && document.querySelector('.menu-buttons')", timeout=120000)
+url('fresh=1'); menu()
+pg.evaluate("Store.data.kamas = 12345; Store.data.runs = 7; Store.data.unlocked.push('bonta'); Store.data.settings.lang = 'fr'; Store.save(); setLang('fr'); UI.options()")
+time.sleep(0.5)
+SV = pg.evaluate("Store.SAVE_V")   # (0.95: the format is 2)
+if pg.evaluate("Store.data.v") != SV: fails.append('a fresh save is not at the current version')
+btns = pg.locator('.save-opt .btn')
+with pg.expect_download() as dl: btns.nth(0).click()
+d = dl.value; path = os.path.join(out, d.suggested_filename); d.save_as(path)
+o = json.load(open(path, encoding='utf8'))
+print('exported', d.suggested_filename, {k: o[k] for k in ('game', 'v', 'build', 'profile')}, 'kamas', o['data']['kamas'])
+if o.get('game') != 'retro-survivors' or o.get('v') != SV or o['data'].get('kamas') != 12345: fails.append('export content wrong')
+shot('options')
+# progress changes, then the file comes back
+pg.evaluate("Store.data.kamas = 1; Store.data.runs = 0; Store.data.settings.music = 0.2; Store.save()")
+pg.locator('.save-opt input[type=file]').set_input_files(path)
+time.sleep(0.5)
+label = btns.nth(1).inner_text(); print('import button:', label.encode('ascii', 'replace').decode())
+if not pg.evaluate("document.querySelectorAll('.save-opt .btn')[1].classList.contains('danger')"): fails.append('no confirmation step')
+shot('import_confirm')
+btns.nth(1).click()
+time.sleep(1.5); menu()
+r = pg.evaluate("[Store.data.kamas, Store.data.runs, Store.data.unlocked.includes('bonta'), Store.data.settings.music, Store.data.v]")
+print('after import', r)
+if r[:3] != [12345, 7, True]: fails.append(f'import did not restore the profile {r}')
+if abs(r[3] - 0.2) > 1e-9: fails.append('import replaced the device settings')
+# refusals: not a save / a newer format; the profile stays
+pg.evaluate("UI.options()"); time.sleep(0.4)
+bad = os.path.join(out, 'bad.json'); open(bad, 'w').write('{"hello": 1}')
+newer = os.path.join(out, 'newer.json'); o['v'] = o['data']['v'] = 99; json.dump(o, open(newer, 'w'))
+for f, key in ((bad, 'save_bad'), (newer, 'save_newer')):
+    pg.locator('.save-opt input[type=file]').set_input_files(f); time.sleep(0.5)
+    t = pg.evaluate("[...document.querySelectorAll('.toast, #toast')].map(e => e.textContent).join(' | ')")
+    want = pg.evaluate(f"T('{key}')")
+    if want not in t: fails.append(f'{os.path.basename(f)}: no "{key}" message (toasts: {t})')
+    if pg.evaluate("document.querySelectorAll('.save-opt .btn')[1].classList.contains('danger')"): fails.append(f'{os.path.basename(f)} armed the import')
+if pg.evaluate("Store.data.kamas") != 12345: fails.append('a refused file changed the profile')
+for f in fails: print('FAIL', f)
+print('FAILS', len(fails))
+print('\n'.join(l for l in logs if 'pageerror' in l))

@@ -1,0 +1,5922 @@
+[
+{
+"sym": "17_262",
+"type": "17",
+"gfx": 262,
+"lvl": 6,
+"item": 958,
+"name": {
+"fr": "Dofusteuse",
+"en": "Dofusteuse",
+"de": "Dofustator",
+"es": "Dofustadora",
+"it": "Dofusantello",
+"nl": "Dofusteuse",
+"pt": "Dofusteuse"
+}
+},
+{
+"sym": "16_287",
+"type": "16",
+"gfx": 287,
+"lvl": 1,
+"item": 10958,
+"name": {
+"fr": "Casque du Corbeau Noir",
+"en": "Black Crow's Helmet",
+"de": "Helm des Schwarzen Raben",
+"es": "Casco del Cuervo Negro",
+"it": "Black Crow's Helmet",
+"nl": "Black Crow's Helmet",
+"pt": "Capacete do Corvo Negro"
+}
+},
+{
+"sym": "16_261",
+"type": "16",
+"gfx": 261,
+"lvl": 1,
+"item": 11477,
+"name": {
+"fr": "Chapeau de l'Aventurier Polykrome",
+"en": "Polykrome Adventurer Hat",
+"de": "Hut des Polykrom-Abenteurers",
+"es": "Sombrero del Aventurero polikromo",
+"it": "Cappello dell'Avventuriero Polikromo",
+"nl": "Polykrome Adventurer Hat",
+"pt": "Chapéu de Aventureiro Polikromático"
+}
+},
+{
+"sym": "16_266",
+"type": "16",
+"gfx": 266,
+"lvl": 37,
+"item": 11482,
+"name": {
+"fr": "Lorko Kasko Polykrome",
+"en": "Polykrome Lorko Kasko",
+"de": "Polykrom Lorko Kasko",
+"es": "Lorko Kasko polikromo",
+"it": "Lorko Kasko Polikromo",
+"nl": "Polykrome Lorko Kasko",
+"pt": "Lroko Kasko Polikromático"
+}
+},
+{
+"sym": "16_267",
+"type": "16",
+"gfx": 267,
+"lvl": 36,
+"item": 11483,
+"name": {
+"fr": "Dora Polykrome",
+"en": "Polykrome Dora",
+"de": "Polykrom Dora",
+"es": "Dora polikroma",
+"it": "Dora Polikroma",
+"nl": "Polykrome Dora",
+"pt": "Dora Polikromática"
+}
+},
+{
+"sym": "16_268",
+"type": "16",
+"gfx": 268,
+"lvl": 36,
+"item": 11484,
+"name": {
+"fr": "Dantgoule Polykrome",
+"en": "Polykrome Eachure Hat",
+"de": "Polykrom Dantgoule",
+"es": "Dantgul polikroma",
+"it": "Dantgul Polikroma",
+"nl": "Polykrome Eachure Hat",
+"pt": "Dantgoule Polikromática"
+}
+},
+{
+"sym": "16_269",
+"type": "16",
+"gfx": 269,
+"lvl": 41,
+"item": 11485,
+"name": {
+"fr": "Kwakoiffe Polykrome",
+"en": "Polykrome Kwak Headdress",
+"de": "Polykrom-Kwackapp",
+"es": "Kwakosombrero polikromo",
+"it": "Kwakapo Polikromo",
+"nl": "Polykrome Kwak Headdress",
+"pt": "Touca de Kwak Polikromática"
+}
+},
+{
+"sym": "16_270",
+"type": "16",
+"gfx": 270,
+"lvl": 22,
+"item": 11486,
+"name": {
+"fr": "Le Oiram Polykrome",
+"en": "Polykrome The Oiram",
+"de": "Polykrom Oiram",
+"es": "El Oiram polikromo",
+"it": "L'Oiram Polikromo",
+"nl": "Polykrome The Oiram",
+"pt": "O oiram Polikromática"
+}
+},
+{
+"sym": "16_271",
+"type": "16",
+"gfx": 271,
+"lvl": 98,
+"item": 11487,
+"name": {
+"fr": "Chapeau Pandala Polykrome",
+"en": "Polykrome Pandala Hat",
+"de": "Pandala-Polykrom-Mütze",
+"es": "Sombrero Pandala polikromo",
+"it": "Cappello Pandala Polikromo",
+"nl": "Polykrome Pandala Hat",
+"pt": "Chapéu de Pandala Polikromático"
+}
+},
+{
+"sym": "16_272",
+"type": "16",
+"gfx": 272,
+"lvl": 88,
+"item": 11488,
+"name": {
+"fr": "Coiffe du Flib Polykrome",
+"en": "Polykrome Flib's Wig",
+"de": "Flippiger Polykrom-Kopfschmuck",
+"es": "Peluca del Flib polikroma",
+"it": "La Parrucca di Flib Polikroma",
+"nl": "Polykrome Flib's Wig",
+"pt": "Peruca de Flib Polikromática"
+}
+},
+{
+"sym": "16_273",
+"type": "16",
+"gfx": 273,
+"lvl": 110,
+"item": 11489,
+"name": {
+"fr": "Coiffe du Bimd'Oule Polykrome",
+"en": "Polykrome Bimd'Oule Hat",
+"de": "Hut von Polykrom-Bimd'Oul",
+"es": "Sombrero del Bimd'Ulo polikromo",
+"it": "Copricapo del Bimd'Ulo Polikromo",
+"nl": "Polykrome Bimd'Oule Hat",
+"pt": "Chapéu de Bimd'Oule Polikromático"
+}
+},
+{
+"sym": "16_274",
+"type": "16",
+"gfx": 274,
+"lvl": 133,
+"item": 11490,
+"name": {
+"fr": "Bandeau Kaliptus Polykrome",
+"en": "Polykrome Kaliptus Headband",
+"de": "Kalyptus-Polykrom-Stirnband",
+"es": "Pañuelo kalipto polikroma",
+"it": "Fascia Kalipto Polikromo",
+"nl": "Polykrome Kaliptus Headband",
+"pt": "Bandana Kapiptus Polikromática"
+}
+},
+{
+"sym": "16_275",
+"type": "16",
+"gfx": 275,
+"lvl": 120,
+"item": 11491,
+"name": {
+"fr": "Solomonk Polykrome",
+"en": "Polykrome Solomonk",
+"de": "Polykrom Solomonk",
+"es": "Solomonk polikromo",
+"it": "Solomonk Polikromo",
+"nl": "Polykrome Solomonk",
+"pt": "Solomonk Polikromático"
+}
+},
+{
+"sym": "16_276",
+"type": "16",
+"gfx": 276,
+"lvl": 145,
+"item": 11492,
+"name": {
+"fr": "Coiffe du Chêne Mou Polykrome",
+"en": "Polykrome Soft Oak Hat",
+"de": "Polykrom-Weich-Eich-Hut",
+"es": "Sombrero del Roble Blando polikromo",
+"it": "Copricapo della Quercia Molle Polikromo",
+"nl": "Polykrome Soft Oak Hat",
+"pt": "Chapéu de Carvalho Mole Polikromático"
+}
+},
+{
+"sym": "16_277",
+"type": "16",
+"gfx": 277,
+"lvl": 145,
+"item": 11493,
+"name": {
+"fr": "Coiffe du Vieux Chêne Mou Polykrome",
+"en": "Polykrome Old Soft Oak Headgear",
+"de": "Kopfbedeckung des Alten Polykrom-Weich-Eich",
+"es": "Sombrero del viejo Roble Blando polikromo",
+"it": "Copricapo del Vecchio Quercia Molle Polikromo",
+"nl": "Polykrome Old Soft Oak Headgear",
+"pt": "Chapéu do Velho Carvalho Mole Polikromático"
+}
+},
+{
+"sym": "16_278",
+"type": "16",
+"gfx": 278,
+"lvl": 180,
+"item": 11494,
+"name": {
+"fr": "Chapeau de Crocodaille Dandi Polykrome",
+"en": "Polykrome Crocodyl Dandy's Hat",
+"de": "Hut des Polykrom-Crocodyll Dandy",
+"es": "Sombrero de Crocodail Dandi polikromo",
+"it": "Cappello di Coccodrail Dandy Polikromo",
+"nl": "Polykrome Crocodyl Dandy's Hat",
+"pt": "Chapéu de Crocodyl Dandy Polikromático"
+}
+},
+{
+"sym": "16_279",
+"type": "16",
+"gfx": 279,
+"lvl": 152,
+"item": 11495,
+"name": {
+"fr": "Chapblopignon Polykrome",
+"en": "Polykrome Mitch Shroom",
+"de": "Polykrom-Bloblingshütchen",
+"es": "Blopisetombrero polikromo",
+"it": "Cappelblopignon Polikromo",
+"nl": "Polykrome Mitch Shroom",
+"pt": "Mitch Shroom Polikromático"
+}
+},
+{
+"sym": "16_280",
+"type": "16",
+"gfx": 280,
+"lvl": 55,
+"item": 11496,
+"name": {
+"fr": "Kannipiou Polykrome",
+"en": "Polykrome Kannipiwi",
+"de": "Polykrom-Kanniepmatz",
+"es": "Kanipío polikromo",
+"it": "Kannipìu Polikromo",
+"nl": "Polykrome Kannipiwi",
+"pt": "Kannipiwi Polikromático"
+}
+},
+{
+"sym": "16_281",
+"type": "16",
+"gfx": 281,
+"lvl": 93,
+"item": 11497,
+"name": {
+"fr": "Dragocoiffe Polykrome",
+"en": "Polykrome Dreggheadgear",
+"de": "Polykrom-Dracheischale",
+"es": "Dragosombrero polikromo",
+"it": "Dragocuffia Polikroma",
+"nl": "Polykrome Dreggheadgear",
+"pt": "Elmo de Dragonete Polikromático"
+}
+},
+{
+"sym": "16_282",
+"type": "16",
+"gfx": 282,
+"lvl": 196,
+"item": 11548,
+"name": {
+"fr": "Couvre-chef corné de Qu'Tan",
+"en": "Qu'Tan Horned Cap",
+"de": "Qu‘Tans Hornhut",
+"es": "Tocado cornudo de Qu'Tan",
+"it": "Copricapo Corneo di Qu'Tan",
+"nl": "Qu'Tan Horned Cap",
+"pt": "Chapéu de Chifre de Qu'Tan"
+}
+},
+{
+"sym": "16_283",
+"type": "16",
+"gfx": 283,
+"lvl": 1,
+"item": 11555,
+"name": {
+"fr": "Casque Dragarmure",
+"en": "Dragarmour Helmet",
+"de": "Helm der Drachrüstung",
+"es": "Casco de dragoarmadura",
+"it": "Copricapo Dragarmatura",
+"nl": "Dragarmour Helmet",
+"pt": "Capacete de Dragarmadura"
+}
+},
+{
+"sym": "16_284",
+"type": "16",
+"gfx": 284,
+"lvl": 1,
+"item": 11703,
+"name": {
+"fr": "Chapeau d'Ankanniversaire",
+"en": "Ankanniversary Hat",
+"de": "Ankaläumshut",
+"es": "Sombrero de ankaniversario",
+"it": "Cappello di Ankampleanno",
+"nl": "Ankanniversary Hat",
+"pt": "Chapéu de Ankaniversário"
+}
+},
+{
+"sym": "16_288",
+"type": "16",
+"gfx": 288,
+"lvl": 1,
+"item": 11708,
+"name": {
+"fr": "Coiffe du Cherchogrine",
+"en": "Ogrine Digger's Hat",
+"de": "Ogrinenjagd-Kopfbedeckung",
+"es": "Casco de buscaogrinas",
+"it": "Copricapo del Cercogrin",
+"nl": "Ogrine Digger's Hat",
+"pt": "Chapéu do Caçogrina"
+}
+},
+{
+"sym": "17_180",
+"type": "17",
+"gfx": 180,
+"lvl": 1,
+"item": 11709,
+"name": {
+"fr": "Cape du Cherchogrine",
+"en": "Ogrine Digger's Cloak",
+"de": "Ogrinenjagd-Umhang",
+"es": "Capa de buscaogrinas",
+"it": "Mantello del Cercogrin",
+"nl": "Ogrine Digger's Cloak",
+"pt": "Capa do Caçogrina"
+}
+},
+{
+"sym": "16_290",
+"type": "16",
+"gfx": 290,
+"lvl": 1,
+"item": 11712,
+"name": {
+"fr": "Tricorne du Pirate",
+"en": "Pirate Tricorn",
+"de": "Dreispitz des Piraten",
+"es": "Tricornio de pirata",
+"it": "Tricorno del Pirata",
+"nl": "Pirate Tricorn",
+"pt": "Tricórnio do Pirata"
+}
+},
+{
+"sym": "17_181",
+"type": "17",
+"gfx": 181,
+"lvl": 1,
+"item": 11713,
+"name": {
+"fr": "Manteau du Pirate",
+"en": "Pirate Coat",
+"de": "Mantel des Piraten",
+"es": "Abrigo de pirata",
+"it": "Mantello del Pirata",
+"nl": "Pirate Coat",
+"pt": "Manto do Pirata"
+}
+},
+{
+"sym": "16_289",
+"type": "16",
+"gfx": 289,
+"lvl": 1,
+"item": 11717,
+"name": {
+"fr": "Saponnet de Nowel 651",
+"en": "Kwismas 651 Treetop",
+"de": "Weißnachts-Turtann 651",
+"es": "Sombrepino de Nawidad 651",
+"it": "Abeterretto di Nawal 651",
+"nl": "Kwismas 651 Treetop",
+"pt": "Pinheigorro de Nataw 651"
+}
+},
+{
+"sym": "17_182",
+"type": "17",
+"gfx": 182,
+"lvl": 1,
+"item": 11725,
+"name": {
+"fr": "Porte-skis Tooshuss",
+"en": "Tooschuss Ski Carrier",
+"de": "Schwingschwung-Skiträger",
+"es": "Portaesquíes esquidinámico",
+"it": "Portasci Etciù",
+"nl": "Tooschuss Ski Carrier",
+"pt": "Porta-esquis Vaptvupt"
+}
+},
+{
+"sym": "16_291",
+"type": "16",
+"gfx": 291,
+"lvl": 1,
+"item": 11726,
+"name": {
+"fr": "Bonnet Tooshuss",
+"en": "Tooschuss Cap",
+"de": "Schwingschwung-Mütze",
+"es": "Gorro esquidinámico",
+"it": "Cappello Etciù",
+"nl": "Tooschuss Cap",
+"pt": "Capuz Vaptvupt"
+}
+},
+{
+"sym": "16_286",
+"type": "16",
+"gfx": 286,
+"lvl": 1,
+"item": 11747,
+"name": {
+"fr": "Coiffe de l'Amour",
+"en": "Brawling Headgear",
+"de": "Kopfbedeckung der Liebe",
+"es": "Tocado del Amor",
+"it": "Copricapo Dell'amore",
+"nl": "Brawling Headgear",
+"pt": "Chapéu do Amor"
+}
+},
+{
+"sym": "16_293",
+"type": "16",
+"gfx": 293,
+"lvl": 1,
+"item": 11752,
+"name": {
+"fr": "Fourblard",
+"en": "Trickerchief",
+"de": "Halsabschleifer",
+"es": "Pycarón",
+"it": "Fouladrurbo",
+"nl": "Trickerchief",
+"pt": "Infivéu"
+}
+},
+{
+"sym": "17_184",
+"type": "17",
+"gfx": 184,
+"lvl": 1,
+"item": 11753,
+"name": {
+"fr": "Capandor",
+"en": "Pandoracape",
+"de": "Umhandoar",
+"es": "Capandor",
+"it": "Pandomantello",
+"nl": "Pandoracape",
+"pt": "Capandor"
+}
+},
+{
+"sym": "16_292",
+"type": "16",
+"gfx": 292,
+"lvl": 1,
+"item": 11758,
+"name": {
+"fr": "Coiffe du Grand Pa Wabbit",
+"en": "Gwandpa Wabbit Headgear",
+"de": "Kopfbedeckung des Grand Pa Wabbit",
+"es": "Tocado de awelito wabbit",
+"it": "Copricapo del Nonno Wabbit",
+"nl": "Gwandpa Wabbit Headgear",
+"pt": "Chapéu do Vovô Wabbit"
+}
+},
+{
+"sym": "17_183",
+"type": "17",
+"gfx": 183,
+"lvl": 1,
+"item": 11759,
+"name": {
+"fr": "Cape du Grand Pa Wabbit",
+"en": "Gwandpa Wabbit Cape",
+"de": "Umhang des Grand Pa Wabbit",
+"es": "Capa de awelito wabbit",
+"it": "Mantello del Nonno Wabbit",
+"nl": "Gwandpa Wabbit Cape",
+"pt": "Capa do Vovô Wabbit"
+}
+},
+{
+"sym": "16_294",
+"type": "16",
+"gfx": 294,
+"lvl": 1,
+"item": 11766,
+"name": {
+"fr": "Bonnet Ki Néko",
+"en": "Ki Neko Cap",
+"de": "Neki Nekappe",
+"es": "Nekinekofia",
+"it": "Cappello Kineko",
+"nl": "Ki Neko Cap",
+"pt": "Boné Ki Neko"
+}
+},
+{
+"sym": "16_295",
+"type": "16",
+"gfx": 295,
+"lvl": 1,
+"item": 11772,
+"name": {
+"fr": "Casque à pointes Zoth",
+"en": "Zoth Spike Helmet",
+"de": "Zoth-Fliegerhelm",
+"es": "Casco con pitones zoth",
+"it": "Elmo a Punte Zoth",
+"nl": "Zoth Spike Helmet",
+"pt": "Capacete de Ponta de Zoth"
+}
+},
+{
+"sym": "17_185",
+"type": "17",
+"gfx": 185,
+"lvl": 1,
+"item": 11773,
+"name": {
+"fr": "Cape Zoth",
+"en": "Zoth Cape",
+"de": "Zoth-Umhang",
+"es": "Capa zoth",
+"it": "Mantello Zoth",
+"nl": "Zoth Cape",
+"pt": "Capa de Zoth"
+}
+},
+{
+"sym": "16_296",
+"type": "16",
+"gfx": 296,
+"lvl": 1,
+"item": 12732,
+"name": {
+"fr": "Bandanam",
+"en": "Carnam Bandana",
+"de": "Bandanam",
+"es": "Bandarnam",
+"it": "Bandanam",
+"nl": "Carnam Bandana",
+"pt": "Bandanam"
+}
+},
+{
+"sym": "17_186",
+"type": "17",
+"gfx": 186,
+"lvl": 1,
+"item": 12733,
+"name": {
+"fr": "Caparnam",
+"en": "Carnam Cape",
+"de": "Umharnam",
+"es": "Caparnam",
+"it": "Mantellarnam",
+"nl": "Carnam Cape",
+"pt": "Caparnam"
+}
+},
+{
+"sym": "16_297",
+"type": "16",
+"gfx": 297,
+"lvl": 1,
+"item": 12753,
+"name": {
+"fr": "Armet du Paladin",
+"en": "Paladin's Armet",
+"de": "Visierhelm des kühnen Ritters",
+"es": "Almete de paladín",
+"it": "Celata del Paladino",
+"nl": "Paladin's Armet",
+"pt": "Capacete do Paladino"
+}
+},
+{
+"sym": "17_187",
+"type": "17",
+"gfx": 187,
+"lvl": 1,
+"item": 12754,
+"name": {
+"fr": "Pelisse du Paladin",
+"en": "Paladin's Pelisse",
+"de": "Pelzmantel des kühnen Ritters",
+"es": "Pelliza de paladín",
+"it": "Pelliccia del Paladino",
+"nl": "Paladin's Pelisse",
+"pt": "Peliça do Paladino"
+}
+},
+{
+"sym": "16_298",
+"type": "16",
+"gfx": 298,
+"lvl": 1,
+"item": 12759,
+"name": {
+"fr": "Lorgnettes de Chauleil",
+"en": "SPF Shunglasses",
+"de": "Hitzebeständige Fernglasbrille",
+"es": "Lentes veraniegas",
+"it": "Occhieggianti da Solleone",
+"nl": "SPF Shunglasses",
+"pt": "Óculos Solhar"
+}
+},
+{
+"sym": "17_188",
+"type": "17",
+"gfx": 188,
+"lvl": 1,
+"item": 12760,
+"name": {
+"fr": "Capuchaud",
+"en": "Summer Cloak",
+"de": "Hitzebeständiges Cape",
+"es": "Frescapa",
+"it": "Capuccaldo",
+"nl": "Summer Cloak",
+"pt": "Capaquente"
+}
+},
+{
+"sym": "16_299",
+"type": "16",
+"gfx": 299,
+"lvl": 1,
+"item": 12767,
+"name": {
+"fr": "Casque du Guerrier sanctifié",
+"en": "Blessed Warrior's Helmet",
+"de": "Fliegerhelm des geweihten Kriegers",
+"es": "Casco de guerrero santificado",
+"it": "Elmo del Guerriero Santificato",
+"nl": "Blessed Warrior's Helmet",
+"pt": "Capacete do Guerreiro Santificado"
+}
+},
+{
+"sym": "17_189",
+"type": "17",
+"gfx": 189,
+"lvl": 1,
+"item": 12768,
+"name": {
+"fr": "Pelisse du Guerrier sanctifié",
+"en": "Blessed Warrior's Pelisse",
+"de": "Pelzmantel des geweihten Kriegers",
+"es": "Pelliza de guerrero santificado",
+"it": "Pelliccia del Guerriero Santificato",
+"nl": "Blessed Warrior's Pelisse",
+"pt": "Peliça do Guerreiro Santificado"
+}
+},
+{
+"sym": "17_190",
+"type": "17",
+"gfx": 190,
+"lvl": 23,
+"item": 12769,
+"name": {
+"fr": "La Boufteuse Polykrome",
+"en": "Polykrome The Gobb",
+"de": "Polykrom Fresssacktuch",
+"es": "La Jalatada polikroma",
+"it": "La Pappatrice di Flib Polikroma",
+"nl": "Polykrome The Gobb",
+"pt": "O Gobb Polikromática"
+}
+},
+{
+"sym": "17_191",
+"type": "17",
+"gfx": 191,
+"lvl": 22,
+"item": 12770,
+"name": {
+"fr": "La Samoulaille Polykrome",
+"en": "Polykrome Poak Cloak",
+"de": "Polykrom Samttuchai",
+"es": "La Samulay polikroma",
+"it": "La Samulaya Polikroma",
+"nl": "Polykrome Poak Cloak",
+"pt": "La Samoulaille Polikromática"
+}
+},
+{
+"sym": "17_192",
+"type": "17",
+"gfx": 192,
+"lvl": 41,
+"item": 12771,
+"name": {
+"fr": "Kwape Polykrome",
+"en": "Polykrome Kwape",
+"de": "Polykrom Kwape",
+"es": "Kwapa polikroma",
+"it": "Kwantello Polikroma",
+"nl": "Polykrome Kwape",
+"pt": "Kwakcapa Polikromática"
+}
+},
+{
+"sym": "17_193",
+"type": "17",
+"gfx": 193,
+"lvl": 142,
+"item": 12772,
+"name": {
+"fr": "Cape Usée du Chêne Mou Polykrome",
+"en": "Polykrome Worn Soft Oak Cape",
+"de": "Polykrom Abgenutzter Weich-Eich-Umhang",
+"es": "Capa gastada del Roble Blando polikroma",
+"it": "Mantello Consumato della Quercia Molle Polikromo",
+"nl": "Polykrome Worn Soft Oak Cape",
+"pt": "Capa Usada de Carvalho Mole Polikromática"
+}
+},
+{
+"sym": "17_194",
+"type": "17",
+"gfx": 194,
+"lvl": 139,
+"item": 12773,
+"name": {
+"fr": "Cape du Meulou Polykrome",
+"en": "Polykrome Moowolf Cape",
+"de": "Polykrom MuWulf-Mantel",
+"es": "Capa del Maxilubo polikroma",
+"it": "Mantello del Muulupo Polikromo",
+"nl": "Polykrome Moowolf Cape",
+"pt": "Capa de Moolobo Polikromática"
+}
+},
+{
+"sym": "16_300",
+"type": "16",
+"gfx": 300,
+"lvl": 141,
+"item": 12775,
+"name": {
+"fr": "Coiffe du Meulou Polykrome",
+"en": "Polykrome Moowolf Headgear",
+"de": "Polykrom-MuWulf-Hut",
+"es": "Casco del Maxilubo polikromo",
+"it": "Copricapo del Muulupo Polikromo",
+"nl": "Polykrome Moowolf Headgear",
+"pt": "Capacete Moolobo Polikromático"
+}
+},
+{
+"sym": "16_301",
+"type": "16",
+"gfx": 301,
+"lvl": 1,
+"item": 12796,
+"name": {
+"fr": "La Futée",
+"en": "Gorhelm",
+"de": "Die Schlaue",
+"es": "Afilado",
+"it": "Il Sagace",
+"nl": "Gorhelm",
+"pt": "A Fiada"
+}
+},
+{
+"sym": "17_195",
+"type": "17",
+"gfx": 195,
+"lvl": 1,
+"item": 12797,
+"name": {
+"fr": "Terreur Nocturne",
+"en": "Night Terror",
+"de": "Nächtlicher Schrecken",
+"es": "Terror Nocturno",
+"it": "Terrore Notturno",
+"nl": "Night Terror",
+"pt": "Terror Noturno"
+}
+},
+{
+"sym": "17_196",
+"type": "17",
+"gfx": 196,
+"lvl": 1,
+"item": 12799,
+"name": {
+"fr": "La Gratte-Ciel",
+"en": "High-Rise",
+"de": "Der Wolkenkratzer",
+"es": "Rascacielos",
+"it": "Il Grattacielo",
+"nl": "High-Rise",
+"pt": "A Arranha-Céu"
+}
+},
+{
+"sym": "16_302",
+"type": "16",
+"gfx": 302,
+"lvl": 1,
+"item": 12800,
+"name": {
+"fr": "Aura Bontarienne",
+"en": "Bontarian Aura",
+"de": "Bonta-Aura",
+"es": "Halo bontariano",
+"it": "Aura di Bonta",
+"nl": "Bontarian Aura",
+"pt": "Aura Bontariana"
+}
+},
+{
+"sym": "17_197",
+"type": "17",
+"gfx": 197,
+"lvl": 1,
+"item": 12809,
+"name": {
+"fr": "Trool de Cape",
+"en": "Cloak Trool",
+"de": "Trooliger Umhang",
+"es": "Trool de capa",
+"it": "Trooll di Mantello",
+"nl": "Cloak Trool",
+"pt": "Trool de Capa"
+}
+},
+{
+"sym": "16_303",
+"type": "16",
+"gfx": 303,
+"lvl": 1,
+"item": 12810,
+"name": {
+"fr": "Trool de Coiffe",
+"en": "Headgear Trool",
+"de": "Troolige Kopfbedeckung",
+"es": "Trool de tocado",
+"it": "Trooll di Copricapo",
+"nl": "Headgear Trool",
+"pt": "Trool de Chapéu"
+}
+},
+{
+"sym": "17_198",
+"type": "17",
+"gfx": 198,
+"lvl": 1,
+"item": 12814,
+"name": {
+"fr": "Feu Intérieur",
+"en": "Internal Fire",
+"de": "Inneres Feuer",
+"es": "Fuego Interno",
+"it": "Fuoco Interiore",
+"nl": "Internal Fire",
+"pt": "Fogo Interior"
+}
+},
+{
+"sym": "16_304",
+"type": "16",
+"gfx": 304,
+"lvl": 1,
+"item": 12815,
+"name": {
+"fr": "Esprit Pétulant",
+"en": "Exuberant Spirit",
+"de": "Ungestümer Geist",
+"es": "Espíritu Impetuoso",
+"it": "Spirito Petulante",
+"nl": "Exuberant Spirit",
+"pt": "Espírito Petulante"
+}
+},
+{
+"sym": "16_305",
+"type": "16",
+"gfx": 305,
+"lvl": 1,
+"item": 12833,
+"name": {
+"fr": "Casque Blanc aux cornes Noires",
+"en": "White Helmet with Black Horns",
+"de": "Weißer Fliegerhelm mit schwarzen Hörnern",
+"es": "Casco blanco de cuernos negros",
+"it": "Elmo Bianco con Corna Nere",
+"nl": "White Helmet with Black Horns",
+"pt": "Capacete Branco de Chifres Escuros"
+}
+},
+{
+"sym": "17_199",
+"type": "17",
+"gfx": 199,
+"lvl": 1,
+"item": 12834,
+"name": {
+"fr": "Manteau Baïka",
+"en": "Baika Jacket",
+"de": "Baika-Mantel",
+"es": "Gabán de Baika",
+"it": "Mantello Baika",
+"nl": "Baika Jacket",
+"pt": "Manto Baika"
+}
+},
+{
+"sym": "16_306",
+"type": "16",
+"gfx": 306,
+"lvl": 1,
+"item": 12836,
+"name": {
+"fr": "Heaume du Bel Huert",
+"en": "Best Iyarius Helm",
+"de": "Glad Iators Helm",
+"es": "Yelmo de Bel Huario",
+"it": "Elmo del Dom Atore",
+"nl": "Best Iyarius Helm",
+"pt": "Elmo do Belo Ário"
+}
+},
+{
+"sym": "17_202",
+"type": "17",
+"gfx": 202,
+"lvl": 1,
+"item": 12837,
+"name": {
+"fr": "Cape voilée du Bel Huert",
+"en": "Best Iyarius Veiled Cloak",
+"de": "Glad Iators geflügelter Umhang",
+"es": "Capa velada de Bel Huario",
+"it": "Mantello velato del Dom Atore",
+"nl": "Best Iyarius Veiled Cloak",
+"pt": "Capa Velada do Belo Ário"
+}
+},
+{
+"sym": "16_309",
+"type": "16",
+"gfx": 309,
+"lvl": 1,
+"item": 12850,
+"name": {
+"fr": "Coiffe Olarj",
+"en": "Seawerd Headgear",
+"de": "Coiffe Olarj",
+"es": "Tocado Enaltamar",
+"it": "Copricapo Allargo",
+"nl": "Seawerd Headgear",
+"pt": "Chapéu Altomar"
+}
+},
+{
+"sym": "17_204",
+"type": "17",
+"gfx": 204,
+"lvl": 1,
+"item": 12851,
+"name": {
+"fr": "Cape Olarj",
+"en": "Seawerd Cloak",
+"de": "Küsten-Umhang",
+"es": "Capa Enaltamar",
+"it": "Mantello Allargo",
+"nl": "Seawerd Cloak",
+"pt": "Capa Altomar"
+}
+},
+{
+"sym": "16_310",
+"type": "16",
+"gfx": 310,
+"lvl": 1,
+"item": 12853,
+"name": {
+"fr": "L'Épouvanpaille",
+"en": "Strawcrow Hat",
+"de": "Die Vogelscheuche",
+"es": "Espantapajo",
+"it": "Lo Spaventapaglia",
+"nl": "Strawcrow Hat",
+"pt": "O Homem-de-Palha"
+}
+},
+{
+"sym": "17_205",
+"type": "17",
+"gfx": 205,
+"lvl": 1,
+"item": 12854,
+"name": {
+"fr": "Capaille",
+"en": "Strawcrow Cloak",
+"de": "Stroh-Umhang",
+"es": "Capaja",
+"it": "Pagliantello",
+"nl": "Strawcrow Cloak",
+"pt": "Manto do Espantalho"
+}
+},
+{
+"sym": "16_311",
+"type": "16",
+"gfx": 311,
+"lvl": 1,
+"item": 12856,
+"name": {
+"fr": "Coiffe Ocharbon",
+"en": "Dirtywerk Headgear",
+"de": "Kohlewerk-Kopfbedeckung",
+"es": "Tocado Alcarbón",
+"it": "Copricapo Carbonaia",
+"nl": "Dirtywerk Headgear",
+"pt": "Chapéu Darduro"
+}
+},
+{
+"sym": "17_206",
+"type": "17",
+"gfx": 206,
+"lvl": 1,
+"item": 12857,
+"name": {
+"fr": "Cape Ocharbon",
+"en": "Dirtywerk Cloak",
+"de": "Kohlewerk-Umhang",
+"es": "Capa Alcarbón",
+"it": "Mantello Carbonaia",
+"nl": "Dirtywerk Cloak",
+"pt": "Capa Darduro"
+}
+},
+{
+"sym": "16_312",
+"type": "16",
+"gfx": 312,
+"lvl": 1,
+"item": 12859,
+"name": {
+"fr": "Hennin du Savoir",
+"en": "Hennin of Knowledge ",
+"de": "Haube des Wissens",
+"es": "Hennin del conocimiento",
+"it": "Hennin del Sapere",
+"nl": "Hennin of Knowledge ",
+"pt": "Hennin do Conhecimento"
+}
+},
+{
+"sym": "17_207",
+"type": "17",
+"gfx": 207,
+"lvl": 1,
+"item": 12860,
+"name": {
+"fr": "Besace du Savoir",
+"en": "Bag of Knowledge",
+"de": "Tasche des Wissens",
+"es": "Bolsa del conocimiento",
+"it": "Bisaccia del Sapere",
+"nl": "Bag of Knowledge",
+"pt": "Bolsa do Conhecimento"
+}
+},
+{
+"sym": "16_313",
+"type": "16",
+"gfx": 313,
+"lvl": 1,
+"item": 12862,
+"name": {
+"fr": "Barbûcheron",
+"en": "Lumbeardjack",
+"de": "Grobholzhacker",
+"es": "Barbifrondoso",
+"it": "Barbalegna",
+"nl": "Lumbeardjack",
+"pt": "Barbenhador"
+}
+},
+{
+"sym": "17_208",
+"type": "17",
+"gfx": 208,
+"lvl": 1,
+"item": 12863,
+"name": {
+"fr": "Capkoup",
+"en": "Capaxe",
+"de": "Hieb-Umhang",
+"es": "Capataka",
+"it": "Mantelkolpo",
+"nl": "Capaxe",
+"pt": "Capalenha"
+}
+},
+{
+"sym": "16_314",
+"type": "16",
+"gfx": 314,
+"lvl": 1,
+"item": 12865,
+"name": {
+"fr": "Coiffe du Braconnier",
+"en": "Poacher Headgear",
+"de": "Wilderer-Kopfbedeckung",
+"es": "Tocado de cazador furtivo",
+"it": "Copricapo del Bracconiere",
+"nl": "Poacher Headgear",
+"pt": "Chapéu do Caçador Ilegal"
+}
+},
+{
+"sym": "17_209",
+"type": "17",
+"gfx": 209,
+"lvl": 1,
+"item": 12866,
+"name": {
+"fr": "Cape du Braconnier",
+"en": "Poacher Cloak",
+"de": "Wilderer-Umhang",
+"es": "Capa de cazador furtivo",
+"it": "Mantello del Bracconiere",
+"nl": "Poacher Cloak",
+"pt": "Capa do Caçador Ilegal"
+}
+},
+{
+"sym": "16_315",
+"type": "16",
+"gfx": 315,
+"lvl": 1,
+"item": 12868,
+"name": {
+"fr": "Béret de l'Homme Mystère",
+"en": "Mystery Man Beret",
+"de": "Baskenmütze des Geheimnisvollen Mannes",
+"es": "Boina de Enigmático",
+"it": "Berretto dell'Uomo Misterioso",
+"nl": "Mystery Man Beret",
+"pt": "Boina do Homem Misterioso"
+}
+},
+{
+"sym": "17_210",
+"type": "17",
+"gfx": 210,
+"lvl": 1,
+"item": 12869,
+"name": {
+"fr": "Manteau de l'Homme Mystère",
+"en": "Mystery Man Coat",
+"de": "Mantel des Geheimnisvollen Mannes",
+"es": "Abrigo de Enigmático",
+"it": "Mantello dell'Uomo Misterioso",
+"nl": "Mystery Man Coat",
+"pt": "Casaco do Homem Misterioso"
+}
+},
+{
+"sym": "16_316",
+"type": "16",
+"gfx": 316,
+"lvl": 1,
+"item": 12871,
+"name": {
+"fr": "Coiffe Grand Bleu",
+"en": "Big Blue Helmet",
+"de": "Kopfbedeckung",
+"es": "Tocado Gran azul",
+"it": "Copricapo Grande Blu",
+"nl": "Big Blue Helmet",
+"pt": "Chapéu Imenso Azul"
+}
+},
+{
+"sym": "17_212",
+"type": "17",
+"gfx": 212,
+"lvl": 1,
+"item": 12873,
+"name": {
+"fr": "Cape Patrokuit",
+"en": "Baykurz Cape",
+"de": "Umhang Brandteig",
+"es": "Capa Nomuyhecho",
+"it": "Mantello Pokokotto",
+"nl": "Baykurz Cape",
+"pt": "Capa Malpassada"
+}
+},
+{
+"sym": "16_317",
+"type": "16",
+"gfx": 317,
+"lvl": 1,
+"item": 12874,
+"name": {
+"fr": "Coiffe Patrokuit",
+"en": "Baykurz Hat",
+"de": "Kopfbedeckung Brandteig",
+"es": "Tocado Nomuyhecho",
+"it": "Copricapo Pokokotto",
+"nl": "Baykurz Hat",
+"pt": "Chapéu Malpassado"
+}
+},
+{
+"sym": "17_213",
+"type": "17",
+"gfx": 213,
+"lvl": 1,
+"item": 12876,
+"name": {
+"fr": "Cape Carat",
+"en": "Carat Cape",
+"de": "Umhang Karat",
+"es": "Capa Quilate",
+"it": "Mantello Carato",
+"nl": "Carat Cape",
+"pt": "Capa de Quilate"
+}
+},
+{
+"sym": "16_318",
+"type": "16",
+"gfx": 318,
+"lvl": 1,
+"item": 12877,
+"name": {
+"fr": "Coiffe Carat",
+"en": "Carat Helmet",
+"de": "Kopfbedeckung Karat",
+"es": "Tocado Quilate",
+"it": "Copricapo Carato",
+"nl": "Carat Helmet",
+"pt": "Chapéu de Quilate"
+}
+},
+{
+"sym": "16_319",
+"type": "16",
+"gfx": 319,
+"lvl": 1,
+"item": 12879,
+"name": {
+"fr": "Coiffe Tanneur",
+"en": "Tanner Helmet",
+"de": "Kopfbedeckung Gerber",
+"es": "Tocado Curtidor",
+"it": "Copricapo Conciatore",
+"nl": "Tanner Helmet",
+"pt": "Chapéu de Curtidor"
+}
+},
+{
+"sym": "17_214",
+"type": "17",
+"gfx": 214,
+"lvl": 1,
+"item": 12880,
+"name": {
+"fr": "Cape Tanneur",
+"en": "Tanner Cape",
+"de": "Umhang Gerber",
+"es": "Capa Curtidor",
+"it": "Scudo Conciatore",
+"nl": "Tanner Cape",
+"pt": "Capa de Curtidor"
+}
+},
+{
+"sym": "17_211",
+"type": "17",
+"gfx": 211,
+"lvl": 1,
+"item": 12882,
+"name": {
+"fr": "Cape Grand Bleu",
+"en": "Big Blue Cape",
+"de": "Umhang Blauer",
+"es": "Capa Gran azul",
+"it": "Mantello Grande Blu",
+"nl": "Big Blue Cape",
+"pt": "Capa Imenso Azul"
+}
+},
+{
+"sym": "16_321",
+"type": "16",
+"gfx": 321,
+"lvl": 1,
+"item": 12939,
+"name": {
+"fr": "Heaume galvanisé",
+"en": "Galvanised Helm",
+"de": "Galvanisierter Helm",
+"es": "Casco galvanizado",
+"it": "Elmo Galvanizzato",
+"nl": "Galvanised Helm",
+"pt": "Elmo Galvanizado"
+}
+},
+{
+"sym": "17_215",
+"type": "17",
+"gfx": 215,
+"lvl": 1,
+"item": 12940,
+"name": {
+"fr": "Cape galvanisée",
+"en": "Galvanised Cape",
+"de": "Galvanisierter Umhang",
+"es": "Capa galvanizada",
+"it": "Capa Galvanizada",
+"nl": "Galvanised Cape",
+"pt": "Mantello Galvanizzato"
+}
+},
+{
+"sym": "16_322",
+"type": "16",
+"gfx": 322,
+"lvl": 1,
+"item": 12942,
+"name": {
+"fr": "Masque Toutenboua",
+"en": "Wooderful Mask",
+"de": "Holzgeschnitzte Maske",
+"es": "Máscara Tododemadera",
+"it": "Maschera Tuttinlegn",
+"nl": "Wooderful Mask",
+"pt": "Máscara Dimadêra"
+}
+},
+{
+"sym": "17_216",
+"type": "17",
+"gfx": 216,
+"lvl": 1,
+"item": 12943,
+"name": {
+"fr": "Cape Toutenboua",
+"en": "Wooderful Cape",
+"de": "Holzgeschnitzter Umhang",
+"es": "Capa Tododemadera",
+"it": "Capa Dimadêra",
+"nl": "Wooderful Cape",
+"pt": "Mantello Tuttinlegn"
+}
+},
+{
+"sym": "16_323",
+"type": "16",
+"gfx": 323,
+"lvl": 1,
+"item": 12945,
+"name": {
+"fr": "Coiffe à quatre épingles",
+"en": "Only Pin Deep Headgear",
+"de": "Piekfeine Kopfbedeckung",
+"es": "Tocado de cuatro alfileres",
+"it": "Copricapo in Ghingheri",
+"nl": "Only Pin Deep Headgear",
+"pt": "Chapéu Alinhavado"
+}
+},
+{
+"sym": "17_217",
+"type": "17",
+"gfx": 217,
+"lvl": 1,
+"item": 12946,
+"name": {
+"fr": "Cape à quatre épingles",
+"en": "Only Pin Deep Cape",
+"de": "Piekfeiner Umhang",
+"es": "Capa de cuatro alfileres",
+"it": "Mantello in Ghingheri",
+"nl": "Only Pin Deep Cape",
+"pt": "Capa Alinhavada"
+}
+},
+{
+"sym": "16_324",
+"type": "16",
+"gfx": 324,
+"lvl": 1,
+"item": 12948,
+"name": {
+"fr": "Lunettes de Brikébrok",
+"en": "Odds'n'ends Glasses",
+"de": "Zusammengewürfelte Brille",
+"es": "Gafas de Manitrastos",
+"it": "Occhiali di Rifforaffa",
+"nl": "Odds'n'ends Glasses",
+"pt": "Óculos de Brikolêro"
+}
+},
+{
+"sym": "17_218",
+"type": "17",
+"gfx": 218,
+"lvl": 1,
+"item": 12949,
+"name": {
+"fr": "Cape de Brikébrok",
+"en": "Odds'n'ends Cape",
+"de": "Zusammengewürfelter Umhang",
+"es": "Capa de Manitrastos",
+"it": "Mantello di Rifforaffa",
+"nl": "Odds'n'ends Cape",
+"pt": "Capa de Brikolêro"
+}
+},
+{
+"sym": "16_325",
+"type": "16",
+"gfx": 325,
+"lvl": 1,
+"item": 12951,
+"name": {
+"fr": "Chapeau R'Unique",
+"en": "R'unique Hat",
+"de": "Runmaliger Hut",
+"es": "Sombrero R'único",
+"it": "Cappello R'unico",
+"nl": "R'unique Hat",
+"pt": "Chapéu Runânime"
+}
+},
+{
+"sym": "17_219",
+"type": "17",
+"gfx": 219,
+"lvl": 1,
+"item": 12952,
+"name": {
+"fr": "Cape R'Unique",
+"en": "R'unique Cape",
+"de": "Runmaliger Umhang",
+"es": "Capa R'única",
+"it": "Mantello R'unico",
+"nl": "R'unique Cape",
+"pt": "Capa Runânime"
+}
+},
+{
+"sym": "16_320",
+"type": "16",
+"gfx": 320,
+"lvl": 1,
+"item": 12954,
+"name": {
+"fr": "Coiffe Roufoux",
+"en": "Redfoux Headgear",
+"de": "Redfoux Headgear",
+"es": "Tocado de rojofux",
+"it": "Redfoux Headgear",
+"nl": "Redfoux Headgear",
+"pt": "Chapéu Ladfox"
+}
+},
+{
+"sym": "16_326",
+"type": "16",
+"gfx": 326,
+"lvl": 1,
+"item": 12955,
+"name": {
+"fr": "Casque du Touitcheur",
+"en": "Tweecher Helmet",
+"de": "Helm des Touitcheur",
+"es": "Casco de tuitchero",
+"it": "Cappello R'unico",
+"nl": "Tweecher Helmet",
+"pt": "Chapéu Runânime"
+}
+},
+{
+"sym": "17_220",
+"type": "17",
+"gfx": 220,
+"lvl": 1,
+"item": 12956,
+"name": {
+"fr": "Cape du Touitcheur",
+"en": "Tweecher Cape",
+"de": "Umhang des Touitcheur",
+"es": "Capa de tuitchero",
+"it": "Mantello del Tuitcher",
+"nl": "Tweecher Cape",
+"pt": "Capa do Tuitcher"
+}
+},
+{
+"sym": "16_328",
+"type": "16",
+"gfx": 328,
+"lvl": 1,
+"item": 12958,
+"name": {
+"fr": "Chapotordu",
+"en": "Twisted Hat",
+"de": "Verdrehthut",
+"es": "Tocadorcido",
+"it": "Cappelritorto",
+"nl": "Twisted Hat",
+"pt": "Chapeloco"
+}
+},
+{
+"sym": "17_222",
+"type": "17",
+"gfx": 222,
+"lvl": 1,
+"item": 12959,
+"name": {
+"fr": "Manteau de parchomancien",
+"en": "Scrollsayer Coat",
+"de": "Mantel des Schriftrollenbeschwörers",
+"es": "Abrigo de pergamigromante",
+"it": "Mantello di Pergamante",
+"nl": "Scrollsayer Coat",
+"pt": "Manto do Pergamante"
+}
+},
+{
+"sym": "16_307",
+"type": "16",
+"gfx": 307,
+"lvl": 1,
+"item": 12961,
+"name": {
+"fr": "Casque de Combattant",
+"en": "Combatant Helmet",
+"de": "Diese Kopfbedeckung schützt euren Schädel bei Wind und Wetter vor bösen Schlägen.",
+"es": "Casco de combatiente",
+"it": "Elmo di Combattente",
+"nl": "Combatant Helmet",
+"pt": "Capacete de Combatente"
+}
+},
+{
+"sym": "17_201",
+"type": "17",
+"gfx": 201,
+"lvl": 1,
+"item": 12962,
+"name": {
+"fr": "Cape de Combattant",
+"en": "Combatant Cape",
+"de": "Umhang des Kämpfers",
+"es": "Capa de combatiente",
+"it": "Mantello di Combattente",
+"nl": "Combatant Cape",
+"pt": "Capa de Combatente"
+}
+},
+{
+"sym": "16_330",
+"type": "16",
+"gfx": 330,
+"lvl": 1,
+"item": 13015,
+"name": {
+"fr": "Coiffasalar",
+"en": "Salarmet",
+"de": "Salarhut",
+"es": "Sombresalar",
+"it": "Copricapasalar",
+"nl": "Salarmet",
+"pt": "Chapelasalar"
+}
+},
+{
+"sym": "17_223",
+"type": "17",
+"gfx": 223,
+"lvl": 1,
+"item": 13016,
+"name": {
+"fr": "Capasalar",
+"en": "Salarcape",
+"de": "Salarumhang",
+"es": "Capasalar",
+"it": "Mantellasalar",
+"nl": "Salarcape",
+"pt": "Capasalar"
+}
+},
+{
+"sym": "16_331",
+"type": "16",
+"gfx": 331,
+"lvl": 1,
+"item": 13019,
+"name": {
+"fr": "Coiffondakal",
+"en": "Dardondelmet",
+"de": "Dondakalhut",
+"es": "Sombrondakal",
+"it": "Copricapondakal",
+"nl": "Dardondelmet",
+"pt": "Chapelondakal"
+}
+},
+{
+"sym": "17_224",
+"type": "17",
+"gfx": 224,
+"lvl": 1,
+"item": 13020,
+"name": {
+"fr": "Capondakal",
+"en": "Dardondacape",
+"de": "Dondakalumhang",
+"es": "Capondakal",
+"it": "Mantellondakal",
+"nl": "Dardondacape",
+"pt": "Capondakal"
+}
+},
+{
+"sym": "16_332",
+"type": "16",
+"gfx": 332,
+"lvl": 1,
+"item": 13023,
+"name": {
+"fr": "Coifferafal",
+"en": "Aerafelmet",
+"de": "Aerafalhut",
+"es": "Sombrerafal",
+"it": "Copricaperafal",
+"nl": "Aerafelmet",
+"pt": "Chaperafal"
+}
+},
+{
+"sym": "17_225",
+"type": "17",
+"gfx": 225,
+"lvl": 1,
+"item": 13024,
+"name": {
+"fr": "Caperafal",
+"en": "Aerafacape",
+"de": "Aerafalumhang",
+"es": "Caperafal",
+"it": "Mantellerafal",
+"nl": "Aerafacape",
+"pt": "Caperafal"
+}
+},
+{
+"sym": "16_333",
+"type": "16",
+"gfx": 333,
+"lvl": 1,
+"item": 13027,
+"name": {
+"fr": "Coiffabrial",
+"en": "Brialmet",
+"de": "Brialhut",
+"es": "Sombrabrial",
+"it": "Copricapabrial",
+"nl": "Brialmet",
+"pt": "Chapelabrial"
+}
+},
+{
+"sym": "17_226",
+"type": "17",
+"gfx": 226,
+"lvl": 1,
+"item": 13028,
+"name": {
+"fr": "Capabrial",
+"en": "Briacape",
+"de": "Brialumhang",
+"es": "Capabrial",
+"it": "Mantellabrial",
+"nl": "Briacape",
+"pt": "Capabrial"
+}
+},
+{
+"sym": "16_334",
+"type": "16",
+"gfx": 334,
+"lvl": 1,
+"item": 13031,
+"name": {
+"fr": "Coiffakourial",
+"en": "Kourialmet",
+"de": "Kourialhut",
+"es": "Sombrakurial",
+"it": "Copricapakurial",
+"nl": "Kourialmet",
+"pt": "Chapelakurial"
+}
+},
+{
+"sym": "17_227",
+"type": "17",
+"gfx": 227,
+"lvl": 1,
+"item": 13032,
+"name": {
+"fr": "Capakourial",
+"en": "Kouriacape",
+"de": "Kourialumhang",
+"es": "Capakurial",
+"it": "Mantellakurial",
+"nl": "Kouriacape",
+"pt": "Capakurial"
+}
+},
+{
+"sym": "16_335",
+"type": "16",
+"gfx": 335,
+"lvl": 1,
+"item": 13035,
+"name": {
+"fr": "Coiffemikhal",
+"en": "Mikhalmet",
+"de": "Mikhalhut",
+"es": "Sombremikhal",
+"it": "Copricapemikhal",
+"nl": "Mikhalmet",
+"pt": "Chapemikhal"
+}
+},
+{
+"sym": "17_228",
+"type": "17",
+"gfx": 228,
+"lvl": 1,
+"item": 13036,
+"name": {
+"fr": "Capemikhal",
+"en": "Mikhacape",
+"de": "Mikhalumhang",
+"es": "Capemikhal",
+"it": "Mantellemikhal",
+"nl": "Mikhacape",
+"pt": "Capemikhal"
+}
+},
+{
+"sym": "16_329",
+"type": "16",
+"gfx": 329,
+"lvl": 1,
+"item": 13040,
+"name": {
+"fr": "Coiffe Diadévin",
+"en": "Icosahediadem Headgear",
+"de": "Würfliara-Hut",
+"es": "Tocado veintedema",
+"it": "Copricapo Diadeventi",
+"nl": "Icosahediadem Headgear",
+"pt": "Chapéu Diadevinte"
+}
+},
+{
+"sym": "16_336",
+"type": "16",
+"gfx": 336,
+"lvl": 1,
+"item": 13041,
+"name": {
+"fr": "Tignasse de Goultard",
+"en": "Goultard's Flowing Locks",
+"de": "Goultards Wuschelmähne",
+"es": "Sombrero de Gúltar",
+"it": "Goultard's Flowing Locks",
+"nl": "Goultard's Flowing Locks",
+"pt": "Cabeleira de Gultar"
+}
+},
+{
+"sym": "17_229",
+"type": "17",
+"gfx": 229,
+"lvl": 1,
+"item": 13042,
+"name": {
+"fr": "Cape de Goultard",
+"en": "Goultard's Cape",
+"de": "Goultards Umhang",
+"es": "Capa de Gúltar",
+"it": "Goultard's Cape",
+"nl": "Goultard's Cape",
+"pt": "Capa de Gultar"
+}
+},
+{
+"sym": "16_342",
+"type": "16",
+"gfx": 342,
+"lvl": 1,
+"item": 13044,
+"name": {
+"fr": "Coiffe de Prestance Volatile",
+"en": "Volatile Panache Headgear",
+"de": "Stattliche flüchtige Kopfbedeckung",
+"es": "Sombrero de prestancia volátil",
+"it": "Copricapo della Prestanza Volatile",
+"nl": "Volatile Panache Headgear",
+"pt": "Chapéu de Presença Volátil"
+}
+},
+{
+"sym": "17_235",
+"type": "17",
+"gfx": 235,
+"lvl": 1,
+"item": 13045,
+"name": {
+"fr": "Cape de Prestance Volatile",
+"en": "Volatile Panache Cape",
+"de": "Stattlicher flüchtiger Umhang",
+"es": "Capa Prestancia volátil",
+"it": "Mantello della Prestanza Volatile",
+"nl": "Volatile Panache Cape",
+"pt": "Capa de Presença Aviária"
+}
+},
+{
+"sym": "16_343",
+"type": "16",
+"gfx": 343,
+"lvl": 1,
+"item": 13049,
+"name": {
+"fr": "Coiffe de Prestance Aqueuse",
+"en": "Aqueous Panache Headgear",
+"de": "Stattliche wässrige Kopfbedeckung",
+"es": "Sombrero Prestancia acuosa",
+"it": "Copricapo della Prestanza Acquosa",
+"nl": "Aqueous Panache Headgear",
+"pt": "Chapéu de Presença Aquosa"
+}
+},
+{
+"sym": "17_236",
+"type": "17",
+"gfx": 236,
+"lvl": 1,
+"item": 13050,
+"name": {
+"fr": "Cape de Prestance Aqueuse",
+"en": "Aqueous Panache Cape",
+"de": "Stattlicher wässriger Umhang",
+"es": "Capa Prestancia acuosa",
+"it": "Mantello della Prestanza Acquosa",
+"nl": "Aqueous Panache Cape",
+"pt": "Capa de Presença Aquosa"
+}
+},
+{
+"sym": "16_344",
+"type": "16",
+"gfx": 344,
+"lvl": 1,
+"item": 13054,
+"name": {
+"fr": "Coiffe de Prestance Ignée",
+"en": "Fiery Panache Headgear",
+"de": "Stattliche feurige Kopfbedeckung",
+"es": "Sombrero Prestancia ígnea",
+"it": "Copricapo della Prestanza Ignea",
+"nl": "Fiery Panache Headgear",
+"pt": "Chapéu de Presença Ígnea"
+}
+},
+{
+"sym": "17_237",
+"type": "17",
+"gfx": 237,
+"lvl": 1,
+"item": 13055,
+"name": {
+"fr": "Cape de Prestance Ignée",
+"en": "Fiery Panache Cape",
+"de": "Stattlicher feuriger Umhang",
+"es": "Capa Prestancia ígnea",
+"it": "Mantello della Prestanza Ignea",
+"nl": "Fiery Panache Cape",
+"pt": "Capa de Presença Ígnea"
+}
+},
+{
+"sym": "16_345",
+"type": "16",
+"gfx": 345,
+"lvl": 1,
+"item": 13059,
+"name": {
+"fr": "Coiffe de Prestance Végétale",
+"en": "Botanic Panache Headgear",
+"de": "Stattliche pflanzliche Kopfbedeckung",
+"es": "Sombrero Prestancia vegetal",
+"it": "Copricapo della Prestanza Vegetale",
+"nl": "Botanic Panache Headgear",
+"pt": "Chapéu de Presença Vegetal"
+}
+},
+{
+"sym": "17_238",
+"type": "17",
+"gfx": 238,
+"lvl": 1,
+"item": 13060,
+"name": {
+"fr": "Cape de Prestance Végétale",
+"en": "Botanic Panache Cape",
+"de": "Stattlicher pflanzlicher Umhang",
+"es": "Capa Prestancia vegetal",
+"it": "Mantello della Prestanza Vegetale",
+"nl": "Botanic Panache Cape",
+"pt": "Capa de Presença Vegetal"
+}
+},
+{
+"sym": "16_346",
+"type": "16",
+"gfx": 346,
+"lvl": 1,
+"item": 13064,
+"name": {
+"fr": "Coiffe Rusée",
+"en": "Clever Headgear",
+"de": "Kopfbedeckung „List“",
+"es": "Tocado astuto",
+"it": "Copricapo Scaltro",
+"nl": "Clever Headgear",
+"pt": "Chapéu Astuto"
+}
+},
+{
+"sym": "17_239",
+"type": "17",
+"gfx": 239,
+"lvl": 1,
+"item": 13065,
+"name": {
+"fr": "Cape 9 Queues",
+"en": "Cape O'9 Tails",
+"de": "Neunschwänziger Umhang",
+"es": "Capa 9 colas",
+"it": "Mantello 9 Code",
+"nl": "Cape O'9 Tails",
+"pt": "Capa 9 Caudas"
+}
+},
+{
+"sym": "16_348",
+"type": "16",
+"gfx": 348,
+"lvl": 1,
+"item": 13097,
+"name": {
+"fr": "Diadème Primordial",
+"en": "Primordial Diadem",
+"de": "Ur-Diadem",
+"es": "Diadema primordial",
+"it": "Diadema Primordiale",
+"nl": "Primordial Diadem",
+"pt": "Diadema Primordial"
+}
+},
+{
+"sym": "17_242",
+"type": "17",
+"gfx": 242,
+"lvl": 1,
+"item": 13098,
+"name": {
+"fr": "Cape Primordiale",
+"en": "Primordial Cape",
+"de": "Ur-Umhang",
+"es": "Capa primordial",
+"it": "Mantello Primordiale",
+"nl": "Primordial Cape",
+"pt": "Capa Primordial"
+}
+},
+{
+"sym": "16_349",
+"type": "16",
+"gfx": 349,
+"lvl": 1,
+"item": 13106,
+"name": {
+"fr": "Masque de Bouftou d'Halouine",
+"en": "Jack O'Gobball Mask",
+"de": "Máscara de jalató de Haluín",
+"es": "Máscara de jalató de Haluín",
+"it": "Jack O'Gobball Mask",
+"nl": "Jack O'Gobball Mask",
+"pt": "Máscara de Jack O' Gobball"
+}
+},
+{
+"sym": "16_350",
+"type": "16",
+"gfx": 350,
+"lvl": 1,
+"item": 13107,
+"name": {
+"fr": "Masque de Tofu d'Halouine",
+"en": "Jack O'Tofu Mask",
+"de": "Máscara de tofu de Haluín",
+"es": "Máscara de tofu de Haluín",
+"it": "Jack O'Tofu Mask",
+"nl": "Jack O'Tofu Mask",
+"pt": "Máscara de Jack O' Tofu"
+}
+},
+{
+"sym": "16_351",
+"type": "16",
+"gfx": 351,
+"lvl": 1,
+"item": 13108,
+"name": {
+"fr": "Masque de Sanglier d'Halouine",
+"en": "Jack O'Boar Mask",
+"de": "Máscara de jabalí de Haluín",
+"es": "Máscara de jabalí de Haluín",
+"it": "Jack O'Boar Mask",
+"nl": "Jack O'Boar Mask",
+"pt": "Máscara de Jack O' Javali"
+}
+},
+{
+"sym": "16_352",
+"type": "16",
+"gfx": 352,
+"lvl": 1,
+"item": 13109,
+"name": {
+"fr": "Masque de Craqueleur d'Halouine",
+"en": "Jack O'Crackler Mask",
+"de": "Máscara de crujidor de Haluín",
+"es": "Máscara de crujidor de Haluín",
+"it": "Jack O'Crackler Mask",
+"nl": "Jack O'Crackler Mask",
+"pt": "Máscara de Jack O'Smagador"
+}
+},
+{
+"sym": "16_353",
+"type": "16",
+"gfx": 353,
+"lvl": 1,
+"item": 13110,
+"name": {
+"fr": "Masque d'Abraknyde d'Halouine",
+"en": "Jack O'Treechnid Mask",
+"de": "Máscara de abráknido de Haluín",
+"es": "Máscara de abráknido de Haluín",
+"it": "Jack O'Treechnid Mask",
+"nl": "Jack O'Treechnid Mask",
+"pt": "Máscara de Jack O' Treechnid"
+}
+},
+{
+"sym": "16_354",
+"type": "16",
+"gfx": 354,
+"lvl": 1,
+"item": 13111,
+"name": {
+"fr": "Masque de Chafer Fantassin d'Halouine",
+"en": "Jack O'Chafer Foot Soldier Mask",
+"de": "Máscara de chafer infante de Haluín",
+"es": "Máscara de chafer infante de Haluín",
+"it": "Jack O'Chafer Foot Soldier Mask",
+"nl": "Jack O'Chafer Foot Soldier Mask",
+"pt": "Máscara de Jack O' Chafer de Infantaria"
+}
+},
+{
+"sym": "16_355",
+"type": "16",
+"gfx": 355,
+"lvl": 1,
+"item": 13112,
+"name": {
+"fr": "Masque de Mulou d'Halouine",
+"en": "Jack O'Boowolf Mask",
+"de": "Máscara de milubo de Haluín",
+"es": "Máscara de milubo de Haluín",
+"it": "Jack O'Boowolf Mask",
+"nl": "Jack O'Boowolf Mask",
+"pt": "Máscara de Jack O' Boolobo"
+}
+},
+{
+"sym": "16_340",
+"type": "16",
+"gfx": 340,
+"lvl": 1,
+"item": 13114,
+"name": {
+"fr": "Chapeau Stume",
+"en": "Posthatmous",
+"de": "Hutkostüm",
+"es": "Funestombrero",
+"it": "Copricapo Stumo",
+"nl": "Posthatmous",
+"pt": "Chapéu Pó-stumo"
+}
+},
+{
+"sym": "17_233",
+"type": "17",
+"gfx": 233,
+"lvl": 1,
+"item": 13115,
+"name": {
+"fr": "Cape Faucheuse",
+"en": "Reaper Cape",
+"de": "Umhang der Sensenfrau",
+"es": "Capa Parca",
+"it": "Mantello Falciatore",
+"nl": "Reaper Cape",
+"pt": "Capa Ceifadora"
+}
+},
+{
+"sym": "16_338",
+"type": "16",
+"gfx": 338,
+"lvl": 1,
+"item": 13121,
+"name": {
+"fr": "Casque du Héros Divin",
+"en": "Divine Hero's Helmet",
+"de": "Divine Hero's Helmet",
+"es": "Casco de héroe divino",
+"it": "Divine Hero's Helmet",
+"nl": "Divine Hero's Helmet",
+"pt": "Capacete de herói divino"
+}
+},
+{
+"sym": "17_231",
+"type": "17",
+"gfx": 231,
+"lvl": 1,
+"item": 13122,
+"name": {
+"fr": "Cape du héros Divin",
+"en": "Divine Hero's Cape",
+"de": "Divine Hero's Cape",
+"es": "Capa de héroe divino",
+"it": "Divine Hero's Cape",
+"nl": "Divine Hero's Cape",
+"pt": "Capa de herói divino"
+}
+},
+{
+"sym": "16_339",
+"type": "16",
+"gfx": 339,
+"lvl": 1,
+"item": 13124,
+"name": {
+"fr": "Casque du Héros Sanglant",
+"en": "Bloody Hero's Helmet",
+"de": "Bloody Hero's Helmet",
+"es": "Casco de héroe sangriento",
+"it": "Bloody Hero's Helmet",
+"nl": "Bloody Hero's Helmet",
+"pt": "Capacete de herói Sangrento"
+}
+},
+{
+"sym": "17_232",
+"type": "17",
+"gfx": 232,
+"lvl": 1,
+"item": 13125,
+"name": {
+"fr": "Cape du Héros Sanglant",
+"en": "Bloody Hero's Cape",
+"de": "Bloody Hero's Cape",
+"es": "Capa de héroe Sangriento",
+"it": "Bloody Hero's Cape",
+"nl": "Bloody Hero's Cape",
+"pt": "Capa de herói Sangrento"
+}
+},
+{
+"sym": "18_93",
+"type": "18",
+"gfx": 93,
+"lvl": 1,
+"item": 13128,
+"name": {
+"fr": "Chacha des Glaces",
+"en": "Snow Bow Meow",
+"de": "Snow Bow Meow",
+"es": "Miaumiau de las nieves",
+"it": "Snow Bow Meow",
+"nl": "Snow Bow Meow",
+"pt": "Miau do Gelo"
+}
+},
+{
+"sym": "16_356",
+"type": "16",
+"gfx": 356,
+"lvl": 1,
+"item": 13129,
+"name": {
+"fr": "Coiffallanster",
+"en": "Fallansteadgear",
+"de": "Fallansteadgear",
+"es": "Sombrefallanster",
+"it": "Fallansteadgear",
+"nl": "Fallansteadgear",
+"pt": "Fallanster"
+}
+},
+{
+"sym": "17_243",
+"type": "17",
+"gfx": 243,
+"lvl": 1,
+"item": 13130,
+"name": {
+"fr": "Capallanster",
+"en": "Cloakallanster",
+"de": "Cloakallanster",
+"es": "Capalanster",
+"it": "Cloakallanster",
+"nl": "Cloakallanster",
+"pt": "Capallanster"
+}
+},
+{
+"sym": "18_94",
+"type": "18",
+"gfx": 94,
+"lvl": 1,
+"item": 13132,
+"name": {
+"fr": "Boufster",
+"en": "Gobballanster",
+"de": "Gobballanster",
+"es": "Jalaster",
+"it": "Gobballanster",
+"nl": "Gobballanster",
+"pt": "Gobster"
+}
+},
+{
+"sym": "16_357",
+"type": "16",
+"gfx": 357,
+"lvl": 1,
+"item": 13135,
+"name": {
+"fr": "Casque Pikaglass",
+"en": "Icepik Helmet",
+"de": "Icepik Helmet",
+"es": "Casco Pikahielo",
+"it": "Icepik Helmet",
+"nl": "Icepik Helmet",
+"pt": "Capacete Pikagelo"
+}
+},
+{
+"sym": "17_244",
+"type": "17",
+"gfx": 244,
+"lvl": 1,
+"item": 13136,
+"name": {
+"fr": "Cape Pikaglass",
+"en": "Icepik Cloak",
+"de": "Icepik Cloak",
+"es": "Capa Pikahielo",
+"it": "Icepik Cloak",
+"nl": "Icepik Cloak",
+"pt": "Capa Pikagelo"
+}
+},
+{
+"sym": "17_245",
+"type": "17",
+"gfx": 245,
+"lvl": 1,
+"item": 13138,
+"name": {
+"fr": "Cape d'orichor",
+"en": "Orichor Cape",
+"de": "Orichor Cape",
+"es": "Capa de oricor",
+"it": "Orichor Cape",
+"nl": "Orichor Cape",
+"pt": "Capa de Oricor"
+}
+},
+{
+"sym": "16_358",
+"type": "16",
+"gfx": 358,
+"lvl": 1,
+"item": 13139,
+"name": {
+"fr": "Coiffe d'orichor",
+"en": "Orichor Headgear",
+"de": "Orichor Headgear",
+"es": "Tocado de oricor",
+"it": "Orichor Headgear",
+"nl": "Orichor Headgear",
+"pt": "Chapéu de Oricor"
+}
+},
+{
+"sym": "17_246",
+"type": "17",
+"gfx": 246,
+"lvl": 1,
+"item": 13141,
+"name": {
+"fr": "Cape du Dragonnet doré",
+"en": "Golden Wyrmling Cloak",
+"de": "Golden Wyrmling Cloak",
+"es": "Capa de dragonito dorado",
+"it": "Golden Wyrmling Cloak",
+"nl": "Golden Wyrmling Cloak",
+"pt": "Capa do Draconiano dourado"
+}
+},
+{
+"sym": "16_359",
+"type": "16",
+"gfx": 359,
+"lvl": 1,
+"item": 13142,
+"name": {
+"fr": "Coiffe du Dragonnet doré",
+"en": "Golden Wyrmling Headgear",
+"de": "Golden Wyrmling Headgear",
+"es": "Casco de dragonito dorado",
+"it": "Golden Wyrmling Headgear",
+"nl": "Golden Wyrmling Headgear",
+"pt": "Capacete do Draconiano dourado"
+}
+},
+{
+"sym": "18_95",
+"type": "18",
+"gfx": 95,
+"lvl": 1,
+"item": 13143,
+"name": {
+"fr": "Dragonnet doré",
+"en": "Golden Wyrmling",
+"de": "Golden Wyrmling",
+"es": "Dragonito dorado",
+"it": "Golden Wyrmling",
+"nl": "Golden Wyrmling",
+"pt": "Draconiano dourado"
+}
+},
+{
+"sym": "16_360",
+"type": "16",
+"gfx": 360,
+"lvl": 1,
+"item": 13144,
+"name": {
+"fr": "Coiffe Stromoss",
+"en": "Stromoss Headgear",
+"de": "Stromoss Headgear",
+"es": "Tocado Onstruomusgo",
+"it": "Stromoss Headgear",
+"nl": "Stromoss Headgear",
+"pt": "Chapéu Stromoss"
+}
+},
+{
+"sym": "17_247",
+"type": "17",
+"gfx": 247,
+"lvl": 1,
+"item": 13145,
+"name": {
+"fr": "Cape Stromoss",
+"en": "Stromoss Cloak",
+"de": "Stromoss Cloak",
+"es": "Capa Onstruomusgo",
+"it": "Stromoss Cloak",
+"nl": "Stromoss Cloak",
+"pt": "Capa Stromoss"
+}
+},
+{
+"sym": "18_96",
+"type": "18",
+"gfx": 96,
+"lvl": 1,
+"item": 13147,
+"name": {
+"fr": "Lethal Ström",
+"en": "Lethal Ström",
+"de": "Lethal Ström",
+"es": "Lethal Ström",
+"it": "Lethal Ström",
+"nl": "Lethal Ström",
+"pt": "Letal Ström"
+}
+},
+{
+"sym": "17_248",
+"type": "17",
+"gfx": 248,
+"lvl": 41,
+"item": 13149,
+"name": {
+"fr": "Cape Pandala Polykrome",
+"en": "Polykrome Pandala Cape",
+"de": "Polykrome Pandala Cape",
+"es": "Capa Pandala polikromo",
+"it": "Polykrome Pandala Cape",
+"nl": "Polykrome Pandala Cape",
+"pt": "Capa de Pandala Polikromático"
+}
+},
+{
+"sym": "16_361",
+"type": "16",
+"gfx": 361,
+"lvl": 1,
+"item": 13151,
+"name": {
+"fr": "Capuche du Roi Eliatrope",
+"en": "Eliatrope King Hood",
+"de": "Eliatrope King Hood",
+"es": "Capucha de rey selatrop",
+"it": "Eliatrope King Hood",
+"nl": "Eliatrope King Hood",
+"pt": "Capuz do Rei Eliatrope"
+}
+},
+{
+"sym": "17_249",
+"type": "17",
+"gfx": 249,
+"lvl": 1,
+"item": 13152,
+"name": {
+"fr": "Cape du Roi Eliatrope",
+"en": "Eliatrope King Cape",
+"de": "Eliatrope King Cape",
+"es": "Capa de rey selatrop",
+"it": "Eliatrope King Cape",
+"nl": "Eliatrope King Cape",
+"pt": "Capa do Rei Eliatrope"
+}
+},
+{
+"sym": "16_363",
+"type": "16",
+"gfx": 363,
+"lvl": 1,
+"item": 13153,
+"name": {
+"fr": "Coiffe Corrompue",
+"en": "Corrupted Headgear",
+"de": "Corrupted Headgear",
+"es": "Tocado corrupto",
+"it": "Corrupted Headgear",
+"nl": "Corrupted Headgear",
+"pt": "Chapéu Corrompido"
+}
+},
+{
+"sym": "17_251",
+"type": "17",
+"gfx": 251,
+"lvl": 1,
+"item": 13154,
+"name": {
+"fr": "Cape Corrompue",
+"en": "Corrupted Cloak",
+"de": "Corrupted Cloak",
+"es": "Capa corrupta",
+"it": "Corrupted Cloak",
+"nl": "Corrupted Cloak",
+"pt": "Capa Corrompida"
+}
+},
+{
+"sym": "18_98",
+"type": "18",
+"gfx": 98,
+"lvl": 1,
+"item": 13156,
+"name": {
+"fr": "Dragoshu",
+"en": "Dragoshu",
+"de": "Dragoshu",
+"es": "Drag'huritu",
+"it": "Dragoshu",
+"nl": "Dragoshu",
+"pt": "Dragoshu"
+}
+},
+{
+"sym": "18_99",
+"type": "18",
+"gfx": 99,
+"lvl": 1,
+"item": 13158,
+"name": {
+"fr": "Bulbécrome",
+"en": "Necrobulb",
+"de": "Zwiebling",
+"es": "Bulbócromo",
+"it": "Necrobulb",
+"nl": "Necrobulb",
+"pt": "Bulbecrome"
+}
+},
+{
+"sym": "16_364",
+"type": "16",
+"gfx": 364,
+"lvl": 196,
+"item": 13167,
+"name": {
+"fr": "Coiffe de Bill de Grobe",
+"en": "Nolifis Bill Headgear",
+"de": "Nolifis Bill Headgear",
+"es": "Tocado de Bill de Grobe",
+"it": "Nolifis Bill Headgear",
+"nl": "Nolifis Bill Headgear",
+"pt": "Chapéu de Bill de Grobe"
+}
+},
+{
+"sym": "16_365",
+"type": "16",
+"gfx": 365,
+"lvl": 198,
+"item": 13170,
+"name": {
+"fr": "Le Kumokan",
+"en": "Kumokan",
+"de": "Kumokan",
+"es": "El Kumokan",
+"it": "Kumokan",
+"nl": "Kumokan",
+"pt": "Kumokan"
+}
+},
+{
+"sym": "16_366",
+"type": "16",
+"gfx": 366,
+"lvl": 1,
+"item": 13193,
+"name": {
+"fr": "Lunettes thermiques du Grobebuster",
+"en": "Nolifisbuster Thermal Goggles",
+"de": "Nolifisbuster Thermal Goggles",
+"es": "Lentes térmicas de cazagrobenses",
+"it": "Nolifisbuster Thermal Goggles",
+"nl": "Nolifisbuster Thermal Goggles",
+"pt": "Óculos Térmicos do Grobebuster"
+}
+},
+{
+"sym": "17_252",
+"type": "17",
+"gfx": 252,
+"lvl": 1,
+"item": 13194,
+"name": {
+"fr": "Cape avec posigrobeur désintégrant",
+"en": "Cape with Protonolifis Pack",
+"de": "Cape with Protonolifis Pack",
+"es": "Capa con colisionador posigróbico",
+"it": "Cape with Protonolifis Pack",
+"nl": "Cape with Protonolifis Pack",
+"pt": "Capa com Desintegrador Grobetrônico"
+}
+},
+{
+"sym": "18_100",
+"type": "18",
+"gfx": 100,
+"lvl": 1,
+"item": 13196,
+"name": {
+"fr": "Leomallow le gentil fantôme",
+"en": "Leokasper the Friendly Ghost",
+"de": "Leokasper the Friendly Ghost",
+"es": "Fantasma bueno leomalvo",
+"it": "Leokasper the Friendly Ghost",
+"nl": "Leokasper the Friendly Ghost",
+"pt": "Leomallow, o Fantasminha Camarada"
+}
+},
+{
+"sym": "17_253",
+"type": "17",
+"gfx": 253,
+"lvl": 97,
+"item": 13204,
+"name": {
+"fr": "Cape de la Ouassingue Polykrome",
+"en": "Polykrome Ouassingue Cape",
+"de": "Polykrom Kleinmorph-Umhang",
+"es": "Capa de Stropajo polikroma",
+"it": "Mantello di Cencio Polikromo",
+"nl": "Polykrome Ouassingue Cape",
+"pt": "Capa de Ouassingue Polikromática"
+}
+},
+{
+"sym": "18_101",
+"type": "18",
+"gfx": 101,
+"lvl": 1,
+"item": 13218,
+"name": {
+"fr": "Galeapagos",
+"en": "Galeapagos",
+"de": "Galeapagos",
+"es": "Galeapagos",
+"it": "Galeapagos",
+"nl": "Galeapagos",
+"pt": "Galeápagos"
+}
+},
+{
+"sym": "17_254",
+"type": "17",
+"gfx": 254,
+"lvl": 1,
+"item": 13219,
+"name": {
+"fr": "Sagum Troolex",
+"en": "Troolex Sagum",
+"de": "Troolex Sagum",
+"es": "Sagum Troolex",
+"it": "-",
+"nl": "Troolex Sagum",
+"pt": "Sagum Troolex"
+}
+},
+{
+"sym": "16_367",
+"type": "16",
+"gfx": 367,
+"lvl": 1,
+"item": 13220,
+"name": {
+"fr": "Galea Troolex",
+"en": "Troolex Galea",
+"de": "Troolex Galea",
+"es": "Galea Troolex",
+"it": "-",
+"nl": "Troolex Galea",
+"pt": "Galea Troolex"
+}
+},
+{
+"sym": "18_102",
+"type": "18",
+"gfx": 102,
+"lvl": 1,
+"item": 13224,
+"name": {
+"fr": "Chazam",
+"en": "Chazam",
+"de": "Chazam",
+"es": "Chazam",
+"it": "Chazam",
+"nl": "Chazam",
+"pt": "Chazam"
+}
+},
+{
+"sym": "17_255",
+"type": "17",
+"gfx": 255,
+"lvl": 1,
+"item": 13225,
+"name": {
+"fr": "Cape du Magicien Arcanique",
+"en": "Arcane Magician Cape",
+"de": "Arcane Magician Cape",
+"es": "Capa del mago arcano",
+"it": "-",
+"nl": "Arcane Magician Cape",
+"pt": "Capa do Mago Arcano"
+}
+},
+{
+"sym": "16_368",
+"type": "16",
+"gfx": 368,
+"lvl": 1,
+"item": 13226,
+"name": {
+"fr": "Capuche du Magicien Arcanique",
+"en": "Arcane Magician Hood",
+"de": "Arcane Magician Hood",
+"es": "Capucha del mago arcano",
+"it": "-",
+"nl": "Arcane Magician Hood",
+"pt": "Capuz do Mago Arcano"
+}
+},
+{
+"sym": "18_103",
+"type": "18",
+"gfx": 103,
+"lvl": 1,
+"item": 13228,
+"name": {
+"fr": "Bobot",
+"en": "Bobot",
+"de": "Bobot",
+"es": "Bobot",
+"it": "Bobot",
+"nl": "Bobot",
+"pt": "Bobot"
+}
+},
+{
+"sym": "17_256",
+"type": "17",
+"gfx": 256,
+"lvl": 1,
+"item": 13229,
+"name": {
+"fr": "Cape du Mekadiateur",
+"en": "Mekadiator Cape",
+"de": "Mekadiator Cape",
+"es": "Capa de mekadiador",
+"it": "-",
+"nl": "Mekadiator Cape",
+"pt": "Capa do Mekadiator"
+}
+},
+{
+"sym": "16_369",
+"type": "16",
+"gfx": 369,
+"lvl": 1,
+"item": 13230,
+"name": {
+"fr": "Galurin du Mekadiateur",
+"en": "Mekadiator Hat",
+"de": "Mekadiator Hat",
+"es": "Sombrero de mekadiador",
+"it": "-",
+"nl": "Mekadiator Hat",
+"pt": "Chapeuzim do Mekadiator"
+}
+},
+{
+"sym": "17_308",
+"type": "17",
+"gfx": 308,
+"lvl": 1,
+"item": 13239,
+"name": {
+"fr": "La Capix",
+"en": "Ekscape",
+"de": "Ekscape",
+"es": "La Capix",
+"it": "-",
+"nl": "Ekscape",
+"pt": "Capix"
+}
+},
+{
+"sym": "18_104",
+"type": "18",
+"gfx": 104,
+"lvl": 1,
+"item": 13240,
+"name": {
+"fr": "Hidwege",
+"en": "Hidweg",
+"de": "Hidweg",
+"es": "Hidwege",
+"it": "Hidweg",
+"nl": "Hidweg",
+"pt": "Hidwege"
+}
+},
+{
+"sym": "16_370",
+"type": "16",
+"gfx": 370,
+"lvl": 1,
+"item": 13246,
+"name": {
+"fr": "Coiffe du Traillarde",
+"en": "Traiharrd Headgear",
+"de": "Traiharrd Headgear",
+"es": "Tocado del Intentón",
+"it": "Traiharrd Headgear",
+"nl": "Traiharrd Headgear",
+"pt": "Chapéu de Tryhard"
+}
+},
+{
+"sym": "17_261",
+"type": "17",
+"gfx": 261,
+"lvl": 1,
+"item": 13247,
+"name": {
+"fr": "Cape du Traillarde",
+"en": "Traiharrd Cape",
+"de": "Traiharrd Cape",
+"es": "Capa del Intentón",
+"it": "Traiharrd Cape",
+"nl": "Traiharrd Cape",
+"pt": "Capa de Tryhard"
+}
+},
+{
+"sym": "18_105",
+"type": "18",
+"gfx": 105,
+"lvl": 1,
+"item": 13250,
+"name": {
+"fr": "Mini Traillarde",
+"en": "Mini Traiharrd",
+"de": "Mini Traiharrd",
+"es": "Mini Intentón",
+"it": "Mini Traiharrd",
+"nl": "Mini Traiharrd",
+"pt": "Mini Tryhard"
+}
+},
+{
+"sym": "17_257",
+"type": "17",
+"gfx": 257,
+"lvl": 1,
+"item": 13251,
+"name": {
+"fr": "Cape Abilité Polykrome",
+"en": "Polykrome Cape Ability",
+"de": "Polykrome Cape Ability",
+"es": "Capa Bilidad polikroma",
+"it": "-",
+"nl": "Polykrome Cape Ability",
+"pt": "Capa Bilidade Polikromática"
+}
+},
+{
+"sym": "17_258",
+"type": "17",
+"gfx": 258,
+"lvl": 41,
+"item": 13252,
+"name": {
+"fr": "Cape de Noké Polykrome",
+"en": "Polykrome Kwape",
+"de": "Polykrom Kwape",
+"es": "Kwapa polikroma",
+"it": "Kwantello Polikroma",
+"nl": "Polykrome Kwape",
+"pt": "Kwakcapa Polikromática"
+}
+},
+{
+"sym": "17_259",
+"type": "17",
+"gfx": 259,
+"lvl": 6,
+"item": 13253,
+"name": {
+"fr": "Cape de Mori Arty Polykrome",
+"en": "Mori Arty's Polykrome Cloak",
+"de": "Mori Arty's Polykrome Cloak",
+"es": "Capa de Mori Arty polikroma",
+"it": "Mori Arty's Polykrome Cloak",
+"nl": "Mori Arty's Polykrome Cloak",
+"pt": "Manto de Mori Arty Polikromático"
+}
+},
+{
+"sym": "17_260",
+"type": "17",
+"gfx": 260,
+"lvl": 22,
+"item": 13254,
+"name": {
+"fr": "Cape Edépée Polykrome",
+"en": "Polykrome Kwape",
+"de": "Polykrom Kwape",
+"es": "Kwapa polikroma",
+"it": "Kwantello Polikroma",
+"nl": "Polykrome Kwape",
+"pt": "Kwakcapa Polikromática"
+}
+},
+{
+"sym": "18_111",
+"type": "18",
+"gfx": 111,
+"lvl": 1,
+"item": 13262,
+"name": {
+"fr": "Briscard ",
+"en": "Veteran ",
+"de": "Veteran ",
+"es": "Veterano ",
+"it": "Veteran ",
+"nl": "Veteran ",
+"pt": "Veterano "
+}
+},
+{
+"sym": "16_371",
+"type": "16",
+"gfx": 371,
+"lvl": 1,
+"item": 13263,
+"name": {
+"fr": "Coiffe Dauge",
+"en": "Dauge Headgear",
+"de": "Dauge Headgear",
+"es": "Tocado de dog",
+"it": "-",
+"nl": "Dauge Headgear",
+"pt": "Chapéu Dógui"
+}
+},
+{
+"sym": "18_106",
+"type": "18",
+"gfx": 106,
+"lvl": 1,
+"item": 13264,
+"name": {
+"fr": "Tribu Tofoune",
+"en": "Tofoone Tribe",
+"de": "Tofoone Tribe",
+"es": "Tribu tofona",
+"it": "Tofoone Tribe",
+"nl": "Tofoone Tribe",
+"pt": "Tribo Tofuna"
+}
+},
+{
+"sym": "18_107",
+"type": "18",
+"gfx": 107,
+"lvl": 1,
+"item": 13266,
+"name": {
+"fr": "Paradoxine",
+"en": "Paradoxine",
+"de": "Paradoxine",
+"es": "Paradoxina",
+"it": "Paradoxine",
+"nl": "Paradoxine",
+"pt": "Paradoxina"
+}
+},
+{
+"sym": "18_110",
+"type": "18",
+"gfx": 110,
+"lvl": 1,
+"item": 13267,
+"name": {
+"fr": "Eliabou",
+"en": "Eliaboo",
+"de": "Eliaboo",
+"es": "Selabúho",
+"it": "Eliaboo",
+"nl": "Eliaboo",
+"pt": "Eliaruja"
+}
+},
+{
+"sym": "17_266",
+"type": "17",
+"gfx": 266,
+"lvl": 1,
+"item": 13269,
+"name": {
+"fr": "Cape de l'Eliacube",
+"en": "Eliacube Cape",
+"de": "Eliacube Cape",
+"es": "Capa de selacubo",
+"it": "Eliacube Cape",
+"nl": "Eliacube Cape",
+"pt": "Capa do Eliacubo"
+}
+},
+{
+"sym": "16_375",
+"type": "16",
+"gfx": 375,
+"lvl": 1,
+"item": 13270,
+"name": {
+"fr": "Capuche de l'Eliacube",
+"en": "Eliacube Hood",
+"de": "Eliacube Hood",
+"es": "Capucha de selacubo",
+"it": "-",
+"nl": "Eliacube Hood",
+"pt": "Capuz do Eliacubo"
+}
+},
+{
+"sym": "18_108",
+"type": "18",
+"gfx": 108,
+"lvl": 1,
+"item": 13271,
+"name": {
+"fr": "Groug",
+"en": "Groug",
+"de": "Groug",
+"es": "Grug",
+"it": "Groug",
+"nl": "Groug",
+"pt": "Grug"
+}
+},
+{
+"sym": "17_264",
+"type": "17",
+"gfx": 264,
+"lvl": 1,
+"item": 13273,
+"name": {
+"fr": "Parure du Dragon Noir",
+"en": "Black Dragon Finery",
+"de": "Black Dragon Finery",
+"es": "Adorno de dragón negro",
+"it": "Black Dragon Finery",
+"nl": "Black Dragon Finery",
+"pt": "Manto do Dragão Negro"
+}
+},
+{
+"sym": "16_373",
+"type": "16",
+"gfx": 373,
+"lvl": 1,
+"item": 13274,
+"name": {
+"fr": "Terreur du Dragon Noir",
+"en": "Black Dragon's Terror",
+"de": "Black Dragon's Terror",
+"es": "Terror de dragón negro",
+"it": "-",
+"nl": "Black Dragon's Terror",
+"pt": "Terror do Dragão Negro"
+}
+},
+{
+"sym": "18_109",
+"type": "18",
+"gfx": 109,
+"lvl": 1,
+"item": 13275,
+"name": {
+"fr": "Piou de givre",
+"en": "Permafrosty Piwi",
+"de": "Permafrosty Piwi",
+"es": "Pío de escarcha",
+"it": "Permafrosty Piwi",
+"nl": "Permafrosty Piwi",
+"pt": "Piu Gélido"
+}
+},
+{
+"sym": "17_265",
+"type": "17",
+"gfx": 265,
+"lvl": 1,
+"item": 13277,
+"name": {
+"fr": "Cape de résident du givre",
+"en": "Permafrost Resident Cape",
+"de": "Permafrost Resident Cape",
+"es": "Capa de residente de la escarcha",
+"it": "Permafrost Resident Cape",
+"nl": "Permafrost Resident Cape",
+"pt": "Capa de Residente do Gelo"
+}
+},
+{
+"sym": "16_374",
+"type": "16",
+"gfx": 374,
+"lvl": 1,
+"item": 13278,
+"name": {
+"fr": "Capuche de résident du givre",
+"en": "Permafrost Resident Hood",
+"de": "Permafrost Resident Hood",
+"es": "Capucha de residente de la escarcha",
+"it": "-",
+"nl": "Permafrost Resident Hood",
+"pt": "Capuz de Residente do Gelo"
+}
+},
+{
+"sym": "16_372",
+"type": "16",
+"gfx": 372,
+"lvl": 1,
+"item": 13279,
+"name": {
+"fr": "Engelure de Harebourg",
+"en": "Harebourg's Chilblains",
+"de": "Harebourg's Chilblains",
+"es": "Sabañón de Kontatrás",
+"it": "-",
+"nl": "Harebourg's Chilblains",
+"pt": "Enregelamento de Traspafrent"
+}
+},
+{
+"sym": "17_263",
+"type": "17",
+"gfx": 263,
+"lvl": 1,
+"item": 13280,
+"name": {
+"fr": "Pèlerine givrée de Harebourg",
+"en": "Harebourg Tippet",
+"de": "Harebourg Tippet",
+"es": "Esclavina de Kontatrás",
+"it": "Harebourg Tippet",
+"nl": "Harebourg Tippet",
+"pt": "Capote de Traspafrent"
+}
+},
+{
+"sym": "18_112",
+"type": "18",
+"gfx": 112,
+"lvl": 1,
+"item": 13283,
+"name": {
+"fr": "Boune originel",
+"en": "Original Boon",
+"de": "Original Boon",
+"es": "Bun original",
+"it": "Original Boon",
+"nl": "Original Boon",
+"pt": "Boon Original"
+}
+},
+{
+"sym": "16_377",
+"type": "16",
+"gfx": 377,
+"lvl": 1,
+"item": 13285,
+"name": {
+"fr": "Casque astrubien",
+"en": "Astrubian Helmet",
+"de": "Astrubian Helmet",
+"es": "Casco astrubiense",
+"it": "-",
+"nl": "Astrubian Helmet",
+"pt": "Capacete Astrubiano"
+}
+},
+{
+"sym": "17_269",
+"type": "17",
+"gfx": 269,
+"lvl": 1,
+"item": 13286,
+"name": {
+"fr": "Cape astrubienne",
+"en": "Astrubian Cloak",
+"de": "Astrubian Cloak",
+"es": "Capa astrubiense",
+"it": "-",
+"nl": "Astrubian Cloak",
+"pt": "Capa Astrubiana"
+}
+},
+{
+"sym": "18_115",
+"type": "18",
+"gfx": 115,
+"lvl": 1,
+"item": 13287,
+"name": {
+"fr": "Fracas Trubien",
+"en": "Astrubian Rukuss",
+"de": "Astrubian Rukuss",
+"es": "Astrúpito",
+"it": "Astrubian Rukuss",
+"nl": "Astrubian Rukuss",
+"pt": "Strondas Trubiano"
+}
+},
+{
+"sym": "17_270",
+"type": "17",
+"gfx": 270,
+"lvl": 1,
+"item": 13288,
+"name": {
+"fr": "Pelisse amaknéenne",
+"en": "Amaknian Pelisse",
+"de": "Amaknian Pelisse",
+"es": "Pelliza amakneana",
+"it": "-",
+"nl": "Amaknian Pelisse",
+"pt": "Peliça Amakniana"
+}
+},
+{
+"sym": "16_378",
+"type": "16",
+"gfx": 378,
+"lvl": 1,
+"item": 13289,
+"name": {
+"fr": "Heaume amaknéen",
+"en": "Amaknian Helm",
+"de": "Amaknian Helm",
+"es": "Yelmo amakneano",
+"it": "-",
+"nl": "Amaknian Helm",
+"pt": "Elmo Amakniano"
+}
+},
+{
+"sym": "18_114",
+"type": "18",
+"gfx": 114,
+"lvl": 1,
+"item": 13291,
+"name": {
+"fr": "Mikmak Néen",
+"en": "Amaknian Hijinkx",
+"de": "Amaknian Hijinkx",
+"es": "Amaksijo",
+"it": "Amaknian Hijinkx",
+"nl": "Amaknian Hijinkx",
+"pt": "Mikmak Niano"
+}
+},
+{
+"sym": "18_113",
+"type": "18",
+"gfx": 113,
+"lvl": 1,
+"item": 13292,
+"name": {
+"fr": "Chocowa",
+"en": "Chocowa",
+"de": "Chocowa",
+"es": "Chocowa",
+"it": "Chocowa",
+"nl": "Chocowa",
+"pt": "Chocowei"
+}
+},
+{
+"sym": "16_376",
+"type": "16",
+"gfx": 376,
+"lvl": 1,
+"item": 13294,
+"name": {
+"fr": "Chapopics",
+"en": "Coco Headgear",
+"de": "Coco Headgear",
+"es": "Twixcado",
+"it": "-",
+"nl": "Coco Headgear",
+"pt": "Chaprestígio"
+}
+},
+{
+"sym": "17_268",
+"type": "17",
+"gfx": 268,
+"lvl": 1,
+"item": 13295,
+"name": {
+"fr": "Capraline ",
+"en": "Praline Cloak ",
+"de": "Praline Cloak ",
+"es": "Capraliné ",
+"it": "-",
+"nl": "Praline Cloak ",
+"pt": "Capralinê "
+}
+},
+{
+"sym": "18_116",
+"type": "18",
+"gfx": 116,
+"lvl": 1,
+"item": 13300,
+"name": {
+"fr": "Bébérubim",
+"en": "Kerubaby",
+"de": "Kerubaby",
+"es": "Beberubín",
+"it": "Kerubaby",
+"nl": "Kerubaby",
+"pt": "Beberubim"
+}
+},
+{
+"sym": "18_118",
+"type": "18",
+"gfx": 118,
+"lvl": 1,
+"item": 13304,
+"name": {
+"fr": "Bébé Elante",
+"en": "Baby Elante",
+"de": "Baby Elante",
+"es": "Bebé elante",
+"it": "Baby Elante",
+"nl": "Baby Elante",
+"pt": "Bebê Elante"
+}
+},
+{
+"sym": "18_117",
+"type": "18",
+"gfx": 117,
+"lvl": 1,
+"item": 13306,
+"name": {
+"fr": "Tichef",
+"en": "Lilboss",
+"de": "Lilboss",
+"es": "Pekejefe",
+"it": "Lilboss",
+"nl": "Lilboss",
+"pt": "Minichefe"
+}
+},
+{
+"sym": "16_379",
+"type": "16",
+"gfx": 379,
+"lvl": 1,
+"item": 13308,
+"name": {
+"fr": "Bandeau de l'ancien chef",
+"en": "Old Boss Headband",
+"de": "Old Boss Headband",
+"es": "Bandana del antiguo jefe",
+"it": "-",
+"nl": "Old Boss Headband",
+"pt": "Faixa do Chefe Antigo"
+}
+},
+{
+"sym": "17_271",
+"type": "17",
+"gfx": 271,
+"lvl": 1,
+"item": 13309,
+"name": {
+"fr": "Cape de l'ancien chef",
+"en": "Old Boss Cloak",
+"de": "Old Boss Cloak",
+"es": "Capa del antiguo jefe",
+"it": "-",
+"nl": "Old Boss Cloak",
+"pt": "Capa do Chefe Antigo"
+}
+},
+{
+"sym": "18_119",
+"type": "18",
+"gfx": 119,
+"lvl": 1,
+"item": 13346,
+"name": {
+"fr": "Dragodindonowel",
+"en": "Kwismas Dragoturklet",
+"de": "Kwismas Dragoturklet",
+"es": "Dragopavideño",
+"it": "Kwismas Dragoturklet",
+"nl": "Kwismas Dragoturklet",
+"pt": "Dragoperudinataw"
+}
+},
+{
+"sym": "18_120",
+"type": "18",
+"gfx": 120,
+"lvl": 1,
+"item": 13350,
+"name": {
+"fr": "Phormuth",
+"en": "Drhelmuth",
+"de": "Drhelmuth",
+"es": "Perfomuth",
+"it": "Drhelmuth",
+"nl": "Drhelmuth",
+"pt": "Perfismuto"
+}
+},
+{
+"sym": "18_123",
+"type": "18",
+"gfx": 123,
+"lvl": 1,
+"item": 13351,
+"name": {
+"fr": "Bébé Ogrest",
+"en": "Baby Ogrest",
+"de": "Baby Ogrest",
+"es": "Bebé Ogrest",
+"it": "Baby Ogrest",
+"nl": "Baby Ogrest",
+"pt": "Bebê Ogrest"
+}
+},
+{
+"sym": "16_380",
+"type": "16",
+"gfx": 380,
+"lvl": 1,
+"item": 13353,
+"name": {
+"fr": "Tictokoiffe",
+"en": "Tik-Tok Topper",
+"de": "Tik-Tok Topper",
+"es": "Tiktokado",
+"it": "Tik-Tok Topper",
+"nl": "Tik-Tok Topper",
+"pt": "TikTókulos"
+}
+},
+{
+"sym": "18_121",
+"type": "18",
+"gfx": 121,
+"lvl": 1,
+"item": 13354,
+"name": {
+"fr": "Parchawan",
+"en": "Scrollawan",
+"de": "Scrollawan",
+"es": "Pergawan",
+"it": "Scrollawan",
+"nl": "Scrollawan",
+"pt": "Pergawan"
+}
+},
+{
+"sym": "17_272",
+"type": "17",
+"gfx": 272,
+"lvl": 1,
+"item": 13355,
+"name": {
+"fr": "Parchecape",
+"en": "Scrollcape",
+"de": "Scrollcape",
+"es": "Pergacapa",
+"it": "-",
+"nl": "Scrollcape",
+"pt": "Pergacapa"
+}
+},
+{
+"sym": "16_381",
+"type": "16",
+"gfx": 381,
+"lvl": 1,
+"item": 13356,
+"name": {
+"fr": "Parchapo",
+"en": "Scrollhat",
+"de": "Scrollhat",
+"es": "Pergambrero",
+"it": "-",
+"nl": "Scrollhat",
+"pt": "Pergapéu"
+}
+},
+{
+"sym": "16_382",
+"type": "16",
+"gfx": 382,
+"lvl": 1,
+"item": 13359,
+"name": {
+"fr": "Forgecasque",
+"en": "Smithelmet",
+"de": "Smithelmet",
+"es": "Forjacasco",
+"it": "-",
+"nl": "Smithelmet",
+"pt": "Forjacapacete"
+}
+},
+{
+"sym": "17_273",
+"type": "17",
+"gfx": 273,
+"lvl": 1,
+"item": 13360,
+"name": {
+"fr": "Forgecape",
+"en": "Smithcape",
+"de": "Smithcape",
+"es": "Forjacapa",
+"it": "-",
+"nl": "Smithcape",
+"pt": "Forjacapa"
+}
+},
+{
+"sym": "18_122",
+"type": "18",
+"gfx": 122,
+"lvl": 1,
+"item": 13361,
+"name": {
+"fr": "Forgy",
+"en": "Smitty",
+"de": "Smitty",
+"es": "Forgy",
+"it": "Smitty",
+"nl": "Smitty",
+"pt": "Forjinha"
+}
+},
+{
+"sym": "18_124",
+"type": "18",
+"gfx": 124,
+"lvl": 1,
+"item": 13367,
+"name": {
+"fr": "Karat Pass",
+"en": "Karah Paice",
+"de": "Karah Paice",
+"es": "Tortu Gandado",
+"it": "Karah Paice",
+"nl": "Karah Paice",
+"pt": "Kara Passa"
+}
+},
+{
+"sym": "17_240",
+"type": "17",
+"gfx": 240,
+"lvl": 1,
+"item": 13368,
+"name": {
+"fr": "Capasse-partout ",
+"en": "Skeleton Cloakey ",
+"de": "Skeleton Cloakey ",
+"es": "Capotillave maestra ",
+"it": "-",
+"nl": "Skeleton Cloakey ",
+"pt": "Capuchave-mestra "
+}
+},
+{
+"sym": "16_347",
+"type": "16",
+"gfx": 347,
+"lvl": 1,
+"item": 13369,
+"name": {
+"fr": "Chapouvert",
+"en": "Hatsopen",
+"de": "Hatsopen",
+"es": "Abiertocado",
+"it": "-",
+"nl": "Hatsopen",
+"pt": "Chapaberto"
+}
+},
+{
+"sym": "17_274",
+"type": "17",
+"gfx": 274,
+"lvl": 1,
+"item": 13380,
+"name": {
+"fr": "Cape du Déclin",
+"en": "Cloak of Decline",
+"de": "Cloak of Decline",
+"es": "Capa de declive",
+"it": "-",
+"nl": "Cloak of Decline",
+"pt": "Capa do Declínio"
+}
+},
+{
+"sym": "16_383",
+"type": "16",
+"gfx": 383,
+"lvl": 1,
+"item": 13381,
+"name": {
+"fr": "Coiffure du Nécromant",
+"en": "Necromancer's Hairstyle",
+"de": "Necromancer's Hairstyle",
+"es": "Peinado de nigromante",
+"it": "-",
+"nl": "Necromancer's Hairstyle",
+"pt": "Penteado do Necromante"
+}
+},
+{
+"sym": "18_125",
+"type": "18",
+"gfx": 125,
+"lvl": 1,
+"item": 13383,
+"name": {
+"fr": "Sinistre Corbac",
+"en": "Sinister Crow",
+"de": "Sinister Crow",
+"es": "Siniestro cuerbok",
+"it": "Sinister Crow",
+"nl": "Sinister Crow",
+"pt": "Corvo Sinistro"
+}
+},
+{
+"sym": "17_275",
+"type": "17",
+"gfx": 275,
+"lvl": 1,
+"item": 13384,
+"name": {
+"fr": "Cape de la bienvaillance",
+"en": "Benevalor Cape",
+"de": "Benevalor Cape",
+"es": "Capa de la bondadosadía",
+"it": "-",
+"nl": "Benevalor Cape",
+"pt": "Capa Benevalente"
+}
+},
+{
+"sym": "16_384",
+"type": "16",
+"gfx": 384,
+"lvl": 1,
+"item": 13385,
+"name": {
+"fr": "Coiffe de l'amourette",
+"en": "Loving Headgear",
+"de": "Loving Headgear",
+"es": "Tocado del amor",
+"it": "-",
+"nl": "Loving Headgear",
+"pt": "Chapéu do Amor"
+}
+},
+{
+"sym": "18_126",
+"type": "18",
+"gfx": 126,
+"lvl": 1,
+"item": 13387,
+"name": {
+"fr": "Trankilémil",
+"en": "Chillemall",
+"de": "Chillemall",
+"es": "Konkalma",
+"it": "Chillemall",
+"nl": "Chillemall",
+"pt": "Trankilim"
+}
+},
+{
+"sym": "16_385",
+"type": "16",
+"gfx": 385,
+"lvl": 1,
+"item": 13408,
+"name": {
+"fr": "Diadème d'Annivers'Or",
+"en": "Golden'versary Diadem",
+"de": "Golden'versary Diadem",
+"es": "Diadema de aniversáureo",
+"it": "Golden'versary Diadem",
+"nl": "Golden'versary Diadem",
+"pt": "Diadema de Anivers'Ouro"
+}
+},
+{
+"sym": "17_276",
+"type": "17",
+"gfx": 276,
+"lvl": 1,
+"item": 13409,
+"name": {
+"fr": "Cape d'Annivers'Or",
+"en": "Golden'versary Cloak",
+"de": "Golden'versary Cloak",
+"es": "Capa de aniversáureo",
+"it": "Golden'versary Cloak",
+"nl": "Golden'versary Cloak",
+"pt": "Capa de Anivers'Ouro"
+}
+},
+{
+"sym": "17_277",
+"type": "17",
+"gfx": 277,
+"lvl": 6,
+"item": 13418,
+"name": {
+"fr": "Cape de l'Aventurier Polykrome",
+"en": "Polykrome Adventurer Cloak",
+"de": "Polykrome Adventurer Cloak",
+"es": "Capa de aventurero polikroma",
+"it": "Polykrome Adventurer Cloak",
+"nl": "Polykrome Adventurer Cloak",
+"pt": "Capa do Aventureiro Polikromático"
+}
+},
+{
+"sym": "18_128",
+"type": "18",
+"gfx": 128,
+"lvl": 1,
+"item": 13420,
+"name": {
+"fr": "Brumulus",
+"en": "Brumulus",
+"de": "Brumulus",
+"es": "Brumulus",
+"it": "Brumulus",
+"nl": "Brumulus",
+"pt": "Brumulus"
+}
+},
+{
+"sym": "16_386",
+"type": "16",
+"gfx": 386,
+"lvl": 1,
+"item": 13422,
+"name": {
+"fr": "Couronne de Brumaire",
+"en": "Brumaire's Crown",
+"de": "Brumaire's Crown",
+"es": "Corona de Brumario",
+"it": "-",
+"nl": "Brumaire's Crown",
+"pt": "Coroa de Brumário"
+}
+},
+{
+"sym": "17_278",
+"type": "17",
+"gfx": 278,
+"lvl": 1,
+"item": 13423,
+"name": {
+"fr": "Voile glacial",
+"en": "Icy Veil",
+"de": "Icy Veil",
+"es": "Velo glacial",
+"it": "-",
+"nl": "Icy Veil",
+"pt": "Véu Glacial"
+}
+},
+{
+"sym": "17_279",
+"type": "17",
+"gfx": 279,
+"lvl": 1,
+"item": 13424,
+"name": {
+"fr": "Étreinte Mortelle",
+"en": "Mortal Embrace",
+"de": "Mortal Embrace",
+"es": "Abrazo Mortal",
+"it": "-",
+"nl": "Mortal Embrace",
+"pt": "Aperto Mortal"
+}
+},
+{
+"sym": "16_387",
+"type": "16",
+"gfx": 387,
+"lvl": 1,
+"item": 13425,
+"name": {
+"fr": "Cagoule du Défunt",
+"en": "Defunct Hood",
+"de": "Defunct Hood",
+"es": "Capucha de difunto",
+"it": "-",
+"nl": "Defunct Hood",
+"pt": "Capuz do Defunto"
+}
+},
+{
+"sym": "18_129",
+"type": "18",
+"gfx": 129,
+"lvl": 1,
+"item": 13427,
+"name": {
+"fr": "Vendâme",
+"en": "Rickquiem",
+"de": "Rickquiem",
+"es": "Vendealmas",
+"it": "Rickquiem",
+"nl": "Rickquiem",
+"pt": "Vendalma"
+}
+},
+{
+"sym": "18_130",
+"type": "18",
+"gfx": 130,
+"lvl": 1,
+"item": 13428,
+"name": {
+"fr": "Séleuhess",
+"en": "Frozanblud",
+"de": "Frozanblud",
+"es": "Eslahesse",
+"it": "Frozanblud",
+"nl": "Frozanblud",
+"pt": "Soless"
+}
+},
+{
+"sym": "16_388",
+"type": "16",
+"gfx": 388,
+"lvl": 1,
+"item": 13430,
+"name": {
+"fr": "Cornes de Djaul",
+"en": "Djaul's Horns",
+"de": "Djaul's Horns",
+"es": "Cuernos de Djaul",
+"it": "-",
+"nl": "Djaul's Horns",
+"pt": "Chifres de Djaul"
+}
+},
+{
+"sym": "17_280",
+"type": "17",
+"gfx": 280,
+"lvl": 1,
+"item": 13431,
+"name": {
+"fr": "Ailes de Djaul",
+"en": "Djaul's Wings",
+"de": "Djaul's Wings",
+"es": "Alas de Djaul",
+"it": "-",
+"nl": "Djaul's Wings",
+"pt": "Asas de Djaul"
+}
+},
+{
+"sym": "18_131",
+"type": "18",
+"gfx": 131,
+"lvl": 1,
+"item": 13432,
+"name": {
+"fr": "Biface",
+"en": "Biface",
+"de": "Biface",
+"es": "Ambifaz",
+"it": "Biface",
+"nl": "Biface",
+"pt": "Biface"
+}
+},
+{
+"sym": "16_389",
+"type": "16",
+"gfx": 389,
+"lvl": 1,
+"item": 13434,
+"name": {
+"fr": "Coiffe Faux Semblants",
+"en": "Sham O'Tamer Headgear",
+"de": "Sham O'Tamer Headgear",
+"es": "Tocado falsas apariencias",
+"it": "-",
+"nl": "Sham O'Tamer Headgear",
+"pt": "Chapéu Duas Caras"
+}
+},
+{
+"sym": "17_281",
+"type": "17",
+"gfx": 281,
+"lvl": 1,
+"item": 13435,
+"name": {
+"fr": "Cape Dualité",
+"en": "Duality Cape",
+"de": "Duality Cape",
+"es": "Capa dualidad",
+"it": "-",
+"nl": "Duality Cape",
+"pt": "Capa Dualidade"
+}
+},
+{
+"sym": "17_283",
+"type": "17",
+"gfx": 283,
+"lvl": 1,
+"item": 13439,
+"name": {
+"fr": "Cape de Jiva",
+"en": "Jiva's Cape",
+"de": "Jiva's Cape",
+"es": "Capa de Jiva",
+"it": "-",
+"nl": "Jiva's Cape",
+"pt": "Capa de Jiva"
+}
+},
+{
+"sym": "16_391",
+"type": "16",
+"gfx": 391,
+"lvl": 1,
+"item": 13440,
+"name": {
+"fr": "Couronne de Jiva",
+"en": "Jiva's Crown",
+"de": "Jiva's Crown",
+"es": "Corona de Jiva",
+"it": "-",
+"nl": "Jiva's Crown",
+"pt": "Coroa de Jiva"
+}
+},
+{
+"sym": "18_137",
+"type": "18",
+"gfx": 137,
+"lvl": 1,
+"item": 13442,
+"name": {
+"fr": "Cervideus",
+"en": "Cervideus",
+"de": "Cervideus",
+"es": "Cervidéus",
+"it": "-",
+"nl": "Cervideus",
+"pt": "Cervideus"
+}
+},
+{
+"sym": "17_284",
+"type": "17",
+"gfx": 284,
+"lvl": 1,
+"item": 13443,
+"name": {
+"fr": "Cape Tur",
+"en": "Cutting Cape",
+"de": "Cutting Cape",
+"es": "Capa Tura",
+"it": "-",
+"nl": "Cutting Cape",
+"pt": "Capa Tureza"
+}
+},
+{
+"sym": "16_392",
+"type": "16",
+"gfx": 392,
+"lvl": 1,
+"item": 13444,
+"name": {
+"fr": "Bandeau de Djone Rando",
+"en": "Djone Rando Headband",
+"de": "Djone Rando Headband",
+"es": "Bandana de Djone Rando",
+"it": "-",
+"nl": "Djone Rando Headband",
+"pt": "Bandana de Djone Rando"
+}
+},
+{
+"sym": "18_138",
+"type": "18",
+"gfx": 138,
+"lvl": 1,
+"item": 13446,
+"name": {
+"fr": "Ned le Brak",
+"en": "Ned T. Cheri",
+"de": "Ned T. Cheri",
+"es": "Tron Kito",
+"it": "-",
+"nl": "Ned T. Cheri",
+"pt": "Ned, o Brak"
+}
+},
+{
+"sym": "17_285",
+"type": "17",
+"gfx": 285,
+"lvl": 1,
+"item": 13447,
+"name": {
+"fr": "Fulguro Cape",
+"en": "Fulguro Cape",
+"de": "Fulguro Cape",
+"es": "Fulgurocapa",
+"it": "-",
+"nl": "Fulguro Cape",
+"pt": "Fulguro Capa"
+}
+},
+{
+"sym": "16_393",
+"type": "16",
+"gfx": 393,
+"lvl": 1,
+"item": 13448,
+"name": {
+"fr": "Coupe Foudre",
+"en": "Lightning Cut",
+"de": "Lightning Cut",
+"es": "Corta rayo",
+"it": "-",
+"nl": "Lightning Cut",
+"pt": "Corta-raio"
+}
+},
+{
+"sym": "18_139",
+"type": "18",
+"gfx": 139,
+"lvl": 1,
+"item": 13450,
+"name": {
+"fr": "Pikulgrude",
+"en": "Pikulgrude",
+"de": "Pikulgrude",
+"es": "Pikulgrud",
+"it": "-",
+"nl": "Pikulgrude",
+"pt": "Pikulgrude"
+}
+},
+{
+"sym": "17_282",
+"type": "17",
+"gfx": 282,
+"lvl": 1,
+"item": 13451,
+"name": {
+"fr": "Queue du Chacha des glaces",
+"en": "Snow Bow Meow Tail",
+"de": "Snow Bow Meow Tail",
+"es": "Cola de miaumiau de las nieves",
+"it": "-",
+"nl": "Snow Bow Meow Tail",
+"pt": "Rabo do Miau do Gelo"
+}
+},
+{
+"sym": "16_390",
+"type": "16",
+"gfx": 390,
+"lvl": 1,
+"item": 13452,
+"name": {
+"fr": "Chachapeau des glaces",
+"en": "Snow Bow Meow Beanie",
+"de": "Snow Bow Meow Beanie",
+"es": "Miaumbrero de las nieves",
+"it": "-",
+"nl": "Snow Bow Meow Beanie",
+"pt": "Miawchapéu do Gelo"
+}
+},
+{
+"sym": "18_132",
+"type": "18",
+"gfx": 132,
+"lvl": 1,
+"item": 13454,
+"name": {
+"fr": "Tofu Nox",
+"en": "Nox Tofu",
+"de": "Nox Tofu",
+"es": "Tofu Nox",
+"it": "-",
+"nl": "Nox Tofu",
+"pt": "Tofu Nox"
+}
+},
+{
+"sym": "18_133",
+"type": "18",
+"gfx": 133,
+"lvl": 1,
+"item": 13455,
+"name": {
+"fr": "Tofu Qilby",
+"en": "Qilby Tofu",
+"de": "Qilby Tofu",
+"es": "Tofu Qilby",
+"it": "-",
+"nl": "Qilby Tofu",
+"pt": "Tofu Qilby"
+}
+},
+{
+"sym": "18_134",
+"type": "18",
+"gfx": 134,
+"lvl": 1,
+"item": 13456,
+"name": {
+"fr": "Tofu Ogrest",
+"en": "Ogrest Tofu",
+"de": "Ogrest Tofu",
+"es": "Tofu Ogrest",
+"it": "-",
+"nl": "Ogrest Tofu",
+"pt": "Tofu Ogrest"
+}
+},
+{
+"sym": "18_135",
+"type": "18",
+"gfx": 135,
+"lvl": 1,
+"item": 13457,
+"name": {
+"fr": "Tofu Oropo",
+"en": "Oropo Tofu",
+"de": "Oropo Tofu",
+"es": "Tofu Oropo",
+"it": "-",
+"nl": "Oropo Tofu",
+"pt": "Tofu Oropo"
+}
+},
+{
+"sym": "18_136",
+"type": "18",
+"gfx": 136,
+"lvl": 1,
+"item": 13458,
+"name": {
+"fr": "Tofu Toross",
+"en": "Toross Tofu",
+"de": "Toross Tofu",
+"es": "Tofu Toross",
+"it": "-",
+"nl": "Toross Tofu",
+"pt": "Tofu Toross"
+}
+},
+{
+"sym": "18_127",
+"type": "18",
+"gfx": 127,
+"lvl": 1,
+"item": 13459,
+"name": {
+"fr": "L'Écœureuil",
+"en": "Skwhirrle",
+"de": "Skwhirrle",
+"es": "Ardililla",
+"it": "Skwhirrle",
+"nl": "Skwhirrle",
+"pt": "Esquilho"
+}
+},
+{
+"sym": "17_287",
+"type": "17",
+"gfx": 287,
+"lvl": 1,
+"item": 13476,
+"name": {
+"fr": "Ankimono",
+"en": "Ankimono",
+"de": "Ankimono",
+"es": "Ankimono",
+"it": "-",
+"nl": "Ankimono",
+"pt": "Ankimono"
+}
+},
+{
+"sym": "16_395",
+"type": "16",
+"gfx": 395,
+"lvl": 1,
+"item": 13477,
+"name": {
+"fr": "Ankegasa",
+"en": "Ankegasa",
+"de": "Ankegasa",
+"es": "Ankegasa",
+"it": "-",
+"nl": "Ankegasa",
+"pt": "Ankegasa"
+}
+},
+{
+"sym": "18_141",
+"type": "18",
+"gfx": 141,
+"lvl": 1,
+"item": 13479,
+"name": {
+"fr": "Ankadrak",
+"en": "Ankadrak",
+"de": "Ankadrak",
+"es": "Ankadrak",
+"it": "-",
+"nl": "Ankadrak",
+"pt": "Ankadrak"
+}
+},
+{
+"sym": "17_288",
+"type": "17",
+"gfx": 288,
+"lvl": 1,
+"item": 13480,
+"name": {
+"fr": "Ultime Paquetage",
+"en": "Ultimate Kitbag",
+"de": "Ultimate Kitbag",
+"es": "Petate definitivo",
+"it": "-",
+"nl": "Ultimate Kitbag",
+"pt": "Mochila Suprema"
+}
+},
+{
+"sym": "16_396",
+"type": "16",
+"gfx": 396,
+"lvl": 1,
+"item": 13481,
+"name": {
+"fr": "Diadème de l'extrême",
+"en": "Extreme Diadem",
+"de": "Extreme Diadem",
+"es": "Diadema del extremo",
+"it": "-",
+"nl": "Extreme Diadem",
+"pt": "Diadema do Extremo"
+}
+},
+{
+"sym": "18_142",
+"type": "18",
+"gfx": 142,
+"lvl": 1,
+"item": 13483,
+"name": {
+"fr": "Frapace",
+"en": "Raptrike",
+"de": "Raptrike",
+"es": "Gavileñazo",
+"it": "-",
+"nl": "Raptrike",
+"pt": "Golptor"
+}
+},
+{
+"sym": "18_143",
+"type": "18",
+"gfx": 143,
+"lvl": 1,
+"item": 13517,
+"name": {
+"fr": "Buchado",
+"en": "Buchado",
+"de": "Buchado",
+"es": "Miaushido",
+"it": "-",
+"nl": "Buchado",
+"pt": "Miaushido"
+}
+},
+{
+"sym": "17_290",
+"type": "17",
+"gfx": 290,
+"lvl": 1,
+"item": 13530,
+"name": {
+"fr": "Cape protectrice",
+"en": "Protective Cloak",
+"de": "Protective Cloak",
+"es": "Capa protectora",
+"it": "-",
+"nl": "Protective Cloak",
+"pt": "Capa Protetora"
+}
+},
+{
+"sym": "16_398",
+"type": "16",
+"gfx": 398,
+"lvl": 1,
+"item": 13531,
+"name": {
+"fr": "Oreilles d'Anoobis",
+"en": "Anoobis Ears",
+"de": "Anoobis Ears",
+"es": "Orejas de Anoobis",
+"it": "-",
+"nl": "Anoobis Ears",
+"pt": "Orelhas de Anoobis"
+}
+},
+{
+"sym": "18_144",
+"type": "18",
+"gfx": 144,
+"lvl": 1,
+"item": 13533,
+"name": {
+"fr": "Kanoobis",
+"en": "Kanoobis",
+"de": "Kanoobis",
+"es": "Kanoobis",
+"it": "-",
+"nl": "Kanoobis",
+"pt": "Kanoobis"
+}
+},
+{
+"sym": "17_292",
+"type": "17",
+"gfx": 292,
+"lvl": 1,
+"item": 13534,
+"name": {
+"fr": "Manteau Double-Chance",
+"en": "Double-Luck Mantle",
+"de": "Double-Luck Mantle",
+"es": "Abrigo de doble suerte",
+"it": "-",
+"nl": "Double-Luck Mantle",
+"pt": "Manto da Chance Dupla"
+}
+},
+{
+"sym": "16_400",
+"type": "16",
+"gfx": 400,
+"lvl": 1,
+"item": 13535,
+"name": {
+"fr": "Masque Impromptu",
+"en": "Impromptu Mask",
+"de": "Impromptu Mask",
+"es": "Máscara improvisada",
+"it": "-",
+"nl": "Impromptu Mask",
+"pt": "Máscara Improvisada"
+}
+},
+{
+"sym": "18_146",
+"type": "18",
+"gfx": 146,
+"lvl": 1,
+"item": 13537,
+"name": {
+"fr": "Aguabi",
+"en": "Aguabi",
+"de": "Aguabi",
+"es": "Aguabi",
+"it": "-",
+"nl": "Aguabi",
+"pt": "Aguabi"
+}
+},
+{
+"sym": "17_293",
+"type": "17",
+"gfx": 293,
+"lvl": 1,
+"item": 13568,
+"name": {
+"fr": "Cape Triomphale",
+"en": "Triumphal Cape",
+"de": "Triumphal Cape",
+"es": "Capa triunfal",
+"it": "-",
+"nl": "Triumphal Cape",
+"pt": "Capa Triunfal"
+}
+},
+{
+"sym": "16_401",
+"type": "16",
+"gfx": 401,
+"lvl": 1,
+"item": 13569,
+"name": {
+"fr": "Masque du Vainqueur",
+"en": "Winner Mask",
+"de": "Winner Mask",
+"es": "Máscara del vencedor",
+"it": "-",
+"nl": "Winner Mask",
+"pt": "Máscara do Vencedor"
+}
+},
+{
+"sym": "18_147",
+"type": "18",
+"gfx": 147,
+"lvl": 1,
+"item": 13571,
+"name": {
+"fr": "Weldonne",
+"en": "Welldonn",
+"de": "Welldonn",
+"es": "Weldón",
+"it": "-",
+"nl": "Welldonn",
+"pt": "Weldonne"
+}
+},
+{
+"sym": "18_148",
+"type": "18",
+"gfx": 148,
+"lvl": 1,
+"item": 13572,
+"name": {
+"fr": "Tikkoup",
+"en": "Snazzoo",
+"de": "Snazzoo",
+"es": "Lakopa",
+"it": "-",
+"nl": "Snazzoo",
+"pt": "Tikkopa"
+}
+},
+{
+"sym": "16_402",
+"type": "16",
+"gfx": 402,
+"lvl": 1,
+"item": 13573,
+"name": {
+"fr": "Coiffe Écailleuse",
+"en": "Scaly Headgear",
+"de": "Scaly Headgear",
+"es": "Tocado escamoso",
+"it": "-",
+"nl": "Scaly Headgear",
+"pt": "Chapéu Escamoso"
+}
+},
+{
+"sym": "18_149",
+"type": "18",
+"gfx": 149,
+"lvl": 1,
+"item": 13574,
+"name": {
+"fr": "Dracaille",
+"en": "Dragoscale",
+"de": "Dragoscale",
+"es": "Dracanalla",
+"it": "-",
+"nl": "Dragoscale",
+"pt": "Dracalafrio"
+}
+},
+{
+"sym": "17_294",
+"type": "17",
+"gfx": 294,
+"lvl": 1,
+"item": 13575,
+"name": {
+"fr": "Cape Écailleuse",
+"en": "Scaly Cape",
+"de": "Scaly Cape",
+"es": "Capa escamosa",
+"it": "-",
+"nl": "Scaly Cape",
+"pt": "Capa Escamosa"
+}
+},
+{
+"sym": "17_291",
+"type": "17",
+"gfx": 291,
+"lvl": 1,
+"item": 13583,
+"name": {
+"fr": "Cape Démonastre",
+"en": "Demoon Cape",
+"de": "Demoon Cape",
+"es": "Capa Demonstruo",
+"it": "-",
+"nl": "Demoon Cape",
+"pt": "Capa Demonastro"
+}
+},
+{
+"sym": "16_399",
+"type": "16",
+"gfx": 399,
+"lvl": 1,
+"item": 13584,
+"name": {
+"fr": "Coiffe Démonastre",
+"en": "Demoon Headgear",
+"de": "Demoon Headgear",
+"es": "Tocado Demonstruo",
+"it": "-",
+"nl": "Demoon Headgear",
+"pt": "Chapéu Demonastro"
+}
+},
+{
+"sym": "18_145",
+"type": "18",
+"gfx": 145,
+"lvl": 1,
+"item": 13586,
+"name": {
+"fr": "Demon Globine",
+"en": "Demoglobin",
+"de": "Demoglobin",
+"es": "Demo Globina",
+"it": "-",
+"nl": "Demoglobin",
+"pt": "Demo Globina"
+}
+},
+{
+"sym": "16_403",
+"type": "16",
+"gfx": 403,
+"lvl": 1,
+"item": 13587,
+"name": {
+"fr": "Coiffe de la Coupe",
+"en": "Crown-Cut Headgear",
+"de": "Crown-Cut Headgear",
+"es": "Tocado del corte",
+"it": "-",
+"nl": "Crown-Cut Headgear",
+"pt": "Chapéu de Cuia"
+}
+},
+{
+"sym": "17_295",
+"type": "17",
+"gfx": 295,
+"lvl": 1,
+"item": 13588,
+"name": {
+"fr": "Cape du Sabo",
+"en": "Hoofit Cape",
+"de": "Hoofit Cape",
+"es": "Capa de la pezuña",
+"it": "-",
+"nl": "Hoofit Cape",
+"pt": "Capa Cascuda"
+}
+},
+{
+"sym": "16_404",
+"type": "16",
+"gfx": 404,
+"lvl": 1,
+"item": 13589,
+"name": {
+"fr": "Coiffe du Kornu",
+"en": "Hornbearer Headgear",
+"de": "Hornbearer Headgear",
+"es": "Tocado del kornudo",
+"it": "-",
+"nl": "Hornbearer Headgear",
+"pt": "Chapéu Córneo"
+}
+},
+{
+"sym": "18_150",
+"type": "18",
+"gfx": 150,
+"lvl": 1,
+"item": 13591,
+"name": {
+"fr": "Titoror",
+"en": "Liltoror",
+"de": "Liltoror",
+"es": "Peketauroro",
+"it": "-",
+"nl": "Liltoror",
+"pt": "Titoror"
+}
+},
+{
+"sym": "17_296",
+"type": "17",
+"gfx": 296,
+"lvl": 1,
+"item": 13599,
+"name": {
+"fr": "Cape Flamboyante Astrale",
+"en": "Flamboyant Astral Cape",
+"de": "Flamboyant Astral Cape",
+"es": "Capa flamígera astral",
+"it": "-",
+"nl": "Flamboyant Astral Cape",
+"pt": "Capa Flamejante Astral"
+}
+},
+{
+"sym": "16_405",
+"type": "16",
+"gfx": 405,
+"lvl": 1,
+"item": 13600,
+"name": {
+"fr": "Coiffe Cosmique",
+"en": "Cosmic Headgear",
+"de": "Cosmic Headgear",
+"es": "Tocado cósmico",
+"it": "-",
+"nl": "Cosmic Headgear",
+"pt": "Chapéu Cósmico"
+}
+},
+{
+"sym": "18_151",
+"type": "18",
+"gfx": 151,
+"lvl": 1,
+"item": 13601,
+"name": {
+"fr": "Sifflon",
+"en": "Whistliphon",
+"de": "Whistliphon",
+"es": "Silbitos",
+"it": "-",
+"nl": "Whistliphon",
+"pt": "Sibilaste"
+}
+},
+{
+"sym": "17_299",
+"type": "17",
+"gfx": 299,
+"lvl": 1,
+"item": 13610,
+"name": {
+"fr": "Pelisse du Brutarbare",
+"en": "Brutabarian Pelisse",
+"de": "Brutabarian Pelisse",
+"es": "Pelliza del brutárbaro",
+"it": "-",
+"nl": "Brutabarian Pelisse",
+"pt": "Peliça do Brutárbaro"
+}
+},
+{
+"sym": "16_408",
+"type": "16",
+"gfx": 408,
+"lvl": 1,
+"item": 13611,
+"name": {
+"fr": "Casque du Brutarbare",
+"en": "Brutabarian Helmet",
+"de": "Brutabarian Helmet",
+"es": "Casco del brutárbaro",
+"it": "-",
+"nl": "Brutabarian Helmet",
+"pt": "Capacete do Brutárbaro"
+}
+},
+{
+"sym": "18_154",
+"type": "18",
+"gfx": 154,
+"lvl": 1,
+"item": 13613,
+"name": {
+"fr": "Brutos",
+"en": "Brutone",
+"de": "Brutone",
+"es": "Huesarraco",
+"it": "-",
+"nl": "Brutone",
+"pt": "Brutosso"
+}
+},
+{
+"sym": "17_298",
+"type": "17",
+"gfx": 298,
+"lvl": 1,
+"item": 13614,
+"name": {
+"fr": "Atours du Subtilame",
+"en": "Subtiblade Finery",
+"de": "Subtiblade Finery",
+"es": "Galas del sutilama",
+"it": "-",
+"nl": "Subtiblade Finery",
+"pt": "Trajes do Sutilâmina"
+}
+},
+{
+"sym": "16_407",
+"type": "16",
+"gfx": 407,
+"lvl": 1,
+"item": 13615,
+"name": {
+"fr": "Chapeau du Subtilame",
+"en": "Subtiblade Hat",
+"de": "Subtiblade Hat",
+"es": "Sombrero del sutilama",
+"it": "-",
+"nl": "Subtiblade Hat",
+"pt": "Chapéu do Sutilâmina"
+}
+},
+{
+"sym": "18_153",
+"type": "18",
+"gfx": 153,
+"lvl": 1,
+"item": 13617,
+"name": {
+"fr": "Dogtagnan",
+"en": "Dogtagnan",
+"de": "Dogtagnan",
+"es": "Dartacán",
+"it": "-",
+"nl": "Dogtagnan",
+"pt": "Dogtagnan"
+}
+},
+{
+"sym": "17_297",
+"type": "17",
+"gfx": 297,
+"lvl": 1,
+"item": 13618,
+"name": {
+"fr": "Capyrolyse",
+"en": "Capyrolysis",
+"de": "Capyrolysis",
+"es": "Capirólisis",
+"it": "-",
+"nl": "Capyrolysis",
+"pt": "Capirólise"
+}
+},
+{
+"sym": "16_406",
+"type": "16",
+"gfx": 406,
+"lvl": 1,
+"item": 13619,
+"name": {
+"fr": "Volcasque",
+"en": "Volcahelm",
+"de": "Volcahelm",
+"es": "Volcasco",
+"it": "-",
+"nl": "Volcahelm",
+"pt": "Vulcapacete"
+}
+},
+{
+"sym": "18_152",
+"type": "18",
+"gfx": 152,
+"lvl": 1,
+"item": 13621,
+"name": {
+"fr": "Ignemikou",
+"en": "Ignemikling",
+"de": "Ignemikling",
+"es": "Ignemiku",
+"it": "-",
+"nl": "Ignemikling",
+"pt": "Ignemikhal"
+}
+},
+{
+"sym": "17_286",
+"type": "17",
+"gfx": 286,
+"lvl": 1,
+"item": 13626,
+"name": {
+"fr": "Cape à pétales de Rosal",
+"en": "Rosal Petal Cloak",
+"de": "Rosal Petal Cloak",
+"es": "Capa de pétalos de Rosal",
+"it": "-",
+"nl": "Rosal Petal Cloak",
+"pt": "Capa de Pétalas de Rosal"
+}
+},
+{
+"sym": "16_394",
+"type": "16",
+"gfx": 394,
+"lvl": 1,
+"item": 13627,
+"name": {
+"fr": "Couronne florale de Rosal",
+"en": "Rosal Floral Crown",
+"de": "Rosal Floral Crown",
+"es": "Corona floral de Rosal",
+"it": "-",
+"nl": "Rosal Floral Crown",
+"pt": "Coroa Floral de Rosal"
+}
+},
+{
+"sym": "18_140",
+"type": "18",
+"gfx": 140,
+"lvl": 1,
+"item": 13629,
+"name": {
+"fr": "Pivoine apprivoisée",
+"en": "Tame Peony",
+"de": "Tame Peony",
+"es": "Peonía domesticada",
+"it": "-",
+"nl": "Tame Peony",
+"pt": "Peônia domesticada"
+}
+},
+{
+"sym": "17_303",
+"type": "17",
+"gfx": 303,
+"lvl": 1,
+"item": 13634,
+"name": {
+"fr": "Cape de l'astre Krosmique",
+"en": "Krosmic Star Cape",
+"de": "Krosmic Star Cape",
+"es": "Capa del astro krósmico",
+"it": "-",
+"nl": "Krosmic Star Cape",
+"pt": "Capa do Astro Krósmico"
+}
+},
+{
+"sym": "18_160",
+"type": "18",
+"gfx": 160,
+"lvl": 1,
+"item": 13635,
+"name": {
+"fr": "Dragouftou",
+"en": "Madreggobball",
+"de": "Madreggobball",
+"es": "Dragulató",
+"it": "-",
+"nl": "Madreggobball",
+"pt": "Dragatudo"
+}
+},
+{
+"sym": "18_161",
+"type": "18",
+"gfx": 161,
+"lvl": 1,
+"item": 13636,
+"name": {
+"fr": "Roufouléon",
+"en": "Chamelefoux",
+"de": "Chamelefoux",
+"es": "Rojofuleón",
+"it": "-",
+"nl": "Chamelefoux",
+"pt": "Camaleadfox"
+}
+},
+{
+"sym": "17_300",
+"type": "17",
+"gfx": 300,
+"lvl": 1,
+"item": 13638,
+"name": {
+"fr": "Cape de Sumens",
+"en": "Sumens Cape",
+"de": "Sumens Cape",
+"es": "Capa de Sumens",
+"it": "-",
+"nl": "Sumens Cape",
+"pt": "Capa de Sumens"
+}
+},
+{
+"sym": "16_409",
+"type": "16",
+"gfx": 409,
+"lvl": 1,
+"item": 13639,
+"name": {
+"fr": "Barbochapo",
+"en": "Tabbybeard",
+"de": "Tabbybeard",
+"es": "Barbonete",
+"it": "-",
+"nl": "Tabbybeard",
+"pt": "Barbochapéu"
+}
+},
+{
+"sym": "18_155",
+"type": "18",
+"gfx": 155,
+"lvl": 1,
+"item": 13641,
+"name": {
+"fr": "Dragoeuf Mollet",
+"en": "Poached Dreggon",
+"de": "Poached Dreggon",
+"es": "Dragohuevo blandito",
+"it": "-",
+"nl": "Poached Dreggon",
+"pt": "Dragonete Molenga"
+}
+},
+{
+"sym": "17_305",
+"type": "17",
+"gfx": 305,
+"lvl": 1,
+"item": 13642,
+"name": {
+"fr": "Cape de l'exterminateur",
+"en": "Exterminator Cape",
+"de": "Exterminator Cape",
+"es": "Capa del exterminador",
+"it": "-",
+"nl": "Exterminator Cape",
+"pt": "Capa do Exterminador"
+}
+},
+{
+"sym": "16_413",
+"type": "16",
+"gfx": 413,
+"lvl": 1,
+"item": 13643,
+"name": {
+"fr": "Coiffe de l'exterminateur",
+"en": "Exterminator Headgear",
+"de": "Exterminator Headgear",
+"es": "Tocado del exterminador",
+"it": "-",
+"nl": "Exterminator Headgear",
+"pt": "Chapéu do Exterminador"
+}
+},
+{
+"sym": "18_159",
+"type": "18",
+"gfx": 159,
+"lvl": 1,
+"item": 13645,
+"name": {
+"fr": "Ssssserpentin",
+"en": "Plisssssken",
+"de": "Plisssssken",
+"es": "Sssserpentino",
+"it": "-",
+"nl": "Plisssssken",
+"pt": "Ssssserpentino"
+}
+},
+{
+"sym": "16_415",
+"type": "16",
+"gfx": 415,
+"lvl": 1,
+"item": 13646,
+"name": {
+"fr": "Cimes du Destin",
+"en": "Apex of Destiny",
+"de": "Apex of Destiny",
+"es": "Copas del destino",
+"it": "-",
+"nl": "Apex of Destiny",
+"pt": "Cumes do Destino"
+}
+},
+{
+"sym": "17_307",
+"type": "17",
+"gfx": 307,
+"lvl": 1,
+"item": 13647,
+"name": {
+"fr": "Écorce Protectrice",
+"en": "Protective Bark",
+"de": "Protective Bark",
+"es": "Corteza Protectora",
+"it": "-",
+"nl": "Protective Bark",
+"pt": "Casca Protetora"
+}
+},
+{
+"sym": "18_163",
+"type": "18",
+"gfx": 163,
+"lvl": 1,
+"item": 13649,
+"name": {
+"fr": "Tirrakou",
+"en": "Tirrakou",
+"de": "Tirrakou",
+"es": "Terraku",
+"it": "-",
+"nl": "Tirrakou",
+"pt": "Rakuri"
+}
+},
+{
+"sym": "16_411",
+"type": "16",
+"gfx": 411,
+"lvl": 1,
+"item": 13654,
+"name": {
+"fr": "Cornes de Démone",
+"en": "Demon Horns",
+"de": "Demon Horns",
+"es": "Cuernos de demonia",
+"it": "-",
+"nl": "Demon Horns",
+"pt": "Chifres de Demônia"
+}
+},
+{
+"sym": "17_302",
+"type": "17",
+"gfx": 302,
+"lvl": 1,
+"item": 13655,
+"name": {
+"fr": "Ailes d'Hécate",
+"en": "Hecate Wings",
+"de": "Hecate Wings",
+"es": "Alas de Hécate",
+"it": "-",
+"nl": "Hecate Wings",
+"pt": "Asas de Hecate"
+}
+},
+{
+"sym": "18_157",
+"type": "18",
+"gfx": 157,
+"lvl": 1,
+"item": 13657,
+"name": {
+"fr": "Hek la cooleuvre",
+"en": "Hek the Grass Snake",
+"de": "Hek the Grass Snake",
+"es": "Hek la coolebra",
+"it": "-",
+"nl": "Hek the Grass Snake",
+"pt": "Hek, a Serpente"
+}
+},
+{
+"sym": "16_410",
+"type": "16",
+"gfx": 410,
+"lvl": 1,
+"item": 13658,
+"name": {
+"fr": "Perles de Pouchecot",
+"en": "Pouchecot Pearls",
+"de": "Pouchecot Pearls",
+"es": "Perlas de Pouchecot",
+"it": "-",
+"nl": "Pouchecot Pearls",
+"pt": "Pérolas de Pouchecot"
+}
+},
+{
+"sym": "17_301",
+"type": "17",
+"gfx": 301,
+"lvl": 1,
+"item": 13659,
+"name": {
+"fr": "Cape Pouchecotienne",
+"en": "Pouchecotian Cape",
+"de": "Pouchecotian Cape",
+"es": "Capa pouchecotiana",
+"it": "-",
+"nl": "Pouchecotian Cape",
+"pt": "Capa Pouchecotiana"
+}
+},
+{
+"sym": "18_156",
+"type": "18",
+"gfx": 156,
+"lvl": 1,
+"item": 13661,
+"name": {
+"fr": "Pouchon",
+"en": "Poucheling",
+"de": "Poucheling",
+"es": "Pouchón",
+"it": "-",
+"nl": "Poucheling",
+"pt": "Pouchinho"
+}
+},
+{
+"sym": "16_414",
+"type": "16",
+"gfx": 414,
+"lvl": 1,
+"item": 13670,
+"name": {
+"fr": "Coiffe de la Rançon",
+"en": "Ransom Headgear",
+"de": "Ransom Headgear",
+"es": "Tocado de la recompensa",
+"it": "-",
+"nl": "Ransom Headgear",
+"pt": "Chapéu do Resgate"
+}
+},
+{
+"sym": "17_306",
+"type": "17",
+"gfx": 306,
+"lvl": 1,
+"item": 13671,
+"name": {
+"fr": "Manteau de la Rançon",
+"en": "Ransom Coat",
+"de": "Ransom Coat",
+"es": "Manto de la recompensa",
+"it": "-",
+"nl": "Ransom Coat",
+"pt": "Manto do Resgate"
+}
+},
+{
+"sym": "18_162",
+"type": "18",
+"gfx": 162,
+"lvl": 1,
+"item": 13673,
+"name": {
+"fr": "Rapaf",
+"en": "Rapteye",
+"de": "Rapteye",
+"es": "Rapaf",
+"it": "-",
+"nl": "Rapteye",
+"pt": "Rapifa"
+}
+},
+{
+"sym": "16_416",
+"type": "16",
+"gfx": 416,
+"lvl": 1,
+"item": 13680,
+"name": {
+"fr": "Tentacoiffe Kralamouresque",
+"en": "Kralovesque Tentaband",
+"de": "Kralovesque Tentaband",
+"es": "Tentocado Kralamaresco",
+"it": "-",
+"nl": "Kralovesque Tentaband",
+"pt": "Tentapéu Kralamoresco"
+}
+},
+{
+"sym": "17_309",
+"type": "17",
+"gfx": 309,
+"lvl": 1,
+"item": 13681,
+"name": {
+"fr": "Tentacape Kralamouresque",
+"en": "Kralovesque Tentacape",
+"de": "Kralovesque Tentacape",
+"es": "Tentacapa Kralamaresca",
+"it": "-",
+"nl": "Kralovesque Tentacape",
+"pt": "Tentacapa Kralamoresca"
+}
+},
+{
+"sym": "18_164",
+"type": "18",
+"gfx": 164,
+"lvl": 1,
+"item": 13683,
+"name": {
+"fr": "Kralaffect",
+"en": "Kralaffect",
+"de": "Kralaffect",
+"es": "Kralafecto",
+"it": "-",
+"nl": "Kralaffect",
+"pt": "Kralafeto"
+}
+},
+{
+"sym": "16_417",
+"type": "16",
+"gfx": 417,
+"lvl": 1,
+"item": 13684,
+"name": {
+"fr": "Chapeau Estival",
+"en": "Summer Hat",
+"de": "Summer Hat",
+"es": "Sombrero Estival",
+"it": "-",
+"nl": "Summer Hat",
+"pt": "Chapéu Estival"
+}
+},
+{
+"sym": "17_310",
+"type": "17",
+"gfx": 310,
+"lvl": 1,
+"item": 13685,
+"name": {
+"fr": "Cape de plage",
+"en": "Beach Cape",
+"de": "Beach Cape",
+"es": "Capa de playa",
+"it": "-",
+"nl": "Beach Cape",
+"pt": "Capa de Praia"
+}
+},
+{
+"sym": "18_165",
+"type": "18",
+"gfx": 165,
+"lvl": 1,
+"item": 13687,
+"name": {
+"fr": "Boufplouf",
+"en": "Gobbsplash",
+"de": "Gobbsplash",
+"es": "Jalapluf",
+"it": "-",
+"nl": "Gobbsplash",
+"pt": "Gobb'água"
+}
+},
+{
+"sym": "16_420",
+"type": "16",
+"gfx": 420,
+"lvl": 1,
+"item": 13688,
+"name": {
+"fr": "Heaume de l'Aube",
+"en": "Dawn's Helm",
+"de": "Dawn's Helm",
+"es": "Yelmo del Alba",
+"it": "-",
+"nl": "Dawn's Helm",
+"pt": "Elmo da Aurora"
+}
+},
+{
+"sym": "17_313",
+"type": "17",
+"gfx": 313,
+"lvl": 1,
+"item": 13689,
+"name": {
+"fr": "Manteau de Lumière",
+"en": "Light Coat",
+"de": "Light Coat",
+"es": "Abrigo de Luz",
+"it": "-",
+"nl": "Light Coat",
+"pt": "Casaco de Luz"
+}
+},
+{
+"sym": "18_168",
+"type": "18",
+"gfx": 168,
+"lvl": 1,
+"item": 13691,
+"name": {
+"fr": "Dardikil",
+"en": "Dardikil",
+"de": "Dardikil",
+"es": "Dardikil",
+"it": "-",
+"nl": "Dardikil",
+"pt": "Dardikil"
+}
+},
+{
+"sym": "16_418",
+"type": "16",
+"gfx": 418,
+"lvl": 1,
+"item": 13698,
+"name": {
+"fr": "Monocularis",
+"en": "Monocularis",
+"de": "Monocularis",
+"es": "Monocularis",
+"it": "-",
+"nl": "Monocularis",
+"pt": "Monocularis"
+}
+},
+{
+"sym": "17_311",
+"type": "17",
+"gfx": 311,
+"lvl": 1,
+"item": 13699,
+"name": {
+"fr": "Pelisse académique",
+"en": "Academic Pelisse",
+"de": "Academic Pelisse",
+"es": "Pelliza académica",
+"it": "-",
+"nl": "Academic Pelisse",
+"pt": "Peliça Acadêmica"
+}
+},
+{
+"sym": "18_166",
+"type": "18",
+"gfx": 166,
+"lvl": 1,
+"item": 13701,
+"name": {
+"fr": "Bogosier",
+"en": "Bibliohoot",
+"de": "Bibliohoot",
+"es": "Erudín",
+"it": "-",
+"nl": "Bibliohoot",
+"pt": "Bogarga"
+}
+},
+{
+"sym": "16_419",
+"type": "16",
+"gfx": 419,
+"lvl": 1,
+"item": 13702,
+"name": {
+"fr": "Voile des arcanes corrompues",
+"en": "Corrupted Arcana Veil",
+"de": "Corrupted Arcana Veil",
+"es": "Velo de los arcanos corruptos",
+"it": "-",
+"nl": "Corrupted Arcana Veil",
+"pt": "Véu das Arcanas Corrompidas"
+}
+},
+{
+"sym": "17_312",
+"type": "17",
+"gfx": 312,
+"lvl": 1,
+"item": 13703,
+"name": {
+"fr": "Linceul de ses morts",
+"en": "Arcane Shroud",
+"de": "Arcane Shroud",
+"es": "Mortaja de sus muertos",
+"it": "-",
+"nl": "Arcane Shroud",
+"pt": "Mortalha dos Mortos"
+}
+},
+{
+"sym": "18_167",
+"type": "18",
+"gfx": 167,
+"lvl": 1,
+"item": 13705,
+"name": {
+"fr": "Hocult",
+"en": "Arcanowl",
+"de": "Arcanowl",
+"es": "Hocult",
+"it": "-",
+"nl": "Arcanowl",
+"pt": "Hocult"
+}
+},
+{
+"sym": "16_412",
+"type": "16",
+"gfx": 412,
+"lvl": 1,
+"item": 13710,
+"name": {
+"fr": "Maskarade",
+"en": "Maskarade",
+"de": "Maskarade",
+"es": "Maskarade",
+"it": "-",
+"nl": "Maskarade",
+"pt": "Maskarade"
+}
+},
+{
+"sym": "17_304",
+"type": "17",
+"gfx": 304,
+"lvl": 1,
+"item": 13711,
+"name": {
+"fr": "Caparade",
+"en": "Caparade",
+"de": "Caparade",
+"es": "Caparade",
+"it": "-",
+"nl": "Caparade",
+"pt": "Caparade"
+}
+},
+{
+"sym": "18_158",
+"type": "18",
+"gfx": 158,
+"lvl": 1,
+"item": 13713,
+"name": {
+"fr": "Carnapiou",
+"en": "Carnapiou",
+"de": "Carnapiou",
+"es": "Carnapiou",
+"it": "-",
+"nl": "Carnapiou",
+"pt": "Carnapiou"
+}
+},
+{
+"sym": "16_422",
+"type": "16",
+"gfx": 422,
+"lvl": 1,
+"item": 13714,
+"name": {
+"fr": "Casque de Zi",
+"en": "Zi Helmet",
+"de": "Zi Helmet",
+"es": "Casco de Zi",
+"it": "-",
+"nl": "Zi Helmet",
+"pt": "Capacete de Zi"
+}
+},
+{
+"sym": "17_314",
+"type": "17",
+"gfx": 314,
+"lvl": 1,
+"item": 13715,
+"name": {
+"fr": "Cape de Zi",
+"en": "Zi Cloak",
+"de": "Zi Cloak",
+"es": "Capa de Zi",
+"it": "-",
+"nl": "Zi Cloak",
+"pt": "Capa de Zi"
+}
+},
+{
+"sym": "16_423",
+"type": "16",
+"gfx": 423,
+"lvl": 1,
+"item": 13753,
+"name": {
+"fr": "Capuche de Joris",
+"en": "Capuche de Joris",
+"de": "Capuche de Joris",
+"es": "Capuche de Joris",
+"it": "-",
+"nl": "Capuche de Joris",
+"pt": "Capuche de Joris"
+}
+},
+{
+"sym": "17_315",
+"type": "17",
+"gfx": 315,
+"lvl": 1,
+"item": 13754,
+"name": {
+"fr": "Cape de Joris",
+"en": "Cape de Joris",
+"de": "Cape de Joris",
+"es": "Cape de Joris",
+"it": "-",
+"nl": "Cape de Joris",
+"pt": "Cape de Joris"
+}
+},
+{
+"sym": "18_170",
+"type": "18",
+"gfx": 170,
+"lvl": 1,
+"item": 13756,
+"name": {
+"fr": "Mou",
+"en": "Mou",
+"de": "Mou",
+"es": "Mou",
+"it": "-",
+"nl": "Mou",
+"pt": "Mou"
+}
+},
+{
+"sym": "18_172",
+"type": "18",
+"gfx": 172,
+"lvl": 1,
+"item": 13781,
+"name": {
+"fr": "Tofookie",
+"en": "Tofookie",
+"de": "Tofookie",
+"es": "Tofukie",
+"it": "-",
+"nl": "Tofookie",
+"pt": "Tofookie"
+}
+},
+{
+"sym": "16_425",
+"type": "16",
+"gfx": 425,
+"lvl": 128,
+"item": 13782,
+"name": {
+"fr": "Casque Dragoeuf Polykrome",
+"en": "Polykrome Dreggon Helmet",
+"de": "Polykrome Dreggon Helmet",
+"es": "Casco de dragohuevo polikromo",
+"it": "-",
+"nl": "Polykrome Dreggon Helmet",
+"pt": "Capacete de Dragovo Polikromático"
+}
+},
+{
+"sym": "17_317",
+"type": "17",
+"gfx": 317,
+"lvl": 191,
+"item": 13783,
+"name": {
+"fr": "Voile d'encre Polykrome",
+"en": "Polykrome Inky Veil",
+"de": "Polykrome Inky Veil",
+"es": "Velo de tinta polikromo",
+"it": "-",
+"nl": "Polykrome Inky Veil",
+"pt": "Véu de Tinta Polikromático"
+}
+},
+{
+"sym": "18_169",
+"type": "18",
+"gfx": 169,
+"lvl": 1,
+"item": 13791,
+"name": {
+"fr": "Miniduk Krosmique",
+"en": "Krosmic Weegle Owl",
+"de": "Krosmic Weegle Owl",
+"es": "Minichuelo krósmico",
+"it": "-",
+"nl": "Krosmic Weegle Owl",
+"pt": "Miniduk Krósmico"
+}
+},
+{
+"sym": "16_430",
+"type": "16",
+"gfx": 430,
+"lvl": 1,
+"item": 13796,
+"name": {
+"fr": "Perruque de Welsh",
+"en": "Perruque de Welsh",
+"de": "Perruque de Welsh",
+"es": "Perruque de Welsh",
+"it": "-",
+"nl": "Perruque de Welsh",
+"pt": "Perruque de Welsh"
+}
+},
+{
+"sym": "17_322",
+"type": "17",
+"gfx": 322,
+"lvl": 1,
+"item": 13797,
+"name": {
+"fr": "Cape de Welsh",
+"en": "Cape de Welsh",
+"de": "Cape de Welsh",
+"es": "Cape de Welsh",
+"it": "-",
+"nl": "Cape de Welsh",
+"pt": "Cape de Welsh"
+}
+},
+{
+"sym": "16_429",
+"type": "16",
+"gfx": 429,
+"lvl": 1,
+"item": 13799,
+"name": {
+"fr": "Perruque de Shedar",
+"en": "Perruque de Shedar",
+"de": "Perruque de Shedar",
+"es": "Perruque de Shedar",
+"it": "-",
+"nl": "Perruque de Shedar",
+"pt": "Perruque de Shedar"
+}
+},
+{
+"sym": "17_321",
+"type": "17",
+"gfx": 321,
+"lvl": 1,
+"item": 13800,
+"name": {
+"fr": "Cape de Shedar",
+"en": "Cape de Shedar",
+"de": "Cape de Shedar",
+"es": "Cape de Shedar",
+"it": "-",
+"nl": "Cape de Shedar",
+"pt": "Cape de Shedar"
+}
+},
+{
+"sym": "18_179",
+"type": "18",
+"gfx": 179,
+"lvl": 1,
+"item": 13801,
+"name": {
+"fr": "Sipho",
+"en": "Sipho",
+"de": "Sipho",
+"es": "Sipho",
+"it": "-",
+"nl": "Sipho",
+"pt": "Sipho"
+}
+},
+{
+"sym": "16_426",
+"type": "16",
+"gfx": 426,
+"lvl": 1,
+"item": 13803,
+"name": {
+"fr": "Ailes du vent pire",
+"en": "Ailes du vent pire",
+"de": "Ailes du vent pire",
+"es": "Ailes du vent pire",
+"it": "-",
+"nl": "Ailes du vent pire",
+"pt": "Ailes du vent pire"
+}
+},
+{
+"sym": "17_318",
+"type": "17",
+"gfx": 318,
+"lvl": 1,
+"item": 13804,
+"name": {
+"fr": "Cape Sang dent",
+"en": "Cape Sang dent",
+"de": "Cape Sang dent",
+"es": "Cape Sang dent",
+"it": "-",
+"nl": "Cape Sang dent",
+"pt": "Cape Sang dent"
+}
+},
+{
+"sym": "18_176",
+"type": "18",
+"gfx": 176,
+"lvl": 1,
+"item": 13806,
+"name": {
+"fr": "Dante Vaine",
+"en": "Dante Vaine",
+"de": "Dante Vaine",
+"es": "Dante Vaine",
+"it": "-",
+"nl": "Dante Vaine",
+"pt": "Dante Vaine"
+}
+},
+{
+"sym": "16_431",
+"type": "16",
+"gfx": 431,
+"lvl": 1,
+"item": 13807,
+"name": {
+"fr": "Couronne de Zabelle",
+"en": "Couronne de Zabelle",
+"de": "Couronne de Zabelle",
+"es": "Couronne de Zabelle",
+"it": "-",
+"nl": "Couronne de Zabelle",
+"pt": "Couronne de Zabelle"
+}
+},
+{
+"sym": "17_323",
+"type": "17",
+"gfx": 323,
+"lvl": 1,
+"item": 13808,
+"name": {
+"fr": "Cape de Zabelle",
+"en": "Cape de Zabelle",
+"de": "Cape de Zabelle",
+"es": "Cape de Zabelle",
+"it": "-",
+"nl": "Cape de Zabelle",
+"pt": "Cape de Zabelle"
+}
+},
+{
+"sym": "18_180",
+"type": "18",
+"gfx": 180,
+"lvl": 1,
+"item": 13810,
+"name": {
+"fr": "Crâne réanimé",
+"en": "Crâne réanimé",
+"de": "Crâne réanimé",
+"es": "Crâne réanimé",
+"it": "-",
+"nl": "Crâne réanimé",
+"pt": "Crâne réanimé"
+}
+},
+{
+"sym": "18_97",
+"type": "18",
+"gfx": 97,
+"lvl": 1,
+"item": 20098,
+"name": {
+"fr": "Budshu",
+"en": "Budshu",
+"de": "Budshu",
+"es": "Budshu",
+"it": "Budshu",
+"nl": "Budshu",
+"pt": "Budshu"
+}
+}
+]

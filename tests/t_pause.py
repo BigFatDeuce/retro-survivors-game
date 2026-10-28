@@ -1,0 +1,6 @@
+url('autostart=1&fresh=1&cls=iop&map=astrub&t=60&lv=12')
+time.sleep(6)
+pg.keyboard.press('Escape'); time.sleep(1)
+shot('pause')
+r = pg.evaluate("(() => { const c = document.querySelector('.modal .content'); return [c.scrollHeight, c.clientHeight, getComputedStyle(c).overflowY, document.querySelector('.window.modal').getBoundingClientRect().height, innerHeight]; })()")
+print('SCROLL', r)
