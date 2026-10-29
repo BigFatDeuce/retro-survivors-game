@@ -25,7 +25,8 @@ part HIGH:
 - Explobombe: cooldown x1.15 (2.823 -> 3.246), fuse x0.75 (1.0 -> 0.75, 0.85 -> 0.6375 at level 3)
 after HIGH: Attaque Mortelle single (one blow, one monster: the strongest within 125), bossK 2; Piège Mortel the same
 within 250, its web under the monster hit (rWeb)
-part ULTRA:
+part ULTRA (and, after the first 0.98 build: cooldowns x1.15, the Cra x1.2 but Flèche Enflammée; Hard hp x1.1; an
+elite's relic 15 %; Dofus Ocre -5 % cooldown, Cawotte +15 % xp, Pourpre +15 % damage; the Arakne majeure's text):
 - the poisons of single hits through little zones (code only: game.js poisonPuff)
 - every boss's hp x0.85 (not the Maître Corbac de l'Apocalypse's own: it copies the strongest boss)
 - the level damage bonus at its top (9.9 %) at level 50: lvDmg 0.099 / 49, lvDmgMax 0.099
@@ -208,6 +209,63 @@ S['fu_sram_toile']['desc'] = {
     'nl': "Een Dodelijke Aanval die twee keer zo ver reikt en een Arakne-web onder het geraakte monster achterlaat. Dubbele schade aan bazen.",
     'pt': "Um Ataque Mortal que chega duas vezes mais longe e deixa uma teia de Arakne debaixo do monstro atingido. Dano a dobrar nos chefes."}
 
+# ================================================================ after the first 0.98 build (the owner's list)
+# cooldowns: every class spell, every global spell and every spell fusion x1.15 — the Cra's spells and the Cra's fusions
+# x1.2, Flèche Enflammée x1.15 (it has no fusion); at their source (base, level steps, cdShop), each spell once; weapons
+# untouched. The shop's levels, characteristics, relics, Dofus and cdLate still work on top (SpellInst.cooldown)
+CRA = next(c for c in C['classes'] if c['id'] == 'cra')['spells']
+cdK = {}
+for c in C['classes']:
+    for sid in c['spells']: cdK[sid] = 1.15
+for g in C['globalSpells']: cdK[g['id']] = 1.15
+for f in C['spellFusions']: cdK[f['id']] = 1.15
+for sid in CRA: cdK[sid] = 1.2
+for f in C['spellFusions']:
+    if f.get('cls') == 'cra': cdK[f['id']] = 1.2
+cdK['fleche_enflammee'] = 1.15
+assert not any('fleche_enflammee' in f['src'] for f in C['spellFusions'])
+for sid, k in sorted(cdK.items()):
+    sp = S[sid]
+    for lv in [sp['base']] + sp.get('lv', []):
+        for key in ('cd', 'cdShop'):
+            if key in lv and 0 < lv[key] < 900: lv[key] = round(lv[key] * k, 3)
+CD_DONE = {k: v for k, v in cdK.items()}
+
+# Hard mode: every monster's and boss's hp x1.1 on top of its Hard bonus (hardHp = 1 + hpMin..hpMax: 1.25 -> 1.375;
+# bossHp 1.25 -> 1.375, the elites' cap and the Maître Corbac follow it)
+H = C['hard']; assert H['hpMin'] == H['hpMax'] == 0.25 and H['bossHp'] == 1.25
+H['hpMin'] = H['hpMax'] = round((1 + H['hpMin']) * 1.1 - 1, 4); H['bossHp'] = round(H['bossHp'] * 1.1, 4)
+
+# an elite's relic 25 % -> 15 % (extras.js maybeEliteRelic: x the luck, as before); bosses, mini-bosses, the merchant unchanged
+assert C['relicElite'] == 0.25; C['relicElite'] = 0.15
+
+# the Dofus: Ocre -10 % -> -5 % cooldown, Cawotte +25 % -> +15 % xp, Pourpre +25 % -> +15 % damage (their texts too)
+DF = {d['id']: d for d in C['dofus']}
+assert DF['ocre']['bonus']['cooldown'] == -0.1 and DF['cawotte']['bonus']['growth'] == 0.25 and DF['pourpre']['bonus']['might'] == 0.25
+DF['ocre']['bonus']['cooldown'] = -0.05; DF['cawotte']['bonus']['growth'] = 0.15; DF['pourpre']['bonus']['might'] = 0.15
+for did, old, new in (('ocre', '-10', '-5'), ('cawotte', '+25', '+15'), ('pourpre', '+25', '+15')):
+    for lg, v in DF[did]['desc'].items(): assert v.count(old) == 1, (did, lg); DF[did]['desc'][lg] = v.replace(old, new)
+
+# the Arakne majeure (an Arakne's critical summon) doubles the character's damage while it is there (game.js dmgMul)
+T_MAJ = {'fr': "Coup critique ! Arakne Majeure se joint à vous : vos dégâts ×2 tant qu'elle est là !",
+         'en': "Critical hit! Major Arachnee joins you: your damage ×2 while it stays!",
+         'de': "Kritischer Treffer! Große Arakne schließt sich dir an: dein Schaden ×2, solange sie bleibt!",
+         'es': "¡Golpe crítico! Arakna Mayor se une a ti: ¡tu daño ×2 mientras esté!",
+         'it': "Colpo critico! Arakne Maggiore si unisce a te: i tuoi danni ×2 finché resta!",
+         'nl': "Kritieke treffer! Grote Arachnee sluit zich bij je aan: je schade ×2 zolang ze blijft!",
+         'pt': "Golpe crítico! Aracne Adulta junta-se a ti: o teu dano ×2 enquanto estiver!"}
+for lg, v in T_MAJ.items(): C['ui'][lg]['pw_majeure'] = v
+# the Hard mode's texts: monsters' and bosses' life +25 % -> +37.5 % (both, every language)
+for lg in C['ui']:
+    for key in ('mode_hint', 'hard_info'):
+        v = C['ui'][lg][key]; n = v.count('+25'); assert n == 2, (lg, key, n); C['ui'][lg][key] = v.replace('+25', '+37,5' if lg in ('fr', 'de', 'es', 'it', 'nl', 'pt') else '+37.5')
+
+# the summons drawn from sheets rendered at their size on screen (tools/assets/build_mobs20.py, from the client's vector
+# sprites; they were blown up): Arakne Agressive 4.0 -> 6.6 (with its attack), Arakne majeure 4.0 -> 10.4, Chaferfu
+# Lancier 3.0 -> 3.3 (the Chaferfu's 3.0 is already its size)
+for kind, old_k, new_k in (('arakne', '1564_z60', '1564_z66'), ('majeure', '1161_z60', '1161_z104'), ('lancier', '1189_z32', '1189_z33')):
+    assert C['allies'][kind]['sprite'] == old_k, kind; C['allies'][kind]['sprite'] = new_k
+
 if __name__ == '__main__':
     json.dump(C, open(f'{G}/data/content.json', 'w', encoding='utf8'), ensure_ascii=False, separators=(',', ':'))
     print('0.98 ok: Invisibilité', [(l.get('cd'), l.get('duration')) for l in [S['invisibilite']['base']] + S['invisibilite']['lv']],
@@ -215,5 +273,6 @@ if __name__ == '__main__':
           '| Intelligence', INT['perShop'], '| Manuel', {k: C['manuel']['boss'][k] for k in ('chef_bouftou', 'bouftou_royal', 'kruorre', 'minotoror', 'royalmouth', 'grand_envoye', 'goultard')})
     print('HIGH: traps', [(k, S[k]['base']) for k in ('piege_sournois', 'fu_sram_piege')], [l.get('dmg') for l in S['piege_sournois']['lv']],
           '| Boufcouls', BA, '| Rempart', RE, '| Explobombe', EB['base']['cd'], [l.get('fuse') for l in [EB['base']] + EB['lv']])
+    print('after the build: cooldowns', len(CD_DONE), 'spells (Cra x1.2:', sorted(k for k, v in CD_DONE.items() if v == 1.2), ') | hard', H, '| relicElite', C['relicElite'], '| dofus', {k: DF[k]['bonus'] for k in ('ocre', 'cawotte', 'pourpre')})
     print('ULTRA: bosses', {k: C['bosses'][k]['hp'] for k in ('chef_bouftou', 'bouftou_royal', 'dark_vlad', 'goultard')}, '| lvDmg', R['lvDmg'], R['lvDmgMax'],
           '| xpEarly', R['xpEarly'], 'saved', saved, 'back', add, '| cdLate', R['cdLate'])

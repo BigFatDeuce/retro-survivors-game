@@ -10,18 +10,31 @@ Object.assign(Run.prototype, {
   hitStop(ms) { const S = Store.data.settings; if (S.shake === false) ms *= 0.5; const t = performance.now() + ms; if (!(this.hitStopUntil > t)) this.hitStopUntil = t; },
   frozenByHit() { return this.hitStopUntil > performance.now(); },
   // the run's clock runs at k for a moment (real seconds)
-  slowMo(sec, k) { this.slowUntil = performance.now() + sec * 1000; this.slowK = k; },
+  slowMo(sec, k) { if (this.critFx && performance.now() < this.critFx.t0 + 2000) return; this.slowUntil = performance.now() + sec * 1000; this.slowK = k; },   // (a critical summon's slow motion is not cut short)
+  // 0.98: a critical summon (the Chaferfu Lancier, the Arakne majeure): the run at 1 % for 2 s with confetti and a strong
+  // aberration, the camera closing in on it (x1.75 in 1 s, held 2 s, back in 1 s: 4 s, real time); one at a time — a
+  // second one meanwhile has its banner, not a second show
+  critSeq(A) {
+    const now = performance.now(); if (this.critFx && now - this.critFx.t0 < 4000) return;
+    this.critFx = { t0: now, A, x: A.x, y: A.y - 40, conf: makeConfetti() }; this.slowUntil = now + 2000; this.slowK = 0.01;   // (set here: slowMo() now waits for it)
+  },
+  critK() {
+    const F = this.critFx; if (!F) return 0; const e = (performance.now() - F.t0) / 1000;
+    if (e >= 4) { this.critFx = null; return 0; }
+    const s = x => x * x * (3 - 2 * x); return e < 1 ? s(e) : e < 3 ? 1 : s(4 - e);
+  },
   // 0.98: the chromatic aberration of the moment, 0..2.6 (PX.end: a lens blur of the world's edges with colour fringes;
-  // the strength widens the blur, it never shifts the picture): the countdown, a strong burst after GO!, the slow
+  // the strength widens the blur, it never shifts the picture): strong from the countdown's '2' to 0.5 s after GO!, the slow
   // motions, a boss's fall, a relic picked up, Libération taking a blow, the victory (the strongest); less in lowFx,
   // none in minFx
   chromaK() {
     let k = 0; const now = performance.now(), c = this.cine, fade = (t0, dur, k0) => t0 ? k0 * Math.max(0, 1 - (now - t0) / dur) : 0;
-    if (c && c.kind === 'countdown') { const n = Math.min(3, Math.floor(c.t / 0.8)), u = n < 3 ? (c.t - n * 0.8) / 0.8 : 0; k = n < 3 ? 0.35 + 0.85 * Math.max(0, 1 - Math.abs(u - 0.14) / 0.12) : 0; if (n === 3) this._goCA = now; }   // (GO!: its clock held at now while it shows)
-    k = Math.max(k, fade(this._goCA, 2600, 2.4));   // GO! and the run's first seconds: strong, fading over 2.6 s once the run starts
+    if (c && c.kind === 'countdown' && c.t >= 0.8) this._goCA = now;   // (from the countdown's '2' to GO!'s end: its clock held at now: full)
+    k = Math.max(k, fade(this._goCA, 500, 2.4));   // then gone 0.5 s after GO!
     if (this.slowUntil > now) k = Math.max(k, 0.9 * Math.min(1, (this.slowUntil - now) / 350));   // the slow motions
     k = Math.max(k, fade(this._bossCA, 1800, 1.6));   // a boss's fall
     k = Math.max(k, fade(this._libCA, 700, 1.1));   // Libération taking a blow
+    if (this.critFx) { const e = (now - this.critFx.t0) / 1000; k = Math.max(k, e < 2 ? 2.2 : 2.2 * Math.max(0, 1 - (e - 2) / 1.2)); }   // a critical summon
     if (this.relicShow) { const e = (now - this.relicShow.t0) / 1000; k = Math.max(k, e < 1 ? 1.3 - 0.8 * e : 0.5 * Math.max(0, 1 - (e - 2.4) / 0.6)); }   // a relic picked up
     const V = this.victoryFx; if (V) { const e = (now - V.t0) / 1000; k = Math.max(k, e < 0.7 ? 1 + 2 * e : e < 3.2 ? 2 + 0.35 * Math.sin(e * 4) : Math.max(0, 2 * (1 - (e - 3.2) / 0.7))); }   // the victory: the strongest
     return clamp(k, 0, 2.6) * (Game.minFx ? 0 : Game.lowFx ? 0.6 : 1);
@@ -111,6 +124,7 @@ Object.assign(Run.prototype, {
     const V = this.victoryFx;
     if (V) { const e = (performance.now() - V.t0) / 1000; if (V.fah && e > 0.7) { V.fah = false; Audio2.fxFile('fah', 1); Prog.add('fahHeard'); Prog.check(this); }
       if (e > 3.9) this.victoryFx = null; else drawVictory(ctx, W, H, e, T('victory_big'), V.conf); }
+    if (this.critFx) { const e = (performance.now() - this.critFx.t0) / 1000; if (e < 2.6) drawConfetti(ctx, W, H, e, this.critFx.conf, e > 2 ? Math.max(0, 1 - (e - 2) / 0.6) : 1); }   // (0.98: a critical summon's confetti)
     if (this.deathFx) drawDeath(ctx, this, W, H, this.deathE());
     const P = this.player; if (!P || P.dead || this.over) return;
     const low = P.hp / this.stats.maxHp;

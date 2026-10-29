@@ -28,7 +28,7 @@ def rcedit(exe, ver):
     except OSError as e: print('rcedit unavailable (', e, "): the exe keeps Electron's icon."); return
     cmd = [rc, exe, '--set-icon', f'{ROOT}/tools/win/icon.ico', '--set-version-string', 'ProductName', 'Retro Survivors',
            '--set-version-string', 'FileDescription', 'Retro Survivors', '--set-version-string', 'CompanyName', 'Fan-made',
-           '--set-file-version', f'{ver}.0', '--set-product-version', f'{ver}.0']
+           '--set-file-version', RL.parts(ver, 4), '--set-product-version', RL.parts(ver, 4)]
     if os.name != 'nt':
         if not shutil.which('wine'): print("(no wine: the exe keeps Electron's icon; make_exe.bat on Windows sets it)"); return
         cmd = ['wine'] + cmd
@@ -53,7 +53,7 @@ def main():
         if f.endswith('.pak') and f[:-4] not in LOCALES: os.remove(f'{out}/locales/{f}')
     app = f'{out}/resources/app'; os.makedirs(app)
     for f in ('main.js', 'icon.png'): shutil.copy(f'{ROOT}/tools/win/{f}', app)
-    json.dump({'name': 'retro-survivors', 'productName': 'Retro Survivors', 'version': f'{ver}.0', 'main': 'main.js'}, open(f'{app}/package.json', 'w'))
+    json.dump({'name': 'retro-survivors', 'productName': 'Retro Survivors', 'version': RL.parts(ver, 3), 'main': 'main.js'}, open(f'{app}/package.json', 'w'))
     print('Copying the game...', flush=True)
     n = RL.copy_game(f'{app}/game')
     rcedit(f'{out}/RetroSurvivors.exe', ver)

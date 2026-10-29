@@ -26,7 +26,10 @@ const Nav = {
   // a small pulse at each move; clipped to the list that scrolls it. Only while an element has the cursor
   glide() {
     if (!this.el) { if (this._gl) this._gl.style.display = 'none'; return; }
-    if (!this._gl) { const g = document.createElement('div'); g.id = 'navglide'; document.body.append(g); this._gl = g; document.body.classList.add('navglide'); }
+    if (!this._gl) { const g = document.createElement('div'); g.id = 'navglide';   // (0.98.1: tiny sparks round it, CSS-animated: placed once along its edge)
+      const P = [[8, 0], [34, 0], [63, 0], [90, 0], [100, 30], [100, 72], [82, 100], [52, 100], [20, 100], [0, 66], [0, 24], [45, 0]];
+      P.forEach(([x, y], i) => { const s = document.createElement('i'); s.style.left = x + '%'; s.style.top = y + '%'; s.style.setProperty('--d', (-i * 0.29).toFixed(2) + 's'); s.style.setProperty('--dx', ((x - 50) / 50 * 6).toFixed(1) + 'px'); s.style.setProperty('--dy', ((y - 50) / 50 * 6 - 4).toFixed(1) + 'px'); g.append(s); });
+      document.body.append(g); this._gl = g; document.body.classList.add('navglide'); }
     if (this._glRaf) return;
     let last = performance.now();
     const step = (now) => {
@@ -263,9 +266,10 @@ const Nav = {
     if (m) { if ((m[0]) && this.adjust(m[0])) return true; this.move(m[0], m[1]); return true; }
     // 0.85: Tab / Shift + Tab go through the items in reading order (the same items as the arrows and the controller)
     if (e.code === 'Tab') { const it = this.ensure(); if (it.length) { const i = it.indexOf(this.el), n = it.length; this.set(it[((i < 0 ? 0 : i) + (e.shiftKey ? -1 : 1) + n) % n]); Audio2.blip('click'); } e.preventDefault(); return true; }
-    // 0.84: a choice opened during a run ignores the dash keys (Space, E) for its first 2 s: a dash pressed as it
-    // popped up no longer picks a card (Enter, the mouse and the controller stay immediate)
-    if ((e.code === 'Space' || e.code === 'KeyE') && UI.modal && UI._modalAt && Game.state === 'run' && performance.now() - UI._modalAt < 2000) { e.preventDefault(); return true; }
+    // 0.84: a choice opened during a run ignores the dash keys (Space, E) for its first moments (UI.PICK_GUARD, 0.98: 0.3 s,
+    // was 2 s): a dash pressed as it popped up no longer picks a card (Enter, the mouse and the controller stay immediate:
+    // the controller's dash is a trigger, never its A)
+    if ((e.code === 'Space' || e.code === 'KeyE') && UI.modal && UI._modalAt && Game.state === 'run' && performance.now() - UI._modalAt < UI.PICK_GUARD) { e.preventDefault(); return true; }
     // Enter, and also Space / E (0.22), validate the highlighted choice
     if (['Enter', 'NumpadEnter', 'Space', 'KeyE'].includes(e.code) && !e.repeat && (this.el && this.el.isConnected || UI.levelUpOpen || (UI.modal && UI.modal.onAct))) { this.ensure(); if (this.el || (UI.modal && UI.modal.onAct)) { e.preventDefault(); this.press(); return true; } }
     return false;

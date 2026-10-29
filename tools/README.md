@@ -16,7 +16,7 @@ Run them as `python tools/<folder>/<tool>.py …` (on Windows add `-X utf8` or `
 | check the content chain still rebuilds content.json | `python tools/make_content.py --check` |
 | test after changing `game/js` | `python tools/qa.py quick` (~5 min) — or at least `python tools/check.py` (~3 min) |
 | full test before a release | `python tools/qa.py full --web` (~1 h 30) |
-| bump the version | `python tools/bump_build.py 0.95` |
+| bump the version | `python tools/bump_build.py 0.95` (a patch release: `0.98.1`) |
 | build Windows / Linux / Android / web | `make_exe.*`, `make_appimage.*`, `make_apk.*`, `python tools/make_dist.py` |
 | publish the web version | `publish_cloudflare.bat` / `.sh` (asks nothing: it publishes) |
 | publish the source to GitHub (this repository, then the public one) | `publish_github.bat` / `.sh` (asks before each step); `publish_github_fresh.bat` / `.sh` restarts the public repository from one commit |

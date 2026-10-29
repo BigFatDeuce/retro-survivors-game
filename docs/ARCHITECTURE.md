@@ -156,13 +156,17 @@ Main state: `player`, `mobs`, `projs` (player projectiles), `eprojs` (enemy proj
   `font`), the titles, names and the victory in the announcements' font. Use them for any new centre-screen message;
   keep the UI's other fonts (DofusBold, Lilita, RetroNum) for the rest.
 - **Chromatic aberration** (0.98): `Run.chromaK()` (juice.js, read every frame) gives its strength of the moment, 0 to
-  2.6 (the countdown, GO! and the run's first seconds, the slow motions, a boss's fall, a relic, Libération, the
+  2.6 (from the countdown's '2' to 0.5 s after GO!, the slow motions, a boss's fall, a relic, Libération, the
   victory; less in lowFx, none in minFx); `PX.end` then draws the frame into a texture and that onto the screen through
   `pxChroma`'s filter: a lens blur — the centre sharp, the edges smeared along the radius over 9 taps weighted by colour
   (small fringes). The strength widens the blur; it never shifts the picture. Its render texture is made again at each
   new render size (`PX.caOld`: the old ones destroyed 3 frames later). Tried once on a tiny texture, left out on
   a GPU that cannot run it. Only the world gets it (no copies drawn on the 2D layer); the Canvas 2D renderer has none
   (t_pixicmp turns it off).
+- **Critical summon's show** (0.98): `Run.critSeq(A)` / `critK()` (juice.js): the run at 1 % for 2 s (slowUntil / slowK:
+  `slowMo` does not cut it short), confetti (`drawConfetti`), `chromaK` 2.2; the camera (real time, `critK` 0..1: 1 s in,
+  2 s held, 1 s out) zooms x1.75 towards the summon (`camTarget`, render.js `zk`); one show at a time (4 s). The Arakne
+  majeure's x2 is in `Run.dmgMul` while one is in `R.allies`.
 - **Controller cursor** (0.98): `Nav.glide` (nav.js) draws `#navglide`, one glowing frame eased each frame towards the
   focused element's box (a light running round its edge, a pulse at each move, clipped to the list that scrolls it);
   the element keeps `.navfocus` for its own styles, its outline hidden while the frame shows (`body.navglide`).

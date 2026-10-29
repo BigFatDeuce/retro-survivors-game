@@ -374,8 +374,9 @@ class Run {
   inRange(m) { const P = this.player, g = this.C.range || { x: 800, y: 450 }; return Math.abs(m.x - P.x) <= g.x && Math.abs(m.y - P.y) <= g.y; }
   // ------------------------------------------------ stats
   camTarget() {   // (0.53: also used to place the camera before the countdown)
-    const P = this.player, vw = Game.viewW, vh = Game.viewH;
+    const ck = this.critK ? this.critK() : 0, zk = 1 + 0.75 * ck, P = this.player, vw = Game.viewW / zk, vh = Game.viewH / zk;
     let cx = P.x, cy = P.y - 30;
+    if (ck > 0) { const F = this.critFx; if (F.A && this.allies.includes(F.A)) { F.x = F.A.x; F.y = F.A.y - 40; } cx = lerp(cx, F.x, ck); cy = lerp(cy, F.y, ck); }   // (0.98: a critical summon's show: towards it)
     if (this.world.w > vw) cx = clamp(cx, vw / 2, this.world.w - vw / 2); else cx = this.world.w / 2;
     if (this.world.h > vh) cy = clamp(cy, vh / 2, this.world.h - vh / 2); else cy = this.world.h / 2;
     return [cx, cy];
@@ -448,7 +449,7 @@ class Run {
   isFinalKill(m) { const d = m.def; return !!d.final && (!d.finalGroup || !this.bossAlive.some(b => b !== m && !b.dying && b.hp > 0 && b.def.finalGroup === d.finalGroup)); }
   // the zone's final boss life (a group's: all of them together), for the scheduled elites' cap
   finalHp() { const B = (this.map.bosses || []).map(b => this.C.bosses[b[1]]).filter(b => b && b.final); return B.length ? (B[0].finalGroup ? B.reduce((a, b) => a + b.hp, 0) : B[0].hp) : 0; }
-  dmgMul() { let k = 1 + Math.min(this.RUN.lvDmgMax || 0, (this.RUN.lvDmg || 0) * (this.level - 1)); if (this.weakUntil > this.time) k *= 0.5; if (this.rally && this.time < this.rally.until) k *= 1 + this.rally.bonus; if (this.fortune && this.time < this.fortune.until) k *= 1 + this.fortune.bonus; if (this.mutate && this.time < this.mutate.until) k *= 1 + this.mutate.power; return k; }
+  dmgMul() { let k = 1 + Math.min(this.RUN.lvDmgMax || 0, (this.RUN.lvDmg || 0) * (this.level - 1)); if (this.weakUntil > this.time) k *= 0.5; if (this.rally && this.time < this.rally.until) k *= 1 + this.rally.bonus; if (this.fortune && this.time < this.fortune.until) k *= 1 + this.fortune.bonus; if (this.mutate && this.time < this.mutate.until) k *= 1 + this.mutate.power; if (this.allies.some(a => a.kind === 'majeure')) k *= 2; return k; }   // (0.98: an Arakne majeure on the field: x2, once however many — it goes when it goes)
   // ------------------------------------------------ helpers
   chat(msg, color = '#fff') { const l = this.chats[this.chats.length - 1]; if (l && l.msg === msg && l.t === this.time) return; this.chats.push({ msg, color, t: this.time }); if (this.chats.length > 7) this.chats.shift(); }
   text(x, y, s, color, size = 14, life = 0.9) { if (this.texts.length < ((typeof Game !== 'undefined' && Game.lowFx) ? (Game.minFx ? 30 : 45) : typeof Game !== 'undefined' && Game.Q && Game.Q().fx === 1 ? 70 : 100)) { const o = { x, y, s, color, size, t: 0, life }; this.texts.push(o); return o; } return null; }
@@ -1641,11 +1642,11 @@ class Run {
     else if (id === 'flamiche') this.powers.flamiche = { until: t + d.dur, next: t };
     else if (id === 'liberation') { this.powers.liberation = { until: t + d.dur, charges: d.charges }; this.fxAt(d.fx, P.x, P.y, { follow: P, scale: 0.6 }); }
     else if (id === 'arakne' || id === 'chaferfu') {
-      let kind = id;
+      let kind = id, crit = false;
       // critical summon (a fixed 1 in 30, never boosted): the Chaferfu Lancier, or the Arakne Majeure
       if (Math.random() < (d.crit || 1 / 30)) {
         kind = id === 'chaferfu' ? 'lancier' : 'majeure'; const cc = id === 'chaferfu' ? '#ffcf3a' : '#c47bff';
-        this.banner(T('pw_' + kind), cc); this.chat(T('pw_' + kind), cc); this.shake(6); Audio2.ui('level', 0.8); Audio2.play('stars', 0.6); Prog.add(kind);   // (0.61: 'crit' is no UI sound)   // (the 'lancier' achievement counts it)
+        this.banner(T('pw_' + kind), cc); this.chat(T('pw_' + kind), cc); this.shake(6); Audio2.ui('level', 0.8); Audio2.play('stars', 0.6); Prog.add(kind); crit = true;   // (0.61: 'crit' is no UI sound)   // (the 'lancier' achievement counts it)
       }
       const cfg = this.allyCfg(kind), al = this.C.allies[kind];
       this.allies = this.allies.filter(a => a.kind !== kind);
@@ -1654,6 +1655,7 @@ class Run {
       this.allies.push(A);
       this.fxAt(1100, P.x + 40, P.y + 10, { scale: 1.4 });
       this.allySnd(kind, 'spawn', 0.6);
+      if (crit && this.critSeq) { A.born = t - 1; this.critSeq(A); }   // (0.98: its show: slow motion, confetti, the camera on it, juice.js; seen at once — its fade-in, run time, lasted 33 s at 1 %)
     }
   }
   powerDmg(base) { return base * (1 + 0.05 * this.level) * this.stats.might; }

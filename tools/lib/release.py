@@ -19,6 +19,20 @@ def version():
     return m.group(1)
 
 
+def parts(ver, n):
+    """0.98 / 0.98.1 as n numbers (0.98.1: a patch release): '0.98.1' -> 0.98.1 (n 3, Electron's package.json, semver),
+    0.98.1.0 (n 4, the Windows file version)"""
+    p = [str(int(x)) for x in re.findall(r'\d+', ver)][:n]
+    return '.'.join(p + ['0'] * (n - len(p)))
+
+
+def android_code(ver):
+    """the APK's versionCode, always growing: major x 10000 + minor x 100 + patch (0.98.1 -> 9801, 0.99 -> 9900; the
+    versions up to 0.98 had minor x 1 (98): the new ones stay above them)"""
+    p = [int(x) for x in re.findall(r'\d+', ver)] + [0, 0, 0]
+    return p[0] * 10000 + p[1] * 100 + p[2] or 1
+
+
 def shipped(name):
     return name not in SKIP_NAMES and not name.lower().endswith(SKIP_EXT)
 

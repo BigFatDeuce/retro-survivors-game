@@ -88,7 +88,8 @@ const UI = {
     if (had) this._refocus();
     this.levelUpOpen = false; this._luBack = null; if (this._doorJ) { this._doorJ = false; Audio2.stopJingle(0.3); } },
   // (0.60: a menu that set levelUpOpen just before keeps it: openModal used to clear it, so B / Échap acted on the cards' window)
-  openModal(el) { if (typeof Game !== 'undefined' && Game.state === 'run') this._modalAt = performance.now();   // (0.84: Nav.key, the dash keys wait 2 s)
+  PICK_GUARD: 300,   // 0.98: ms a choice opened in a run ignores the dash keys (Space, E) — was 2000, it blocked real picks
+  openModal(el) { if (typeof Game !== 'undefined' && Game.state === 'run') this._modalAt = performance.now();   // (0.84: Nav.key, the dash keys wait UI.PICK_GUARD)
     if (!this.modal && typeof Nav !== 'undefined' && Nav.el && Nav.el.isConnected) this._opener = Nav.el;
     const lu = this.levelUpOpen, back = this._luBack, opener = this._opener; this.closeModal(); this._opener = opener; this.levelUpOpen = lu; this._luBack = back; this.modal = h('div', { class: 'modal-wrap' }, el); this.rootEl.append(this.modal); return this.modal; },
   loading(p, inRun) {

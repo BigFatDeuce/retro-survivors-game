@@ -548,7 +548,8 @@ function drawArea(ctx, x, y, r, col, a, soft) {
 }
 function drawTinted(ctx, name, kind, x, y, scale) { const c = RCache.tinted(name, kind); if (!c) { Game.icons.draw(ctx, name, x, y, scale); return; } const s = scale / c.sc; ctx.drawImage(c, x - c.width * s / 2, y - c.height * s / 2, c.width * s, c.height * s); }
 Run.prototype.draw = function (ctx) {
-  const G = Game, zk = this.deathFx ? this.deathZoomK() : 1, z = G.zoom * zk, P = this.player;   // (0.61: zk, the death's close-in, juice.js)
+  const G = Game, ck = this.critK ? this.critK() : 0, zk = (this.deathFx ? this.deathZoomK() : 1) * (1 + 0.75 * ck), z = G.zoom * zk, P = this.player;   // (0.61: zk, the death's close-in, juice.js; 0.98: a critical summon's)
+  if (ck > 0) { const [tx, ty] = this.camTarget(); this.cam.x = tx; this.cam.y = ty; }   // (the run runs at 1 %: the camera moves in real time, eased by critK)
   const W = G.cw, H = G.ch;
   let sx = 0, sy = 0;
   if (this.shakeAmt > 0) { sx = rand(-this.shakeAmt, this.shakeAmt); sy = rand(-this.shakeAmt, this.shakeAmt); }
@@ -1580,6 +1581,20 @@ function hudPlate(ctx, x, y, r, u, t, ready, pop = 0) {
   if (ready && !Game.lowFx) { const an = t * 2.2, s = 5 * u; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(RCache.glow('rgba(255,255,200,0.95)'), x + Math.cos(an) * r - s, y + Math.sin(an) * r - s, s * 2, s * 2); ctx.restore(); }
   if (pop > 0) { ctx.save(); ctx.globalAlpha = pop; ctx.strokeStyle = '#d8f870'; ctx.lineWidth = 3 * u * pop; ctx.beginPath(); ctx.arc(x, y, r + (1 - pop) * 14 * u, 0, TAU); ctx.stroke(); ctx.restore(); }
 }
+// 0.98: a fusion's icon in the run's spell bar: two lights running round its violet / gold edge and three twinkling stars
+// (cached glows and sparks only: 5 small pictures an icon, nothing kept between frames)
+function hudFusionSparks(ctx, x, y, s, u, t, seed) {
+  const gl = RCache.glow('rgba(255,236,170,0.95)'), vi = RCache.glow('rgba(200,140,255,0.95)'), per = s * 4;
+  const at = q => { q = ((q % 1) + 1) % 1; const d = q * per; return d < s ? [x + d, y] : d < 2 * s ? [x + s, y + d - s] : d < 3 * s ? [x + 3 * s - d, y + s] : [x, y + 4 * s - d]; };
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (const [q, img, r] of [[t * 0.35, gl, 7], [t * 0.35 + 0.5, vi, 6]]) { const [px, py] = at(q); ctx.globalAlpha = 0.95; ctx.drawImage(img, px - r * u, py - r * u, r * 2 * u, r * 2 * u); }
+  for (let i = 0; i < (Game.lowFx ? 1 : 3); i++) {
+    const tw = Math.max(0, Math.sin(t * 3 + i * 2.1 + seed * 0.01)); if (tw < 0.05) continue;
+    const sx = x + s * (0.2 + 0.6 * ((i * 0.37 + seed * 0.013) % 1)), sy = y + s * (0.15 + 0.3 * i), r = (3 + 4 * tw) * u;
+    ctx.globalAlpha = tw; ctx.fillStyle = '#fff6d0'; ctx.beginPath(); for (let k = 0; k < 8; k++) { const rr = k % 2 ? r * 0.18 : r, a = k / 8 * TAU; ctx.lineTo(sx + Math.cos(a) * rr, sy + Math.sin(a) * rr); } ctx.closePath(); ctx.fill();
+  }
+  ctx.restore();
+}
 function drawKeyHint(ctx, kind, cx, cy, u, off) {
   const d = Input.dev;
   if (off) ctx.globalAlpha = 0.6;
@@ -1700,8 +1715,9 @@ function drawHud(ctx, R) {
       const cdk = clamp(sp.cd / sp.cooldown(), 0, 1);
       if (cdk > 0) { ctx.fillStyle = 'rgba(0,0,0,0.45)'; ctx.fillRect(x, y + s * (1 - cdk), s, s * cdk); }
     }
-    ctx.strokeStyle = sp.maxed ? '#ffd24a' : '#c8a46a'; ctx.lineWidth = 2 * u; ctx.strokeRect(x, y, s, s);
-    outlinedText(ctx, String(sp.level), x + s - 4 * u, y + s - 4 * u, sp.maxed ? '#ffd24a' : '#fff', 14 * u, 'right');
+    ctx.strokeStyle = sp.def.sfusion ? '#d4a0ff' : sp.maxed ? '#ffd24a' : '#c8a46a'; ctx.lineWidth = 2 * u; ctx.strokeRect(x, y, s, s);
+    if (sp.def.sfusion) hudFusionSparks(ctx, x, y, s, u, R.time, x);   // (0.98: a fusion tells itself from a spell at a glance)
+    else outlinedText(ctx, String(sp.level), x + s - 4 * u, y + s - 4 * u, sp.maxed ? '#ffd24a' : '#fff', 14 * u, 'right');
     x += s + 5 * u;
   }
   if (R.weapon) {

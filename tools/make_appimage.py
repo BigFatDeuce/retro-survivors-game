@@ -53,7 +53,7 @@ def appdir(ver, ev):
         if f.endswith('.pak') and f[:-4] not in keep: os.remove(f'{lib}/locales/{f}')
     app = f'{lib}/resources/app'; os.makedirs(app)
     for f in ('main.js', 'icon.png'): shutil.copy(f'{ROOT}/tools/win/{f}', app)
-    json.dump({'name': NAME, 'productName': 'Retro Survivors', 'version': f'{ver}.0', 'main': 'main.js'}, open(f'{app}/package.json', 'w'))
+    json.dump({'name': NAME, 'productName': 'Retro Survivors', 'version': RL.parts(ver, 3), 'main': 'main.js'}, open(f'{app}/package.json', 'w'))
     print('Copying the game...', flush=True)
     RL.copy_game(f'{app}/game')
     shutil.copy(f'{ROOT}/tools/win/icon.png', f'{APPDIR}/{NAME}.png'); shutil.copy(f'{ROOT}/tools/win/icon.png', f'{APPDIR}/.DirIcon')

@@ -150,7 +150,7 @@ def icons(res):
 
 def main():
     accept = '--accept-license' in sys.argv
-    ver = version(); code = int(round(float(re.sub(r'[^\d.]', '', ver) or 0) * 100)) or 1
+    ver = version(); code = RL.android_code(ver)   # (0.98.1: major x 10000 + minor x 100 + patch, tools/lib/release.py)
     say(f'=== Retro Survivors {ver} — APK Android (versionCode {code}) ===')
     jdk = find_jdk() or (None if '--no-jdk-download' in sys.argv else install_jdk())
     if not jdk: sys.exit('javac not found: install a JDK 17 or newer (e.g. winget install EclipseAdoptium.Temurin.21.JDK)')

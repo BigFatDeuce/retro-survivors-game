@@ -1,7 +1,30 @@
 # Changelog (player-visible changes)
 
 From the Git history and the technical notes. The version shown in
-game is **0.98** (0.94 was never released on its own: its changes come with 0.95).
+game is **0.98.1** (0.94 was never released on its own: its changes come with 0.95).
+
+## 0.98.1
+
+Balance
+- Every spell, global spell and spell fusion recharges 15 % slower; the Cra's spells and fusions 20 % slower (Flèche
+  Enflammée 15 %). Weapons are unchanged.
+- Hard mode: every monster and boss has 10 % more life.
+- An elite drops a relic 15 % of the time (was 25 %).
+- **Dofus Ocre** -5 % cooldowns (was -10 %), **Dofus Cawotte** +15 % experience (was +25 %), **Dofus Pourpre** +15 %
+  damage (was +25 %).
+- The **Arakne Majeure** (an Arakne's critical summon) doubles your damage while it stays.
+
+Quality of life
+- A choice that pops up during a run accepts Space / E after 0.3 s (was 2 s).
+- A critical Arakne or Chaferfu summon (Arakne Majeure, Chaferfu Lancer): the game nearly stops for 2 seconds under
+  confetti and a strong chromatic aberration, the camera closes in on it, then comes back.
+- The Aggressive Arachnee, the Arakne Majeure and the Chaferfu Lancer are drawn sharper (re-rendered from the client's
+  vector art at their size on screen); the Aggressive Arachnee now has its attack animation.
+- Spell fusions in the run's spell bar have a violet edge with lights running round it and twinkling stars.
+- The chromatic aberration of the countdown runs from the « 2 » to half a second after GO!.
+- The Hard mode's texts and the manuals give its real life bonus (+37.5 %); the manuals list the Manuel du Tailleur's
+  chance on every boss.
+- Tiny sparks around the menus' cursor (controller and keyboard).
 
 ## 0.98
 
