@@ -16,9 +16,34 @@ const Nav = {
   forget(screen) { if (this.mem) delete this.mem[screen]; },
   set(e) {
     if (this.el) this.el.classList.remove('navfocus');
-    this.el = e;
+    if (e && e !== this.el) this.glidePop = performance.now();
+    this.el = e; this.glide();
     if (e && typeof UI !== 'undefined' && UI.screen && !UI.modal) (this.mem || (this.mem = {}))[UI.screen] = { cls: e.className.replace(' navfocus', ''), txt: (e.textContent || '').slice(0, 40) };   // (0.60)
     if (e) { e.classList.add('navfocus'); e.scrollIntoView({ block: 'nearest', inline: 'nearest' }); if (typeof e.focus === 'function' && ['INPUT', 'SELECT'].includes(e.tagName)) e.focus({ preventScroll: true }); try { e.dispatchEvent(new CustomEvent('navfocus', { bubbles: true })); } catch (x) { } }
+  },
+  // 0.98: the cursor drawn as one glowing frame (#navglide) that slides from the last element to the new one (eased each
+  // frame towards its box, so it also follows a list that scrolls or a card that grows), a light running round its edge,
+  // a small pulse at each move; clipped to the list that scrolls it. Only while an element has the cursor
+  glide() {
+    if (!this.el) { if (this._gl) this._gl.style.display = 'none'; return; }
+    if (!this._gl) { const g = document.createElement('div'); g.id = 'navglide'; document.body.append(g); this._gl = g; document.body.classList.add('navglide'); }
+    if (this._glRaf) return;
+    let last = performance.now();
+    const step = (now) => {
+      const e = this.el, g = this._gl;
+      if (!e || !e.isConnected) { g.style.display = 'none'; this._glRaf = 0; this._glBox = null; return; }
+      const r = e.getBoundingClientRect(), dt = Math.min(0.05, (now - last) / 1000); last = now;
+      const B = this._glBox || (this._glBox = { x: r.left, y: r.top, w: r.width, h: r.height }), k = 1 - Math.exp(-dt * 20);
+      B.x += (r.left - B.x) * k; B.y += (r.top - B.y) * k; B.w += (r.width - B.w) * k; B.h += (r.height - B.h) * k;
+      const pk = Math.max(0, 1 - (now - (this.glidePop || 0)) / 260), pad = 3 + 3 * pk;
+      let sc = e.parentElement; while (sc && sc !== document.body && !/(auto|scroll)/.test(getComputedStyle(sc).overflowY + getComputedStyle(sc).overflowX)) sc = sc.parentElement;
+      const c = sc && sc !== document.body ? sc.getBoundingClientRect() : null, x = B.x - pad, y = B.y - pad, w = B.w + pad * 2, h = B.h + pad * 2;
+      Object.assign(g.style, { display: 'block', transform: `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`, width: w.toFixed(1) + 'px', height: h.toFixed(1) + 'px',
+        clipPath: c ? `inset(${Math.max(0, c.top - y - 8)}px ${Math.max(0, x + w - c.right - 8)}px ${Math.max(0, y + h - c.bottom - 8)}px ${Math.max(0, c.left - x - 8)}px round 10px)` : 'none',
+        borderRadius: Math.min(14, Math.max(6, getComputedStyle(e).borderTopLeftRadius === '50%' ? h / 2 : parseFloat(getComputedStyle(e).borderTopLeftRadius) + pad || 8)) + 'px' });
+      this._glRaf = requestAnimationFrame(step);
+    };
+    this._glRaf = requestAnimationFrame(step);
   },
   ensure() {
     const it = this.items();
@@ -130,6 +155,7 @@ const Nav = {
     this.set(box.querySelector('.btn.active') || box.querySelector('.btn'));
   },
   press() {
+    if (UI.modal && UI.modal.onAct && UI.modal.onAct()) return;   // (0.98: a window that takes the action key itself: the Manuel du Tailleur's reel, pressed twice, skips)
     this.ensure(); const e = this.el; if (!e) return;
     if (e.tagName === 'INPUT' && e.type === 'checkbox') { e.click(); return; }
     if (e.tagName === 'SELECT') { this.selectPopup(e); return; }   // 0.40: a list to pick from (it used to jump to the next value)
@@ -241,7 +267,7 @@ const Nav = {
     // popped up no longer picks a card (Enter, the mouse and the controller stay immediate)
     if ((e.code === 'Space' || e.code === 'KeyE') && UI.modal && UI._modalAt && Game.state === 'run' && performance.now() - UI._modalAt < 2000) { e.preventDefault(); return true; }
     // Enter, and also Space / E (0.22), validate the highlighted choice
-    if (['Enter', 'NumpadEnter', 'Space', 'KeyE'].includes(e.code) && !e.repeat && (this.el && this.el.isConnected || UI.levelUpOpen)) { this.ensure(); if (this.el) { e.preventDefault(); this.press(); return true; } }
+    if (['Enter', 'NumpadEnter', 'Space', 'KeyE'].includes(e.code) && !e.repeat && (this.el && this.el.isConnected || UI.levelUpOpen || (UI.modal && UI.modal.onAct))) { this.ensure(); if (this.el || (UI.modal && UI.modal.onAct)) { e.preventDefault(); this.press(); return true; } }
     return false;
   },
 };

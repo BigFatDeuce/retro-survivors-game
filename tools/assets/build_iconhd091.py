@@ -7,6 +7,8 @@ for the places that show an icon bigger than its 180-px picture (never upscale o
         window, 'item get' scene); the dofus_hd_* / it_23_* pictures content.json no longer names leave the atlas
   python tools/assets/build_iconhd091.py relics   0.61: every relic at 400 px -> icons3 'relic_hd_<icon>' (the 'relic got' show)
   python tools/assets/build_iconhd091.py gift     0.91: Nowel's gift (item 89/2) at 512 px -> icons3 'gift_hd'
+  python tools/assets/build_iconhd091.py gosword  0.98: the Épée Royale du Bouftou (item 2440, picture 6/30) at 640 px -> icons3
+        'go_sword' (the two swords that cross before GO!, events.js drawCountdown)
 (dofus / relics / gift used to be build_dofus38.py, build_relics061.py, build_gift091.py.)"""
 import sys as _sys, os as _os
 _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))   # tools/ (its folders: _root)
@@ -63,7 +65,14 @@ def gift():
     print('ok', ims['it_89_2'].size)
 
 
+def gosword():
+    B.T = 640
+    ims = B.render(['it_6_30'], f'{ROOT}/work/gosword098')
+    B.merge({'go_sword': ims['it_6_30']})
+    print('ok', ims['it_6_30'].size)
+
+
 if __name__ == '__main__':
     a = sys.argv[1:]
-    what = a.pop(0) if a and a[0] in ('skins', 'dofus', 'relics', 'gift') else 'skins'
-    {'skins': lambda: skins(a), 'dofus': dofus, 'relics': relics, 'gift': gift}[what]()
+    what = a.pop(0) if a and a[0] in ('skins', 'dofus', 'relics', 'gift', 'gosword') else 'skins'
+    {'skins': lambda: skins(a), 'dofus': dofus, 'relics': relics, 'gift': gift, 'gosword': gosword}[what]()

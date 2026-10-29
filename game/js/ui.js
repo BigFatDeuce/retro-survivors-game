@@ -396,7 +396,7 @@ const UI = {
         h('div', { class: 'passive' }, h('b', {}, T('class_passive') + ' : '), L(cls.passive)),
         h('div', { class: 'spell-list' }, ...cls.spells.map((sid, i) => {
           const sp = C.spells[sid];
-          return h('div', { class: 'spell' + (i === 0 ? ' sig' : '') }, iconImg('sp_' + sp.icon, 34), h('div', {}, h('b', {}, L(sp.name) + (i === 0 ? ' ★' : '')), h('div', { class: 'desc' }, L(sp.desc)), h('div', { class: 'syn-mini', title: T('arm_boosted') }, h('small', {}, T('arm_boosted') + ' :'), ...boostsOf(sp).map(p => tipIcon(p.icon, L(p.name), 16)))));
+          return h('div', { class: 'spell' + (i === 0 ? ' sig' : '') }, iconImg('sp_' + sp.icon, 34), h('div', {}, h('b', {}, L(sp.name) + (i === 0 ? ' ★' : '')), h('div', { class: 'desc fx-desc' }, L(sp.desc)), h('div', { class: 'syn-mini', title: T('arm_boosted') }, h('small', {}, T('arm_boosted') + ' :'), ...boostsOf(sp).map(p => tipIcon(p.icon, L(p.name), 16)))));
         })));
     };
     C.classes.forEach(c => {
@@ -574,7 +574,7 @@ const UI = {
             h('div', { class: 'iname' }, L(sp.name)), h('div', { class: 'syn-mini', title: T('arm_boosted') }, ...boostsOf(sp).map(p => tipIcon(p.icon, L(p.name), 15))), sfMini(cur === GLOB ? null : cur.id, sid), h('div', { class: 'isub' }, T('spell_lv', { n: lv, m: MAX })),
             h('div', { class: 'mbar' }, h('div', { style: { width: (lv * 100 / MAX) + '%' } })),
             h('div', { class: 'isub' }, T('spell_bonus', { n: lv * per }) + (lv < MAX ? ' → ' + (lv + 1) * per + '%' : '')),
-            h('div', { class: 'isub stot' }, shopSpellReal(sp, cur, lv, lv < MAX ? lv + 1 : null)),   // 0.60: what it really gives
+            h('div', { class: 'isub stot' }, ...fxNodes(shopSpellParts(sp, cur, lv, lv < MAX ? lv + 1 : null))),   // 0.60: what it really gives
             lv >= MAX ? h('div', { class: 'maxed' }, T('maxed')) : btn([iconImg('KamaSymbol', 14), ' ' + fmtNum(cost)], () => {
               if (S.kamas < cost) return buyFail(card);
               S.kamas -= cost; S.spellLv[sid] = lv + 1; Prog.add('kamasSpent', cost); Prog.add('spellBuys'); Store.save(); Audio2.blip('coin'); Audio2.ui('level', 0.6); Prog.check(null); refresh();
@@ -594,7 +594,7 @@ const UI = {
             h('div', { class: 'micons' }, iconImg(pa.icon, 48)), h('div', { class: 'iname' }, L(pa.name)), h('div', { class: 'isub' }, T('spell_lv', { n: lv, m: MAX })),
             h('div', { class: 'mbar' }, h('div', { style: { width: (lv * 100 / MAX) + '%' } })),
             pa.perShop ? null : h('div', { class: 'isub' }, T('spell_bonus', { n: lv * per }) + (lv < MAX ? ' → ' + (lv + 1) * per + '%' : '')),   // (0.94: Vitalité / PA: the real value below says it)
-            h('div', { class: 'isub stot' }, T('trait_real', { t: passiveShopReal(pa, lv, lv < MAX ? lv + 1 : null) })),   // 0.60: one level in a run, really
+            h('div', { class: 'isub stot' }, ...fxAround('trait_real', passiveShopParts(pa, lv, lv < MAX ? lv + 1 : null))),   // 0.60: one level in a run, really
             lv >= MAX ? h('div', { class: 'maxed' }, T('maxed')) : btn([iconImg('KamaSymbol', 14), ' ' + fmtNum(cost)], () => {
               if (S.kamas < cost) return buyFail(card);
               S.kamas -= cost; S.passLv[pa.id] = lv + 1; Prog.add('kamasSpent', cost); Store.save(); Audio2.blip('coin'); Audio2.ui('level', 0.6); Prog.check(null); refresh();
@@ -954,13 +954,28 @@ const UI = {
       h('div', { class: 'ex-dofus' }, iconImg(C.manuel.icon, 74)), lights(), slot, lights(), status, prizeEl, sub, h('div', { class: 'start-row' }, okBtn)));
     this.openModal(el);
     if (Game.debug.bot) { setTimeout(() => this.closeModal(), 300); return; }
+    // 0.98: the action key (A, Enter, Space, E — Nav.press) pressed twice within 0.6 s skips to the prize, already saved
+    // before the show (tailorPrize): skipping only draws the end; once it is there, the key goes back to the OK button
+    let done = false, tapAt = -1e9;
+    const finish = () => {
+      done = true; cancelAnimationFrame(raf);
+      reel.style.transform = `translateX(${xAt(P)}px)`;
+      slot.classList.add('win'); el.classList.add('jackpot'); status.textContent = T('tailor_jackpot');
+      prizeEl.classList.add('show'); sub.style.opacity = 1; okBtn.style.visibility = 'visible';
+      Audio2.sfx('EVENT', 0.9); Audio2.blip('level'); Audio2.play('coffre', 0.7);
+      const sp = h('div', { class: 'ex-sparks' }, ...Array.from({ length: 18 }, (_, i) => h('i', { style: { '--a': (i * 20) + 'deg', '--c': FW_COLS[i % FW_COLS.length], '--d': (i % 6) * 0.12 + 's' } })));
+      slot.parentElement.querySelector('.ex-dofus').append(sp);
+      Nav.el = null;
+    };
+    const act = this.modal.onAct = () => { if (done) return false; const n = performance.now(); if (n - tapAt < 600) finish(); else tapAt = n; return true; };
+    slot.addEventListener('click', act);   // (a mouse or a finger: two taps on the reel)
     // the reel: a long spin that slows down, stops one cell short ("so close…"), then clicks onto the prize
     const W = () => slot.clientWidth || 420, x0 = 0;
     const xAt = i => -(i * CELL) + W() / 2 - CELL / 2;
     const T1 = 5.2, start = performance.now(); let last = -1, phase = 0, nudgeT = 0;
     const ease = k => 1 - Math.pow(1 - k, 4);
     const step = () => {
-      if (!el.isConnected) return;
+      if (!el.isConnected || done) return;
       const t = (performance.now() - start) / 1000;
       let x;
       if (phase === 0) {
@@ -973,16 +988,7 @@ const UI = {
       } else {
         const k = Math.min(1, (t - nudgeT) / 0.38), b = k < 1 ? 1 - Math.pow(1 - k, 3) * Math.cos(k * 9) : 1;
         x = xAt(P - 1) + (xAt(P) - xAt(P - 1)) * b;
-        if (k >= 1) {
-          reel.style.transform = `translateX(${xAt(P)}px)`;
-          slot.classList.add('win'); el.classList.add('jackpot'); status.textContent = T('tailor_jackpot');
-          prizeEl.classList.add('show'); sub.style.opacity = 1; okBtn.style.visibility = 'visible';
-          Audio2.sfx('EVENT', 0.9); Audio2.blip('level'); Audio2.play('coffre', 0.7);
-          const sp = h('div', { class: 'ex-sparks' }, ...Array.from({ length: 18 }, (_, i) => h('i', { style: { '--a': (i * 20) + 'deg', '--c': FW_COLS[i % FW_COLS.length], '--d': (i % 6) * 0.12 + 's' } })));
-          slot.parentElement.querySelector('.ex-dofus').append(sp);
-          Nav.el = null;
-          return;
-        }
+        if (k >= 1) { finish(); return; }
       }
       reel.style.transform = `translateX(${x}px)`;
       const cell = Math.floor((W() / 2 - x) / CELL);   // a tick each time a picture passes the frame
@@ -997,34 +1003,35 @@ const UI = {
     let extra = '';
     if (o.kind === 'spell') {
       const sp = C.spells[o.id]; icon = iconImg('sp_' + sp.icon, 48); name = L(sp.name);
-      desc = o.lv === 1 ? [L(sp.desc), h('div', { class: 'up-real' }, realSummary(R, sp))] : realDiff(R, sp, o.lv);   // 0.53: the real numbers
+      desc = o.lv === 1 ? [fxDesc(L(sp.desc)), h('div', { class: 'up-real' }, fxNodes(realSummaryParts(R, sp)))] : diffNodes(R, sp, o.lv);   // 0.53: the real numbers (0.98: coloured, fxNodes)
       lvtxt = o.lv === 1 ? T('new_') : `${T('level')} ${o.lv}`;
     } else if (o.kind === 'weapon') {
       const w = weaponById(C, o.id); icon = iconImg(w.icon, 50); name = L(w.name);   // (0.60: a Soif de Sang's picture has blood on its blade)
-      desc = o.lv === 1 ? [L(w.desc), h('div', { class: 'up-real' }, realSummary(R, w))] : realDiff(R, w, o.lv);   // 0.53: real numbers (the mastery is in them)
-      if (w.leech && o.lv > 1) desc = `${T('p_leech')} ${pctLeech(w.leech[o.lv - 2])} → ${pctLeech(w.leech[o.lv - 1])}` + (desc ? ' · ' + desc : '');   // 0.48: what the level adds to the life steal
+      desc = o.lv === 1 ? [fxDesc(L(w.desc)), h('div', { class: 'up-real' }, fxNodes(realSummaryParts(R, w)))]   // 0.53: real numbers (the mastery is in them)
+        : diffNodes(R, w, o.lv, w.leech ? [fxPart('leech', T('p_leech'), `${pctLeech(w.leech[o.lv - 2])} → ${pctLeech(w.leech[o.lv - 1])}`)] : []);   // 0.48: what the level adds to the life steal
       lvtxt = o.lv === 1 ? (w.blood ? T('blood_tag') : T('weapon_tag')) : `${T('level')} ${o.lv}`; extra = ' weapon' + (w.blood ? ' blood' : '');   // (0.60: every weapon is special: no purple 'unique' frame)
     } else if (o.kind === 'fusion') {
       // 0.25 weapon fusion: the weapon's picture inside an animated ring of the element, the characteristic on top
       const f = C.fusions.find(x => x.id === o.id), W = R.weapon;
       icon = h('span', { class: 'fusion-ic', style: { '--fc': f.color } }, h('i', { class: 'f-ring' }), iconImg(W.icon, 46), h('span', { class: 'f-stat' }, iconImg(f.icon, 26)), ...Array.from({ length: 6 }, (_, i) => h('b', { class: 'f-spark', style: { '--i': i } })));
-      name = L(f.name); desc = L(f.desc) + ' ' + T('fusion_note'); lvtxt = T('fusion_tag'); extra = ' weapon fusion';
+      name = L(f.name); desc = [fxDesc(L(f.desc)), ' ', fxDesc(T('fusion_note'), 'spec')]; lvtxt = T('fusion_tag'); extra = ' weapon fusion';
     } else if (o.kind === 'sfusion') {
       // 0.60 spell fusion: the fused spell's picture in a turning gold / violet ring, its recipe, what it really does
       const sp = C.spells[o.id], f = (C.spellFusions || []).find(x => x.id === o.id);
       icon = h('span', { class: 'sf-ic' }, h('i', { class: 'f-ring' }), iconImg('sp_' + sp.icon, 54), ...Array.from({ length: 8 }, (_, i) => h('b', { class: 'f-spark', style: { '--i': i } })));
       name = L(sp.name); lvtxt = T('sfusion_tag'); extra = ' sfusion';
-      desc = [h('div', { class: 'sf-recipe' }, ...sfRecipe(R, f)), L(sp.desc), h('div', { class: 'up-real' }, realSummary(R, sp)), h('div', { class: 'sf-note' }, f.kind === 'weapon' ? T('sfusion_keep') : T('sfusion_slot'))];
+      desc = [h('div', { class: 'sf-recipe' }, ...sfRecipe(R, f)), fxDesc(L(sp.desc)), h('div', { class: 'up-real' }, fxNodes(realSummaryParts(R, sp))), h('div', { class: 'sf-note fx-spec' }, f.kind === 'weapon' ? T('sfusion_keep') : T('sfusion_slot'))];
     } else if (o.kind === 'wevo') {
       // weapon finale: one single pick that also gives the weapon its own look (a real weapon of the same kind)
       const E = evoDef(o.id);
       icon = h('span', { class: 'evo-ic' }, iconImg(E.e.icon || E.w.icon, 50), h('b', { class: 'evo-star' }, '✦')); name = L(E.e.name) + ' — ' + L(E.e.skinName || E.w.name);
-      desc = L(E.e.desc) + ' ' + T('final_note', { n: L(E.e.skinName || E.w.name) });
+      desc = [fxDesc(L(E.e.desc)), ' ', fxDesc(T('final_note', { n: L(E.e.skinName || E.w.name) }), 'spec')];
       lvtxt = T('final_tag'); extra = ' weapon evo' + (E.w.blood ? ' blood' : '');
     } else {
       const p = C.passives.find(p => p.id === o.id); icon = iconImg(p.icon, 44); name = L(p.name);
-      desc = ['reflect', 'revive', 'spellslot', 'luck', 'evade', 'amount', 'growth'].includes(p.stat) ? [L(p.desc), h('div', { class: 'up-real' }, passiveReal(p, o.lv))] : passiveReal(p, o.lv);   // 0.53: the real totals (shop included)
-      if (p.stat === 'revive' || p.stat === 'spellslot') desc = L(p.desc);
+      const pp = passiveParts(p, o.lv), pn = pp ? fxNodes(pp) : fxDesc(L(p.desc));
+      desc = ['reflect', 'revive', 'spellslot', 'luck', 'evade', 'amount', 'growth'].includes(p.stat) ? [fxDesc(L(p.desc)), h('div', { class: 'up-real' }, pn)] : pn;   // 0.53: the real totals (shop included)
+      if (p.stat === 'revive' || p.stat === 'spellslot') desc = fxDesc(L(p.desc));
       lvtxt = o.lv === 1 ? T('new_') : `${T('level')} ${o.lv}`;
     }
     const kindTxt = o.kind === 'spell' ? (C.spells[o.id].glob ? T('g_spell') : T('spells')) : o.kind === 'sfusion' ? T('sfusion_tag') : o.kind === 'fusion' ? T('fusion_tag') : o.kind === 'weapon' ? (weaponById(C, o.id).blood ? T('blood_tag') : T('weapon_tag')) : o.kind === 'wevo' ? T('evo_tag') : T('passives');
@@ -1147,7 +1154,7 @@ const UI = {
     const box = h('div', { class: 'troll-wheel' }, wheel, h('div', { class: 'troll-ptr' }), h('div', { class: 'troll-hub' }, iconImg('it_15_737', 44)));
     const status = h('div', { class: 't-status' }, T('wheel_spin'));
     const sp = C.spells[w.won.id], prizeEl = h('div', { class: 't-prize' }, iconImg('sp_' + sp.icon, 40), ' ', T('wheel_won', { n: L(sp.name), c: L(w.won.cls.name) }));
-    const desc = h('p', { class: 'sub', style: { opacity: 0 } }, L(sp.desc));
+    const desc = h('p', { class: 'sub fx-desc', style: { opacity: 0 } }, L(sp.desc));   // (0.98: a spell's description in the effect colours)
     let raf = 0, given = false;
     const done = () => { if (given) return; given = true; cancelAnimationFrame(raf); w.give(); this.closeModal(); };
     const okBtn = btn(T('wheel_ok'), done, 'orange big'); okBtn.style.visibility = 'hidden';
@@ -1248,11 +1255,13 @@ const UI = {
       (R.dofus.length || (R.relics || []).length) ? h('div', { class: 'ov-items' }, ...R.dofus.map(d => tipIcon('dofus_hd_' + d.icon, L(d.name), 34)), ...(R.relics || []).map(r => tipIcon(r.icon, L(r.name), 30))) : null,
       ach.length ? h('div', { class: 'ov-ach' }, h('small', null, T('ov_ach')), ...ach.map(a => h('span', { class: 'ov-a' }, iconImg(a.icon, 24), L(a.name)))) : null);
     const stamp = h('div', { class: 'ov-grade g' + grade }, rankMedal(grade), h('small', null, T('ov_grade_' + grade)));
-    const head = victory ? h('div', { class: 'ov-head win' }, h('img', { class: 'over-banner', src: 'assets/banners/4.webp' }))   // (the banner's picture says VICTOIRE itself)
+    const head = victory ? h('div', { class: 'ov-head win' }, h('div', { class: 'ov-title' }, T('victory_big')))   // (0.98: written in Verdance, verdant; was the banner picture)
       : h('div', { class: 'ov-head lose' }, iconImg('phoenix_statue', 130), h('div', { class: 'ov-title' }, T(R.cancelled ? 'run_cancelled' : 'dead_title')));   // (0.79: given up before 20 s)
     // 0.61: no 'Rejouer' after a victory; the buttons stay at the bottom of the window, its content scrolls
     const replay = victory ? null : btn('↻ ' + T('replay'), () => { this.closeModal(); Game.startRun(Object.assign({}, R.opts)); }, 'orange big');
-    const el = h('div', { class: 'window modal over ' + (victory ? 'win' : 'lose') }, h('div', { class: 'title' }, L(R.cls.name) + ' — ' + L(R.map.name)),
+    // 0.98: behind a victory's whole window, rays turning round the title and leaves drifting (under the content: .ov-sky)
+    const sky = victory ? h('div', { class: 'ov-sky' }, h('div', { class: 'ov-rays' }), ...Array.from({ length: 16 }, (_, i) => h('i', { class: 'ov-leaf', style: { '--i': i, left: (4 + (i * 37) % 92) + '%', top: (6 + (i * 53) % 86) + '%' } }))) : null;
+    const el = h('div', { class: 'window modal over ' + (victory ? 'win' : 'lose') }, sky, h('div', { class: 'title' }, L(R.cls.name) + ' — ' + L(R.map.name)),
       h('div', { class: 'content' }, victory ? h('div', { class: 'ov-confetti' }, ...Array.from({ length: 36 }, (_, i) => h('i', { style: { '--x': ((i * 37) % 100) + '%', '--c': FW_COLS[i % FW_COLS.length], '--d': ((i % 9) * 0.23) + 's', '--r': (i * 47 % 360) + 'deg' } }))) : null,
         head, h('p', { class: 'sub' }, victory ? (R.doom ? T('victory_doom') : T('victory_sub')) : T(R.cancelled ? 'run_cancelled_sub' : 'dead_sub')),
         h('div', { class: 'ov-cols' }, h('div', { class: 'ov-left' }, R.cancelled ? null : stamp, R.newBest && !R.infinite ? h('p', { class: 'unlock ov-record' }, '🏅 ' + T('new_record') + ' ' + fmtTime(R.time)) : null, stats), h('div', { class: 'ov-right' }, rows.length ? h('h3', null, T('ov_dmg')) : null, bars, loot))),
@@ -1356,23 +1365,37 @@ function fmtParam(k, v) {
   if (k === 'cd' || k === 'duration' || k === 'buffDur' || k === 'slowDur' || k === 'stun' || k === 'fuse') return n(v) + '\u00a0s';
   return v >= 20 ? String(Math.round(v)) : n(v);
 }
+// 0.98: the effect colour code of Dofus 2's tooltips: a spell's description orange (fx-desc), what it does green (fx-eff:
+// damage, heals, bonuses), its properties in the text's colour with the value bold (fx-prop: cooldown, reach, area,
+// duration, count), a drawback red (fx-neg), a special effect blue (fx-spec), a condition red (fx-cond). The lines are
+// built as parts { k, lab, val, kind }: fxNodes draws them, fxText keeps the plain text (titles, tests)
+const FX_EFF = new Set(['dmg', 'heal', 'shield', 'armorBuff', 'leech', 'poison', 'burn', 'slow', 'stun', 'mark', 'execute', 'crit', 'power', 'haste', 'gold', 'transmute', 'bonus', 'retal']);
+const FX_NEG = new Set(['cost']);
+function fxPart(k, lab, val, kind) { return { k, lab, val, kind: kind || (FX_NEG.has(k) ? 'neg' : FX_EFF.has(k) ? 'eff' : 'prop') }; }
+function fxText(parts) { return parts.map(p => `${p.lab} ${p.val}`).join(' · '); }
+function fxNodes(parts) { const out = []; parts.forEach((p, i) => { if (i) out.push(h('span', { class: 'fx-sep' }, ' · ')); out.push(h('span', { class: 'fx-' + p.kind }, p.lab + ' ', h('b', {}, p.val))); }); return out; }
+function fxDesc(t, kind = 'desc') { return t ? h('span', { class: 'fx-' + kind }, t) : null; }
 // the main numbers of a spell / weapon now (a new one)
-function realSummary(R, def) {
+function realSummaryParts(R, def) {
   const p = realParams(R, def, 1), out = [];
-  if (def.t === 'wheel') return '';   // (0.60: the Jeton de la Foire du Trool is used at once: no recharge to show)
-  for (const k of ['dmg', 'heal', 'count', 'radius', 'aoe', 'range', 'width', 'duration', 'cd']) if (p[k] !== undefined && typeof p[k] === 'number' && p[k] > 0 && !(k === 'cd' && (p.perm || p.cd >= 900))) { const lab = T('p_' + k); if (lab !== 'p_' + k) out.push(`${lab} ${fmtParam(k, p[k])}`); }
-  return out.join(' · ');
+  if (def.t === 'wheel') return out;   // (0.60: the Jeton de la Foire du Trool is used at once: no recharge to show)
+  for (const k of ['dmg', 'heal', 'count', 'radius', 'aoe', 'range', 'width', 'duration', 'cd']) if (p[k] !== undefined && typeof p[k] === 'number' && p[k] > 0 && !(k === 'cd' && (p.perm || p.cd >= 900))) { const lab = T('p_' + k); if (lab !== 'p_' + k) out.push(fxPart(k, lab, fmtParam(k, p[k]))); }
+  return out;
 }
+function realSummary(R, def) { return fxText(realSummaryParts(R, def)); }
 // what one more level changes, in real numbers (damage always shown)
-function realDiff(R, def, lv) {
+function realDiffParts(R, def, lv) {
   const a = realParams(R, def, lv - 1), b = realParams(R, def, lv), parts = [];
   for (const k in b) {
     if (typeof b[k] !== 'number' || (Math.abs((a[k] || 0) - b[k]) < 1e-6 && k !== 'dmg')) continue;
     const lab = T('p_' + k); if (lab === 'p_' + k) continue;
-    parts.push(Math.abs((a[k] || 0) - b[k]) < 1e-6 ? `${lab} ${fmtParam(k, b[k])}` : `${lab} ${fmtParam(k, a[k] || 0)} → ${fmtParam(k, b[k])}`);   // (0.60: no '5,5 → 5,5')
+    parts.push(fxPart(k, lab, Math.abs((a[k] || 0) - b[k]) < 1e-6 ? fmtParam(k, b[k]) : `${fmtParam(k, a[k] || 0)} → ${fmtParam(k, b[k])}`));   // (0.60: no '5,5 → 5,5')
   }
-  return parts.join(' · ') || L(def.desc);
+  return parts;
 }
+function realDiff(R, def, lv) { return fxText(realDiffParts(R, def, lv)) || L(def.desc); }
+// a level-up card's lines of a spell / weapon at a level above 1: the changes, or its description when nothing shows
+function diffNodes(R, def, lv, pre = []) { const d = pre.concat(realDiffParts(R, def, lv)); return d.length ? fxNodes(d) : fxDesc(L(def.desc)); }
 // 0.96: a spell's real numbers out of a run (the shop's cards, the Armurerie's fusions) at a shop level, as SpellInst gives
 // them at the start of a run (dmg, cooldown, the heal), with the ends a spell may set for the whole shop (cdShop, durShop,
 // healShop: the Cawotte, the Immunité, Élagage de cou), without the run's own bonuses
@@ -1380,21 +1403,22 @@ function menuSpellParams(sp, cls, shopLv, lv = 1) {
   const C = Game.C, R = C.run || {}, p = Object.assign({}, spellParams(sp, lv)), k = 1 + (C.spellPer || 0.1) * shopLv, s = Math.min(1, shopLv / 5), might = cls && cls.base ? (cls.base.might || 1) + ((cls.passiveStats || {}).might || 0) : 1;   // (0.96: + a class bonus kept apart from the base, the Iop's +12 %)
   if (p.dmg) p.dmg *= might * (R.spellDmgMul || 1) * (cls && cls.id === 'feca' && !sp.weapon ? R.fecaDmg || 1 : 1) * k;
   if (p.heal) p.heal = p.healShop ? lerp(p.heal, p.healShop, s) : p.heal * k;
-  if (p.cd) p.cd = (p.cdShop ? lerp(p.cd, p.cdShop, s) : p.cd / (1 + (k - 1) * 0.5)) * (R.cdMul || 1);
+  if (p.cd) p.cd = (p.cdShop ? lerp(p.cd, p.cdShop, s) : p.cd / (1 + (k - 1) * 0.5)) * (R.cdMul || 1) * cdLateK(R, p.cd, 1);   // (0.98: as SpellInst.cooldown at a run's first level)
   if (p.duration) p.duration = p.durShop ? lerp(p.duration, p.durShop, s) : p.duration * k;
   return p;
 }
 // 0.60 (shop): what the spell power bought really changes, on the spell at its first level: damage / heal, durations,
 // cooldown (the shop power shortens it by half its value: SpellInst.cooldown; 0.96: or its cdShop / durShop / healShop)
-function shopSpellReal(sp, cls, lv, next) {
+function shopSpellParts(sp, cls, lv, next) {
   const n = x => (Math.round(x * 10) / 10).toLocaleString(LANG), parts = [], a = menuSpellParams(sp, cls, lv), b = next !== null ? menuSpellParams(sp, cls, next) : null;
-  const pair = (k, lab, f) => parts.push(`${lab} ${f(a[k])}${b ? ' → ' + f(b[k]) : ''}`);
+  const pair = (k, lab, f) => parts.push(fxPart(k, lab, `${f(a[k])}${b ? ' → ' + f(b[k]) : ''}`));
   if (a.dmg) pair('dmg', T('p_dmg'), n);
   if (a.heal) pair('heal', T('p_heal'), n);
   if (a.cd && !a.perm) pair('cd', T('p_cd'), x => n(x) + ' s');
   if (a.duration && !a.perm && !a.dmg) pair('duration', T('p_duration'), x => n(x) + ' s');
-  return parts.join(' · ');
+  return parts;
 }
+function shopSpellReal(sp, cls, lv, next) { return fxText(shopSpellParts(sp, cls, lv, next)); }
 // 0.96: a fusion's damage and cooldown in the Armurerie, the game's own numbers (menuSpellParams at its spells' best
 // shop level, as SpellInst.shopK; a fusion is always at its top): per blow, x its count, per tick for an area, the reach of
 // its explosion, and a line when its effects add damage of their own (riders, the Cawottes); 0.97: its life steal (a
@@ -1403,19 +1427,22 @@ const SF_EXTRA = ['rBurn', 'rPoison', 'rBleed', 'rBlast', 'rWeb', 'rCloud', 'rRo
 function sfStats(f, cls) {
   const C = Game.C, SL = (Store.data && Store.data.spellLv) || {}, sp = C.spells[f.id], p = menuSpellParams(sp, cls, Math.max(...f.src.map(k => SL[k] || 0)));
   const n = x => (Math.round(x * 10) / 10).toLocaleString(LANG), parts = [];
-  if (p.dmg) parts.push(`${T('p_dmg')} ${n(p.dmg)}${p.count > 1 ? ' × ' + p.count : ''}${p.tick ? ' / ' + n(p.tick) + '\u00a0s' : ''}${p.aoe ? ' (' + T('p_aoe') + ' ' + Math.round(p.aoe) + ')' : ''}`);
-  if (p.perm) parts.push(`${T('p_duration')} ${T('permanent')}`); else if (p.cd) parts.push(`${T('p_cd')} ${n(p.cd)}\u00a0s`);
+  if (p.dmg) parts.push(fxPart('dmg', T('p_dmg'), `${n(p.dmg)}${p.count > 1 ? ' × ' + p.count : ''}${p.tick ? ' / ' + n(p.tick) + '\u00a0s' : ''}${p.aoe ? ' (' + T('p_aoe') + ' ' + Math.round(p.aoe) + ')' : ''}`));
+  if (p.perm) parts.push(fxPart('duration', T('p_duration'), T('permanent'))); else if (p.cd) parts.push(fxPart('cd', T('p_cd'), `${n(p.cd)}\u00a0s`));
   const pc = x => n(x * 100) + ' %', heal = [];
   if (p.leech) heal.push(T('sf_leech', { n: pc(p.leech) }) + (sp.t === 'pulse' ? ' (' + T('sf_leech_cap', { n: pc(PULSE_LEECH_CAP) }) + ')' : ''));
   if (p.heal && sp.t === 'pwcawotte') heal.push(T('sf_hot', { n: n(p.heal), d: n(p.duration) }));
-  return h('div', { class: 'sf-stats' }, parts.join(' · '), heal.length ? h('span', { class: 'sf-heal' }, heal.join(' · ')) : null, SF_EXTRA.some(k => p[k]) ? h('small', null, T('sf_extra')) : null);
+  return h('div', { class: 'sf-stats' }, ...fxNodes(parts), heal.length ? h('span', { class: 'sf-heal fx-eff' }, heal.join(' · ')) : null, SF_EXTRA.some(k => p[k]) ? h('small', null, T('sf_extra')) : null);
 }
 // 0.60 (shop): one level of a characteristic in a run, at this shop level → the next one
-function passiveShopReal(p, lv, next) {
-  const d = PASSIVE_FMT(p); if (!d) return '';
+function passiveShopParts(p, lv, next) {
+  const d = PASSIVE_FMT(p); if (!d) return [];
   const v = l => passivePer(Game.C, p, l);
-  return `${d.lab} ${d.f(v(lv))}${next !== null ? ' → ' + d.f(v(next)) : ''}`;
+  return [fxPart('bonus', d.lab, `${d.f(v(lv))}${next !== null ? ' → ' + d.f(v(next)) : ''}`, 'eff')];   // (a characteristic's bonus: an effect)
 }
+function passiveShopReal(p, lv, next) { return fxText(passiveShopParts(p, lv, next)); }
+// a translated line around coloured parts ('1 level in a run: {t}' in every language, {t} anywhere in it)
+function fxAround(key, parts) { const [a, b] = T(key, { t: '\u0001' }).split('\u0001'); return [a, ...fxNodes(parts), b || '']; }
 function PASSIVE_FMT(p) {
   const pc = x => (x >= 0 ? '+' : '') + (Math.round(x * 1000) / 10).toLocaleString(LANG) + ' %', nb = x => '+' + (Math.round(x * 100) / 100).toLocaleString(LANG);
   const LAB = { maxhp: ['ps_maxhp', pc], growth: ['ps_growth', pc], might: ['p_dmg', pc], area: ['p_radius', pc], luck: [null, pc], crit: ['p_crit', pc], cooldown: ['p_cd', pc],
@@ -1424,19 +1451,21 @@ function PASSIVE_FMT(p) {
   const d = LAB[p.stat]; return d ? { lab: d[0] ? T(d[0]) : L(p.name), f: d[1] } : null;
 }
 // 0.53: a characteristic's real total before → after this level (the shop's levels included)
-function passiveReal(p, lv) {
+function passiveReal(p, lv) { const d = passiveParts(p, lv); return d ? fxText(d) : L(p.desc); }
+function passiveParts(p, lv) {
   const C = Game.C, per = passivePer(C, p, (Store.data.passLv || {})[p.id]);   // (0.94: the shop's levels, util.js)
   const v = l => l > 0 ? per * l * (p.stat === 'leech' ? 1 + 0.1 * (l - 1) : 1) : 0;
   const pc = x => (x >= 0 ? '+' : '') + (Math.round(x * 1000) / 10).toLocaleString(LANG) + ' %', nb = x => '+' + (Math.round(x * 100) / 100).toLocaleString(LANG);
   const LAB = { maxhp: ['ps_maxhp', pc], growth: ['ps_growth', pc], might: ['p_dmg', pc], area: ['p_radius', pc], luck: [null, pc], crit: ['p_crit', pc], cooldown: ['p_cd', pc],
     speed: ['p_speed', pc], projspeed: ['ps_projspeed', pc], amount: ['ps_amount', nb], regen: ['ps_regen', nb], magnet: ['ps_magnet', pc], armor: ['p_armorBuff', nb],
     duration: ['p_duration', pc], leech: ['p_leech', x => pctLeech(x)], reflect: ['ps_reflect', x => '≤ ' + Math.round(30 * x)], evade: [null, pc] };
-  const d = LAB[p.stat]; if (!d) return L(p.desc);
-  const lab = d[0] ? T(d[0]) : L(p.name), f = d[1], parts = [`${lab} ${lv > 1 ? f(v(lv - 1)) + ' → ' : ''}${f(v(lv))}`];
-  if (p.stat === 'magnet') parts.push(`${T('ps_kamas')} ${lv > 1 ? pc(0.1 * (lv - 1)) + ' → ' : ''}${pc(0.1 * lv)}`);
-  if (p.reachW) { const w = l => p.reachW * l + (p.reachShop || 0) * ((Store.data.passLv || {})[p.id] || 0); parts.push(`${T('ps_wreach')} ${lv > 1 ? pc(w(lv - 1)) + ' → ' : ''}${pc(w(lv))}`); }   // (0.92: Portée's weapon reach shown, as Run.recompute st.wreach)
-  if (p.block) { const b = l => p.block[0] + (p.block[1] - p.block[0]) * (l - 1) / Math.max(1, p.max - 1); parts.push(`${T('ps_block')} ${lv > 1 ? pc(b(lv - 1)) + ' → ' : ''}${pc(b(lv))}`); }
-  return parts.join(' · ');
+  const d = LAB[p.stat]; if (!d) return null;
+  const E = (lab, val) => fxPart('bonus', lab, val, 'eff');   // (every characteristic line is a bonus: green)
+  const lab = d[0] ? T(d[0]) : L(p.name), f = d[1], parts = [E(lab, `${lv > 1 ? f(v(lv - 1)) + ' → ' : ''}${f(v(lv))}`)];
+  if (p.stat === 'magnet') parts.push(E(T('ps_kamas'), `${lv > 1 ? pc(0.1 * (lv - 1)) + ' → ' : ''}${pc(0.1 * lv)}`));
+  if (p.reachW) { const w = l => p.reachW * l + (p.reachShop || 0) * ((Store.data.passLv || {})[p.id] || 0); parts.push(E(T('ps_wreach'), `${lv > 1 ? pc(w(lv - 1)) + ' → ' : ''}${pc(w(lv))}`)); }   // (0.92: Portée's weapon reach shown, as Run.recompute st.wreach)
+  if (p.block) { const b = l => p.block[0] + (p.block[1] - p.block[0]) * (l - 1) / Math.max(1, p.max - 1); parts.push(E(T('ps_block'), `${lv > 1 ? pc(b(lv - 1)) + ' → ' : ''}${pc(b(lv))}`)); }
+  return parts;
 }
 function setLang(lg) {
   if (!LANGS.includes(lg)) return;

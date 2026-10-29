@@ -73,7 +73,7 @@ To see what would go out without writing anything: `python tools/make_public.py 
 (features, pictures, how to build) is `docs/public/README.md`: edit it here, it goes out with the next publication.
 ### The Releases page (downloads)
 
-The installed games (exe, AppImage, APK) read this page: at launch (at most every 6 h, `C.update`), when a release
+The installed games (exe, AppImage, APK) read this page once per launch (`C.update`; up to 0.97: at most every 6 h), when a release
 newer than their version is there (pre-releases count, drafts do not), the main menu shows a window once a day and a
 "Version x available" button; it opens the release's page. So a release must be complete when it is published.
 

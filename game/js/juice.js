@@ -11,6 +11,21 @@ Object.assign(Run.prototype, {
   frozenByHit() { return this.hitStopUntil > performance.now(); },
   // the run's clock runs at k for a moment (real seconds)
   slowMo(sec, k) { this.slowUntil = performance.now() + sec * 1000; this.slowK = k; },
+  // 0.98: the chromatic aberration of the moment, 0..2.6 (PX.end: a lens blur of the world's edges with colour fringes;
+  // the strength widens the blur, it never shifts the picture): the countdown, a strong burst after GO!, the slow
+  // motions, a boss's fall, a relic picked up, Libération taking a blow, the victory (the strongest); less in lowFx,
+  // none in minFx
+  chromaK() {
+    let k = 0; const now = performance.now(), c = this.cine, fade = (t0, dur, k0) => t0 ? k0 * Math.max(0, 1 - (now - t0) / dur) : 0;
+    if (c && c.kind === 'countdown') { const n = Math.min(3, Math.floor(c.t / 0.8)), u = n < 3 ? (c.t - n * 0.8) / 0.8 : 0; k = n < 3 ? 0.35 + 0.85 * Math.max(0, 1 - Math.abs(u - 0.14) / 0.12) : 0; if (n === 3) this._goCA = now; }   // (GO!: its clock held at now while it shows)
+    k = Math.max(k, fade(this._goCA, 2600, 2.4));   // GO! and the run's first seconds: strong, fading over 2.6 s once the run starts
+    if (this.slowUntil > now) k = Math.max(k, 0.9 * Math.min(1, (this.slowUntil - now) / 350));   // the slow motions
+    k = Math.max(k, fade(this._bossCA, 1800, 1.6));   // a boss's fall
+    k = Math.max(k, fade(this._libCA, 700, 1.1));   // Libération taking a blow
+    if (this.relicShow) { const e = (now - this.relicShow.t0) / 1000; k = Math.max(k, e < 1 ? 1.3 - 0.8 * e : 0.5 * Math.max(0, 1 - (e - 2.4) / 0.6)); }   // a relic picked up
+    const V = this.victoryFx; if (V) { const e = (now - V.t0) / 1000; k = Math.max(k, e < 0.7 ? 1 + 2 * e : e < 3.2 ? 2 + 0.35 * Math.sin(e * 4) : Math.max(0, 2 * (1 - (e - 3.2) / 0.7))); }   // the victory: the strongest
+    return clamp(k, 0, 2.6) * (Game.minFx ? 0 : Game.lowFx ? 0.6 : 1);
+  },
   timeK() { if (!(this.slowUntil > performance.now())) return 1; const left = (this.slowUntil - performance.now()) / 1000; return lerp(this.slowK, 1, clamp(1 - left / 0.35, 0, 1) * (left < 0.35 ? 1 : 0)); },   // (eases back the last 0.35 s)
   flash(color, sec, a) { this.flashFx = { color, t0: performance.now(), dur: sec * 1000, a }; },
   // ambers picked within 0.6 s of each other: the pickup sound goes up a step each time (up to an octave)
@@ -38,7 +53,8 @@ Object.assign(Run.prototype, {
       this._recShown = true; const P = this.player; this.text(P.x, P.y - 146, T('combo_record'), '#5ad1ff', 19, 1.6); Audio2.comboSfx('record');
     }
     if (m.boss && !m.doom) {   // a boss falls: freeze, slow motion, white flash, a fountain of gold (the zone's final boss: 3 s and a 'VICTOIRE !')
-      const fin = this.isFinalKill ? this.isFinalKill(m) : !!m.def.final; this.hitStop(fin ? 220 : 140); this.slowMo(fin ? 3.0 : 1.5, fin ? 0.25 : 0.3); this.flash('255,250,230', fin ? 0.7 : 0.45, 0.6);
+      const fin = this.isFinalKill ? this.isFinalKill(m) : !!m.def.final, late = this.time >= (this.RUN.bossSlowT || 660) ? (this.RUN.bossSlowK || 0.25) : 1;   // (0.98: from 11:00 the slow motion lasts a quarter as long)
+      this.hitStop(fin ? 220 : 140); this.slowMo((fin ? 3.0 : 1.5) * late, fin ? 0.25 : 0.3); this.flash('255,250,230', fin ? 0.7 : 0.45, 0.6); this._bossCA = performance.now();   // (0.98: its chromatic aberration)
       if (fin && !m.endless && !this.victoryShown) { this.victoryShown = true; this.startVictoryFx(); }
       for (let i = 0; i < 46 && this.particles.length < 380; i++) { const a = rand(TAU), v = rand(120, 420); this.particles.push({ x: m.x, y: m.y - m.r * 1.5, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 160, t: 0, life: rand(0.7, 1.4), c: pick(['#ffd700', '#fff3a0', '#ffb02e', '#ffffff']), s: rand(3, 6), star: i % 6 === 0 ? 1 : 0 }); }
       this.rings.push({ x: m.x, y: m.y, r0: 20, r1: 260, t0: this.time, dur: 0.7, color: '#fff3a0' });
@@ -115,20 +131,27 @@ Object.assign(Run.prototype, {
 // OFL, weights 700-900): flared Roman capitals close to the logo's carved letters, its lower case drawn as small caps.
 // annGlyph draws one string as carved metal: a deep extrusion under it, a dark outline, a thin bevel line, a light top
 // edge, the gradient. Per-letter animations lay letters out with annLayout and draw each with annGlyph.
-const ANN_FONT = "Cinzel, DofusBold, Verdana, serif";
+// 0.98: in Verdance (assets/fonts/verdance.woff2), the angular, flared lettering of Dofus Unity's logo; Cinzel stays behind
+// it for the few signs Verdance has not (emoji, arrows)
+const ANN_FONT = "Verdance, Cinzel, DofusBold, Verdana, sans-serif";
 function annFont(px, w = 900) { return `${w} ${Math.max(4, Math.round(px))}px ${ANN_FONT}`; }
 // palettes: gradient stops (top to bottom), outline, bevel line, extrusion, top-edge light
 const ANN = {
   gold: { stops: [[0, '#fff8d8'], [0.36, '#ffd65a'], [0.62, '#f2a024'], [1, '#9c4e08']], edge: '#1c0d03', bevel: '#7a4210', deep: '#3a1d05', hi: '#fffbe8' },
   ember: { stops: [[0, '#fff1c8'], [0.34, '#ffb03a'], [0.64, '#e8601a'], [1, '#8a1e06']], edge: '#1c0703', bevel: '#7a2a0c', deep: '#3a0f04', hi: '#fff4dc' },
   blood: { stops: [[0, '#ff9a86'], [0.34, '#e2262c'], [0.68, '#9c0a12'], [1, '#3e0206']], edge: '#0d0002', bevel: '#4c0409', deep: '#1a0003', hi: '#ffcabc' },
+  // 0.98, the verdant set (the Dofus Unity logo: cream letters on a gold rim in a lime halo; Dofus Retro's: gold letters among
+  // leaves): halo = a soft lime outline around everything
+  cream: { stops: [[0, '#ffffff'], [0.45, '#f7f0dc'], [0.8, '#e2d2a6'], [1, '#c4ab72']], edge: '#2a2414', bevel: '#f2b24a', deep: '#173a1c', hi: '#ffffff', halo: 'rgba(170,236,60,0.55)' },
+  retro: { stops: [[0, '#fffbe0'], [0.32, '#ffe27a'], [0.62, '#f5b52e'], [1, '#a8650c']], edge: '#2a1a06', bevel: '#7a4a10', deep: '#1c3a16', hi: '#fffbe8', halo: 'rgba(160,232,60,0.55)' },
+  lime: { stops: [[0, '#fbffe0'], [0.35, '#d8f870'], [0.66, '#9ad83a'], [1, '#4a8a16']], edge: '#14300c', bevel: '#f2e27a', deep: '#0e2a0c', hi: '#ffffff', halo: 'rgba(255,226,110,0.5)' },
 };
 // (centred on x; while see-through — fades — the layers are composed whole in a scratch canvas at the size on screen and
 // laid at that opacity once: drawn one by one, the dark extrusion showed through the face)
 function annGlyph(ctx, s, x, y, fs, P, w = 900) {
   if (ctx.globalAlpha > 0.995 || typeof document === 'undefined') { annCarve(ctx, s, x, y, fs, P, w); return; }
   const m = ctx.getTransform(), k = Math.min(4, Math.max(0.25, Math.hypot(m.a, m.b))), C = annGlyph.c || (annGlyph.c = document.createElement('canvas')), g = annGlyph.g || (annGlyph.g = C.getContext('2d'));
-  const f = fs * k; g.font = annFont(f, w); const pw = Math.ceil(g.measureText(s).width + f * 0.7), ph = Math.ceil(f * 1.75);
+  const f = fs * k; g.font = annFont(f, w); const pw = Math.ceil(g.measureText(s).width + f * 0.9), ph = Math.ceil(f * 1.9);   // (0.98: room for the halo)
   if (C.width < pw || C.height < ph) { C.width = Math.max(C.width, pw); C.height = Math.max(C.height, ph); }
   g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, pw, ph); g.textAlign = 'center';
   annCarve(g, s, pw / 2, ph * 0.44, f, P, w);
@@ -137,6 +160,7 @@ function annGlyph(ctx, s, x, y, fs, P, w = 900) {
 function annCarve(ctx, s, x, y, fs, P, w) {
   ctx.font = annFont(fs, w); ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
   const d = fs * 0.065, st = Math.max(1, fs * 0.016);
+  if (P.halo) { ctx.strokeStyle = P.halo; ctx.lineWidth = fs * 0.34; ctx.strokeText(s, x, y + d * 0.5); ctx.lineWidth = fs * 0.24; ctx.strokeText(s, x, y + d * 0.5); }   // (0.98: the lime halo, two widths: a soft edge)
   ctx.fillStyle = P.deep; ctx.strokeStyle = P.deep; ctx.lineWidth = fs * 0.15;
   for (let k = d; k > 0; k -= st) { ctx.strokeText(s, x, y + k); ctx.fillText(s, x, y + k); }   // (the extrusion)
   ctx.strokeStyle = P.edge; ctx.strokeText(s, x, y);
@@ -188,8 +212,8 @@ function annRule(ctx, x, y, half, k, u, col = '#ffd65a') {
 }
 // one line of a smaller announcement (banners, the relic's and the Dofus' captions): Cinzel 700, a dark outline, a
 // light top edge, its colour; align as ctx.textAlign
-function annLine(ctx, s, x, y, fs, color) {
-  ctx.font = annFont(fs, 700); ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+function annLine(ctx, s, x, y, fs, color, font) {   // (0.98: font, another lettering for this line — the banners' Lilita, render.js BAN_FONT)
+  ctx.font = font ? font(fs) : annFont(fs, 700); ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
   ctx.lineWidth = Math.max(2, fs * 0.2); ctx.strokeStyle = 'rgba(16,8,2,0.92)'; ctx.strokeText(s, x, y + fs * 0.03);
   ctx.fillStyle = 'rgba(255,248,226,0.8)'; ctx.fillText(s, x, y - fs * 0.03); ctx.fillStyle = color; ctx.fillText(s, x, y);
 }
@@ -287,20 +311,27 @@ function drawConfetti(ctx, W, H, e, P, fade) {
 }
 // 0.95: a blade of light opens across the middle, the letters strike in from the centre outwards (each from big to its
 // size with a short overshoot and a golden flare), a burst of light when the last one lands, two gold rules with their
-// diamonds grow out above and below, then the word breathes in the god rays, a sheen running over it, embers rising
+// diamonds grow out above and below, then the word breathes in the god rays, a sheen running over it, embers rising.
+// 0.98 (verdant, like the Dofus logos): a deep green veil, lime and gold rays, Dofus Retro's gold letters in a lime halo,
+// leaves on the rules' diamonds, leaves twirling down with the confetti, fireflies instead of embers
 function drawVictory(ctx, W, H, e, txt, conf) {
   const fade = e < 0.25 ? e / 0.25 : e > 3.2 ? Math.max(0, 1 - (e - 3.2) / 0.7) : 1, cx = W / 2, cy = H * 0.4, u = Math.min(W, H) / 720;
   ctx.save();
-  ctx.fillStyle = `rgba(20,10,0,${(0.42 * fade).toFixed(3)})`; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = `rgba(2,22,12,${(0.42 * fade).toFixed(3)})`; ctx.fillRect(0, 0, W, H);
   // god rays: long soft beams turning slowly
   ctx.translate(cx, cy); ctx.rotate(e * 0.16); ctx.globalAlpha = 0.3 * fade * clamp(e / 0.6, 0, 1);
   for (let i = 0; i < 12; i++) {
-    ctx.rotate(TAU / 12); const L = (i % 2 ? 520 : 400) * u, g = ctx.createLinearGradient(0, 0, 0, -L); g.addColorStop(0, 'rgba(255,226,140,0.95)'); g.addColorStop(1, 'rgba(255,226,140,0)');
+    ctx.rotate(TAU / 12); const L = (i % 2 ? 520 : 400) * u, g = ctx.createLinearGradient(0, 0, 0, -L); g.addColorStop(0, i % 2 ? 'rgba(255,226,140,0.95)' : 'rgba(190,245,100,0.95)'); g.addColorStop(1, 'rgba(190,245,100,0)');
     ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(-6 * u, 0); ctx.lineTo(6 * u, 0); ctx.lineTo(40 * u, -L); ctx.lineTo(-40 * u, -L); ctx.closePath(); ctx.fill();
   }
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   if (conf) drawConfetti(ctx, W, H, e, conf, e > 3.2 ? fade : 1);
-  const out = e > 3.2 ? (e - 3.2) / 0.7 : 0, A = annLayout(ctx, txt, 112 * u, 0.04 + out * 0.12, W * 0.86), fs = A.fs, mid = (A.chars.length - 1) / 2;
+  for (let i = 0; i < 16; i++) {   // leaves twirling down
+    const q = (e * (0.16 + 0.08 * annHash(i + 80)) + annHash(i + 81)) % 1, lx = (annHash(i + 82) + Math.sin(e * 1.4 + i) * 0.04) * W, ly = -40 * u + q * (H + 80 * u);
+    ctx.save(); ctx.globalAlpha = fade * 0.95; ctx.translate(lx, ly); ctx.rotate(e * (1.5 + annHash(i + 83)) * (i % 2 ? 1 : -1) + i); ctx.scale(1, 0.4 + 0.6 * Math.abs(Math.sin(e * 3 + i)));
+    cdLeaf(ctx, (16 + 12 * annHash(i + 84)) * u, CD_LEAVES[i % CD_LEAVES.length]); ctx.restore();
+  }
+  const out = e > 3.2 ? (e - 3.2) / 0.7 : 0, A = annLayout(ctx, txt, 112 * u, 0.18 + out * 0.12, W * 0.88)   /* (0.98: wider: 0.04 -> 0.18 em, the halo takes some) */, fs = A.fs, mid = (A.chars.length - 1) / 2;
   const y = cy - Math.min(e, 3.2) * 3 * u, glowG = RCache.glow('rgba(255,214,110,0.95)'), glowW = RCache.glow('rgba(255,248,220,0.95)');
   // the blade of light that opens the moment
   if (e < 0.75) {
@@ -314,6 +345,9 @@ function drawVictory(ctx, W, H, e, txt, conf) {
   // the rules above and below
   const rk = clamp((e - land + 0.1) / 0.45, 0, 1), re = 1 - Math.pow(1 - rk, 3);
   ctx.globalAlpha = fade; annRule(ctx, cx, y + fs * 0.78, A.tw * 0.5 + fs * 0.4, re, u); annRule(ctx, cx, y - fs * 0.78, A.tw * 0.32, re, u * 0.8);
+  if (re > 0) for (const [ry, k] of [[y + fs * 0.78, 1], [y - fs * 0.78, 0.8]]) for (const sd of [-1, 1]) {   // (0.98: two leaves on each diamond)
+    ctx.save(); ctx.translate(cx + sd * 12 * u * k, ry); ctx.scale(sd, 1); ctx.rotate(-0.25 + Math.sin(e * 2 + ry) * 0.08); ctx.translate(13 * u * k * re, 0); cdLeaf(ctx, 26 * u * k * re, sd > 0 ? '#7cd04a' : '#3fae3a'); ctx.restore();
+  }
   // the letters, from the centre outwards
   const br = 1 + 0.012 * Math.sin(e * 2.6);
   A.chars.forEach((c, i) => {
@@ -323,15 +357,15 @@ function drawVictory(ctx, W, H, e, txt, conf) {
     ctx.globalAlpha = fade * Math.min(1, k * 2.2);
     ctx.save(); ctx.translate(cx + A.xs[i] * (1 + out * 0.1), y); ctx.scale(sc, sc); ctx.textAlign = 'center';
     if (k < 1) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= (1 - k) * 0.9; ctx.drawImage(glowG, -fs * 0.6, -fs * 0.6, fs * 1.2, fs * 1.2); ctx.restore(); }   // (its flare)
-    annGlyph(ctx, c, 0, 0, fs, ANN.gold); ctx.restore();
+    annGlyph(ctx, c, 0, 0, fs, ANN.retro); ctx.restore();
   });
   // a sheen running over the word now and then
   const sw = (e - land - 0.2) % 1.7; if (e > land + 0.2 && sw < 0.8) { ctx.globalAlpha = fade; ctx.textAlign = 'center'; const at = -A.tw / 2 - fs + (A.tw + fs * 2) * sw / 0.8; A.chars.forEach((c, i) => annSheen(ctx, c, cx + A.xs[i] * (1 + out * 0.1), y, fs * br * (1 + out * 0.08), cx + at, 0.75)); }
-  // embers rising around the word, sparkles twinkling on it
-  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  // fireflies rising around the word, sparkles twinkling on it
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; const glowL = RCache.glow('rgba(200,250,110,0.95)');
   for (let i = 0; i < 22; i++) {
     const q = (e * (0.18 + 0.12 * annHash(i)) + annHash(i + 30)) % 1, ex = cx + (annHash(i + 3) - 0.5) * A.tw * 1.3 + Math.sin(e * 1.3 + i) * 8 * u, ey = y + fs * 0.9 - q * fs * 2.4, r = (6 + 8 * annHash(i + 5)) * u;
-    ctx.globalAlpha = fade * Math.sin(q * Math.PI) * 0.8 * clamp((e - land) / 0.4, 0, 1); ctx.drawImage(glowG, ex - r, ey - r, r * 2, r * 2);
+    ctx.globalAlpha = fade * Math.sin(q * Math.PI) * 0.8 * clamp((e - land) / 0.4, 0, 1); ctx.drawImage(i % 3 ? glowL : glowG, ex - r, ey - r, r * 2, r * 2);
   }
   for (let i = 0; i < 7; i++) {
     const tw2 = Math.max(0, Math.sin(e * 2.2 + i * 2.1)), sx = cx + (annHash(i + 60) - 0.5) * A.tw * 0.95, sy = y + (annHash(i + 61) - 0.5) * fs * 0.7, s = (4 + 9 * tw2) * u;

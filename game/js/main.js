@@ -213,7 +213,7 @@ const Game = {
       if (ch) Store.save();
     }
     UI.loading(0.5);
-    try { await Promise.all([document.fonts.load('12px Dofus'), document.fonts.load('bold 12px DofusBold'), document.fonts.load('12px RetroNum'), document.fonts.load('900 12px Cinzel'), document.fonts.load('700 12px Cinzel')]); } catch (e) { }   // (0.85: RetroNum = the damage numbers; 0.95: Cinzel = the announcements, drawn on canvases)
+    try { await Promise.all([document.fonts.load('12px Dofus'), document.fonts.load('bold 12px DofusBold'), document.fonts.load('12px RetroNum'), document.fonts.load('900 12px Cinzel'), document.fonts.load('700 12px Cinzel'), document.fonts.load('900 12px Verdance'), document.fonts.load('700 12px Verdance')]); } catch (e) { }   // (0.85: RetroNum = the damage numbers; 0.95: Cinzel = the announcements, drawn on canvases)
     if (pxReady) await pxReady;
     UI.loading(1);   // (0.44: the boss chest's sheet loads with the runs, no longer before the menu)
     Audio2.setVolumes(S.musicOff ? 0 : S.music, S.sfx);
@@ -520,11 +520,13 @@ const Game = {
   openChest(n) {
     const R = this.run; const got = []; const before = R.kamas;
     const count = n >= 5 ? (Math.random() < 0.3 * R.stats.luck ? 5 : 3) : n >= 3 ? 3 : 1;
+    R.chestN = n;   // (0.98: a fusion a big chest makes plays its show without the slow motion, sfusions.js)
     for (let i = 0; i < count; i++) {
       const o = R.upgradeOptions(1, true)[0];   // chests only improve what was already picked
       if (o) { R.applyUpgrade(o); got.push(o); }
       else { const k = { kind: 'kamas' }; R.applyUpgrade(k); got.push(k); }
     }
+    R.chestN = 0;
     const k = R.addKamas(randi(4, 12) * (1 + R.mapIdx) * (n >= 3 ? 2 : 1));
     if (R.ps) R.ps.chests++;
     const kamasOnly = got.every(o => o.kind === 'kamas');

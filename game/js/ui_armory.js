@@ -70,18 +70,18 @@ Object.assign(UI, {
       curCard = card;
       list.querySelectorAll('.arm-card').forEach(e => e.classList.toggle('sel', e === card)); cur = w; t = 0;
       const p = spellParams(w, MAX_SPELL_LV), evo = (C.weaponEvo || {})[w.id] || [], found = (S.uniques || {})[w.id] || 0, ml = (S.mastery || {})[w.of || w.id] || 0;
-      const row = (k, v) => h('tr', {}, h('td', {}, k), h('td', {}, v));
+      const row = (k, v, kind = 'prop') => h('tr', {}, h('td', {}, k), h('td', { class: 'fx-' + kind }, v));   // (0.98: the value in the effect colours)
       detail.innerHTML = '';
       detail.append(h('h2', {}, iconImg(w.icon, 40), ' ', L(w.name), w.blood ? h('span', { class: 'tag blood' }, T('blood_tag')) : null),
-        h('div', { class: 'arm-top' }, h('div', { class: 'arm-prev-box' }, cv, prevRow), h('div', {}, h('p', { class: 'flavor' }, L(w.desc)),
+        h('div', { class: 'arm-top' }, h('div', { class: 'arm-prev-box' }, cv, prevRow), h('div', {}, h('p', { class: 'fx-desc' }, L(w.desc)),
           h('table', { class: 'stats' },
-            row(T('p_dmg'), Math.round(p.dmg) + (p.count > 1 ? ' ×' + p.count : '')), row(T('p_cd'), p.cd + ' s'),
+            row(T('p_dmg'), Math.round(p.dmg) + (p.count > 1 ? ' ×' + p.count : ''), 'eff'), row(T('p_cd'), p.cd + ' s'),
             p.range ? row(T('p_range'), p.range) : null, p.radius ? row(T('p_radius'), p.radius) : null,
-            w.leech ? row(T('p_leech'), pctLeech(w.leech[0]) + ' → ' + pctLeech(w.leech[w.leech.length - 1])) : null,
+            w.leech ? row(T('p_leech'), pctLeech(w.leech[0]) + ' → ' + pctLeech(w.leech[w.leech.length - 1]), 'eff') : null,
 
-            row(T('mastery'), L(w.masteryName) + ' +' + Math.round(ml * (C.masteryPer || 0.1) * 100) + ' %'), w.unique ? row(T('arm_found'), found ? '×' + found : T('arm_notyet')) : null))),
+            row(T('mastery'), L(w.masteryName) + ' +' + Math.round(ml * (C.masteryPer || 0.1) * 100) + ' %', 'eff'), w.unique ? row(T('arm_found'), found ? '×' + found : T('arm_notyet'), found ? 'prop' : 'cond') : null))),
         evo.length ? h('h3', {}, T('arm_finales')) : '',   // (0.60: '' — append(null) wrote 'null' under the preview)
-        h('div', { class: 'arm-evos' }, ...evo.map(e => h('div', { class: 'arm-evo' }, iconImg(e.icon || w.icon, 26), h('div', {}, h('b', {}, L(e.name) + (e.skinName ? ' — ' + L(e.skinName) : '')), h('div', { class: 'desc' }, L(e.desc)))))),
+        h('div', { class: 'arm-evos' }, ...evo.map(e => h('div', { class: 'arm-evo' }, iconImg(e.icon || w.icon, 26), h('div', {}, h('b', {}, L(e.name) + (e.skinName ? ' — ' + L(e.skinName) : '')), h('div', { class: 'desc fx-desc' }, L(e.desc)))))),
         h('h3', {}, T('arm_boosted')), h('div', { class: 'arm-syn' }, ...boostsOf(w).map(pp => h('span', { class: 'chip', title: L(pp.desc) }, iconImg(pp.icon, 20), L(pp.name)))));
       const sp = UI.own(new CharSprite(cls.sprites[sex], (S.colors && S.colors[cls.id]) || baseColors(cls, sex), null, null, null)); sp.weapon = w.acc || null; sprite = UI.drop(sprite); await sp.load(); if (cur === w) { UI.drop(sprite); sprite = sp; } else UI.drop(sp);   // (0.93: UI.own)
     };
@@ -107,7 +107,7 @@ Object.assign(UI, {
     for (const p of C.passives) {
       const byCls = C.classes.map(c => [c, c.spells.map(s => C.spells[s]).filter(d => d && statBoosts(p, d))]).filter(([, l]) => l.length);
       const glob = (C.globalSpells || []).map(g => C.spells[g.id]).filter(d => statBoosts(p, d)), weap = C.weapons.filter(w => statBoosts(p, w));
-      const head = h('div', { class: 'arm-stat-head' }, iconImg(p.icon, 40), h('div', {}, h('b', {}, L(p.name)), h('div', { class: 'desc' }, L(p.desc)), h('small', {}, T('arm_max', { n: p.max }))));
+      const head = h('div', { class: 'arm-stat-head' }, iconImg(p.icon, 40), h('div', {}, h('b', {}, L(p.name)), h('div', { class: 'desc fx-eff' }, L(p.desc)), h('small', {}, T('arm_max', { n: p.max }))));
       if (!(byCls.length || glob.length || weap.length)) { alone.push(head); continue; }   // (0.34: grouped in one box below)
       wrap.append(h('div', { class: 'arm-stat' }, head,
         h('div', { class: 'arm-stat-list' },
@@ -172,8 +172,8 @@ Object.assign(UI, {
       detail.innerHTML = '';
       detail.append(h('h2', {}, iconImg('sp_' + sp.icon, 40), ' ', L(sp.name), done[f.id] ? ' ✔' : null),
         h('div', { class: 'arm-top' }, h('div', { class: 'arm-prev-box' }, cv, h('div', { class: 'prev-row' }, h('span', { class: 'pcls' }, L(cur.name)))),
-          h('div', {}, h('span', { class: 'sf-kind' }, kind), h('p', { class: 'flavor' }, L(sp.desc)), sfStats(f, cur), h('div', { class: 'sf-rec' }, ...rec),   // (0.96: its damage and cooldown)
-            h('small', null, f.kind === 'weapon' ? T('sfusion_need_w') + ' — ' + T('sfusion_keep') : T('sfusion_need') + ' — ' + T('sfusion_slot')))));
+          h('div', {}, h('span', { class: 'sf-kind' }, kind), h('p', { class: 'fx-desc' }, L(sp.desc)), sfStats(f, cur), h('div', { class: 'sf-rec' }, ...rec),   // (0.96: its damage and cooldown)
+            h('small', null, fxDesc(f.kind === 'weapon' ? T('sfusion_need_w') : T('sfusion_need'), 'cond'), ' — ', fxDesc(f.kind === 'weapon' ? T('sfusion_keep') : T('sfusion_slot'), 'spec')))));   // (0.98: the condition red, what it frees blue)
     };
     const show = () => {
       sub.querySelectorAll('.btn').forEach(b => b.classList.toggle('active', b.dataset.c === cur.id)); list.innerHTML = ''; pick = null; loadSprite();

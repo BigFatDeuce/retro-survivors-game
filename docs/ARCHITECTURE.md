@@ -97,7 +97,7 @@ Main state: `player`, `mobs`, `projs` (player projectiles), `eprojs` (enemy proj
 - Delayed actions inside a run use `Run.after(sec, fn)` (run time: paused with the run, dropped with it) — never
   `setTimeout`.
 - `SpellInst` (spells.js): `def` (the spell in content.json), `lv` (1–4), `p` = `spellParams(def, lv)` (`base` + the
-  `lv[]` steps), `dmg()`, `cooldown()`, `cast()` dispatching on `def.t` (projectile, orbit, zone, strike, line, melee,
+  `lv[]` steps), `dmg()`, `cooldown()` (0.98: × `cdLateK`, the run's level, `C.run.cdLate`), `cast()` dispatching on `def.t` (projectile, orbit, zone, strike, line, melee,
   toss, bomb, detonate, beam, summon, cone, trap, leap, dash, aura, pulse, heal, buff, pioche, wheel…).
   **When a spell type starts reading a new stat, update `SYN_TYPES` in ui_armory.js** (it drives the synergy lines and
   the real values on level-up cards: `realParams` / `realDiff` / `realSummary` / `passiveReal` in ui.js; out of a run —
@@ -134,17 +134,40 @@ Main state: `player`, `mobs`, `projs` (player projectiles), `eprojs` (enemy proj
   `ring`, `ringAt`, `drainLine`) instead. The ground effects (`Run.underDecor`) are quads in their own container
   (`PX.groundStart` / `groundEnd`, `gfxC`), hidden under the tall scenery by the GPU (the decor mask's part on screen
   as an inverted alpha mask). `perf_probe.py --each` counts the layers / boxes per frame (`LAYERS` / `boxes`).
+- **Areas on the ground**: `drawArea(ctx, x, y, r, col, a, soft)` / `RCache.area`; every area that stays on the ground —
+  spell zones (`R.zones`, at `ZONE_A`), traps, the monsters' puddles (`drawHzones`) — uses the soft picture (`AREA_SOFT`:
+  no outline, fill and grid fading at the edge) and `zoneRim` (particles of its element rising off its edge); the short
+  impacts, rings and the telegraphs keep the hard one (`AREA_HARD`).
 - **Cached pictures for what is drawn many times a frame**: `RCache` (glow, area, runes, tri, streak, ring, web, swath,
   band…), `TextCache` (texts), `NumCache` (damage numbers: one strip of characters per colour and size, drawn glyph by
   glyph). The announcements' text is placed by its ink (`annInk`, juice.js), framed by `annPanel` (render.js).
 - **GPU memory**: `PX.warm` sends the run's own sheets (monsters, tiles, `run.fxNeed` = its effects) at the loading
   screen; the other effect sheets the menu preloaded stay in memory only, sent on first use.
-- **Announcements** (countdown, GO!, victory, death, fusion names, banners, relic / Dofus captions) share one
-  lettering, in juice.js: the Cinzel font (`annFont`, assets/fonts/cinzel.woff2, OFL, weights 700–900), `annGlyph` =
-  one string as carved metal (extrusion, outline, bevel line, light top edge, gradient) with the palettes `ANN.gold / ember /
-  blood` (GO! = `GO_FORGE`, events.js), `annLayout` (per-letter layout that shrinks to fit a width), `annSheen`, `annLine` (banners),
-  `annRule`. The countdown's medallion and GO!'s burning leaves are `cdMedal`, `cdLeaf` (events.js). Use them for any
-  new centre-screen message; keep the UI's other fonts (DofusBold, Lilita, RetroNum) for the rest.
+- **Announcements** (countdown, GO!, victory, death, fusion names, banners, relic / Dofus captions, the run's end title)
+  share one lettering, in juice.js: the Verdance font (0.98, `ANN_FONT` / `annFont`, assets/fonts/verdance.woff2 built by
+  `tools/assets/build_verdance098.py` with the accents and punctuation it lacked; Cinzel behind it for the rest), `annGlyph`
+  = one string as carved letters (an optional lime `halo`, extrusion, outline, bevel line, light top edge, gradient) with
+  the palettes `ANN.cream / retro / lime` (the verdant set: the Dofus Unity and Dofus Retro logos) and `ANN.gold / ember /
+  blood`, `annLayout` (per-letter layout that shrinks to fit a width), `annSheen`, `annLine` (banners), `annRule`. The
+  countdown's emblem (a wreath of leaves, a glowing Dofus egg, the time as a vine) is `cdMedal` / `cdEgg`, the leaves
+  `cdLeaf` / `CD_LEAVES` (events.js), GO!'s swords `goSword` (the Épée Royale du Bouftou, icons3 'go_sword'); the
+  banners' frame `annPanel(…, t, style)` (`PANEL`: green; 'boss' light green with a blurred shade and glowing edge;
+  'fire' for the relics: green flames, sparks). The banners' words are in Lilita (`BAN_FONT`, render.js; `annLine`'s
+  `font`), the titles, names and the victory in the announcements' font. Use them for any new centre-screen message;
+  keep the UI's other fonts (DofusBold, Lilita, RetroNum) for the rest.
+- **Chromatic aberration** (0.98): `Run.chromaK()` (juice.js, read every frame) gives its strength of the moment, 0 to
+  2.6 (the countdown, GO! and the run's first seconds, the slow motions, a boss's fall, a relic, Libération, the
+  victory; less in lowFx, none in minFx); `PX.end` then draws the frame into a texture and that onto the screen through
+  `pxChroma`'s filter: a lens blur — the centre sharp, the edges smeared along the radius over 9 taps weighted by colour
+  (small fringes). The strength widens the blur; it never shifts the picture. Its render texture is made again at each
+  new render size (`PX.caOld`: the old ones destroyed 3 frames later). Tried once on a tiny texture, left out on
+  a GPU that cannot run it. Only the world gets it (no copies drawn on the 2D layer); the Canvas 2D renderer has none
+  (t_pixicmp turns it off).
+- **Controller cursor** (0.98): `Nav.glide` (nav.js) draws `#navglide`, one glowing frame eased each frame towards the
+  focused element's box (a light running round its edge, a pulse at each move, clipped to the list that scrolls it);
+  the element keeps `.navfocus` for its own styles, its outline hidden while the frame shows (`body.navglide`).
+- **HUD round buttons** (dash, moving spell, auto-pick): `hudPlate` (render.js); the pause / full-screen buttons are DOM
+  (`#pausebtn`, `#fsbtn`, same look in CSS).
 - Small sprites drawn every frame go through `RCache.put` (a decoded `<img>` copy: Chrome redraws downscaled canvases
   slowly at 'high' smoothing). World texts use `outlinedText` / `NumCache` (bitmaps rendered at screen size).
 
@@ -162,6 +185,11 @@ Main state: `player`, `mobs`, `projs` (player projectiles), `eprojs` (enemy proj
   corner rivets (`::after`); `.window.modal` (the windows over the game) a wider frame, gold diamonds on its corners, a
   title rule with a diamond, a light-up on opening and a slow sheen on the title; `.close` buttons are drawn by CSS (the
   '×' text is hidden). A window with its own coloured frame hides `::before` / `::after` (Exploit, Dark Vlad).
+- **Effect colours** (0.98, Dofus 2's tooltips): a spell / weapon / characteristic line is a list of parts (`fxPart`:
+  `realSummaryParts`, `realDiffParts`, `shopSpellParts`, `passiveParts`, `passiveShopParts`), drawn by `fxNodes` in the
+  classes `.fx-desc` (description, orange), `.fx-eff` (damage, heals, bonuses: `FX_EFF`, green), `.fx-prop` (the other
+  numbers, value bold), `.fx-neg` (a drawback), `.fx-spec` (a special effect, blue), `.fx-cond` (a condition, red); the
+  colours are `--fx-*` variables for the light and dark menus (index.html). `fxText` keeps the plain text (`realSummary`…).
 - Previews (`CharSprite`) belong to their screen: `UI.own` / `UI.drop`, `CharSprite.dispose` (a missing dispose leaked
   gigabytes in 0.92).
 
@@ -213,6 +241,11 @@ forgotten migration breaks players' profiles. Export / import: Options → profi
 - **Level-up**: `upgradeOptions`, `UI.levelUpMenu`, card fitting `fitCards`; Banish / Skip once a run.
 - **Shop**: spells, characteristics (`passLv`), weapon masteries, scrolls, global spells, skins, shields.
 - **Monster states**: poison `poisonUntil`, bleed `bleedUntil`, burn `burnUntil/burnDps`, slow, stun, confusion.
+  `Run.poisonCloud` = a short zone (`z.dose`) that poisons each monster in it once (the Piège Empoisonné's gas);
+  `Run.poisonPuff` = the same at a poisoned spell's single hit (0.25 s, `drawPoisonPuff`): no spell poisons one monster
+  directly any more (weapons' `poisonW` still do).
+- **Blows on the character**: `damagePlayer(dmg, src, area)`; `area` = a ground area (telegraphs, hostile puddles, a
+  boss's spin) — the only blows that reach an invisible Sram (`invisUntil`); projectiles (lobs too) and contact miss.
 - **Achievements**: progress.js (`Prog.add` at hook points, `Prog.value` for computed ones), each with its own picture.
 
 ## Debug URL parameters

@@ -7,6 +7,14 @@ function spellParams(def, level) {
   return p;
 }
 const PULSE_LEECH_CAP = 0.12;   // a pulse's life steal heals at most this share of the max HP a wave (ui.js sfStats says it)
+// 0.98: every cooldown grows with the run's level, up to C.run.cdLate.lv (50): +fast[1] for a spell whose own cooldown
+// (p.cd, its level's) is fast[0] s or less, +slow[1] from slow[0] s, in between on a log scale; applied once, in
+// SpellInst.cooldown (spells, weapons, fusions) and menuSpellParams (the menus: a run's first level)
+function cdLateK(RUN, cd, level) {
+  const L = RUN && RUN.cdLate; if (!L || !(cd > 0)) return 1;
+  const f = clamp(Math.log(cd / L.fast[0]) / Math.log(L.slow[0] / L.fast[0]), 0, 1);
+  return 1 + (L.fast[1] + (L.slow[1] - L.fast[1]) * f) * Math.min((level || 1) / L.lv, 1);
+}
 const MAX_SPELL_LV = 4;   // (0.81: spells and weapons have 4 levels, was 6 — patch_081 merged their level steps)
 // the attacks whose rhythm ramps up during a run (lasting things — orbits, summons, traps, glyphs, auras, buffs — keep theirs)
 const RAMPED = new Set(['projectile', 'strike', 'melee', 'slam', 'line', 'beam', 'cone', 'pulse', 'bomb', 'toss', 'leap', 'dash', 'detonate']);
@@ -40,7 +48,7 @@ class SpellInst {
   extraK(i, base = this.p.count || 1) { return i >= base ? (this.run.RUN.extraK || 1) : 1; }
   get icon() { return (this.finale && this.finale.icon) || this.def.icon; }   // a weapon finale has its own skin
   shopT() { return Math.min(1, (this.shopK - 1) / (5 * (this.run.C.spellPer || 0.1))); }   // (0.71: 0 → 1 over the shop's 5 levels)
-  cooldown() { const st = this.run.stats, R = this.run; return Math.max(0.1, (this.p.cdShop ? lerp(this.p.cd, this.p.cdShop, this.shopT()) : this.p.cd / (1 + (this.shopK - 1) * 0.5)) * st.cooldown * (R.RUN.cdMul || 1) * (R.hasted && R.hasted() ? 0.5 : 1) * (R.cdRamp && RAMPED.has(this.def.t) ? R.cdRamp() : 1)); }
+  cooldown() { const st = this.run.stats, R = this.run; return Math.max(0.1, (this.p.cdShop ? lerp(this.p.cd, this.p.cdShop, this.shopT()) : this.p.cd / (1 + (this.shopK - 1) * 0.5)) * st.cooldown * (R.RUN.cdMul || 1) * (R.hasted && R.hasted() ? 0.5 : 1) * (R.cdRamp && RAMPED.has(this.def.t) ? R.cdRamp() : 1) * cdLateK(R.RUN, this.p.cd, R.level)); }
   // v2.0 spell levels bought in the shop: +10% power per level (damage and heals), class spells only
   get shopK() { if (this._shopK === undefined) { const C = this.run.C, SL = (typeof Store !== 'undefined' && Store.data && Store.data.spellLv) || {}, lv = this.def.weapon ? 0 : this.def.sfusion ? Math.max(...this.def.src.map(k => SL[k] || 0)) : (SL[this.def.id] || 0); this._shopK = 1 + (C.spellPer || 0.1) * lv; } return this._shopK; }   // (0.60: a spell fusion keeps the best shop level of its spells)
   update(dt) {
@@ -113,8 +121,8 @@ class SpellInst {
         this.playAnim(); return true;
       }
       case 'strike': {
-        const n = p.count + st.amount;
-        const targets = R.pickTargets(p.target || 'random', n, 360);
+        const n = p.single ? 1 : p.count + st.amount;   // (0.98: p.single, one blow on one monster — Attaque Mortelle)
+        const targets = R.pickTargets(p.target || 'random', n, p.range || 360);   // (0.98: p.range, a strike's reach — Attaque Mortelle)
         if (!targets.length) return false;
         for (const [ti, tg] of targets.entries()) {
           const x = tg.x + rand(-6, 6), y = tg.y + rand(-6, 6), kd = this.dmg() * this.extraK(ti);
@@ -124,7 +132,8 @@ class SpellInst {
           } else if (p.shovel) { // Pelle Massacrante: the client's giant shovel rises above the target, then crashes down (impact on frame ~25)
             R.fxAt(this.def.fx[0], x, y, { scale: p.radius * st.area / 70, fit: p.radius * st.area });
             R.strikes.push({ x, y, r: p.radius * st.area, at: R.time + 1.2, delay: 1.2, dmg: kd, spell: this, shake: 5, nofx: true });
-          } else R.strikes.push({ x, y, r: p.radius * st.area, at: R.time + p.delay, delay: p.delay, dmg: kd, spell: this, gamble: p.gamble, shake: p.shake, slow: p.slow, slowDur: p.slowDur, mark: p.mark, markDur: p.markDur, stun: p.stun, rock: p.rock, transmute: p.transmute, gold: p.gold });
+          } else if (p.single) R.strikes.push({ x: tg.x, y: tg.y, r: tg.r * 1.2, tgt: tg, bossK: p.bossK, at: R.time + p.delay, delay: p.delay, dmg: kd, spell: this });   // (it follows its monster and hits it alone)
+          else R.strikes.push({ x, y, r: p.radius * st.area, at: R.time + p.delay, delay: p.delay, dmg: kd, spell: this, gamble: p.gamble, shake: p.shake, slow: p.slow, slowDur: p.slowDur, mark: p.mark, markDur: p.markDur, stun: p.stun, rock: p.rock, transmute: p.transmute, gold: p.gold });
         }
         this.playAnim(); return true;
       }
@@ -245,12 +254,8 @@ class SpellInst {
         this.playAnim(); return true;
       }
       case 'trap': {
-        const mine = R.traps.filter(s => s.spell === this);
-        const n = p.count;
-        for (let i = 0; i < n; i++) {
-          if (mine.length + i >= p.max) { const old = R.traps.find(s => s.spell === this); if (old) old.dead = true; }
-          R.traps.push({ x: P.x + (i ? rand(-50, 50) : 0), y: P.y + (i ? rand(-40, 40) : 0), r: p.radius * st.area, dmg: this.dmg(), spell: this, until: R.time + p.duration * st.duration, armed: R.time + 0.4 });
-        }
+        while (R.traps.length >= p.max) R.traps.shift();   // (0.98: one trap a cast; p.max on the ground for every trap spell together — the Piège Sournois 1, the oldest goes)
+        R.traps.push({ x: P.x, y: P.y, r: p.radius * st.area, dmg: this.dmg(), gas: p.gas ? this.dmg(p.gas) : 0, spell: this, until: R.time + p.duration * st.duration, armed: R.time + 0.4 });
         return true;
       }
       case 'heal': {

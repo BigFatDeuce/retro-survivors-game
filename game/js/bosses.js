@@ -47,7 +47,7 @@ Object.assign(Run.prototype, {
       case 'roar': {
         const r = a.radius || 220;
         this.teles.push({ kind: 'circle', x: m.x, y: m.y, r, t0: T0, dur: 0.8, cb: () => {
-          if (dist2(P.x, P.y, m.x, m.y) < r * r) { this.damagePlayer(a.dmg * MEL, m); this.pSlowUntil = this.time + (a.slowDur || 2); this.pSlowAmt = 1 - (a.slow || 0.45); this.text(P.x, P.y - 80, '💢', '#ff8a50', 18); }
+          if (dist2(P.x, P.y, m.x, m.y) < r * r) { this.damagePlayer(a.dmg * MEL, m, true); this.pSlowUntil = this.time + (a.slowDur || 2); this.pSlowAmt = 1 - (a.slow || 0.45); this.text(P.x, P.y - 80, '💢', '#ff8a50', 18); }
           for (let i = 0; i < 3; i++) this.rings.push({ x: m.x, y: m.y, r0: 20, r1: r, t0: this.time + i * 0.1, dur: 0.5, color: col });
           this.shake(6); const k = Audio2.mobSnd(m.def.gfx, 'atk'); Audio2.play(k ? k[k.length - 1] : 'growl', 0.9, 0.85);
         } });
@@ -75,7 +75,7 @@ Object.assign(Run.prototype, {
     const P = this.player;
     for (let i = this.hzones.length - 1; i >= 0; i--) {
       const z = this.hzones[i]; if (this.time > z.until) { this.hzones.splice(i, 1); continue; }
-      if ((z.next -= dt) <= 0 && dist2(P.x, P.y, z.x, z.y) < z.r * z.r * 0.8) { z.next = z.tick; if (!this.cleansed()) this.damagePlayer(z.dmg); }
+      if ((z.next -= dt) <= 0 && dist2(P.x, P.y, z.x, z.y) < z.r * z.r * 0.8) { z.next = z.tick; if (!this.cleansed()) this.damagePlayer(z.dmg, null, true); }
     }
     const pl = this.pull;
     if (pl && this.cleansed()) this.pull = null;
@@ -111,8 +111,9 @@ Object.assign(Run.prototype, {
   drawHzones(ctx, t) {
     for (const z of this.hzones) {
       const k = Math.min(1, (t - z.born) * 3) * Math.min(1, (z.until - t) * 2);
-      drawArea(ctx, z.x, z.y, z.r, z.color, k * 0.9);
-      ctx.save(); ctx.globalAlpha = 0.55 * k; ctx.fillStyle = z.color; ctx.beginPath(); ctx.ellipse(z.x, z.y, z.r * 0.85, z.r * 0.5, 0, 0, TAU); ctx.fill();
+      drawArea(ctx, z.x, z.y, z.r, z.color, k * 0.95, true);   // (0.98: soft, its edge melting into the ground; a feathered blob of its colour, particles round it)
+      const [cr, cg, cb] = hexToRgb(z.color); ctx.save(); ctx.globalAlpha = 0.6 * k; ctx.drawImage(RCache.glow(`rgba(${cr},${cg},${cb},0.85)`), z.x - z.r, z.y - z.r * 0.62, z.r * 2, z.r * 1.24);
+      zoneRim(ctx, z.x, z.y, z.r, z.color, t, k, z.born * 5.3 + z.x); ctx.globalAlpha = k;
       ctx.globalAlpha = 0.7 * k; ctx.fillStyle = 'rgba(255,255,255,0.5)';
       for (let i = 0; i < 4; i++) { const ph = (t * 0.8 + i / 4) % 1, a = i * 1.7 + z.x; ctx.beginPath(); ctx.arc(z.x + Math.cos(a) * z.r * 0.5, z.y + Math.sin(a) * z.r * 0.25, 3 + ph * 4, 0, TAU); ctx.fill(); }
       ctx.restore();

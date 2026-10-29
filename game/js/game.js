@@ -588,7 +588,7 @@ class Run {
     };
     this.mobs.push(m); this.bossAlive.push(m);
     this.seen(d.id);
-    this.banner(T('boss_appears', { n: L(d.name) }), d.final ? '#ff5050' : '#ffb347', false, true);
+    this.banner(T('boss_appears', { n: L(d.name) }), d.final ? '#ff5050' : '#ffb347', false, true, 'boss');
     this.chat(T('boss_appears', { n: L(d.name) }), '#ff8a65');
     Audio2.sfx('EVENT', 0.7); Audio2.bossSfx(d.final);   // (0.54: loud enough to be heard over the fight)
     if (d.final) Audio2.playMusic(this.map.boss_music, 2.0);
@@ -597,7 +597,7 @@ class Run {
   // 0.84: while a boss fights (its bar at the top of the screen) no message in the middle of the screen: it goes
   // to the chat only (chat() drops the caller's own copy). force = the boss's own arrival.
   bossFight() { return this.bossAlive.some(b => !b.dying && b.hp > 0); }
-  banner(text, color, center, force) { if (!force && this.bossFight()) { this.chat(text, color); return; } this.bannerMsg = { text, color, t: 0, center: !!center }; }
+  banner(text, color, center, force, kind) { if (!force && this.bossFight()) { this.chat(text, color); return; } this.bannerMsg = { text, color, t: 0, center: !!center, kind }; }   // (kind 'boss': its frame, render.js annPanel)
   seen(id) { const s = Store.data.seen; if (!s[id]) { s[id] = 1; } }
   spawner(dt) {
     const tm = this.time / 60;
@@ -738,6 +738,18 @@ class Run {
     if (m.hp <= 0) this.killMob(m);
     if (src && src.def && src.def.sfusion && src.p) this.riderHit(m, dmg, src);   // 0.60: a fused spell's effect on every hit (sfusions.js)
   }
+  // 0.98: a short poison zone (R.zones, z.dose): every monster in it or entering it before it fades is poisoned once
+  // (z.dosed) with poisonMob(dps, dur) — the one way a poison reaches a monster from a single hit (the Piège Empoisonné's
+  // gas, cloud 1; the poisoned spells' impacts, poisonPuff); dps as poisonMob takes it (before might / level)
+  poisonCloud(x, y, r, dps, dur, life, spell, o = {}) { const z = { x, y, r, until: this.time + life, tick: 0.05, next: 0, dmg: 0, dose: { dps, dur }, dosed: new Set(), color: o.color || '#5fbf3a', spell, born: this.time, cloud: o.puff ? 0 : 1, puff: o.puff ? 1 : 0 }; this.zones.push(z); return z; }
+  // a poisoned spell's impact on one monster: a little zone of PUFF.life s around it (C.run.poisonPuff can override);
+  // an impact inside a fresh zone of the same spell leaves it to that one (its next tick doses the monster): an area
+  // fusion's riders make one zone, not one a monster
+  poisonPuff(m, dps, dur, spell) {
+    const P = Object.assign({ r: 38, life: 0.25 }, this.RUN.poisonPuff), r = P.r * this.stats.area, T_ = this.time;
+    for (const z of this.zones) if (z.puff && z.spell === spell && T_ - z.born < 0.1 && dist2(z.x, z.y, m.x, m.y) < z.r * z.r) { z.dose.dps = Math.max(z.dose.dps, dps); return; }
+    this.poisonCloud(m.x, m.y, r, dps, dur, P.life, spell, { puff: 1 });
+  }
   poisonMob(m, dps, dur, src) { const v = dps * this.stats.might * this.dmgMul(); m.poisonDps = m.poisonUntil > this.time ? Math.max(m.poisonDps || 0, v) : v; m.poisonUntil = this.time + (dur || 4); m.poisonSrc = src; }
   // 0.91: Transmutation (the Otomaï): an ordinary monster under `s.transmute` of its life is turned into gold at once;
   // any monster it kills drops kamas `s.gold` of the time
@@ -816,8 +828,11 @@ class Run {
     this.maybeRelic(m); this.maybeCoffre(m);
     if (m.endless) Prog.add('endlessBosses');
     // 0.37: the Endless final bosses drop the Manuel du Tailleur; 0.95 (was 50 %): 5 % from 10:00, +2.5 % per minute after (C.infinite.manuelP / manuelStep)
-    const IM = this.C.infinite, mw = Math.max(0, Math.floor((this.time - (IM.bossT || 600)) / 60));
-    if (m.endless && this.C.manuel && Math.random() < (IM.manuelP || 0.05) + (IM.manuelStep || 0.025) * mw) {
+    // 0.98: every boss may drop it, by its place in the game (C.manuel.boss: Bouftou Royal 1 % ... Goultard 5 %; a boss of
+    // no zone's list: its zone's final boss's chance); an Endless one keeps the better of the two
+    const IM = this.C.infinite, mw = Math.max(0, Math.floor((this.time - (IM.bossT || 600)) / 60)), MB = (this.C.manuel && this.C.manuel.boss) || {};
+    const mp = d.finalGroup && !fin ? 0 : MB[d.id] !== undefined ? MB[d.id] : MB[(this.map.bosses[this.map.bosses.length - 1] || [])[1]] || 0;   // (the four Kwakeres: one roll, the last one)
+    if (this.C.manuel && Math.random() < Math.max(mp, m.endless ? (IM.manuelP || 0.05) + (IM.manuelStep || 0.025) * mw : 0)) {
       this.dropPickup('manuel', m.x + 30, m.y); this.chat(T('tailor_drop', { n: L(this.C.manuel.name) }), '#ff9cf0'); Audio2.sfx('EVENT', 0.45);
     }
     for (let i = 0; i < 6; i++) this.dropPickup('kama', m.x + rand(-40, 40), m.y + rand(-30, 30), randi(2, 5) * (1 + this.mapIdx));   // v1.6: kamas /5
@@ -907,16 +922,16 @@ class Run {
     const next = this.C.maps.slice(this.mapPos + 1).find(m => !m.hidden);
     if (next && !S.unlocked.includes(next.id)) { S.unlocked.push(next.id); this.unlockedNow.push(next); }
   }
-  damagePlayer(dmg, src) {
+  damagePlayer(dmg, src, area) {   // area: a ground area hit (telegraphs, puddles, spins), which reaches an invisible Sram
     const P = this.player, st = this.stats;
     if (P.dead || this.over) return;
     if (this.hard) dmg *= this.hard.dmg;   // Difficile: every enemy blow +50%
     if (this.aid) dmg *= this.aid.dmg;   // 0.95: the beginners' help (the first three zones until won in Normal)
-    if (this.time < P.invisUntil || this.time < P.invulnUntil) return;
+    if (this.time < P.invulnUntil || (this.time < P.invisUntil && !area)) return;   // (0.98: invisible = no projectile nor contact blow, the areas he stands in still hit)
     if (st.evade && Math.random() < st.evade && this.time - P.lastHit > 0.22) { P.lastHit = this.time; this.text(P.x, P.y - 72, T('dodge') + ' !', '#9fe0ff', 13); return; }
     if (this.time - P.lastHit < 0.22) return;
     const lib = this.powers.liberation;
-    if (lib && this.time < lib.until && lib.charges > 0) { this.liberation(); P.lastHit = this.time; return; }
+    if (lib && this.time < lib.until && lib.charges > 0) { this.liberation(); P.lastHit = this.time; if (this.slowMo) { this.slowMo(0.45, 0.45); this._libCA = performance.now(); } return; }   // (0.98: a short slow motion and its aberration as it saves him)
     if (src && src.def && !src.boss) { const a = Audio2.mobSnd(src.def.gfx, 'atk'); Audio2.play(a ? a[0] : 'son_attack', 0.45, rand(0.92, 1.08)); }
     else if (src && src.boss) { const a = Audio2.mobSnd(src.def.gfx, 'atk'); if (a) Audio2.play(a[0], 0.6); }
     if (P.shieldUp) { P.shieldUp = false; P.shieldNext = this.time + 12; this.text(P.x, P.y - 70, T('blocked'), '#7fd0ff', 14); P.lastHit = this.time; this.fxAt(802, P.x, P.y + 6, { follow: P, scale: 0.45, sym: 'root' }); Audio2.ui('shield', 0.7); return; }
@@ -960,7 +975,8 @@ class Run {
       this.xp -= this.xpNext; this.level++;
       // v2.0: the first levels need more experience (no more spam of choices in the first minute), the rest is unchanged
       const XE = this.RUN.xpEarly || [];
-      this.xpNext = Math.round((this.level < 20 ? 5 + (this.level - 1) * 10 : this.level < 40 ? 195 + (this.level - 20) * 22 : 640 + (this.level - 40) * 40) * (XE[this.level - 1] || 1));
+      const XB = this.RUN.xpBack;   // (0.98: the experience taken off the first levels, given back level by level: xpBack.add[level - from])
+      this.xpNext = Math.round((this.level < 20 ? 5 + (this.level - 1) * 10 : this.level < 40 ? 195 + (this.level - 20) * 22 : 640 + (this.level - 40) * 40) * (XE[this.level - 1] || 1)) + ((XB && XB.add[this.level - XB.from]) || 0);
       this.pendingLevels++; if (this.ps) this.ps.levelups++;
     }
   }
@@ -1023,6 +1039,7 @@ class Run {
     else if (o.kind === 'bread') this.massPotion();   // (0.53: the mass healing potion; the kind keeps its old name, saved in the settings)
   }
   // ------------------------------------------------ summons
+  summonBlow(s) { return s.spell.dmg ? s.spell.dmg() * (this.cls.id === 'osamodas' ? 1.4 : 1) * (s.k || 1) : s.dmg * this.dmgMul(); }   // one melee blow of a summon, read now
   spawnSummon(spell, x, y, k = 1) {   // (k: 0.96, a copy added by Démultiplication hits at C.run.extraK)
     const p = spell.p; const by = spell.def.spriteKeyBy, key = (by && by[this.charSid]) || p.spriteKey, cs = this.summonChars && this.summonChars[key];
     const sh = p.decoy || cs ? null : MobSheets.c[key]; if (!sh && !p.decoy && !(cs && cs.ready)) return;
@@ -1030,7 +1047,7 @@ class Run {
     // (0.68: Portée makes the summons faster and lets them see / go farther; their blows hit around them with p.aoe)
     this.summons.push({ spell, sh, x, y, hp: p.hp, k, dmg: spell.dmg() / (this.dmgMul() || 1) * (this.cls.id === 'osamodas' ? 1.4 : 1) * k, speed: p.speed * st.projspeed, aoe: p.aoe || 0, until: this.time + p.duration * st.duration,
       t: rand(1), flip: false, hitT: 0, target: null, kamikaze: p.kamikaze, taunt: p.taunt, radius: p.radius || 0, kamas: p.kamas, fly: p.fly, born: this.time,
-      decoy: p.decoy, ranged: p.ranged, healer: p.healer, view: 'R', flipP: this.player.flip, cs });
+      decoy: p.decoy, ranged: p.ranged, healer: p.healer, view: 'R', flipP: this.player.flip, cs, cad: p.hitJit ? rand(1 - p.hitJit, 1 + p.hitJit) : 1 });   // (0.98: cad, its blows' rhythm drawn once)
     this.fxAt(1100, x, y, {});
     const sm = this.summons[this.summons.length - 1];
     sm.snd = (this.C.summonSnd || {})[spell.def.id]; this.sndOf(sm.snd, 'spawn', 0.5);
@@ -1196,7 +1213,7 @@ class Run {
     let mx = dx / d, my = dy / d, sp = m.speed;
     if (m.state === 'wind') { m.st -= dt; if (m.st <= 0) { m.state = 'dash'; m.st = 0.6; } return [0, 0, 0]; }
     if (m.state === 'dash') { m.st -= dt; if (m.st <= 0) { m.state = 'move'; } return [m.cdir[0], m.cdir[1], m.speed * 3.6]; }
-    if (m.state === 'spin') { m.st -= dt; m.spinT = (m.spinT || 0) - dt; if (m.st <= 0) m.state = 'move'; if (m.spinT <= 0 && dist2(m.x, m.y, P.x, P.y) < m.spinR * m.spinR) { m.spinT = 0.5; this.damagePlayer(m.spinDmg, m); } return [mx, my, sp * 0.8]; }
+    if (m.state === 'spin') { m.st -= dt; m.spinT = (m.spinT || 0) - dt; if (m.st <= 0) m.state = 'move'; if (m.spinT <= 0 && dist2(m.x, m.y, P.x, P.y) < m.spinR * m.spinR) { m.spinT = 0.5; this.damagePlayer(m.spinDmg, m, true); } return [mx, my, sp * 0.8]; }
     if (m.state === 'leap') { m.st -= dt; const k = 1 - m.st / m.leapDur; m.x = lerp(m.lx0, m.lx1, k); m.y = lerp(m.ly0, m.ly1, k) - Math.sin(k * Math.PI) * 120; if (m.st <= 0) { m.state = 'move'; m.y = m.ly1; this.areaHitPlayer(m.x, m.y, m.leapR, m.leapDmg); this.rings.push({ x: m.x, y: m.y, r0: 20, r1: m.leapR, t0: this.time, dur: 0.4, color: '#ff8a50' }); this.shake(6); } return [0, 0, 0]; }
     if (def.abilities.some(a => a.k === 'erratic')) { m.dirT -= dt; if (m.dirT <= 0) { m.dirT = rand(0.3, 0.8); const a = Math.atan2(dy, dx) + rand(-1.2, 1.2); m.ex = Math.cos(a); m.ey = Math.sin(a); } mx = m.ex; my = m.ey; }
     const SD = this.scaleDmg(), MEL = SD * (this.RUN.meleeMul || 1), RNG = SD * (this.RUN.rangedMul || 1);   // melee / ranged blows
@@ -1226,16 +1243,16 @@ class Run {
           for (let k = 0; k < (a.count || 1); k++) { const an = Math.atan2(dy, dx) + rand(-0.6, 0.6); this.eprojs.push({ x: m.x, y: m.y - m.r * 1.6, vx: Math.cos(an) * a.speed, vy: Math.sin(an) * a.speed, sp: a.speed, homing: a.homing, dmg: a.dmg * RNG * ramp, life: 4.5, size: 11, crow: true, t0: this.time, src: m }); }
         } break;
         default: this.bossAbility(m, a, d, dx, dy, MEL, RNG); break;   // 0.27: rain, ring, fissure, roar, puddle, pull (bosses.js)
-        case 'breath': { const an = Math.atan2(dy, dx); this.teles.push({ kind: 'cone', x: m.x, y: m.y, a: an, len: a.range, half: 0.5, t0: this.time, dur: 0.7, cb: () => { const pd = Math.hypot(P.x - m.x, P.y - m.y); const pa = Math.atan2(P.y - m.y, P.x - m.x); let da = Math.abs(((pa - an + Math.PI * 3) % TAU) - Math.PI); if (pd < a.range && da < 0.5) this.damagePlayer(a.dmg * RNG, m); this.cones.push({ x: m.x, y: m.y - m.r, a: an, range: a.range, half: 0.5, ticks: 0, next: 1e9, dt: 1, dmg: 0, hostile: true, until: this.time + 0.4, t0: this.time, color: a.color }); } }); } break;
+        case 'breath': { const an = Math.atan2(dy, dx); this.teles.push({ kind: 'cone', x: m.x, y: m.y, a: an, len: a.range, half: 0.5, t0: this.time, dur: 0.7, cb: () => { const pd = Math.hypot(P.x - m.x, P.y - m.y); const pa = Math.atan2(P.y - m.y, P.x - m.x); let da = Math.abs(((pa - an + Math.PI * 3) % TAU) - Math.PI); if (pd < a.range && da < 0.5) this.damagePlayer(a.dmg * RNG, m, true); this.cones.push({ x: m.x, y: m.y - m.r, a: an, range: a.range, half: 0.5, ticks: 0, next: 1e9, dt: 1, dmg: 0, hostile: true, until: this.time + 0.4, t0: this.time, color: a.color }); } }); } break;
       }
     }
     return [mx, my, sp];
   }
-  areaHitPlayer(x, y, r, dmg) { const P = this.player; if (dist2(x, y, P.x, P.y) < (r + 10) ** 2) this.damagePlayer(dmg); }
+  areaHitPlayer(x, y, r, dmg, proj) { const P = this.player; if (dist2(x, y, P.x, P.y) < (r + 10) ** 2) this.damagePlayer(dmg, null, !proj); }
   lineHitPlayer(x, y, a, len, w, dmg) {
     const P = this.player; const dx = P.x - x, dy = P.y - 15 - y; const ca = Math.cos(a), sa = Math.sin(a);
     const along = dx * ca + dy * sa, perp = Math.abs(-dx * sa + dy * ca);
-    if (along > -10 && along < len && perp < w / 2 + 10) this.damagePlayer(dmg);
+    if (along > -10 && along < len && perp < w / 2 + 10) this.damagePlayer(dmg, null, true);
   }
   updateProjectiles(dt) {
     const P = this.player;
@@ -1281,7 +1298,7 @@ class Run {
           else if (!m.boss) { const v = Math.hypot(p.vx, p.vy) || 1, kb = this.RUN.projKnock || 0; m.kx += p.vx / v * kb; m.ky += p.vy / v * kb; }
           if (p.slow) { m.slowUntil = this.time + (p.slowDur || 1.5); m.slowAmt = p.slow; }
           if (p.burn) { m.burnUntil = this.time + 2.5; m.burnDps = p.burn * this.stats.might; }
-          if (p.poison) this.poisonMob(m, p.poison, p.poisonDur, p.spell);
+          if (p.poison) this.poisonPuff(m, p.poison, p.poisonDur, p.spell);   // (0.98: a little poison zone at the impact)
           if (p.leech) { this.player.leechHeal(Math.max(0, hp0 - Math.max(0, m.hp)) * p.leech * (1 + this.stats.healBonus)); this.drainFx(m); }
           if (!m.boss && p.push === undefined) { const k = p.knock || 40; m.kx += p.vx / p.sp * k * (p.knock ? 3 : 1); m.ky += p.vy / p.sp * k * (p.knock ? 3 : 1); }
           if (p.bounce > 0) {
@@ -1303,7 +1320,7 @@ class Run {
         e.t += dt; const k = Math.min(1, e.t / e.dur);
         e.x = lerp(e.sx, e.tx, k); e.y = lerp(e.sy, e.ty, k) - Math.sin(k * Math.PI) * 110;
         if (k >= 1) {
-          if (!(dist2(P.x, P.y, e.tx, e.ty) < e.aoe * e.aoe && this.blockSpell())) this.areaHitPlayer(e.tx, e.ty, e.aoe, e.dmg);   // (0.53: Sagesse may block a thrown spell)
+          if (!(dist2(P.x, P.y, e.tx, e.ty) < e.aoe * e.aoe && this.blockSpell())) this.areaHitPlayer(e.tx, e.ty, e.aoe, e.dmg, true);   // (a thrown projectile: misses an invisible Sram)   // (0.53: Sagesse may block a thrown spell)
           if (e.fx) this.fxAt(e.fx, e.tx, e.ty);
           this.rings.push({ x: e.tx, y: e.ty, r0: 8, r1: e.aoe, t0: this.time, dur: 0.3, color: '#ffae5a' });
           if (e.mob) this.spawnMob(e.mob, e.tx, e.ty, { force: true });
@@ -1349,6 +1366,7 @@ class Run {
       const z = this.zones[i];
       if (z.follow) { z.x = z.follow.x; z.y = z.follow.y; }
       if (z.heal && (z.healT = (z.healT || 0) - dt) <= 0) { z.healT = 1; this.zoneHeal(z); }   // (0.95: the Pwout + Cawotte fusion's cloud, gspells.js)
+      if (z.dose) { if (T_ >= z.next) { z.next = T_ + z.tick; for (const m of this.mobsInRadius(z.x, z.y, z.r)) if (!m.dying && !z.dosed.has(m)) { z.dosed.add(m); this.poisonMob(m, z.dose.dps, z.dose.dur, z.spell); } } if (T_ > z.until) this.zones.splice(i, 1); continue; }
       if (T_ >= z.next) { z.next = T_ + z.tick; for (const m of this.mobsInRadius(z.x, z.y, z.r)) { if (z.grp && !this.grpHit(z.grp, m)) continue; this.damageMob(m, z.dmg, z.spell, true); if (z.poison && !m.dying) this.poisonMob(m, z.poison, 2 * this.stats.duration, z.spell); if (z.slow) { m.slowUntil = T_ + 0.5; m.slowAmt = z.slow; } if (z.stun) m.stunUntil = Math.max(m.stunUntil, T_ + z.stun * (m.boss ? 0.2 : 1)); if (z.burn) { m.burnUntil = T_ + 2; m.burnDps = Math.max(m.burnDps || 0, z.dmg * 0.6 * this.stats.might); } } }   // (0.89: the fire armour sets them burning — at the tick: it was looked for in the 50 ms after it, missed at low frame rates)
       if (T_ > z.until) {
         if (z.push) {   // 0.89: Trêve / Rempart: the dome pushes everything out when it fades
@@ -1361,11 +1379,12 @@ class Run {
     // strikes
     for (let i = this.strikes.length - 1; i >= 0; i--) {
       const s = this.strikes[i];
+      if (s.tgt && !s.tgt.dying) { s.x = s.tgt.x; s.y = s.tgt.y; }   // (0.98: a single blow follows its monster)
       if (T_ >= s.at) {
         let dmg = s.dmg;
         if (s.gamble) dmg *= Math.random() < 0.3 ? 0 : rand(0.8, 1.8);
-        for (const m of this.mobsInRadius(s.x, s.y, s.r)) {
-          this.damageMob(m, dmg, s.spell);
+        for (const m of s.tgt ? (s.tgt.dying ? [] : [s.tgt]) : this.mobsInRadius(s.x, s.y, s.r)) {
+          this.damageMob(m, dmg * (m.boss && s.bossK ? s.bossK : 1), s.spell);   // (0.98: s.bossK, more on a boss)
           if (s.slow) { m.slowUntil = T_ + (s.slowDur || 2); m.slowAmt = s.slow; }
           if (s.mark) { m.markUntil = T_ + (s.markDur || 4); m.markAmt = s.mark; }
           if (s.stun) m.stunUntil = Math.max(m.stunUntil, T_ + s.stun * (m.boss ? 0.2 : 1));   // (0.60: Éboulement du Craqueleur)
@@ -1459,9 +1478,11 @@ class Run {
       const t = this.traps[i];
       if (t.dead || T_ > t.until) { this.traps.splice(i, 1); continue; }
       if (T_ < t.armed) continue;
-      const m = this.nearestMob(t.x, t.y, t.r * 0.6);
-      if (m) {
-        for (const mm of this.mobsInRadius(t.x, t.y, t.r)) this.damageMob(mm, t.dmg, t.spell);
+      const hit = this.mobsInRadius(t.x, t.y, t.r).filter(m => { const dx = m.x - t.x, dy = (m.y - t.y) / 0.62, rr = t.r + m.r; return dx * dx + dy * dy <= rr * rr; });   // (0.98: the drawn ellipse triggers and hits; was 0.6 of the radius as a circle)
+      const tg = t.spell.p.trig, on = tg ? hit.some(m => { const dx = m.x - t.x, dy = (m.y - t.y) / 0.62, rr = tg + m.r * 0.5; return dx * dx + dy * dy <= rr * rr; }) : hit.length;   // (0.98: p.trig, a trap that goes off only when a monster steps on its cone, render.js drawTrapCone's base)
+      if (on) {
+        for (const mm of hit) this.damageMob(mm, t.dmg, t.spell);
+        if (t.gas) { const D = t.spell.p.gasPoison || 4; this.poisonCloud(t.x, t.y, t.r, t.gas / D / Math.max(0.01, this.stats.might * this.dmgMul()), D, t.spell.p.gasDur || 0.5, t.spell); }   // (0.98: the Piège Empoisonné's gas: t.gas went through dmg())
         this.rings.push({ x: t.x, y: t.y, r0: t.r * 0.5, r1: t.r, t0: T_, dur: 0.45, color: '#b388ff', fill: 1 });
         this.fxAt(412, t.x, t.y, { scale: 0.6 });
         Audio2.blip('boom');
@@ -1479,6 +1500,11 @@ class Run {
         if (s.decoy) { // the Double explodes
           for (const m of this.mobsInRadius(s.x, s.y, s.radius * this.stats.area)) this.damageMob(m, s.dmg * this.dmgMul(), s.spell);
           this.rings.push({ x: s.x, y: s.y, r0: 8, r1: s.radius * this.stats.area, t0: T_, dur: 0.35, color: '#b388ff' }); this.fxAt(412, s.x, s.y, { scale: 0.7 }); Audio2.blip('boom');
+        }
+        if (s.spell.p.boom) { // 0.98: the Boufcouls burst once, dead or gone: p.boom of their blows, p.boomR x their melee reach (16 + the monster's size)
+          const r = s.spell.p.boomR * 16 * this.stats.area, d = this.summonBlow(s) * s.spell.p.boom;
+          for (const m of this.mobsInRadius(s.x, s.y, r)) this.damageMob(m, d, s.spell, true);
+          this.rings.push({ x: s.x, y: s.y, r0: 6, r1: r, t0: T_, dur: 0.3, color: '#c9a27a', fill: 1 }); this.fxAt(2004, s.x, s.y, { fit: r }); Audio2.play('explosion', 0.3, rand(1.05, 1.25));
         }
         this.particles.push({ x: s.x, y: s.y - 10, vx: 0, vy: -30, t: 0, life: 0.5, c: '#fff', s: 6 });
         this.summons.splice(i, 1); continue;
@@ -1520,10 +1546,10 @@ class Run {
           Audio2.play('explosion', 0.35, rand(0.95, 1.2)); this.shake(2);
           this.summons.splice(i, 1); continue;
         }
-        s.hitT = s.spell.p.hitcd || 0.5; s.atkT = 0;
+        s.hitT = (s.spell.p.hitcd || 0.5) * s.cad; s.atkT = 0;
         // (0.68: the damage is read at every blow — the levels and buffs gained since the summoning count —, and a summon
-        // with an area (the Boufcouls) hits every monster around its target: it keeps up with the late crowds)
-        const sd = (s.spell.dmg ? s.spell.dmg() * (this.cls.id === 'osamodas' ? 1.4 : 1) * (s.k || 1) : s.dmg * this.dmgMul());
+        // with an area hits every monster around its target)
+        const sd = this.summonBlow(s);
         if (s.aoe) {
           const r = s.aoe * this.stats.area;
           for (const m of this.mobsInRadius(s.target.x, s.target.y, r)) this.damageMob(m, sd, s.spell, true);

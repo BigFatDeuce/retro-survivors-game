@@ -75,7 +75,7 @@ Shared rules for builders:
 | tool | what it does |
 |---|---|
 | `patch_v20.py` | the base: applies v2.0 to `work/content_v19.json` (the published v1.9 content) |
-| `patch_020.py` … `patch_097.py` | one per version, each imports the previous one and changes `C` in memory; only the one run as a script writes content.json. Their docstrings say what each version changed |
+| `patch_020.py` … `patch_098.py` | one per version, each imports the previous one and changes `C` in memory; only the one run as a script writes content.json. Their docstrings say what each version changed |
 | `weapons060.py` | the 40 weapons (5 per type, real Retro names) |
 | `fusions060.py` | the spell fusions (3 per class) and their damage factors `CAL` |
 | `calib_fusions060.py [rounds]` | recomputes `CAL` in `fusions060.py` from the spell bench (`checks/sim_node.js BENCH=`) |
@@ -89,7 +89,7 @@ Shared rules for builders:
 | `calc_amber081.py` | computes the amber XP curve (`run.amber`) — computed, not simulated |
 
 To change content: add the change to the newest patch if it belongs to the version being prepared, or create
-`patch_<new version>.py` (copy the header of `patch_097.py`: `import patch_097 as P`, `C, G, T, put_ui = P.C, …`,
+`patch_<new version>.py` (copy the header of `patch_098.py`: `import patch_098 as P`, `C, G, T, put_ui = P.C, …`,
 the `if __name__ == '__main__':` dump at the end). UI strings: `put_ui({'key': T(fr, en, de, es, it, nl, pt)})`. Never
 edit content.json by hand: the next run overwrites it.
 
@@ -141,11 +141,12 @@ Icons and interface (atlas `icons3*.webp`; `build_icons20.merge` adds pictures t
 | tool | what it does |
 |---|---|
 | `build_icons20.py [it_T_G…]` | HD item pictures from the client's vector items; the `render` / `merge` library of every icon builder |
-| `build_iconhd091.py [skins\|dofus\|relics\|gift]` | item pictures shown big: skins 400 px (`assets/ui/hd/`), Dofus 440, relics 400, Nowel's gift 512 |
+| `build_iconhd091.py [skins\|dofus\|relics\|gift\|gosword]` | item pictures shown big: skins 400 px (`assets/ui/hd/`), Dofus 440, relics 400, Nowel's gift 512, GO!'s Épée Royale du Bouftou 640 |
 | `build_spellicons21.py`, `build_fusionicons060.py`, `build_globalicons23.py`, `build_globalicons060.py` | class spell icons, fusion icons (`build_fusionicons060.py [fusion id…]`: only those), global spell icons (23: the first ones, 060: the three of 0.60 and 0.96's Boule de Chaos; `[key…]`: only those) |
 | `build_staticons34.py`, `build_staticons48.py`, `build_staticons068.py`, `build_demulti54.py` | characteristic / effect icons: client vectors (34), framed SVG ones (48), the up-to-date client's stats window (068), Démultiplication |
 | `build_challenge20.py n…`, `build_ui060.py`, `build_ready060.py`, `build_zaap56.py`, `build_totbg41.py` | challenge pictures, small UI pictures, the 'ready' swords, ToT's zaap, ToT's quiz background |
 | `build_retronum085.py font.ttf` | the client's damage-number font (`assets/fonts/retronum.woff2`) |
+| `build_verdance098.py [Verdance-Bold.ttf]` | the announcements' font `assets/fonts/verdance.woff2` (Verdance Bold from `raw/fonts/verdance/`, + the accents, ß, Œ and punctuation it lacks, drawn in its style) |
 | `build_cinzel095.py Cinzel[wght].ttf` | the announcements' font `assets/fonts/cinzel.woff2` (Cinzel, OFL: weights 700–900, the 7 languages' Latin subset) |
 | `build_phoenix36.py` | the death screen's Phoenix statue (the original picture upscaled with `lib/esrgan.py`) |
 | `build_boosters38.py`, `boosters/build_boosters.py` | the booster pack atlas from the original pictures; a standalone generator of booster designs (`dist/boosters/`) |

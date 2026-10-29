@@ -234,13 +234,13 @@ Object.assign(Run.prototype, {
   // the end of the cine): the run starts as it did.
   drawCountdown(ctx, W, H, c) {
     const n = Math.min(3, Math.floor(c.t / 0.8)), u = (c.t - n * 0.8) / (n < 3 ? 0.8 : c.dur - 2.4), S = Math.min(W, H), cx = W / 2, cy = H * 0.42;
-    ctx.fillStyle = `rgba(14,8,2,${n < 3 ? 0.3 * Math.min(1, c.t / 0.2) : 0.3 * Math.max(0, 1 - u * 3)})`; ctx.fillRect(0, 0, W, H);
-    const vg = ctx.createRadialGradient(cx, cy, S * 0.1, cx, cy, Math.max(W, H) * 0.7); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(20,10,0,${n < 3 ? 0.35 : 0.35 * Math.max(0, 1 - u * 3)})`);
+    ctx.fillStyle = `rgba(2,20,12,${n < 3 ? 0.3 * Math.min(1, c.t / 0.2) : 0.3 * Math.max(0, 1 - u * 3)})`; ctx.fillRect(0, 0, W, H);   // (0.98: a deep green veil)
+    const vg = ctx.createRadialGradient(cx, cy, S * 0.1, cx, cy, Math.max(W, H) * 0.7); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, `rgba(0,22,12,${n < 3 ? 0.4 : 0.4 * Math.max(0, 1 - u * 3)})`);
     ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
     const sparks = (k, R, col, seed) => {   // gold motes thrown out when a number lands
       for (let i = 0; i < 16; i++) {
         const an = i / 16 * TAU + seed, d = R * (0.7 + 1.3 * k) * (0.8 + 0.4 * ((i * 37) % 10) / 10), r = S * 0.008 * (1 - k);
-        if (r <= 0) continue; ctx.globalAlpha = (1 - k) * 0.95; ctx.fillStyle = i % 3 ? col : '#fff6c8';
+        if (r <= 0) continue; ctx.globalAlpha = (1 - k) * 0.95; ctx.fillStyle = i % 3 ? col : '#f8ffd8';
         ctx.beginPath(); for (let q = 0; q < 8; q++) { const rr = q % 2 ? r * 0.35 : r * 1.4, aa = q / 8 * TAU; ctx.lineTo(cx + Math.cos(an) * d + Math.cos(aa) * rr, cy + Math.sin(an) * d * 0.8 + Math.sin(aa) * rr); } ctx.fill();
       }
       ctx.globalAlpha = 1;
@@ -259,14 +259,14 @@ Object.assign(Run.prototype, {
       ctx.save(); if (shk) ctx.translate(Math.sin(c.t * 97) * shk, Math.cos(c.t * 83) * shk);
       if (hk > 0 && hk < 0.3) {   // the impact in the disc: a flash and a shock ring
         const q = hk / 0.3; ctx.save(); ctx.globalCompositeOperation = 'lighter';
-        ctx.globalAlpha = (1 - q) * 0.8; const fr = R * (0.9 + 0.5 * q); ctx.drawImage(RCache.glow(n === 2 ? 'rgba(255,110,50,0.95)' : n === 1 ? 'rgba(255,160,70,0.95)' : 'rgba(255,214,110,0.95)'), cx - fr, cy - fr, fr * 2, fr * 2);
-        ctx.globalAlpha = (1 - q); ctx.strokeStyle = '#fff1c0'; ctx.lineWidth = S * 0.012 * (1 - q) + 1; ctx.beginPath(); ctx.ellipse(cx, cy, R * (0.95 + 0.9 * q), R * (0.95 + 0.9 * q) * 0.92, 0, 0, TAU); ctx.stroke();
+        ctx.globalAlpha = (1 - q) * 0.8; const fr = R * (0.9 + 0.5 * q); ctx.drawImage(RCache.glow(n === 2 ? 'rgba(245,200,70,0.95)' : n === 1 ? 'rgba(220,240,90,0.95)' : 'rgba(180,245,90,0.95)'), cx - fr, cy - fr, fr * 2, fr * 2);
+        ctx.globalAlpha = (1 - q); ctx.strokeStyle = '#f4ffd0'; ctx.lineWidth = S * 0.012 * (1 - q) + 1; ctx.beginPath(); ctx.ellipse(cx, cy, R * (0.95 + 0.9 * q), R * (0.95 + 0.9 * q) * 0.92, 0, 0, TAU); ctx.stroke();
         ctx.restore();
       }
       ctx.globalAlpha = Math.min(1, u / 0.05) * (1 - out); ctx.translate(cx, cy); ctx.scale(sc * (1 - out * 0.3), sc * (1 - out * 0.3)); ctx.textAlign = 'center';
       // (0.95: it sat a little high: the figure's ink — and half its carved depth, annCarve — centred on the disc)
       const fs = Math.round(R * 1.5), ink = annInk(String(3 - n), fs), gx = ink.dx, gy0 = ink.dy - fs * 0.0325;
-      annGlyph(ctx, String(3 - n), gx, gy0, fs, [ANN.gold, CD_AMBER, ANN.ember][n]);
+      annGlyph(ctx, String(3 - n), gx, gy0, fs, n === 2 ? ANN.retro : ANN.cream);   // (0.98: cream letters in a lime halo, the 1 in Dofus Retro's gold)
       if (hk > 0.05 && hk < 0.4) annSheen(ctx, String(3 - n), gx, gy0, fs, -fs * 0.6 + fs * 1.2 * (hk - 0.05) / 0.35, 0.7);
       ctx.restore();
       if (u >= HIT) sparks(Math.min(1, (u - HIT) / 0.45), R * 1.15, CD_HEAT[n], n * 1.3);
@@ -284,7 +284,7 @@ Object.assign(Run.prototype, {
     // the rays turning behind (brighter once the blades meet)
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(c.t * 0.6); ctx.globalAlpha = (u < HIT ? 0.25 : 0.45) * a;
     for (let i = 0; i < 16; i++) {
-      ctx.rotate(TAU / 16); const g = ctx.createLinearGradient(0, 0, 0, -S * 0.62); g.addColorStop(0, 'rgba(255,236,150,0.9)'); g.addColorStop(1, 'rgba(255,236,150,0)');
+      ctx.rotate(TAU / 16); const g = ctx.createLinearGradient(0, 0, 0, -S * 0.62); g.addColorStop(0, i % 2 ? 'rgba(255,230,140,0.9)' : 'rgba(200,245,110,0.9)'); g.addColorStop(1, 'rgba(200,245,110,0)');
       ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(-S * 0.014, 0); ctx.lineTo(S * 0.014, 0); ctx.lineTo(S * 0.05, -S * 0.62); ctx.lineTo(-S * 0.05, -S * 0.62); ctx.closePath(); ctx.fill();
     }
     ctx.restore();
@@ -292,14 +292,12 @@ Object.assign(Run.prototype, {
     // spinning, an ember ring racing outwards
     if (u < 0.4) {
       const k = u / 0.4, R = S * 0.185, ke = 1 - Math.pow(1 - k, 2);
-      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - k) * 0.9; const fr = R * (1.2 + 1.6 * ke); ctx.drawImage(RCache.glow('rgba(255,120,50,0.95)'), cx - fr, cy - fr, fr * 2, fr * 2);
-      ctx.globalAlpha = (1 - k); ctx.strokeStyle = '#ffb060'; ctx.lineWidth = S * 0.01 * (1 - k) + 1; ctx.beginPath(); ctx.ellipse(cx, cy, R * (1 + 3 * ke), R * (1 + 3 * ke) * 0.9, 0, 0, TAU); ctx.stroke(); ctx.restore();
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = (1 - k) * 0.9; const fr = R * (1.2 + 1.6 * ke); ctx.drawImage(RCache.glow('rgba(170,240,80,0.95)'), cx - fr, cy - fr, fr * 2, fr * 2);
+      ctx.globalAlpha = (1 - k); ctx.strokeStyle = '#c8f060'; ctx.lineWidth = S * 0.01 * (1 - k) + 1; ctx.beginPath(); ctx.ellipse(cx, cy, R * (1 + 3 * ke), R * (1 + 3 * ke) * 0.9, 0, 0, TAU); ctx.stroke(); ctx.restore();
       for (let i = 0; i < 14; i++) {
         const an = i / 14 * TAU + 0.2, d = R * (0.9 + 2.6 * ke * (0.7 + 0.5 * ((i * 41) % 7) / 7)), x = cx + Math.cos(an) * d, y = cy + Math.sin(an) * d + S * 0.25 * k * k, w = R * (i % 2 ? 0.24 : 0.16);
-        ctx.save(); ctx.globalAlpha = a * (1 - k); ctx.translate(x, y); ctx.rotate(an + k * (i % 2 ? 7 : -9));
-        ctx.fillStyle = '#1c0d03'; ctx.beginPath(); ctx.moveTo(-w, -w * 0.45); ctx.lineTo(w, -w * 0.3); ctx.lineTo(w * 0.6, w * 0.5); ctx.lineTo(-w * 0.8, w * 0.4); ctx.closePath(); ctx.fill();
-        const sg = ctx.createLinearGradient(0, -w * 0.4, 0, w * 0.4); sg.addColorStop(0, '#fff0b8'); sg.addColorStop(1, i % 3 ? '#b0701c' : '#ff7a2a');
-        ctx.fillStyle = sg; ctx.beginPath(); ctx.moveTo(-w * 0.85, -w * 0.32); ctx.lineTo(w * 0.85, -w * 0.2); ctx.lineTo(w * 0.5, w * 0.38); ctx.lineTo(-w * 0.65, w * 0.28); ctx.closePath(); ctx.fill(); ctx.restore();
+        ctx.save(); ctx.globalAlpha = a * (1 - k); ctx.translate(x, y); ctx.rotate(an + k * (i % 2 ? 7 : -9)); ctx.scale(1, 0.6 + 0.4 * Math.abs(Math.cos(k * 8 + i)));
+        cdLeaf(ctx, w * 2.4, CD_LEAVES[i % CD_LEAVES.length]); ctx.restore();   // (0.98: the wreath's leaves flung out)
       }
     }
     // where each sword is at the moment q (0 = far away, 1 = crossed): its guard and its angle
@@ -307,7 +305,7 @@ Object.assign(Run.prototype, {
       const e = 1 - Math.pow(1 - Math.max(0, Math.min(1, q)), 3), th = side * TH + side * (1 - e) * -4.2, ex = X - side * W * 0.62 * (1 - e), ey = Y - S * 0.35 * (1 - e);
       return [ex - Math.sin(th) * D, ey + Math.cos(th) * D, th];   // (the guard sits D below the crossing point, along the blade)
     };
-    const swordAt = (side, q, al, glint) => { const [x, y, th] = pose(side, q); ctx.save(); ctx.globalAlpha = al; ctx.translate(x, y); ctx.rotate(th); cdSword(ctx, L, glint); ctx.restore(); };
+    const swordAt = (side, q, al, glint) => { const [x, y, th] = pose(side, q); ctx.save(); ctx.globalAlpha = al; ctx.translate(x, y); ctx.rotate(th); goSword(ctx, L, glint, side); ctx.restore(); };
     const q = u / HIT;
     if (u < HIT) {   // flying in: the trails, then the swords
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
@@ -316,7 +314,7 @@ Object.assign(Run.prototype, {
       for (const side of [-1, 1]) swordAt(side, q, a, -1);
     } else {
       // the glow behind the crossing
-      const gl = RCache.glow('rgba(255,214,120,0.9)'), gr = S * (0.32 + 0.04 * Math.sin(c.t * 8)) * (1 + 0.6 * Math.max(0, 1 - hk * 5));
+      const gl = RCache.glow('rgba(220,245,130,0.9)'), gr = S * (0.32 + 0.04 * Math.sin(c.t * 8)) * (1 + 0.6 * Math.max(0, 1 - hk * 5));
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a * 0.75; ctx.drawImage(gl, X - gr, Y - gr, gr * 2, gr * 2); ctx.restore();
       // the two slashes across the screen, along the blades
       if (hk < 0.3) for (const side of [-1, 1]) {
@@ -333,7 +331,7 @@ Object.assign(Run.prototype, {
         ctx.save(); ctx.translate(X, Y); ctx.rotate(c.t * 2); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a * (1 - k);
         ctx.fillStyle = '#fff6d0'; ctx.beginPath(); for (let i = 0; i < 24; i++) { const rr = i % 2 ? r * 0.18 : r * (i % 4 ? 0.7 : 1), an = i / 24 * TAU; ctx.lineTo(Math.cos(an) * rr, Math.sin(an) * rr); } ctx.closePath(); ctx.fill(); ctx.restore();
       }
-      for (const [sp, col, wd] of [[1, '#fff2b0', 0.016], [0.6, '#ffb84a', 0.01]]) {
+      for (const [sp, col, wd] of [[1, '#f4ffd0', 0.016], [0.6, '#a8e63a', 0.01]]) {
         const k = Math.min(1, hk * 2.4 * sp); if (k >= 1) continue;
         ctx.globalAlpha = a * (1 - k); ctx.lineWidth = S * wd * (1 - k) + 1; ctx.strokeStyle = col; ctx.beginPath(); ctx.ellipse(X, Y, S * (0.05 + 0.6 * k), S * (0.04 + 0.42 * k), 0, 0, TAU); ctx.stroke();
       }
@@ -341,7 +339,7 @@ Object.assign(Run.prototype, {
         const k = hk / 0.5; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
         for (let i = 0; i < 30; i++) {
           const an = i / 30 * TAU + (i % 3) * 0.13, sp = 0.45 + ((i * 53) % 17) / 17 * 0.75, d0 = S * 0.05 + S * 0.42 * sp * Math.sqrt(k), d1 = d0 + S * 0.07 * (1 - k) * sp, fall = S * 0.08 * k * k * sp;
-          ctx.globalAlpha = a * (1 - k); ctx.strokeStyle = i % 4 ? '#ffd35a' : '#ffffff'; ctx.lineWidth = S * 0.006 * (1 - k * 0.7);
+          ctx.globalAlpha = a * (1 - k); ctx.strokeStyle = i % 4 ? (i % 3 ? '#c8f060' : '#ffd35a') : '#ffffff'; ctx.lineWidth = S * 0.006 * (1 - k * 0.7);
           ctx.beginPath(); ctx.moveTo(X + Math.cos(an) * d0, Y + Math.sin(an) * d0 + fall); ctx.lineTo(X + Math.cos(an) * d1, Y + Math.sin(an) * d1 + fall); ctx.stroke();
         }
         ctx.restore();
@@ -349,37 +347,28 @@ Object.assign(Run.prototype, {
       if (hk < 0.12) { ctx.globalAlpha = (1 - hk / 0.12) * 0.7; ctx.fillStyle = '#fff8e2'; ctx.fillRect(-W, -H, W * 3, H * 3); }   // the flash
       // GO! (0.95: badass, in the logo's and the font's spirit): forged gold, white-hot, the end of the count's heat
       // (gold, amber, ember, then white-hot). It drops in at the clash with a zoom trail and hits: a dark heat-haze behind
-      // it, two blades of light shooting out of its sides, a fire aura licking up the letters, burning leaves
+      // it, a fire aura licking up the letters, burning leaves
       // (the logo's) flung out of the clash, a shudder, sheens; at the end the letters stretch out and burn away to embers
       const gy = cy + S * 0.21, go = T('cd_go'), out = Math.max(0, (u - 0.78) / 0.22), A = annLayout(ctx, go, S * 0.22, 0.05 + 0.1 * out, W * 0.82), fs = A.fs, goDy = annInk(go, fs).dy - fs * 0.0325;   // (0.95: the word's ink centred on gy)
       const lk = clamp(hk / 0.09, 0, 1), drop = lk < 1 ? 1.9 - 0.9 * lk * lk : 1, land = hk - 0.09, settle = land > 0 ? 1 + 0.1 * Math.exp(-land * 30) * Math.cos(land * 60) : drop;
-      const glowF = RCache.glow('rgba(255,170,60,0.95)'), glowW = RCache.glow('rgba(255,248,220,0.95)');
-      // burning leaves
+      const glowF = RCache.glow('rgba(170,240,80,0.95)'), glowW = RCache.glow('rgba(255,248,220,0.95)');   // (0.98: lime, the verdant set)
+      // leaves flying out of the clash
       if (hk < 0.9) {
         const k = hk / 0.9;
         for (let i = 0; i < 18; i++) {
           const an = i / 18 * TAU + Math.sin(i * 3.7) * 0.3, sp = 0.55 + ((i * 29) % 11) / 11 * 0.7, d = S * 0.52 * sp * (1 - Math.pow(1 - k, 2)), x = X + Math.cos(an) * d, y = Y + Math.sin(an) * d * 0.75 + S * 0.3 * k * k * sp;
           ctx.save(); ctx.globalAlpha = a * Math.min(1, (1 - k) * 2.2); ctx.translate(x, y); ctx.rotate(an + k * (5 + i % 4) * (i % 2 ? 1 : -1)); ctx.scale(1, 0.55 + 0.45 * Math.abs(Math.cos(k * 9 + i)));
           const s = S * (0.03 + 0.022 * ((i * 17) % 5) / 5); ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= 0.7; ctx.drawImage(glowF, -s, -s, s * 2, s * 2); ctx.restore();
-          cdLeaf(ctx, s, ['#ffb02e', '#ff7a1a', '#e8401a'][i % 3]); ctx.restore();
+          cdLeaf(ctx, s, CD_LEAVES[i % CD_LEAVES.length]); ctx.restore();
         }
       }
       if (land > 0) {
-        // a dark heat-haze behind the word (it reads on any ground and the fire shows), then two blades of light shooting
-        // out from its sides — tapered, outlined, a white core — sharp at the hit, then fading
-        const k = clamp(land / 0.5, 0, 1), wa = a * (1 - k * 0.7), hw = (A.tw / 2 + fs * 0.5) + W * 0.42 * (1 - Math.pow(1 - clamp(land / 0.16, 0, 1), 3));
-        ctx.save(); ctx.globalAlpha = a * 0.75; ctx.drawImage(RCache.glow('rgba(24,6,0,0.9)'), cx - A.tw * 0.85, gy - fs * 0.95, A.tw * 1.7, fs * 1.9);
+        // a dark haze behind the word (it reads on any ground and the glow shows); 0.98: the two blades of light out of its
+        // sides gone, the screen's chromatic aberration (Run.chromaK) instead
+        const k = clamp(land / 0.5, 0, 1), wa = a * (1 - k * 0.7);
+        ctx.save(); ctx.globalAlpha = a * 0.75; ctx.drawImage(RCache.glow('rgba(2,26,12,0.9)'), cx - A.tw * 0.85, gy - fs * 0.95, A.tw * 1.7, fs * 1.9);
         ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = wa * 0.7; ctx.drawImage(glowF, cx - A.tw * 0.7, gy - fs * 0.6, A.tw * 1.4, fs * 1.2); ctx.restore();
-        ctx.save(); ctx.lineJoin = 'round';
-        for (const sd of [-1, 1]) for (const [dy, hh, len, al] of [[-0.02, 0.12, 1, 1], [0.22, 0.05, 0.62, 0.7]]) {
-          const x0 = cx + sd * (A.tw / 2 + fs * 0.3), x1 = x0 + sd * (hw - A.tw / 2 - fs * 0.3) * len, y0 = gy + fs * dy, h = fs * hh;
-          ctx.globalAlpha = wa * al; ctx.fillStyle = 'rgba(40,10,0,0.85)'; ctx.beginPath(); ctx.moveTo(x0, y0 - h - fs * 0.025); ctx.lineTo(x1 + sd * fs * 0.06, y0); ctx.lineTo(x0, y0 + h + fs * 0.025); ctx.closePath(); ctx.fill();
-          const g = ctx.createLinearGradient(x0, 0, x1, 0); g.addColorStop(0, '#fff8e0'); g.addColorStop(0.35, '#ffc84a'); g.addColorStop(1, 'rgba(240,110,20,0.2)');
-          ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x0, y0 - h); ctx.lineTo(x1, y0); ctx.lineTo(x0, y0 + h); ctx.closePath(); ctx.fill();
-          ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(255,255,240,0.9)'; ctx.beginPath(); ctx.moveTo(x0, y0 - h * 0.25); ctx.lineTo(x0 + (x1 - x0) * 0.8, y0); ctx.lineTo(x0, y0 + h * 0.25); ctx.closePath(); ctx.fill(); ctx.globalCompositeOperation = 'source-over';
-        }
-        ctx.restore();
-        // the fire aura licking up the letters
+        // the glow rising off the letters (0.98: lime; was fire)
         ctx.save(); ctx.globalCompositeOperation = 'lighter';
         const nfl = Math.max(8, Math.round(A.tw / (fs * 0.28))), surge = 1 + 1.2 * Math.max(0, 1 - land / 0.35);
         for (let i = 0; i < nfl; i++) {
@@ -390,22 +379,22 @@ Object.assign(Run.prototype, {
       }
       // the zoom trail while it falls: fading copies, bigger and further back
       ctx.save(); ctx.textAlign = 'center';
-      if (lk < 1) { ctx.globalCompositeOperation = 'lighter'; for (let j = 3; j >= 1; j--) { const sc = drop * (1 + j * 0.22); ctx.save(); ctx.globalAlpha = a * lk * 0.18 * (4 - j) / 3; ctx.translate(cx, gy); ctx.scale(sc, sc); ctx.font = annFont(fs); ctx.textBaseline = 'middle'; ctx.fillStyle = '#ffd88a'; A.chars.forEach((ch, i) => ctx.fillText(ch, A.xs[i], goDy)); ctx.restore(); } ctx.globalCompositeOperation = 'source-over'; }
+      if (lk < 1) { ctx.globalCompositeOperation = 'lighter'; for (let j = 3; j >= 1; j--) { const sc = drop * (1 + j * 0.22); ctx.save(); ctx.globalAlpha = a * lk * 0.18 * (4 - j) / 3; ctx.translate(cx, gy); ctx.scale(sc, sc); ctx.font = annFont(fs); ctx.textBaseline = 'middle'; ctx.fillStyle = '#e8f8a0'; A.chars.forEach((ch, i) => ctx.fillText(ch, A.xs[i], goDy)); ctx.restore(); } ctx.globalCompositeOperation = 'source-over'; }
       // the letters: a shudder after the hit, then stretching out and burning away at the end
       const shud = land > 0 && land < 0.25 ? (1 - land / 0.25) * fs * 0.025 : 0;
       ctx.globalAlpha = a * Math.min(1, hk / 0.03 + 0.2) * (1 - out * out);
       ctx.translate(cx + (shud ? Math.sin(c.t * 120) * shud : 0), gy); ctx.scale(settle * (1 + out * 0.22), settle * (1 - out * 0.08));
-      A.chars.forEach((ch, i) => { if (ch !== ' ') annGlyph(ctx, ch, A.xs[i], goDy, fs, GO_FORGE); });
+      A.chars.forEach((ch, i) => { if (ch !== ' ') annGlyph(ctx, ch, A.xs[i], goDy, fs, ANN.retro); });   // (0.98: Dofus Retro's gold in a lime halo)
       if (land > 0) { const at = ((land * 1.5) % 1.2 - 0.1) * (A.tw + fs * 2) - A.tw / 2 - fs; A.chars.forEach((ch, i) => annSheen(ctx, ch, A.xs[i], goDy, fs, at, 0.9)); }
       ctx.restore();
-      // embers: thrown up at the hit, then rising off the letters as they burn away
+      // fireflies: thrown up at the hit, then rising off the letters as they fade
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       for (let i = 0; i < 26; i++) {
         const q = ((c.t * (0.6 + 0.5 * ((i * 7) % 5) / 5)) + i / 26) % 1, ex = cx + ((i * 61) % 97 / 97 - 0.5) * A.tw * 1.2 + Math.sin(c.t * 2 + i) * fs * 0.1, ey = gy + fs * 0.3 - q * fs * (1.4 + out * 1.6), r = fs * (0.04 + 0.05 * ((i * 11) % 7) / 7);
         ctx.globalAlpha = a * Math.sin(q * Math.PI) * (land > 0 ? 0.85 : 0) * (0.5 + out); ctx.drawImage(glowF, ex - r * 2, ey - r * 2, r * 4, r * 4);
       }
       ctx.restore();
-      if (hk < 0.5) sparks(hk / 0.5, S * 0.2, '#ffcf6a', 0.4);
+      if (hk < 0.5) sparks(hk / 0.5, S * 0.2, '#d8f870', 0.4);
     }
     ctx.restore();
     ctx.globalAlpha = 1;
@@ -707,79 +696,100 @@ function tmapZoneName(m) { const S = Store.data; return m.hidden && !(S.unlocked
 // 0.91: the countdown's sword, as vectors, pointing up from its guard at (0, 0), blade about 0.8 L long: a silver blade
 // with its fuller, a gold crossguard with a red gem, a leather grip, a gold pommel, a dark outline; glint in 0..1 = a
 // light running down the blade (-1: none)
-// 0.95: the countdown's turn-timer medallion, drawn around 0 (R = its outer radius): blades at the four points (and four
-// shorter ones between), a riveted gold bezel, a dark band of runes turning slowly that glow in the count's heat, the
-// time arc emptying clockwise with a burning spark at its head, and a dark disc with the Dofus spiral (the logo's 'O',
-// the egg's swirl) engraved in it, turning the other way. Its heat goes gold -> amber -> ember as the count goes down;
-// the runes flare when the number strikes (u 0.12).
-const CD_HEAT = ['#ffd24a', '#ff9a3a', '#ff5a24'];
+// 0.98 (the old bronze medallion was not Dofus enough: Dofus Retro's and Dofus Unity's logos, green and alive): the
+// countdown's emblem, drawn around 0 (R = its outer radius): a lime aurora behind, a wreath of leaves turning slowly (and an
+// inner one the other way), a gold ring carrying the time left as a glowing vine that empties clockwise with a spark at
+// its head, a Dofus egg glowing lime in the middle with the logo's swirl turning in it, fireflies drifting up around it.
+// Its glow warms as the count goes down (lime, yellow-green, gold); the egg flares when the number strikes (u 0.12).
+const CD_HEAT = ['#b6f04a', '#d8ec4a', '#f5c542'];
+const CD_LEAVES = ['#3fae3a', '#7cd04a', '#2e8b3a', '#a8e05a', '#5cbf3a'];
+function cdEgg(ctx, w, h) {   // an egg, its widest part low, drawn around 0 (top -h, bottom h * 0.85)
+  ctx.beginPath(); ctx.moveTo(0, -h); ctx.bezierCurveTo(w * 0.62, -h, w, -h * 0.25, w, h * 0.18); ctx.bezierCurveTo(w, h * 0.62, w * 0.55, h * 0.85, 0, h * 0.85);
+  ctx.bezierCurveTo(-w * 0.55, h * 0.85, -w, h * 0.62, -w, h * 0.18); ctx.bezierCurveTo(-w, -h * 0.25, -w * 0.62, -h, 0, -h); ctx.closePath();
+}
 function cdMedal(ctx, R, u, n, t) {
   const heat = CD_HEAT[n], flare = u >= 0.12 && u < 0.5 ? 1 - (u - 0.12) / 0.38 : 0;
-  ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.beginPath(); ctx.ellipse(0, R * 0.12, R * 1.2, R * 1.12, 0, 0, TAU); ctx.fill();   // (its shadow)
-  // the blades: four long at the points, four short between, dark steel with a gold edge and a light ridge
-  for (let i = 0; i < 8; i++) {
-    const long = i % 2 === 0, L = R * (long ? 1.42 : 1.2), w = R * (long ? 0.2 : 0.13);
-    ctx.save(); ctx.rotate(i / 8 * TAU + Math.sin(t * 1.3) * 0.015);
-    ctx.fillStyle = '#1c0d03'; ctx.beginPath(); ctx.moveTo(-w - R * 0.03, -R * 0.7); ctx.lineTo(0, -L - R * 0.04); ctx.lineTo(w + R * 0.03, -R * 0.7); ctx.closePath(); ctx.fill();
-    const g = ctx.createLinearGradient(-w, 0, w, 0); g.addColorStop(0, '#8a5a1c'); g.addColorStop(0.48, '#ffe7a0'); g.addColorStop(0.52, '#b47a26'); g.addColorStop(1, '#5a3410');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(-w, -R * 0.72); ctx.lineTo(0, -L); ctx.lineTo(w, -R * 0.72); ctx.closePath(); ctx.fill();
-    ctx.restore();
-  }
-  // the bezel: dark rim, gold body with a light top, 16 rivets
-  ctx.fillStyle = '#1c0d03'; ctx.beginPath(); ctx.arc(0, 0, R * 1.03, 0, TAU); ctx.fill();
-  const bz = ctx.createLinearGradient(0, -R, 0, R); bz.addColorStop(0, '#fff3c0'); bz.addColorStop(0.35, '#f2bf4a'); bz.addColorStop(0.7, '#b0701c'); bz.addColorStop(1, '#5c3208');
-  ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R, 0, TAU); ctx.fill();
-  for (let i = 0; i < 16; i++) {
-    const an = i / 16 * TAU + TAU / 32, x = Math.cos(an) * R * 0.93, y = Math.sin(an) * R * 0.93, r = R * 0.035;
-    ctx.fillStyle = '#3a1d05'; ctx.beginPath(); ctx.arc(x, y + r * 0.3, r * 1.2, 0, TAU); ctx.fill();
-    ctx.fillStyle = '#fff0b8'; ctx.beginPath(); ctx.arc(x - r * 0.2, y - r * 0.2, r, 0, TAU); ctx.fill();
-  }
-  // the rune band, turning
-  ctx.fillStyle = '#1e1008'; ctx.beginPath(); ctx.arc(0, 0, R * 0.87, 0, TAU); ctx.fill();
-  ctx.save(); ctx.rotate(t * 0.45);
-  for (let i = 0; i < 18; i++) {
-    const an = i / 18 * TAU, rr = R * 0.8, s = R * 0.045; ctx.save(); ctx.rotate(an); ctx.translate(0, -rr);
-    ctx.globalAlpha *= 0.55 + 0.45 * flare + 0.15 * Math.sin(t * 4 + i); ctx.fillStyle = heat; ctx.strokeStyle = heat; ctx.lineWidth = R * 0.014;
-    if (i % 3 === 0) { ctx.beginPath(); ctx.moveTo(0, -s); ctx.lineTo(s * 0.7, 0); ctx.lineTo(0, s); ctx.lineTo(-s * 0.7, 0); ctx.closePath(); ctx.fill(); }   // (a diamond)
-    else { ctx.beginPath(); ctx.moveTo(-s * 0.5, -s * 0.8); ctx.lineTo(i % 3 === 1 ? s * 0.5 : -s * 0.5, s * 0.8); ctx.moveTo(s * 0.5, -s * 0.8); ctx.lineTo(i % 3 === 1 ? -s * 0.1 : s * 0.5, i % 3 === 1 ? 0 : s * 0.8); ctx.stroke(); }   // (a rune stroke pair)
-    ctx.restore();
-  }
+  // the aurora behind: a lime glow and a deeper teal one, breathing
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  const br = 1 + 0.05 * Math.sin(t * 2.4) + 0.25 * flare;
+  ctx.globalAlpha *= 0.55; let gr = R * 1.75 * br; ctx.drawImage(RCache.glow('rgba(40,170,120,0.8)'), -gr, -gr, gr * 2, gr * 2);
+  gr = R * 1.3 * br; ctx.drawImage(RCache.glow(n === 2 ? 'rgba(245,200,70,0.85)' : 'rgba(170,236,60,0.85)'), -gr, -gr, gr * 2, gr * 2);
   ctx.restore();
-  // the disc: dark bronze, the Dofus spiral engraved and turning the other way, an inner bevel
-  const dg = ctx.createRadialGradient(-R * 0.25, -R * 0.3, R * 0.05, 0, 0, R * 0.72); dg.addColorStop(0, '#5a3818'); dg.addColorStop(1, '#170b04');
-  ctx.fillStyle = '#0d0602'; ctx.beginPath(); ctx.arc(0, 0, R * 0.73, 0, TAU); ctx.fill(); ctx.fillStyle = dg; ctx.beginPath(); ctx.arc(0, 0, R * 0.7, 0, TAU); ctx.fill();
-  ctx.save(); ctx.rotate(-t * 0.6); ctx.lineCap = 'round';
-  for (const [lw, col, al] of [[R * 0.07, '#0a0401', 0.7], [R * 0.035, heat, 0.32 + 0.3 * flare]]) {
-    ctx.globalAlpha *= al; ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.beginPath();
-    for (let k = 0; k <= 70; k++) { const th = k / 70 * 3.2 * TAU, r = R * 0.6 * k / 70; ctx.lineTo(Math.cos(th) * r, Math.sin(th) * r); }
-    ctx.stroke(); ctx.globalAlpha /= al;
-  }
-  ctx.restore();
-  // the time left: a burning arc clockwise from the top, its head a spark throwing embers back along it
-  const a0 = -Math.PI / 2 + TAU * Math.min(1, u), a1 = -Math.PI / 2 + TAU, rr = R * 0.8;
+  ctx.fillStyle = 'rgba(0,20,8,0.35)'; ctx.beginPath(); ctx.ellipse(0, R * 0.14, R * 1.12, R * 1.04, 0, 0, TAU); ctx.fill();   // (its shadow)
+  // the wreaths: big leaves turning one way, smaller ones the other, each swaying a little
+  const wreath = (N, rr, s, spin, off) => {
+    for (let i = 0; i < N; i++) {
+      const an = i / N * TAU + t * spin + off, sw = Math.sin(t * 2.2 + i * 1.7) * 0.18;
+      ctx.save(); ctx.rotate(an); ctx.translate(0, -rr); ctx.rotate(-0.55 + sw); cdLeaf(ctx, s * (0.85 + 0.3 * ((i * 7) % 5) / 5), CD_LEAVES[(i * 3) % CD_LEAVES.length]); ctx.restore();
+    }
+  };
+  wreath(20, R * 0.98, R * 0.36, 0.22, 0);
+  wreath(14, R * 0.86, R * 0.24, -0.35, 0.2);
+  // the gold ring (dark rim, gold body, a light top)
+  ctx.lineWidth = R * 0.12; ctx.strokeStyle = '#1e2a0e'; ctx.beginPath(); ctx.arc(0, 0, R * 0.78, 0, TAU); ctx.stroke();
+  const gz = ctx.createLinearGradient(0, -R, 0, R); gz.addColorStop(0, '#fff3b8'); gz.addColorStop(0.4, '#f5c542'); gz.addColorStop(1, '#8a560c');
+  ctx.lineWidth = R * 0.075; ctx.strokeStyle = gz; ctx.beginPath(); ctx.arc(0, 0, R * 0.78, 0, TAU); ctx.stroke();
+  ctx.fillStyle = 'rgba(8,36,22,0.92)'; ctx.beginPath(); ctx.arc(0, 0, R * 0.73, 0, TAU); ctx.fill();   // (the deep green inside)
+  // the time left: a glowing vine on the ring, clockwise from the top, its head a spark throwing motes and tiny leaves back
+  const a0 = -Math.PI / 2 + TAU * Math.min(1, u), a1 = -Math.PI / 2 + TAU, rr = R * 0.78, gl = RCache.glow('rgba(200,250,110,0.95)');
   if (u < 1) {
-    ctx.lineCap = 'round'; ctx.strokeStyle = '#1c0d03'; ctx.lineWidth = R * 0.11; ctx.beginPath(); ctx.arc(0, 0, rr, a0, a1); ctx.stroke();
-    const ag = ctx.createLinearGradient(-R, -R, R, R); ag.addColorStop(0, '#fff6d0'); ag.addColorStop(1, heat); ctx.strokeStyle = ag; ctx.lineWidth = R * 0.065; ctx.beginPath(); ctx.arc(0, 0, rr, a0, a1); ctx.stroke();
-    const hx = Math.cos(a0) * rr, hy = Math.sin(a0) * rr, gl = RCache.glow(n === 2 ? 'rgba(255,90,40,0.95)' : n === 1 ? 'rgba(255,160,60,0.95)' : 'rgba(255,220,120,0.95)');
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; const gr = R * (0.26 + 0.04 * Math.sin(t * 30)); ctx.drawImage(gl, hx - gr, hy - gr, gr * 2, gr * 2);
-    for (let i = 0; i < 7; i++) {   // embers left behind the head
-      const q = (t * 2.2 + i / 7) % 1, an = a0 - q * 0.5, d = rr + (Math.sin(i * 7.3) * 0.5) * R * 0.12 * q, er = R * 0.03 * (1 - q);
+    ctx.lineCap = 'round'; ctx.strokeStyle = '#0e2a0a'; ctx.lineWidth = R * 0.085; ctx.beginPath(); ctx.arc(0, 0, rr, a0, a1); ctx.stroke();
+    const ag = ctx.createLinearGradient(-R, -R, R, R); ag.addColorStop(0, '#f4ffc8'); ag.addColorStop(1, heat); ctx.strokeStyle = ag; ctx.lineWidth = R * 0.05; ctx.beginPath(); ctx.arc(0, 0, rr, a0, a1); ctx.stroke();
+    for (let i = 0; i < 9; i++) {   // little leaves sprouting along the vine
+      const an = a0 + (a1 - a0) * (i + 0.5) / 9; if (an >= a1) break;
+      ctx.save(); ctx.rotate(an + Math.PI / 2); ctx.translate(0, -rr - R * 0.05 * (i % 2 ? 1 : -1)); ctx.rotate(i % 2 ? 0.6 : -0.6); cdLeaf(ctx, R * 0.12, CD_LEAVES[i % CD_LEAVES.length]); ctx.restore();
+    }
+    const hx = Math.cos(a0) * rr, hy = Math.sin(a0) * rr;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; const hr = R * (0.24 + 0.04 * Math.sin(t * 30)); ctx.drawImage(gl, hx - hr, hy - hr, hr * 2, hr * 2);
+    for (let i = 0; i < 7; i++) {
+      const q = (t * 2.2 + i / 7) % 1, an = a0 - q * 0.5, d = rr + Math.sin(i * 7.3) * 0.5 * R * 0.12 * q, er = R * 0.03 * (1 - q);
       ctx.globalAlpha = (1 - q) * 0.9; ctx.drawImage(gl, Math.cos(an) * d - er * 2, Math.sin(an) * d - er * 2 - q * R * 0.1, er * 4, er * 4);
     }
     ctx.restore();
   }
-  ctx.strokeStyle = 'rgba(255,230,170,0.35)'; ctx.lineWidth = R * 0.015; ctx.beginPath(); ctx.arc(0, 0, R * 0.71, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();   // (light on the bevel)
+  // the Dofus egg: dark outline, lime body lit from the top left, the logo's swirl turning in it, a light rim, a flare
+  const ew = R * 0.56, eh = R * 0.66;
+  ctx.save(); ctx.translate(0, R * 0.04);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= 0.5 + 0.5 * flare; const eg0 = R * (0.95 + 0.25 * flare); ctx.drawImage(RCache.glow('rgba(190,250,90,0.9)'), -eg0, -eg0, eg0 * 2, eg0 * 2); ctx.restore();
+  ctx.lineWidth = R * 0.06; ctx.strokeStyle = '#14300c'; cdEgg(ctx, ew, eh); ctx.stroke();
+  const eg = ctx.createRadialGradient(-ew * 0.35, -eh * 0.45, R * 0.04, 0, 0, eh * 1.1); eg.addColorStop(0, '#f4ffb0'); eg.addColorStop(0.35, '#c8f060'); eg.addColorStop(0.75, '#7cc42e'); eg.addColorStop(1, '#3a7a16');
+  ctx.fillStyle = eg; cdEgg(ctx, ew, eh); ctx.fill();
+  ctx.save(); cdEgg(ctx, ew, eh); ctx.clip(); ctx.rotate(-t * 0.5); ctx.lineCap = 'round';
+  for (const [lw, col, al] of [[R * 0.08, '#4a8a16', 0.55], [R * 0.03, '#2e6a10', 0.7]]) {
+    ctx.globalAlpha *= al; ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.beginPath();
+    for (let k = 0; k <= 60; k++) { const th = k / 60 * 2.6 * TAU, r = R * 0.52 * k / 60; ctx.lineTo(Math.cos(th) * r, Math.sin(th) * r); }
+    ctx.stroke(); ctx.globalAlpha /= al;
+  }
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(250,255,220,0.55)'; ctx.lineWidth = R * 0.02; ctx.beginPath(); ctx.ellipse(-ew * 0.32, -eh * 0.42, ew * 0.32, eh * 0.2, -0.5, Math.PI * 1.05, Math.PI * 1.75); ctx.stroke();   // (its shine)
+  if (flare) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= flare * 0.6; ctx.fillStyle = '#f4ffd0'; cdEgg(ctx, ew, eh); ctx.fill(); ctx.restore(); }
+  ctx.restore();
+  // fireflies drifting up around the emblem
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; const ff = RCache.glow('rgba(220,255,120,0.95)');
+  for (let i = 0; i < 14; i++) {
+    const q = (t * (0.18 + 0.1 * ((i * 7) % 5) / 5) + i / 14) % 1, an = i * 2.4, fx = Math.cos(an) * R * (0.95 + 0.45 * ((i * 13) % 7) / 7) + Math.sin(t * 1.7 + i) * R * 0.06, fy = Math.sin(an) * R * 0.9 - q * R * 0.7, fr = R * (0.035 + 0.03 * ((i * 11) % 5) / 5) * (0.6 + 0.4 * Math.sin(t * 5 + i));
+    ctx.globalAlpha = Math.sin(q * Math.PI) * 0.9; ctx.drawImage(ff, fx - fr * 2, fy - fr * 2, fr * 4, fr * 4);
+  }
+  ctx.restore();
 }
-// GO!'s leaves (the logo's, burning): a pointed leaf with its midrib, drawn around 0, length s
+// a leaf (the logos' leaves: the countdown's wreath, GO!'s burst, the panels, the victory): a pointed leaf with its midrib, drawn around 0, length s
 function cdLeaf(ctx, s, col) {
   ctx.fillStyle = '#0f2a06'; ctx.beginPath(); ctx.moveTo(-s * 0.55, 0); ctx.quadraticCurveTo(0, -s * 0.36, s * 0.55, 0); ctx.quadraticCurveTo(0, s * 0.36, -s * 0.55, 0); ctx.fill();
   ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-s * 0.47, 0); ctx.quadraticCurveTo(0, -s * 0.28, s * 0.47, 0); ctx.quadraticCurveTo(0, s * 0.28, -s * 0.47, 0); ctx.fill();
   ctx.strokeStyle = 'rgba(15,42,6,0.8)'; ctx.lineWidth = Math.max(1, s * 0.05); ctx.beginPath(); ctx.moveTo(-s * 0.4, 0); ctx.lineTo(s * 0.4, 0); ctx.stroke();
 }
-// the '2' of the countdown: gold warming up between the gold '3' and the ember '1'
-// GO!: forged gold, white-hot (the end of the count's heat)
-const GO_FORGE = { stops: [[0, '#ffffff'], [0.3, '#fff2b0'], [0.55, '#ffc23a'], [0.8, '#f07a14'], [1, '#9a2c06']], edge: '#1a0602', bevel: '#6a2006', deep: '#2c0b02', hi: '#ffffff' };
-const CD_AMBER = { stops: [[0, '#fff5d0'], [0.36, '#ffc246'], [0.64, '#f0861e'], [1, '#93380a']], edge: '#1c0a03', bevel: '#7a360e', deep: '#3a1604', hi: '#fff8e2' };
+// 0.98: GO!'s swords are the Épée Royale du Bouftou (client item 2440, picture 6/30, rendered from its vector art at 640 px:
+// icons3 'go_sword', tools/assets/build_iconhd091.py gosword), drawn like cdSword around its guard, blade up, tip at
+// -0.8 L; the left one mirrored; the glint = the picture again, added, flashing as the light runs. cdSword if it is missing
+const GO_SWORD = { gx: 165, gy: 470, cx: 316, cy: 320, len: 650, size: 640 };   // (in the picture: its guard, its centre, guard to tip, its size)
+function goSword(ctx, L, glint, side) {
+  const IC = Game.icons; if (!IC || !IC.get('go_sword')) { cdSword(ctx, L, glint); return; }
+  const G = GO_SWORD, k = L * 0.8 / G.len, x = (G.cx - G.gx) * k, y = (G.cy - G.gy) * k;
+  ctx.save(); if (side < 0) ctx.scale(-1, 1); ctx.rotate(-Math.PI / 4);   // (its blade runs to the top right: turned up)
+  IC.drawFit(ctx, 'go_sword', x, y, G.size * k);
+  if (glint >= 0) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= 0.2 * Math.sin(glint * Math.PI); IC.drawFit(ctx, 'go_sword', x, y, G.size * k); }
+  ctx.restore();
+}
 function cdSword(ctx, L, glint) {
   const O = 'rgba(28,16,6,0.95)', bw = L * 0.05, tip = -L * 0.8, base = -L * 0.03;
   const blade = () => { ctx.beginPath(); ctx.moveTo(-bw, base); ctx.lineTo(-bw * 0.92, tip + L * 0.12); ctx.lineTo(0, tip); ctx.lineTo(bw * 0.92, tip + L * 0.12); ctx.lineTo(bw, base); ctx.closePath(); };

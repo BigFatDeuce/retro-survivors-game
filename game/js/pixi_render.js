@@ -268,7 +268,25 @@ const PX = {
     if (!this.gTouched) { for (let i = 0; i < this.gused; i++) this.gpool[i].visible = false; this.gused = 0; }   // (no ground effects drawn this frame)
     for (let i = this.n; i < this.used; i++) this.pool[i].visible = false;
     this.used = this.n;
-    this.r.render(this.stage);
+    // 0.98: the chromatic aberration of the moment (this.ca 0..1, Run.chromaK), only while it shows: the frame is drawn into
+    // a texture, then on the screen through the filter (a filter on the stage itself broke with the scenery's alpha mask)
+    let ca = false;
+    if (this.ca > 0.01 && this.caF !== false) {
+      if (!this.caF) this.caF = pxChroma(this.r);
+      if (this.caF) {
+        // (made again at each new size — the adaptive resolution, a window resized, full screen: RenderTexture.resize left
+        // the sprite showing it at the old size, the picture shifted and stretched until the effect ended; the old ones are
+        // destroyed a few frames later, the renderer still holds the last target for a frame)
+        if (!this.caRT || this.caRT.width !== this.W || this.caRT.height !== this.H) {
+          if (this.caRT) (this.caOld || (this.caOld = [])).push([this.caRT, this.caRoot, 3]);
+          this.caRT = PIXI.RenderTexture.create({ width: this.W, height: this.H, resolution: 1 }); this.caS = new PIXI.Sprite(this.caRT); this.caS.filters = [this.caF]; this.caRoot = new PIXI.Container(); this.caRoot.addChild(this.caS);
+        }
+        this.caF.resources.caU.uniforms.uStrength = 0.03 * Math.pow(Math.min(1, this.ca / 2.6), 0.75);   // (the smear's reach: ~1.5 % of the screen at the edge at most, the victory)
+        this.r.render({ container: this.stage, target: this.caRT, clear: true }); this.r.render(this.caRoot); ca = true;
+      }
+    }
+    if (!ca) this.r.render(this.stage);
+    if (this.caOld && this.caOld.length) this.caOld = this.caOld.filter(o => { if (--o[2] > 0) return true; o[1].destroy({ children: true }); o[0].destroy(true); return false; });
     if (!this.shown) { this.cv.style.visibility = 'visible'; this.shown = true; }
   },
   // the next quad of the frame: texture tex at (x, y) (its top-left corner, or its centre with ax 0.5), scale sx / sy
@@ -547,3 +565,52 @@ const PX = {
     this.q(P.tex, (X0 - this.wx) / z, (Y0 - this.wy) / z, 1 / z, 1 / z, 1);
   },
 };
+// 0.98: the chromatic aberration (PX.end, Run.chromaK), like a lens: the centre stays sharp, towards the edges the picture
+// is smeared along the radius over 9 taps weighted by colour (red outwards, green in the middle, blue inwards): a soft
+// blur with small colour fringes. (A first version sampled red and blue apart by an offset growing with the strength:
+// strong, it showed two shifted copies of the screen, jumping with the screen shake.) False when PixiJS cannot make it. (The frame's sizes stay in the vertex shader:
+// a uniform in both shaders at different precisions does not link — the screen went black, the context lost)
+function pxChroma(r) {
+  try {
+    const vertex = `in vec2 aPosition;
+out vec2 vTextureCoord;
+out vec2 vCenter;
+uniform vec4 uInputSize;
+uniform vec4 uOutputFrame;
+uniform vec4 uOutputTexture;
+void main(void) {
+  vec2 position = aPosition * uOutputFrame.zw + uOutputFrame.xy;
+  position.x = position.x * (2.0 / uOutputTexture.x) - 1.0;
+  position.y = position.y * (2.0 * uOutputTexture.z / uOutputTexture.y) - uOutputTexture.z;
+  gl_Position = vec4(position, 0.0, 1.0);
+  vTextureCoord = aPosition * (uOutputFrame.zw * uInputSize.zw);
+  vCenter = uOutputFrame.zw * uInputSize.zw * 0.5;
+}`;
+    const fragment = `in vec2 vTextureCoord;
+in vec2 vCenter;
+out vec4 finalColor;
+uniform sampler2D uTexture;
+uniform float uStrength;
+uniform vec4 uInputClamp;
+void main(void) {
+  vec2 dir = vTextureCoord - vCenter;
+  float edge = smoothstep(0.25, 1.15, length(dir / vCenter));
+  vec2 d = dir * uStrength * edge;
+  vec3 acc = vec3(0.0), ws = vec3(0.0);
+  for (int i = 0; i < 9; i++) {
+    float t = float(i) / 8.0;
+    vec3 s = texture(uTexture, clamp(vTextureCoord + d * (t * 2.0 - 1.0), uInputClamp.xy, uInputClamp.zw)).rgb;
+    vec3 w = vec3(t * t, 1.0 - abs(t * 2.0 - 1.0) * 0.8, (1.0 - t) * (1.0 - t));
+    acc += s * w; ws += w;
+  }
+  finalColor = vec4(acc / ws, texture(uTexture, vTextureCoord).a);
+}`;
+    const f = new PIXI.Filter({ glProgram: PIXI.GlProgram.from({ vertex, fragment, name: 'rs-chroma' }), resources: { caU: { uStrength: { value: 0, type: 'f32' } } }, resolution: 1 });   // (resolution 1: 'inherit' on the stage itself found no parent to read)
+    // a trial on a tiny texture first: a GPU that cannot run it gets no effect rather than a broken picture
+    const gl = r.gl; while (gl.getError()) { }
+    const c = new PIXI.Container(), sp = c.addChild(new PIXI.Sprite(PIXI.Texture.WHITE)), rt = PIXI.RenderTexture.create({ width: 8, height: 8 }); sp.width = sp.height = 8; c.filters = [f];
+    r.render({ container: c, target: rt }); const bad = gl.getError() || gl.isContextLost(); f._trial = [c, rt];   // (kept: destroyed at once, the renderer still read its target next frame)
+    if (bad) { console.warn('chromatic aberration unavailable on this GPU'); return false; }
+    return f;
+  } catch (e) { console.warn('chromatic aberration unavailable', e); return false; }
+}

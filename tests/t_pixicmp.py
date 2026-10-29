@@ -28,7 +28,7 @@ SETUP = """(() => { const R = Game.run, P = R.player; P.god = 1;
   kinds.forEach((k, i) => R.pickups.push({ kind: k, x: P.x - 260 + i * 46, y: P.y + 150, v: k === 'gem' ? 20 : k === 'relic' ? R.C.relics[0].id : k === 'dofus' ? R.C.dofus[0].id : 1, pk: 1 }));
   R.mobs.slice(0, 40).forEach((m, i) => { if (i % 4 === 0) m.markUntil = 1e9; if (i % 4 === 1) m.stunUntil = 1e9; if (i % 4 === 2) m.slowUntil = 1e9; if (i % 4 === 3) { m.poisonUntil = 1e9; m.bleedUntil = 1e9; } });
 })()"""
-FREEZE = "(() => { const R = Game.run; R.update = () => {}; R.update._f = 1; R.shakeAmt = 0; R.shake = () => {}; })()"
+FREEZE = "(() => { const R = Game.run; R.update = () => {}; R.update._f = 1; R.shakeAmt = 0; R.shake = () => {}; R.chromaK = () => 0; })()"   # (0.98: no chromatic aberration: a PixiJS-only pass over the frame, Run.chromaK)
 res = []
 for c in SC:
     url(f'autostart=1&fresh=1&cls={c}&map=astrub&t=150&pixi=1&spells={SP[c]}')

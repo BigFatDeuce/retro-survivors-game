@@ -32,8 +32,9 @@ Object.assign(Run.prototype, {
     this.sfused.add(id); Prog.add('sfusions'); Prog.bump('sfDone', id); if (this.ps) this.ps.sfusions = (this.ps.sfusions || 0) + 1;
     this.chat('✦ ' + T('sfusion_union') + ' ' + L(d.name), '#ffcf6a');
     // (0.61: made by a chest, the show waits for its window to close: it played unseen behind it)
+    const big = this.chestN >= 3;   // (0.98: made by a boss chest: no slow motion after the show)
     const show = () => this.startCine('union', { def: d, icons, kind: f.kind }, () => {
-      const P = this.player; this.slowMo(0.9, 0.4); this.flash('255,240,200', 0.4, 0.5); this.shake(6);
+      const P = this.player; if (!big) this.slowMo(0.9, 0.4); this.flash('255,240,200', 0.4, 0.5); this.shake(6);
       this.rings.push({ x: P.x, y: P.y, r0: 20, r1: 300, t0: this.time, dur: 0.7, color: '#ffcf6a', fill: 1 });
       if (d.fx2) this.fxAt(d.fx2, P.x, P.y - 10, { scale: 1.6 });
       for (const m of this.mobsInRadius(P.x, P.y, 260)) if (!m.boss) { const dx = m.x - P.x, dy = m.y - P.y, dd = Math.hypot(dx, dy) || 1; m.kx += dx / dd * 500; m.ky += dy / dd * 500; }
@@ -47,7 +48,7 @@ Object.assign(Run.prototype, {
     const bare = sp._bare || (sp._bare = { def: sp.def, p: {}, bare: true, level: MAX_SPELL_LV });
     if (!m.dying) {
       if (p.rBurn) { m.burnUntil = t + 3; m.burnDps = Math.max(m.burnDps || 0, d * p.rBurn); }
-      if (p.rPoison) this.poisonMob(m, d * p.rPoison / 4 / Math.max(0.01, st.might * this.dmgMul()), 4, bare);
+      if (p.rPoison) this.poisonPuff(m, d * p.rPoison / 4 / Math.max(0.01, st.might * this.dmgMul()), 4, bare);   // (0.98: through a little poison zone)
       if (p.rSlow && !m.boss) { m.slowAmt = Math.max(m.slowUntil > t ? m.slowAmt || 0 : 0, p.rSlow); m.slowUntil = t + 1.6; }
       if (p.rStun && Math.random() < (p.rStunP || 1)) m.stunUntil = Math.max(m.stunUntil || 0, t + p.rStun * (m.boss ? 0.2 : 1));
       if (p.rBleed) { m.bleedUntil = t + 2.5; m.burnUntil = t + 2.5; m.burnDps = Math.max(m.burnDps || 0, d * 0.16 * p.rBleed); }

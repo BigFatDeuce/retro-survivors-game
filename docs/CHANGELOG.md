@@ -1,7 +1,69 @@
 # Changelog (player-visible changes)
 
 From the Git history and the technical notes. The version shown in
-game is **0.97** (0.94 was never released on its own: its changes come with 0.95).
+game is **0.98** (0.94 was never released on its own: its changes come with 0.95).
+
+## 0.98
+
+Balance
+- **Invisibilité** (Sram): at 5/5 in the shop, 25 s between two (was 15.2 s) and 1.5 s invisible (was 2.3 s).
+- **Flèche Explosive** (Cra): 20 damage at 5/5 (was 23.6), 2 s between two (was 1.5 s). **Flèche Magique** no longer
+  pushes monsters back (nor the arrows of its fusion, Flèche Punitive).
+- **Attaque Mortelle** (Sram): one blow on one monster only (no area, no extra copies), the strongest one right next to
+  you (about 2 m), twice the damage on bosses. Its fusion with Toile d'Arakne, **Piège Mortel**: the same with twice the
+  reach, and an Arakne web under the monster hit.
+- 25 % less damage: **Frappe du Craqueleur** (Osamodas), **Fiole Corrosive** (Otomaï, its puddle too), **Dagues
+  Boomerang** (Roublard), **Lancer de Pièces** (Enutrof), **Marteau de Moon**, **Toile d'Arakne**. **Épée du Jugement**
+  (Iop): 35 % less damage.
+- **Intelligence**: at 5/5 in the shop, its four levels give +42.5 % area (was +50 %).
+- **Manuel du Tailleur**: every boss may now drop it, from 1 % (Bouftou Royal) to 5 % (Goultard), more the further the
+  boss is in the game.
+- **Invisibilité** (Sram): monsters' blows and projectiles still miss you, but their areas on the ground (puddles,
+  marked circles, charges, breaths) now hit you.
+- **Piège Sournois** and **Piège Empoisonné** (Sram): half as wide, twice the time between two, 50 % more damage, one
+  trap a cast. The Piège Sournois: one on the ground at a time (the new one replaces it), it goes off when a monster
+  touches its drawn area. The Piège Empoisonné: several can wait on the ground; it goes off when a monster steps on its
+  cone in the middle, hits its whole area and leaves a gas cloud for one second that poisons every monster passing
+  through it, once.
+- **Bénédiction Animale** (Osamodas): the Boufcouls no longer hit around them on every blow; each one bursts once when
+  it dies or goes, around it (five of its blows). Each one hits at its own pace.
+- **Rempart élémentaire** (Féca): three times the damage, a quarter smaller, twice the time between two.
+- **Explobombe** (Roublard): a little more time between two (+15 %), its fuse a quarter shorter.
+- Poisoned spells (Poison insidieux, Flèche Empoisonnée, Flèche Harcelante, and the poison of Poison Paralysant and
+  Mutagen) leave a small poison cloud where they hit, for a quarter of a second: the monsters around are poisoned too.
+- Bosses have 15 % less life.
+- The damage bonus of your level now reaches its top (+9.9 %) at level 50 instead of level 100.
+- Levels 1 to 5 need 20 % less experience; the difference comes back little by little between levels 20 and 50.
+- Cooldowns grow slowly with your level: at level 50, +20 % for the fastest spells down to +10 % for the slowest.
+
+Quality of life
+- After 11:00, a boss's fall slows the game four times less long; a fusion made by a boss chest no longer slows it.
+- The Manuel du Tailleur's slot machine: press the action button twice (A, Enter…) or tap the reel twice to see the prize at once.
+- The Ambre Ancestrale is half as big on the ground, with a soft glow.
+- Every area that stays on the ground (spell zones, traps, the monsters' puddles) melts into the ground: no outline, its
+  edge fading out, its lines quieter, sparks of its element rising around it. The Boule de Chaos, Vent Empoisonné,
+  domes and webs are softened the same way.
+- **New lettering for the announcements**, closer to Dofus Unity's: the countdown, GO!, the messages in the middle of
+  the screen, the victory and the end-of-run summary. The countdown's emblem is now green and alive (a wreath of leaves,
+  a glowing Dofus egg, fireflies), GO! and the victory throw leaves, the messages sit in a green frame with a gold edge;
+  the relics' captions use it too. After a victory, rays and leaves fill the whole summary window.
+- A chromatic aberration, like a camera lens (the screen's edges softly blurred, small colour fringes): during the
+  countdown, strongly right after GO!, in the slow motions, when a boss falls, when a relic is picked up, when
+  Libération saves you (with a short slow motion) and very strongly at the victory. GO!'s swords are now two Épées
+  Royales du Bouftou, without the two light blades at its sides.
+- A boss's arrival: a bigger, light green frame that glows, with sparks. A relic's caption: a see-through green frame
+  with green flames, its bonus written in a rounder, easier font. The messages in the middle of the screen (monsters,
+  bosses, events) use that rounder font too; titles and names keep the announcements' lettering.
+- The Ambre Ancestrale a quarter bigger than before on the ground, the Ambre du Chêne Mou half as big.
+- The controller's cursor glides from one button to the next, with a light running round it.
+- The run's messages at the bottom left sit on a soft shade (they read on bright grass); the menus' values no longer
+  break in the middle (a unit alone on the next line).
+- The dash, moving-spell, auto-pick, pause and full-screen buttons in the green and gold style, alive when ready; the
+  "2×" hint under the dash is bigger on phones and tablets.
+- Spells, weapons and characteristics use one colour code in the menus (level-up cards, shop, Armoury, chests), as in
+  Dofus 2's tooltips: the description in orange, what it does in green (damage, heals, bonuses), its other numbers
+  (cooldown, area, duration…) with the value in bold, a condition in red, a special effect in blue.
+- The installed games look for a new version at every launch (a new version could stay unseen for 6 hours).
 
 ## 0.97
 

@@ -85,27 +85,33 @@ const RCache = {
   },
   // v2.0 spell areas on the ground, drawn like the zones of the client: a tinted ellipse with its cells and a rim
   // outlined in dark so it reads on any ground. Pre-rendered per colour and radius (bucketed), drawn scaled
-  area(col, r) {
-    const z = Math.max(1, Math.min(3, Math.round((Game.zoom || 1) * 2) / 2)), rb = Math.max(12, Math.round(r / 6) * 6), k = 'z' + col + '_' + rb + '_' + z;
+  // soft (0.98: every area that stays on the ground — spell zones, traps, the monsters' puddles): no outline, the fill
+  // and the grid fading into the ground at the edge, a soft glow just inside it; the hard picture stays for the short
+  // impacts and rings
+  area(col, r, soft) {
+    const z = Math.max(1, Math.min(3, Math.round((Game.zoom || 1) * 2) / 2)), rb = Math.max(12, Math.round(r / 6) * 6), k = 'z' + col + '_' + rb + '_' + z + (soft ? 's' : '');
+    const A = soft ? AREA_SOFT : AREA_HARD;
     let c = this.m.get(k); if (c) return c;
     const w = rb * 2 + 10, h = rb * 1.24 + 10; c = document.createElement('canvas'); c.width = Math.ceil(w * z); c.height = Math.ceil(h * z);
     const g = c.getContext('2d'); g.scale(z, z); const cx = w / 2, cy = h / 2, ry = rb * 0.62;
     const ell = (rr) => { g.beginPath(); g.ellipse(cx, cy, rr, rr * 0.62, 0, 0, TAU); };
-    const gr = g.createRadialGradient(cx, cy, rb * 0.15, cx, cy, rb); gr.addColorStop(0, col + '30'); gr.addColorStop(0.75, col + '48'); gr.addColorStop(1, col + '70');
+    const gr = g.createRadialGradient(cx, cy, rb * 0.15, cx, cy, rb); for (const [o, v] of A.fill) gr.addColorStop(o, col + v);
     g.save(); g.translate(cx, cy); g.scale(1, 0.62); g.translate(-cx, -cy); g.fillStyle = gr; g.beginPath(); g.arc(cx, cy, rb, 0, TAU); g.fill(); g.restore();
-    // the cells (diamonds of the Dofus grid) inside the zone
-    g.save(); ell(rb - 1); g.clip(); g.strokeStyle = col + '66'; g.lineWidth = 1;
+    // the cells (diamonds of the Dofus grid) inside the zone (0.98, soft: on their own layer, fading out towards the edge)
+    const L = A.feather ? document.createElement('canvas') : null, gc = L ? L.getContext('2d') : g; if (L) { L.width = c.width; L.height = c.height; gc.scale(z, z); }
+    gc.save(); gc.beginPath(); gc.ellipse(cx, cy, rb - 1, (rb - 1) * 0.62, 0, 0, TAU); gc.clip(); gc.strokeStyle = col + A.cells; gc.lineWidth = 1;
     const cw = 53 * ES * 0.25, chh = 27 * ES * 0.25;
     for (let i = -Math.ceil(rb / cw) - 1; i <= Math.ceil(rb / cw) + 1; i++) {
-      g.beginPath(); g.moveTo(cx + i * cw * 2 - rb * 2, cy - rb * 2 * chh / cw); g.lineTo(cx + i * cw * 2 + rb * 2, cy + rb * 2 * chh / cw); g.stroke();
-      g.beginPath(); g.moveTo(cx + i * cw * 2 - rb * 2, cy + rb * 2 * chh / cw); g.lineTo(cx + i * cw * 2 + rb * 2, cy - rb * 2 * chh / cw); g.stroke();
+      gc.beginPath(); gc.moveTo(cx + i * cw * 2 - rb * 2, cy - rb * 2 * chh / cw); gc.lineTo(cx + i * cw * 2 + rb * 2, cy + rb * 2 * chh / cw); gc.stroke();
+      gc.beginPath(); gc.moveTo(cx + i * cw * 2 - rb * 2, cy + rb * 2 * chh / cw); gc.lineTo(cx + i * cw * 2 + rb * 2, cy - rb * 2 * chh / cw); gc.stroke();
     }
-    g.restore();
-    { g.save(); ell(rb - 1); g.clip(); const eg = g.createRadialGradient(cx, cy, rb * 0.55, cx, cy, rb); eg.addColorStop(0, col + '00'); eg.addColorStop(1, col + '55');   // (0.87: a glow along the edge, deeper areas)
+    gc.restore();
+    if (L) { const fm = gc.createRadialGradient(cx, cy, rb * 0.2, cx, cy, rb * 0.95); fm.addColorStop(0, '#000'); fm.addColorStop(1, 'rgba(0,0,0,0)'); gc.globalCompositeOperation = 'destination-in'; gc.translate(cx, cy); gc.scale(1, 0.62); gc.translate(-cx, -cy); gc.fillStyle = fm; gc.fillRect(-w, -h * 2, w * 3, h * 4); g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(L, 0, 0); g.restore(); }
+    { g.save(); ell(rb - 1); g.clip(); const eg = g.createRadialGradient(cx, cy, rb * 0.55, cx, cy, rb); for (const [o, v] of A.edge) eg.addColorStop(o, col + v);   // (0.87: a glow along the edge, deeper areas)
       g.translate(cx, cy); g.scale(1, 0.62); g.translate(-cx, -cy); g.fillStyle = eg; g.beginPath(); g.arc(cx, cy, rb, 0, TAU); g.fill(); g.restore(); }
-    ell(rb - 1.5); g.lineWidth = 4.5; g.strokeStyle = 'rgba(0,0,0,0.45)'; g.stroke();
-    ell(rb - 1.5); g.lineWidth = 2.2; g.strokeStyle = col; g.stroke();
-    ell(rb - 5.5); g.lineWidth = 1; g.strokeStyle = 'rgba(255,255,255,0.32)'; g.stroke();   // (0.87: a thin light inner rim)
+    if (A.dark) { ell(rb - 1.5); g.lineWidth = A.dark[0]; g.strokeStyle = 'rgba(0,0,0,' + A.dark[1] + ')'; g.stroke(); }
+    if (A.rim) { ell(rb - 1.5); g.lineWidth = A.rim[0]; g.strokeStyle = col + A.rim[1]; g.stroke(); }
+    if (A.light) { ell(rb - 5.5); g.lineWidth = 1; g.strokeStyle = 'rgba(255,255,255,' + A.light + ')'; g.stroke(); }   // (0.87: a thin light inner rim)
     c.rb = rb; c.w = w; c.h = h; this.put(k, c); if (this.m.size > 600) this.m.delete(this.m.keys().next().value); return c;
   },
   // 0.87: a ring of runes for the areas on the ground (zoneRunes turns it, flattened): a fine circle, then marks around the
@@ -204,6 +210,15 @@ const RCache = {
     return this.put(key, c);
   },
   // an ellipse's outline (rx x ry world units, line lw): sizes by steps of 2 units
+  // 0.98: a spark (the areas' and frames' particles): a bright head, a tail of its colour fading down; drawn added
+  spark(col) {
+    const key = 'spk' + col; let c = this.m.get(key); if (c) return c;
+    c = document.createElement('canvas'); c.width = 16; c.height = 48; const g = c.getContext('2d');
+    const tl = g.createLinearGradient(0, 6, 0, 46); tl.addColorStop(0, col); tl.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = tl; g.beginPath(); g.moveTo(8, 3); g.quadraticCurveTo(14, 12, 8, 46); g.quadraticCurveTo(2, 12, 8, 3); g.fill();
+    const hd = g.createRadialGradient(8, 9, 0, 8, 9, 7); hd.addColorStop(0, 'rgba(255,255,235,1)'); hd.addColorStop(0.45, col); hd.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = hd; g.fillRect(0, 0, 16, 18);
+    return this.put(key, c);
+  },
   ring(col, rx, ry, lw) {
     rx = Math.max(2, Math.round(rx / 2) * 2); ry = Math.max(1, Math.round(ry / 2) * 2);
     const key = 'rg' + col + rx + ',' + ry + ',' + lw; let c = this.m.get(key); if (c) return c;
@@ -221,7 +236,7 @@ const RCache = {
     const path = () => { g.beginPath();
       for (let i = 0; i < n; i++) { const an = i / n * TAU; g.moveTo(0, 0); g.lineTo(Math.cos(an) * r, Math.sin(an) * r); }
       for (let ring = 1; ring <= 4; ring++) { const rr = r * ring / 4.3; for (let i = 0; i <= n; i++) { const an = i / n * TAU, sag = rr * (i % 2 ? 0.92 : 1), x = Math.cos(an) * sag, y = Math.sin(an) * sag; if (i === 0) g.moveTo(x, y); else g.lineTo(x, y); } } };
-    g.globalAlpha = 0.85; g.strokeStyle = 'rgba(30,30,40,0.55)'; g.lineWidth = 3.4; path(); g.stroke();
+    g.globalAlpha = 0.85; g.strokeStyle = 'rgba(30,30,40,0.22)'; g.lineWidth = 3.4; path(); g.stroke();   // (0.98: its dark under-line faint)
     g.strokeStyle = 'rgba(245,245,255,0.95)'; g.lineWidth = 1.6; path(); g.stroke();
     this.put(key, c); if (this.m.size > 600) this.m.delete(this.m.keys().next().value); return c;
   },
@@ -403,21 +418,21 @@ function zoneRunes(ctx, x, y, r, col, t, a, speed = 0.35, kind) {
   ctx.drawImage(c, -c.w * s / 2, -c.w * s / 2, c.w * s, c.w * s); ctx.restore();
 }
 // the bright rim that runs out when an area appears
-function zoneFlash(ctx, x, y, r, col, f) {
-  if (f <= 0.01) return; const c = RCache.area(col, r), s = r / c.rb * (1 + 0.25 * (1 - f));
+function zoneFlash(ctx, x, y, r, col, f, soft) {
+  if (f <= 0.01) return; const c = RCache.area(col, r, soft), s = r / c.rb * (1 + 0.25 * (1 - f));
   ctx.save(); ctx.globalAlpha = f * 0.8; ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(c, x - c.w * s / 2, y - c.h * s / 2, c.w * s, c.h * s); ctx.restore();
 }
 // element motes: n glow dots placed on the area by a fixed hash of `seed`, each on its own loop
 function zoneMotes(ctx, x, y, r, col, t, a, seed, n = 8) {
-  if (a <= 0.01 || Game.lowFx) return; const [mc, vy, sz] = ZONE_MOTE[zoneElem(col)], g = RCache.glow(mc);
+  if (a <= 0.01 || Game.lowFx) return; const [mc, vy, sz] = ZONE_MOTE[zoneElem(col)], sp = RCache.spark(mc);   // (0.98: sparks with a white head: round dots looked dull)
   for (let i = 0; i < n; i++) {
     const h1 = Math.sin(seed * 12.9898 + i * 78.233) * 43758.5453, h2 = Math.sin(seed * 39.346 + i * 11.135) * 24634.6345;
     const fx = (h1 - Math.floor(h1)) * 2 - 1, fy = (h2 - Math.floor(h2)) * 2 - 1, ph = ((t * 0.55 + (h1 - Math.floor(h1))) % 1);
     if (fx * fx + fy * fy > 1) continue;
-    const px = x + fx * r * 0.85 + Math.sin(t * 2 + i) * 3, py = y + fy * r * 0.85 * 0.62 + vy * ph, k = Math.sin(ph * Math.PI), d = (7 + 5 * sz) * (0.6 + 0.4 * k);
-    ctx.globalAlpha = a * k * 0.9; ctx.drawImage(g, px - d, py - d, d * 2, d * 2);
+    const px = x + fx * r * 0.85 + Math.sin(t * 2 + i) * 3, py = y + fy * r * 0.85 * 0.62 + vy * ph, k = Math.sin(ph * Math.PI), w = (3.4 + 2 * sz) * (0.7 + 0.3 * k), h = w * 3;
+    ctx.globalAlpha = a * k * 0.9; ctx.drawImage(sp, px - w / 2, py - h * 0.2, w, h);
   }
-  ctx.globalAlpha = 1;
+  ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
 }
 // 0.89 (the Féca's glyphs replaced): Armure Incandescente — a crown of flickering flame tongues standing round the
 // rim (stretched glows, a white-hot core at their feet), a warm glow on the ground inside; Trêve / Rempart élémentaire —
@@ -452,7 +467,7 @@ function drawDome(ctx, x, y, r, t, a, col, born) {
   lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(0.5, 'rgba(255,255,255,0.28)'); lg.addColorStop(1, 'rgba(255,255,255,0)');
   ctx.globalAlpha = a; ctx.fillStyle = lg; ctx.fillRect(bx - r * 0.25, y - H - 4, r * 0.5, H + ry + 8);
   ctx.restore(); ctx.save();
-  ctx.globalAlpha = a * 0.95; ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(40,20,0,0.35)'; ctx.beginPath(); ctx.ellipse(x, y, r, H, 0, Math.PI, 0); ctx.stroke();
+  ctx.globalAlpha = a * 0.45; ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(40,20,0,0.2)'; ctx.beginPath(); ctx.ellipse(x, y, r, H, 0, Math.PI, 0); ctx.stroke();   // (0.98: its outline softer)
   ctx.lineWidth = 2.8; ctx.strokeStyle = col; ctx.stroke(); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.stroke();
   ctx.globalAlpha = a * 0.75; ctx.lineWidth = 2.5; ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineCap = 'round';
   ctx.beginPath(); ctx.ellipse(x, y, r * 0.9, H * 0.9, 0, Math.PI * 1.18, Math.PI * 1.42); ctx.stroke();   // the shine
@@ -509,8 +524,26 @@ function drawCracks(ctx, x, y, R, k, seed) {
   }
   ctx.restore();
 }
-function drawArea(ctx, x, y, r, col, a) {
-  if (a <= 0.01 || r < 4) return; const c = RCache.area(col, r), s = r / c.rb;
+// the area pictures (RCache.area): hex alphas of the fill (centre, 3/4, edge), the cells, the edge glow; outline / rim (width, alpha)
+// the area pictures (RCache.area): the fill's stops (offset, hex alpha), the cells' alpha, the edge glow's stops, the dark
+// outline and the rim (width, alpha) or null, the inner light line's alpha; feather: the cells fade towards the edge
+const AREA_HARD = { fill: [[0, '30'], [0.75, '48'], [1, '70']], cells: '66', edge: [[0, '00'], [1, '55']], dark: [4.5, 0.45], rim: [2.2, 'ff'], light: 0.32 };
+const AREA_SOFT = { fill: [[0, '26'], [0.55, '34'], [0.8, '3e'], [0.93, '22'], [1, '00']], cells: '30', edge: [[0, '00'], [0.62, '2a'], [0.86, '00']], dark: null, rim: null, light: 0, feather: true };
+const ZONE_A = 0.8;   // 0.98: how strongly every spell zone on the ground is drawn (was 0.9 of the hard picture)
+// 0.98: particles round an area on the ground (spell zones, traps, the monsters' puddles): motes of its element rising
+// off its edge, each on its own loop; fewer in lowFx, none in minFx
+function zoneRim(ctx, x, y, r, col, t, a, seed, n = 9) {
+  if (a <= 0.01 || r < 14 || Game.minFx) return; if (Game.lowFx) n = Math.ceil(n / 2);
+  const [mc, , sz] = ZONE_MOTE[zoneElem(col)], sp = RCache.spark(mc);   // (sparks with a white head)
+  for (let i = 0; i < n; i++) {
+    const ph = (t * (0.45 + 0.2 * ((i * 7) % 3) / 3) + i / n + seed * 0.37) % 1, an = i / n * TAU + seed + t * 0.12 + Math.sin(t * 0.7 + i) * 0.2, rr = r * (0.9 + 0.12 * Math.sin(i * 2.3 + t));
+    const px = x + Math.cos(an) * rr, py = y + Math.sin(an) * rr * 0.62 - ph * (16 + 12 * sz), k = Math.sin(ph * Math.PI), w = (3.2 + 1.8 * sz) * (0.7 + 0.3 * k), h = w * 3.2;
+    ctx.globalAlpha = a * k * 0.9; ctx.drawImage(sp, px - w / 2, py - h * 0.2, w, h);
+  }
+  ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+}
+function drawArea(ctx, x, y, r, col, a, soft) {
+  if (a <= 0.01 || r < 4) return; const c = RCache.area(col, r, soft), s = r / c.rb;
   ctx.globalAlpha = Math.min(1, a); ctx.drawImage(c, x - c.w * s / 2, y - c.h * s / 2, c.w * s, c.h * s); ctx.globalAlpha = 1;
 }
 function drawTinted(ctx, name, kind, x, y, scale) { const c = RCache.tinted(name, kind); if (!c) { Game.icons.draw(ctx, name, x, y, scale); return; } const s = scale / c.sc; ctx.drawImage(c, x - c.width * s / 2, y - c.height * s / 2, c.width * s, c.height * s); }
@@ -554,10 +587,11 @@ Run.prototype.draw = function (ctx) {
   for (const zn of this.zones) {
     if (!inView(zn.x, zn.y, zn.r)) continue;
     const [zs, a, zf] = zoneLife(zn.born, zn.until, t), col = zn.color || '#ff7a1a', glyph = zn.spell && zn.spell.p.glyph, web = zn.spell && zn.spell.p.web, rr = zn.r * zs;   // (0.87: pops in, shrinks away)
-    if (!glyph) drawArea(ctx, zn.x, zn.y, rr, col, a * 0.9);   // v2.0: the exact reach of the zone
-    zoneFlash(ctx, zn.x, zn.y, zn.r, col, zf);
-    if (zn.cloud) drawCloud(ctx, zn, a, t); else if (zn.chaos) drawChaosZone(ctx, zn, a, t); else if (glyph) drawGlyphCells(ctx, zn, a, t); else if (web) drawWeb(ctx, zn, a, t); else if (zn.armor || zn.dome) { if (zn.dome) drawDome(ctx, zn.x, zn.y, rr, t, a, col, zn.born); if (zn.armor) drawFireArmor(ctx, zn.x, zn.y, rr, t, a); } else drawGlyph(ctx, zn.x, zn.y, rr, col, a, t);   // (0.89: the Féca's armour / dome)
-    if (!web && !zn.chaos) { if (!zn.cloud && !glyph) zoneRunes(ctx, zn.x, zn.y, rr, col, t, a * 0.85, 0.4); zoneMotes(ctx, zn.x, zn.y, rr, col, t, a, zn.born * 7.3 + zn.x, zn.cloud ? 5 : 8); }   // (the Féca glyphs keep the client's own cells)
+    if (!glyph) drawArea(ctx, zn.x, zn.y, rr, col, a * ZONE_A, true);   // v2.0: the exact reach of the zone (0.98: soft, one rule for every zone)
+    zoneFlash(ctx, zn.x, zn.y, zn.r, col, zf, true);
+    if (zn.puff) drawPoisonPuff(ctx, zn, t); else if (zn.cloud) drawCloud(ctx, zn, a, t); else if (zn.chaos) drawChaosZone(ctx, zn, a, t); else if (glyph) drawGlyphCells(ctx, zn, a, t); else if (web) drawWeb(ctx, zn, a, t); else if (zn.armor || zn.dome) { if (zn.dome) drawDome(ctx, zn.x, zn.y, rr, t, a, col, zn.born); if (zn.armor) drawFireArmor(ctx, zn.x, zn.y, rr, t, a); } else drawGlyph(ctx, zn.x, zn.y, rr, col, a, t);   // (0.89: the Féca's armour / dome)
+    if (!zn.puff && !web) zoneRim(ctx, zn.x, zn.y, rr, col, t, a, zn.born * 3.1 + zn.x);   // (0.98: sparks round its edge)
+    if (!web && !zn.chaos && !zn.puff) { if (!zn.cloud && !glyph) zoneRunes(ctx, zn.x, zn.y, rr, col, t, a * 0.4, 0.4); zoneMotes(ctx, zn.x, zn.y, rr, col, t, a, zn.born * 7.3 + zn.x, zn.cloud ? 5 : 8); }   // (the Féca glyphs keep the client's own cells)
   }
   this.drawWeaponFx(ctx, t, 'ground');   // a fused weapon's element ring (weapons.js)
   // 0.90: the melee blows' footprints (the strip each blow hits) on the ground, under the scenery
@@ -569,8 +603,8 @@ Run.prototype.draw = function (ctx) {
   for (const tr of this.traps) {
     const fu = tr.spell && tr.spell.def.id === 'fu_sram_piege', col = fu ? '#2f7a34' : '#b388ff';
     if (t >= tr.armed) {   // what it covers when it goes off
-      drawArea(ctx, tr.x, tr.y, tr.r, col, fu ? 0.3 : 0.26);
-      zoneRunes(ctx, tr.x, tr.y, tr.r, fu ? '#7ee05a' : '#c9a8ff', t, fu ? 0.8 : 0.7, fu ? -0.45 : 0.3, 'knife');
+      drawArea(ctx, tr.x, tr.y, tr.r, col, fu ? 0.42 : 0.38, true); zoneRim(ctx, tr.x, tr.y, tr.r, col, t, 0.6, tr.x * 0.37, 6);   // (0.98: soft, its aberration, sparks)
+      zoneRunes(ctx, tr.x, tr.y, tr.r, fu ? '#7ee05a' : '#c9a8ff', t, fu ? 0.55 : 0.5, fu ? -0.45 : 0.3, 'knife');
       if (fu) drawPoisonTrapFx(ctx, tr, t);
     }
     ctx.save(); ctx.globalAlpha = t < tr.armed ? 0.4 : 0.85;
@@ -815,7 +849,7 @@ Run.prototype.draw = function (ctx) {
   drawHud(ctx, this);
   if (this.cine) this.drawCineScreen(ctx, W, H);
   if (this.tofuShowUntil) drawKonami(ctx, this, W, H);
-  if (px) PX.end();
+  { const ca = this.chromaK ? this.chromaK() : 0; if (px) { PX.ca = ca; PX.end(); } }   // (0.98: PX.ca, the chromatic aberration of the moment; read every frame: its clocks start on their own)
 };
 // 0.88: draws fn (the areas on the ground) under the world's tall scenery: into a full-screen 2D layer of its own (PixiJS:
 // a fresh PX layer; 2D: an offscreen canvas), then erases it where the decor mask (assets/worlds/<world>_decor.webp,
@@ -981,7 +1015,7 @@ function drawGlyph(ctx, x, y, r, color, a, t) {
   // (0.95: its halo from the cached glow picture — a gradient made every frame sent the ground effects to a 2D layer)
   const br = 0.85 + 0.15 * Math.sin(t * 3.2), gr = r * 0.75 * br; ctx.globalAlpha = a * 0.8; ctx.drawImage(RCache.glow(`rgba(${hexRgb(color)},0.4)`), -gr, -gr, gr * 2, gr * 2);
   ctx.rotate(-t * 0.9); ctx.lineCap = 'round';
-  for (const [lw, st, al] of [[5, 'rgba(0,0,0,0.25)', 0.6], [2.4, color, 0.85]]) {
+  for (const [lw, st, al] of [[4, 'rgba(0,0,0,0.12)', 0.4], [2, color, 0.55]]) {   // (0.98: quieter lines, the dark one faint)
     ctx.lineWidth = lw; ctx.strokeStyle = st; ctx.globalAlpha = a * al;
     for (let i = 0; i < 3; i++) { ctx.beginPath(); for (let k = 0; k <= 12; k++) { const q = k / 12, an = i / 3 * TAU + q * 2.4, rr = r * (0.12 + 0.6 * q); k ? ctx.lineTo(Math.cos(an) * rr, Math.sin(an) * rr) : ctx.moveTo(Math.cos(an) * rr, Math.sin(an) * rr); } ctx.stroke(); }
   }
@@ -992,8 +1026,9 @@ function drawPickup(ctx, p, t) {
   if (p.kind === 'gem') {
     // Ambre (small), Ambre Ancestrale (bigger, more xp), Ambre du Chêne Mou (rare: bosses and the strongest elites)
     // v2.0: 40% smaller on the ground (they used to cover it)
-    const NA = R_ && R_.RUN.amber, ai = p.rare || (!NA && p.v >= 100) ? 2 : (p.anc || p.big || (!NA && p.v >= 12)) ? 1 : 0, as = ai === 2 ? (NA ? 96 : 24) : ai === 1 ? (p.anc ? 27 : p.big ? 20 : 19) : (!NA && p.v >= 5) ? 16 : 14;   // (0.82: ancestral 32 px = 20 % smaller than 0.81's 40, the Chêne Mou 3x it = 96 px; 0.92: the ancestral 15 % smaller, 27 px)
+    const NA = R_ && R_.RUN.amber, ai = p.rare || (!NA && p.v >= 100) ? 2 : (p.anc || p.big || (!NA && p.v >= 12)) ? 1 : 0, as = ai === 2 ? (NA ? 48 : 12) : ai === 1 ? (p.anc ? 16.9 : p.big ? 20 : 19) : (!NA && p.v >= 5) ? 16 : 14;   // (0.82: ancestral 32 px = 20 % smaller than 0.81's 40, the Chêne Mou 3x it = 96 px; 0.92: the ancestral 15 % smaller, 27 px; 0.98: the Chêne Mou half, 48 px)
     const c = RCache.amber(ai, as);
+    if (c && p.anc) ctx.drawImage(RCache.glow('rgba(255,170,50,0.55)'), p.x - 19, p.y + bob - c.h * 0.45 - 19, 38, 38);   // (0.98: the ancestral 27 -> 13.5 -> 16.9 px, a soft glow)
     if (c) {
       if (ai === 2) { const r = (19 + Math.sin(t * 5 + p.x) * 2) * as / 24; ctx.drawImage(RCache.glow('rgba(255,190,60,0.7)'), p.x - r, p.y + bob - c.h * 0.45 - r, r * 2, r * 2); }   // the rare one glows
       ctx.drawImage(c, p.x - c.w / 2, p.y + bob - c.h * 0.8, c.w, c.h); return;
@@ -1128,13 +1163,48 @@ function drawReviveFront(ctx, P, e) {   // over the character: the powder, the b
   }
   ctx.restore();
 }
-// 0.95: the dark wood frame with a gold edge of the banners (and the relic's caption): x, y its top-left corner
-function annPanel(ctx, px, py, tw, ph, u) {
-  const gr = ctx.createLinearGradient(0, py, 0, py + ph); gr.addColorStop(0, '#5a4128'); gr.addColorStop(0.55, '#3a2814'); gr.addColorStop(1, '#24170b');
-  ctx.fillStyle = gr; ctx.strokeStyle = '#c8a46a'; ctx.lineWidth = 2.5 * u;
-  ctx.beginPath(); ctx.roundRect(px, py, tw, ph, 9 * u); ctx.fill(); ctx.stroke();
-  ctx.strokeStyle = 'rgba(255,225,160,0.25)'; ctx.lineWidth = 1 * u; ctx.beginPath(); ctx.roundRect(px + 4 * u, py + 4 * u, tw - 8 * u, ph - 8 * u, 6 * u); ctx.stroke();
-  for (const sx of [px + 14 * u, px + tw - 14 * u]) { ctx.fillStyle = '#e0b04a'; ctx.beginPath(); ctx.arc(sx, py + ph / 2, 3.2 * u, 0, TAU); ctx.fill(); }   // two gold studs
+// 0.98: the messages in the middle of the screen (monsters, bosses, events) in Lilita, rounder and easier to read; the
+// titles, names and the victory keep the announcements' font
+const BAN_FONT = px => `${Math.max(4, Math.round(px))}px Lilita, DofusBold, sans-serif`;
+// 0.95: the frame of the banners (and the relic's caption): x, y its top-left corner. 0.98 (it was too dark and plain: in
+// the Dofus logos' spirit, green and alive): a glow behind, a body lit from the top, a gold edge on a dark rim, an inner
+// line, swaying leaves held by a gold bud at each end, particles rising off it; t = the run's clock. Styles (PANEL): the
+// banners' deep green; 'boss' light green, a bigger blurred glow, more sparks; 'fire' (the relics) green flames licking up
+// its edges, sparks, a lime glow. The caller sets its opacity
+const PANEL = {
+  green: { glow: 'rgba(150,230,70,0.8)', glowA: 0.35, rim: '#132a0c', body: ['#3c8a4a', '#1f5a34', '#0f3a22'], edge: ['#fff1b0', '#f2b83a', '#9a6010'], inner: 'rgba(200,250,120,0.35)', leaves: 1, spark: 'rgba(220,255,120,0.95)', n: 7 },
+  boss: { glow: 'rgba(200,255,130,0.9)', glowA: 0.55, blur: 'rgba(10,50,14,0.75)', edgeGlow: 'rgba(230,255,150,1)', rim: '#1c3a12', body: ['#b4f08a', '#78cf62', '#459e48'], edge: ['#ffffff', '#f5d860', '#a87818'], inner: 'rgba(255,255,225,0.55)', leaves: 1, spark: 'rgba(255,215,90,0.95)', n: 16 },
+  fire: { glow: 'rgba(150,240,80,0.85)', glowA: 0.55, blur: 'rgba(8,50,20,0.55)', edgeGlow: 'rgba(190,255,110,1)', rim: '#0e2a10', body: ['#4caa58', '#24703a', '#0f3a22'], edge: ['#fffbe0', '#c8f060', '#3a8a1a'], inner: 'rgba(220,255,160,0.45)', spark: 'rgba(210,255,120,0.95)', n: 14, flames: 1, green: 1 },   // (0.98: green, the red was too much)
+};
+function annPanel(ctx, px, py, tw, ph, u, t = 0, style) {
+  const S = PANEL[style] || PANEL.green, cx = px + tw / 2, cy = py + ph / 2, a0 = ctx.globalAlpha;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a0 * (S.glowA + 0.08 * Math.sin(t * 2.2)); ctx.drawImage(RCache.glow(S.glow), px - 30 * u, py - 26 * u, tw + 60 * u, ph + 52 * u); ctx.restore();
+  if (S.blur) { ctx.save(); ctx.shadowColor = S.blur; ctx.shadowBlur = (30 + 6 * Math.sin(t * 3)) * u; ctx.fillStyle = S.blur; ctx.beginPath(); ctx.roundRect(px - 6 * u, py - 5 * u, tw + 12 * u, ph + 10 * u, 14 * u); ctx.fill(); ctx.fill(); ctx.fill(); ctx.restore(); }   // (a blurred shade round it, under the body: it stands out on any ground)
+  if (S.flames && !Game.minFx) {   // flames licking up its top edge, behind it
+    ctx.save(); const gf = RCache.glow(S.green ? 'rgba(60,190,60,0.85)' : 'rgba(255,90,20,0.9)'), go = RCache.glow(S.green ? 'rgba(170,240,80,0.95)' : 'rgba(255,170,40,0.95)'), gy = RCache.glow(S.green ? 'rgba(240,255,190,1)' : 'rgba(255,240,150,1)'), nf = Math.max(6, Math.round(tw / (14 * u)));   // (green flames for the relics)
+    for (const [yy, side] of [[py, 0], [py + ph, 1]]) for (let i = 0; i < nf; i++) { if (side && i % 2) continue; const fx = px + (i + 0.5) / nf * tw + Math.sin(t * 3 + i) * 2 * u, fl = 0.55 + 0.45 * Math.abs(Math.sin(t * (5 + (i % 4)) + i * 1.7)), hh = (20 + 16 * ((i * 37) % 7) / 7) * u * fl * (side ? 0.55 : 1), ww = 17 * u;
+      ctx.globalAlpha = a0 * 0.85; ctx.drawImage(gf, fx - ww / 2, yy - hh * 0.9, ww, hh * 1.2); ctx.globalAlpha = a0 * 0.8; ctx.drawImage(go, fx - ww * 0.33, yy - hh * 0.62, ww * 0.66, hh * 0.85); ctx.globalAlpha = a0 * 0.9; ctx.drawImage(gy, fx - ww * 0.16, yy - hh * 0.35, ww * 0.32, hh * 0.45); }
+    ctx.restore();
+  }
+  ctx.beginPath(); ctx.roundRect(px - 1.5 * u, py - 1.5 * u, tw + 3 * u, ph + 3 * u, 10.5 * u); ctx.fillStyle = S.rim; ctx.fill();   // (the dark rim)
+  const gr = ctx.createLinearGradient(0, py, 0, py + ph); gr.addColorStop(0, S.body[0]); gr.addColorStop(0.45, S.body[1]); gr.addColorStop(1, S.body[2]);
+  const gd = ctx.createLinearGradient(0, py, 0, py + ph); gd.addColorStop(0, S.edge[0]); gd.addColorStop(0.5, S.edge[1]); gd.addColorStop(1, S.edge[2]);
+  ctx.beginPath(); ctx.roundRect(px, py, tw, ph, 9 * u); ctx.fillStyle = gr; ctx.fill();
+  if (S.edgeGlow && !Game.lowFx) { ctx.save(); ctx.shadowColor = S.edgeGlow; ctx.shadowBlur = (12 + 4 * Math.sin(t * 4)) * u; ctx.strokeStyle = gd; ctx.lineWidth = 2.6 * u; ctx.stroke(); ctx.stroke(); ctx.restore(); } else { ctx.strokeStyle = gd; ctx.lineWidth = 2.4 * u; ctx.stroke(); }   // (its edge glowing)
+  ctx.strokeStyle = S.inner; ctx.lineWidth = 1 * u; ctx.beginPath(); ctx.roundRect(px + 4 * u, py + 4 * u, tw - 8 * u, ph - 8 * u, 6 * u); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,220,0.1)'; ctx.beginPath(); ctx.roundRect(px + 3 * u, py + 3 * u, tw - 6 * u, ph * 0.38, 7 * u); ctx.fill();   // (the light on its top)
+  if (S.leaves) for (const sd of [-1, 1]) {   // the leaves at both ends, fanned out and swaying
+    const lx = cx + sd * (tw / 2 + 2 * u), s = Math.min(26 * u, ph * 0.62);
+    for (let i = 0; i < 3; i++) { ctx.save(); ctx.translate(lx, cy); ctx.scale(sd, 1); ctx.rotate((i - 1) * 0.62 + Math.sin(t * 2 + i * 1.9 + sd) * 0.1); ctx.translate(s * 0.42, 0); cdLeaf(ctx, s * (i === 1 ? 1 : 0.8), CD_LEAVES[(i + (sd > 0 ? 2 : 0)) % CD_LEAVES.length]); ctx.restore(); }
+    ctx.fillStyle = '#132a0c'; ctx.beginPath(); ctx.arc(lx, cy, 4.2 * u, 0, TAU); ctx.fill(); ctx.fillStyle = '#f5c542'; ctx.beginPath(); ctx.arc(lx, cy, 2.8 * u, 0, TAU); ctx.fill();   // (a gold bud holding them)
+  }
+  if (!Game.lowFx) {   // sparks rising off it
+    ctx.save(); const sp = RCache.spark(S.spark);   // (normal blending: added, the sparks vanished on bright ground)
+    for (let i = 0; i < S.n; i++) { const q = (t * (0.4 + 0.12 * (i % 3)) + i / S.n) % 1, fx = px + (i + 0.5) / S.n * tw + Math.sin(t * 1.6 + i * 2.3) * 8 * u, fy = py + ph * 0.25 - q * 44 * u, w = (5 + 1.5 * (i % 3)) * u, h = w * 3;
+      ctx.globalAlpha = a0 * Math.sin(q * Math.PI) * 0.9; ctx.drawImage(sp, fx - w / 2, fy - h * 0.2, w, h); }
+    ctx.restore();
+  }
+  ctx.globalAlpha = a0;
 }
 // 0.95: the XP bar's frame (drawHud), made once per size: a bronze body with a gold bevel, a dark track, the level's plate
 // at the left (pw wide, standing out 2 u above and below) with two rivets, a gold finial at the right end. Drawn m px out
@@ -1497,11 +1567,24 @@ function drawKeyCap(ctx, label, cx, cy, u, w) {
   roundRectPath(ctx, x, y, w, h, 4 * u); ctx.fillStyle = '#3a2c1e'; ctx.fill(); ctx.lineWidth = 1.2 * u; ctx.strokeStyle = '#e8d9b0'; ctx.stroke();
   TextCache.draw(ctx, label, cx, cy + 4 * u, '#fff4d8', 10.5 * u, 'center', 'rgba(0,0,0,0.6)', 1.5 * u);
 }
+// 0.98: the HUD's round buttons (the dash, the moving spell's switch, the auto-pick) in the verdant style: a deep green
+// plate lit from the top left, a gold rim, a lime inner line; ready = a breathing lime glow and a spark running round
+// the rim; pop (0..1) = just ready again, a ring going out
+function hudPlate(ctx, x, y, r, u, t, ready, pop = 0) {
+  if (ready) { ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.26 + 0.14 * Math.sin(t * 3); const gr = r * 1.75; ctx.drawImage(RCache.glow('rgba(170,240,80,0.8)'), x - gr, y - gr, gr * 2, gr * 2); ctx.restore(); }
+  const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r); g.addColorStop(0, '#4caa58'); g.addColorStop(0.55, '#1f5a34'); g.addColorStop(1, '#0c2c18');
+  ctx.globalAlpha = 0.92; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill(); ctx.globalAlpha = 1;
+  ctx.lineWidth = 3.6 * u; ctx.strokeStyle = '#132a0c'; ctx.stroke();
+  const gd = ctx.createLinearGradient(0, y - r, 0, y + r); gd.addColorStop(0, '#fff1b0'); gd.addColorStop(0.5, '#f2b83a'); gd.addColorStop(1, '#9a6010'); ctx.lineWidth = 2.1 * u; ctx.strokeStyle = gd; ctx.stroke();
+  ctx.lineWidth = 1 * u; ctx.strokeStyle = 'rgba(200,250,120,0.45)'; ctx.beginPath(); ctx.arc(x, y, r - 3.2 * u, 0, TAU); ctx.stroke();
+  if (ready && !Game.lowFx) { const an = t * 2.2, s = 5 * u; ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(RCache.glow('rgba(255,255,200,0.95)'), x + Math.cos(an) * r - s, y + Math.sin(an) * r - s, s * 2, s * 2); ctx.restore(); }
+  if (pop > 0) { ctx.save(); ctx.globalAlpha = pop; ctx.strokeStyle = '#d8f870'; ctx.lineWidth = 3 * u * pop; ctx.beginPath(); ctx.arc(x, y, r + (1 - pop) * 14 * u, 0, TAU); ctx.stroke(); ctx.restore(); }
+}
 function drawKeyHint(ctx, kind, cx, cy, u, off) {
   const d = Input.dev;
   if (off) ctx.globalAlpha = 0.6;
   if (d === 'pad') drawTrigger(ctx, kind === 'dash' ? 'R' : 'L', cx, cy, u);
-  else if (d === 'touch') TextCache.draw(ctx, kind === 'dash' ? '2× ☝' : '☝', cx, cy + 4 * u, off ? '#ff9a7a' : '#e8d9b0', 11 * u, 'center', 'rgba(0,0,0,0.85)', 2.5 * u);
+  else if (d === 'touch') TextCache.draw(ctx, kind === 'dash' ? '2× ☝' : '☝', cx, cy + 7 * u, off ? '#ff9a7a' : '#f4ffd0', 16 * u, 'center', 'rgba(0,0,0,0.85)', 3 * u);   // (0.98: bigger on phones and tablets: 11 -> 16)
   else if (kind === 'dash') { drawKeyCap(ctx, '␣', cx - 12 * u, cy, u, 22); drawKeyCap(ctx, 'E', cx + 11 * u, cy, u); }
   else drawKeyCap(ctx, Input.toggleKey(), cx, cy, u);
   ctx.globalAlpha = 1;
@@ -1659,25 +1742,26 @@ function drawHud(ctx, R) {
     const r = R.relicShow.r, a = Math.min(1, k * 3.5, (D - k) * 2.5), cx = W / 2, sc = 1 + Math.max(0, 0.45 - k) * 0.7;
     const e1 = 1 - Math.pow(1 - Math.min(1, k / 0.42), 3), out = Math.max(0, k - (D - 0.4)) / 0.4 * 10 * u;   // e1: the rise; out: a small lift as it fades
     const maxW = Math.min(W * 0.9, 600 * u) - 44 * u, f1 = 13 * u; let f2 = 20 * u; ctx.font = annFont(f2, 700); const nw = ctx.measureText(L(r.name)).width; if (nw > maxW) f2 *= maxW / nw;
-    const f3 = 13 * u; ctx.font = hudFont(f3); const dl = wrapLines(ctx, L(r.desc), maxW), d3 = f3 * 1.25;
-    ctx.font = annFont(f1, 700); const w1 = ctx.measureText(T('relic_got')).width; ctx.font = annFont(f2, 700); const w2 = ctx.measureText(L(r.name)).width; ctx.font = hudFont(f3);
+    const f3 = 15 * u, F3 = px_ => `${px_}px Lilita, DofusBold, sans-serif`; ctx.font = F3(f3); const dl = wrapLines(ctx, L(r.desc), maxW), d3 = f3 * 1.22;   // (0.98: the bonus in Lilita: rounder, easier to read than the announcements' font)
+    ctx.font = annFont(f1, 700); const w1 = ctx.measureText(T('relic_got')).width; ctx.font = annFont(f2, 700); const w2 = ctx.measureText(L(r.name)).width; ctx.font = F3(f3);
     const bw = Math.min(W * 0.94, Math.max(w1, w2, ...dl.map(l => ctx.measureText(l).width)) + 44 * u), gap = 5 * u, h1 = f1 * 1.15, h2 = f2 * 1.2, h3 = dl.length * d3, pad = 9 * u, bh = pad * 2 + h1 + h2 + gap + h3;
     const top = Math.max(H / 2 - 112 * u - 40 * u - bh, R.bannerMsg && R._banBot ? R._banBot + 6 * u : 0, 8 * u), cy = top + bh + 40 * u - out;
     const py0 = (R.player.y - 30 - R.cam.y) * Game.zoom + H / 2, ry = lerp(py0, cy, e1);   // the relic's height: from the character to its place
     ctx.save(); ctx.globalAlpha = a * e1; ctx.translate(cx, ry); ctx.rotate(k * 0.6);
-    for (let i = 0; i < 12; i++) { ctx.rotate(TAU / 12); ctx.fillStyle = i % 2 ? 'rgba(255,220,110,0.28)' : 'rgba(255,245,200,0.18)'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-13 * u, -62 * u); ctx.lineTo(13 * u, -62 * u); ctx.closePath(); ctx.fill(); }
+    for (let i = 0; i < 12; i++) { ctx.rotate(TAU / 12); ctx.fillStyle = i % 2 ? 'rgba(255,230,130,0.26)' : 'rgba(170,240,90,0.26)'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-13 * u, -62 * u); ctx.lineTo(13 * u, -62 * u); ctx.closePath(); ctx.fill(); }
     ctx.restore(); ctx.save(); ctx.globalAlpha = a;
     ctx.drawImage(RCache.glow('rgba(255,230,140,0.85)'), cx - 50 * u, ry - 50 * u, 100 * u, 100 * u);
     IC.drawFit(ctx, IC.get('relic_hd_' + r.icon) ? 'relic_hd_' + r.icon : r.icon, cx, ry - Math.sin(Math.min(1, k * 2) * Math.PI) * 6 * u, 58 * u * sc);   // (0.61: its 400-px picture, build_iconhd091 relics)
     // (0.95: 'RELIQUE' over the relic's name, not beside it, all centred in a frame): three blocks in a banner's
-    // frame — the word (Cinzel 700), the name (bigger, shrunk to fit), the bonus (wrapped) —, each centred by its ink
+    // frame — the word, the name (bigger, shrunk to fit), the bonus (wrapped), all in the announcements' font —, each centred by its ink
     const e2 = 1 - Math.pow(1 - Math.min(1, k / 0.3), 2), bx = cx - bw / 2, byy = top - (1 - e2) * 12 * u - out;
-    ctx.globalAlpha = a * e2 * 0.78; annPanel(ctx, bx, byy, bw, bh, u); ctx.globalAlpha = a * e2;
+    ctx.globalAlpha = a * e2 * 0.6; annPanel(ctx, bx, byy, bw, bh, u, R.time, 'fire'); ctx.globalAlpha = a * e2;   // (0.98: green flames, see-through)
     ctx.textAlign = 'center'; let yy = byy + pad;
     annLine(ctx, T('relic_got'), cx, yy + h1 / 2 + annInk('H', f1, 700).dy, f1, '#ffe9a8'); yy += h1;
-    annLine(ctx, L(r.name), cx, yy + h2 / 2 + annInk('H', f2, 700).dy, f2, '#ffd24a'); yy += h2 + gap;
-    const hb = hudCap(f3) / 2;   // (outlinedText writes on its baseline: half the capitals' height under the line's middle)
-    dl.forEach((l, i) => outlinedText(ctx, l, cx, yy + d3 * (i + 0.5) + hb, '#fff6dc', f3, 'center', 'rgba(0,0,0,0.9)'));
+    { const ny = yy + h2 / 2 + annInk('H', f2, 700).dy;
+      annLine(ctx, L(r.name), cx, ny, f2, '#ffd24a'); } yy += h2 + gap;
+    const i3 = annInk('H', f3, 700, F3(100)).dy; ctx.font = F3(f3); ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = Math.max(2, f3 * 0.24); ctx.strokeStyle = 'rgba(30,8,0,0.92)';
+    dl.forEach((l, i) => { const ly = yy + d3 * (i + 0.5) + i3; ctx.strokeText(l, cx, ly); ctx.fillStyle = '#fff6dc'; ctx.fillText(l, cx, ly); });
     ctx.textAlign = 'left';
     ctx.restore(); } }
   // relics: a column on the left side, at the Dofus' height (0.38)
@@ -1739,18 +1823,21 @@ function drawHud(ctx, R) {
   // dodge (Space / double tap / triggers), next to the heart
   { const D = Game.C.dodge, ds = 46 * u, dx = hx + 78 * u, dyy = hy - ds / 2 + 4 * u, left = Math.max(0, P.dodgeReady - R.time);
     // an item (feather) on a round dark plate with a gold rim, so it reads on any ground
-    ctx.fillStyle = 'rgba(30,20,10,0.78)'; ctx.beginPath(); ctx.arc(dx, dyy + ds / 2, ds / 2, 0, TAU); ctx.fill();
-    ctx.strokeStyle = '#c8a46a'; ctx.lineWidth = 2.5 * u; ctx.stroke();
+    if (left > 0) R._dashWait = true; else if (R._dashWait) { R._dashWait = false; R._dashPop = R.time; }   // (0.98: verdant, a pop when it is ready again)
+    hudPlate(ctx, dx, dyy + ds / 2, ds / 2, u, R.time, left <= 0, clamp(1 - (R.time - (R._dashPop || -9)) / 0.45, 0, 1));
     const bat = R.batofuUntil > R.time;   // 0.34: the Batofu feather replaces the Tofu's while it is active
-    ctx.drawImage(IC.canvas(bat ? 'it_53_120' : D.icon, 96), dx - ds * 0.36, dyy + ds * 0.14, ds * 0.72, ds * 0.72);
+    ctx.save(); ctx.translate(dx, dyy + ds / 2); if (left <= 0) { ctx.rotate(Math.sin(R.time * 2.4) * 0.09); ctx.translate(0, Math.sin(R.time * 3.1) * 1.2 * u); }   // (it sways while ready)
+    ctx.drawImage(IC.canvas(bat ? 'it_53_120' : D.icon, 96), -ds * 0.36, -ds * 0.36, ds * 0.72, ds * 0.72); ctx.restore();
     if (bat) { ctx.strokeStyle = '#9fe0ff'; ctx.lineWidth = 2.5 * u; ctx.beginPath(); ctx.arc(dx, dyy + ds / 2, ds / 2 + 2 * u, -Math.PI / 2, -Math.PI / 2 + TAU * clamp((R.batofuUntil - R.time) / (R.batofuDur || 10), 0, 1)); ctx.stroke(); }
-    if (left > 0) { ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.beginPath(); ctx.moveTo(dx, dyy + ds / 2); ctx.arc(dx, dyy + ds / 2, ds / 2, -Math.PI / 2, -Math.PI / 2 + TAU * left / D.cd); ctx.closePath(); ctx.fill(); outlinedText(ctx, String(Math.ceil(left)), dx, dyy + ds / 2 + 6 * u, '#fff', 16 * u, 'center'); }
+    if (left > 0) { const cyy = dyy + ds / 2; ctx.fillStyle = 'rgba(4,22,10,0.62)'; ctx.beginPath(); ctx.moveTo(dx, cyy); ctx.arc(dx, cyy, ds / 2, -Math.PI / 2, -Math.PI / 2 + TAU * left / D.cd); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#c8f060'; ctx.lineWidth = 2.6 * u; ctx.lineCap = 'round'; ctx.beginPath(); ctx.arc(dx, cyy, ds / 2 - 1.2 * u, -Math.PI / 2 + TAU * left / D.cd, Math.PI * 1.5); ctx.stroke(); ctx.lineCap = 'butt';   // (what has come back, lime)
+      ctx.textAlign = 'center'; annLine(ctx, String(Math.ceil(left)), dx, cyy + annInk('8', 19 * u, 700).dy, 19 * u, '#f4ffd0'); ctx.textAlign = 'left'; }
     drawKeyHint(ctx, 'dash', dx, dyy + ds + 17 * u, u, false);
     // 0.34: the potion (0.53; bread before) / kamas auto-choice (when every upgrade is maxed), on / off with R / Y (0.60) / a click
     const ap = Store.data.settings.autoPick, ak = ap || Store.data.settings.lastAutoPick;
     if (ak && R.maxedAll) { const as = 36 * u, ax = dx + 62 * u, ay = dyy + ds / 2;
       R.hudAuto = { x: ax, y: ay, r: as / 2 };
-      ctx.fillStyle = 'rgba(30,20,10,0.78)'; ctx.beginPath(); ctx.arc(ax, ay, as / 2, 0, TAU); ctx.fill(); ctx.strokeStyle = ap ? '#7fd06a' : '#8a6d45'; ctx.lineWidth = 2.5 * u; ctx.stroke();
+      hudPlate(ctx, ax, ay, as / 2, u, R.time, !!ap);   // (0.98: verdant)
       if (!ap) ctx.globalAlpha = 0.45; ctx.drawImage(IC.canvas(ak === 'kamas' ? 'KamaSymbol' : potionIcon(), 96), ax - as * 0.32, ay - as * 0.32, as * 0.64, as * 0.64); ctx.globalAlpha = 1;
       if (!ap) { ctx.strokeStyle = '#ff4a3a'; ctx.lineWidth = 3 * u; ctx.beginPath(); ctx.moveTo(ax - as * 0.3, ay - as * 0.3); ctx.lineTo(ax + as * 0.3, ay + as * 0.3); ctx.stroke(); }
       const d = Input.dev; if (d === 'pad') drawPadBtn(ctx, 'Y', ax, ay + as / 2 + 13 * u, u); else if (d !== 'touch') drawKeyCap(ctx, 'R', ax, ay + as / 2 + 13 * u, u);
@@ -1760,8 +1847,9 @@ function drawHud(ctx, R) {
     if (ms) {
       const ds = 46 * u, dx = hx - 78 * u, dyy = hy - ds / 2 + 4 * u;
       R.hudMove = { x: dx, y: dyy + ds / 2, r: ds / 2 };
+      hudPlate(ctx, dx, dyy + ds / 2, ds / 2 + 2 * u, u, R.time, !R.moveOff);   // (0.98: on its verdant plate)
       if (R.moveOff) ctx.globalAlpha = 0.45;
-      ctx.drawImage(IC.canvas('sp_' + ms.def.icon, 96), dx - ds / 2, dyy, ds, ds);
+      ctx.drawImage(IC.canvas('sp_' + ms.def.icon, 96), dx - ds * 0.44, dyy + ds * 0.06, ds * 0.88, ds * 0.88);
       ctx.globalAlpha = 1;
       if (R.moveOff) { ctx.strokeStyle = '#ff4a3a'; ctx.lineWidth = 4 * u; ctx.beginPath(); ctx.moveTo(dx - ds * 0.34, dyy + ds * 0.16); ctx.lineTo(dx + ds * 0.34, dyy + ds * 0.84); ctx.stroke(); }
       drawKeyHint(ctx, 'move', dx, dyy + ds + 17 * u, u, R.moveOff);
@@ -1807,6 +1895,8 @@ function drawHud(ctx, R) {
     // 0.94 (quality audit): a long line ran under the heart and the potion (their '/62' hidden): lines wrap before the
     // bottom-centre HUD (the heart at W / 2, the move-spell switch left of it)
     const cw = Math.max(160 * u, W / 2 - 116 * u), f0 = ctx.font; ctx.font = hudFont(13 * u);
+    { let n = 0, al = 0; for (const c of R.chats) { const age = now - c.t; if (age > 14) continue; n += c._w === cw ? c._ls.length : 1; al = Math.max(al, age > 11 ? (14 - age) / 3 : 1); }   // (0.98: a soft shade behind the lines: they read on bright grass)
+      if (n) { const hh = n * 18 * u + 26 * u; ctx.globalAlpha = 0.55 * al; ctx.drawImage(RCache.glow('rgba(0,10,4,0.85)'), -cw * 0.25, H - hh - 6 * u, cw * 1.45, hh * 1.6); ctx.globalAlpha = 1; } }
     for (let i = R.chats.length - 1; i >= 0; i--) {
       const c = R.chats[i]; const age = now - c.t; if (age > 14) continue;
       ctx.globalAlpha = age > 11 ? (14 - age) / 3 : 1;
@@ -1833,21 +1923,24 @@ function drawHud(ctx, R) {
   }
   // banner
   if (R.bannerMsg) {
-    const b = R.bannerMsg; const k = b.t < 0.3 ? b.t / 0.3 : b.t > 2.6 ? (3.2 - b.t) / 0.6 : 1;
+    const b = R.bannerMsg; const k = b.t < 0.3 ? b.t / 0.3 : b.t > 2.6 ? (3.2 - b.t) / 0.6 : 1, BS = b.kind === 'boss' ? 1.1 : 1;   // (0.98: a boss's arrival 10 % bigger, its light green frame)
     ctx.globalAlpha = clamp(k, 0, 1);
     // a Dofus Retro style ribbon: dark wood panel, gold edge, the message (centre of the screen for ToT's rewards)
     // (0.34: a long message — the Batofu feather in every language, a phone screen — wraps on several lines inside the box)
     // (0.95: the message in the announcements' Cinzel, juice.js annLine; it slides down a little as it comes in)
-    const nb = Math.min(4, R.bossAlive.length + (R.mutant ? 1 : 0)), by0 = Math.max(b.center ? H * 0.24 : H * 0.17, 118 * u + nb * 24 * u) - (b.t < 0.3 ? (1 - b.t / 0.3) * (1 - b.t / 0.3) * 14 * u : 0); let fs = 22 * u;   // (0.35: higher, out of the middle of the view, under the boss bars)
-    ctx.font = annFont(fs, 700);
+    const nb = Math.min(4, R.bossAlive.length + (R.mutant ? 1 : 0)), by0 = Math.max(b.center ? H * 0.24 : H * 0.17, 118 * u + nb * 24 * u) - (b.t < 0.3 ? (1 - b.t / 0.3) * (1 - b.t / 0.3) * 14 * u : 0); let fs = 22 * u * BS;   // (0.35: higher, out of the middle of the view, under the boss bars)
+    ctx.font = BAN_FONT(fs);
     const maxW = Math.min(W * 0.92, 900 * u) - 70 * u; let lines = wrapLines(ctx, b.text, maxW);
-    if (lines.length > 2) { fs = 19 * u; ctx.font = annFont(fs, 700); lines = wrapLines(ctx, b.text, maxW); }
+    if (lines.length > 2) { fs = 19 * u * BS; ctx.font = BAN_FONT(fs); lines = wrapLines(ctx, b.text, maxW); }
     // (0.95: the messages sat low and off-centre in their frame: the frame was laid from a guess of the text's
     // height; now the block of lines — line height lh, the capitals' ink centred on each line, annInk — is centred in it)
-    const lh = fs * 1.2, tw = Math.max(...lines.map(l => ctx.measureText(l).width)) + 70 * u, ph = 46 * u + (lines.length - 1) * lh, px = (W - tw) / 2, py = by0 - 46 * u * 0.68;
-    annPanel(ctx, px, py, tw, ph, u); R._banBot = py + ph;   // (0.95: a relic's caption shown meanwhile goes under it)
-    const dy = annInk('H', fs, 700).dy, y0 = py + ph / 2 - (lines.length - 1) * lh / 2 + dy;
-    ctx.textAlign = 'center'; lines.forEach((l, i) => annLine(ctx, l, W / 2, y0 + i * lh, fs, b.color)); ctx.textAlign = 'left';
+    const lh = fs * 1.2, tw = Math.max(...lines.map(l => ctx.measureText(l).width)) + 70 * u * BS, ph = 46 * u * BS + (lines.length - 1) * lh, px = (W - tw) / 2, py = by0 - 46 * u * BS * 0.68;
+    ctx.globalAlpha = clamp(k, 0, 1) * (b.kind === 'boss' ? 0.9 : 1); annPanel(ctx, px, py, tw, ph, u, R.time, b.kind === 'boss' ? 'boss' : null); R._banBot = py + ph; ctx.globalAlpha = clamp(k, 0, 1);
+   // (0.95: a relic's caption shown meanwhile goes under it)
+    const dy = annInk('H', fs, 700, BAN_FONT(100)).dy, y0 = py + ph / 2 - (lines.length - 1) * lh / 2 + dy;
+    ctx.textAlign = 'center';
+    if (b.kind === 'boss' && !Game.lowFx) { ctx.save(); ctx.font = BAN_FONT(fs); ctx.textBaseline = 'middle'; ctx.shadowColor = b.color; ctx.shadowBlur = (16 + 5 * Math.sin(R.time * 5)) * u; ctx.fillStyle = b.color; lines.forEach((l, i) => { ctx.fillText(l, W / 2, y0 + i * lh); ctx.fillText(l, W / 2, y0 + i * lh); }); ctx.restore(); }   // (its words glowing in their colour, under the outline)
+    lines.forEach((l, i) => annLine(ctx, l, W / 2, y0 + i * lh, fs, b.color, BAN_FONT)); ctx.textAlign = 'left';
     ctx.globalAlpha = 1;
   }
   // touch joystick
@@ -1895,11 +1988,17 @@ function drawChaosZone(ctx, z, a, t) {
   const r = z.r, e = t - z.born, k = Math.min(1, e / 0.08) * a;
   ctx.save(); ctx.translate(z.x, z.y);
   ctx.globalAlpha = 0.45 * k; ctx.drawImage(RCache.glow('rgba(140,60,240,0.85)'), -r * 1.15, -r * 0.72, r * 2.3, r * 1.44);
-  ctx.globalAlpha = 0.7 * k; ctx.drawImage(RCache.glow('rgba(22,0,44,0.95)'), -r * 0.75, -r * 0.47, r * 1.5, r * 0.94);
-  ctx.globalCompositeOperation = 'lighter'; ctx.lineWidth = 2.5;
-  for (let i = 0; i < 3; i++) { const a0 = e * (9 + i * 3) * (i % 2 ? -1 : 1) + i * 2.1, rr = r * (0.45 + i * 0.2); ctx.globalAlpha = 0.7 * k; ctx.strokeStyle = i === 1 ? '#e2c4ff' : '#9a46ff'; ctx.beginPath(); ctx.ellipse(0, 0, rr, rr * 0.62, 0, a0, a0 + 2.2); ctx.stroke(); }
+  ctx.globalAlpha = 0.42 * k; ctx.drawImage(RCache.glow('rgba(22,0,44,0.95)'), -r * 0.85, -r * 0.53, r * 1.7, r * 1.06);   // (0.98: softer, like the ground areas: a lighter core, fainter arcs)
+  ctx.globalCompositeOperation = 'lighter'; ctx.lineWidth = 2;
+  for (let i = 0; i < 3; i++) { const a0 = e * (9 + i * 3) * (i % 2 ? -1 : 1) + i * 2.1, rr = r * (0.45 + i * 0.2); ctx.globalAlpha = 0.35 * k; ctx.strokeStyle = i === 1 ? '#e2c4ff' : '#9a46ff'; ctx.beginPath(); ctx.ellipse(0, 0, rr, rr * 0.62, 0, a0, a0 + 2.2); ctx.stroke(); }
   for (let i = 0; i < 3; i++) { const an = e * 7 + i * TAU / 3, w = r * 0.32; ctx.globalAlpha = 0.6 * k; ctx.drawImage(RCache.glow('rgba(200,140,255,0.9)'), Math.cos(an) * r * 0.5 - w, Math.sin(an) * r * 0.31 - w - 6, w * 2, w * 2); }
   ctx.restore();
+}
+// 0.98: a poisoned spell's impact (Run.poisonPuff): a few green puffs swell out of the monster and fade with the zone
+function drawPoisonPuff(ctx, z, t) {
+  const k = clamp((t - z.born) / Math.max(0.01, z.until - z.born), 0, 1), gl = RCache.glow('rgba(150,220,60,0.55)'), n = Game.lowFx ? 3 : 5;
+  for (let i = 0; i < n; i++) { const an = i / n * TAU + z.born * 7, rr = z.r * (0.15 + 0.55 * k), pr = z.r * (0.35 + 0.3 * k); ctx.globalAlpha = (1 - k) * 0.9; ctx.drawImage(gl, z.x + Math.cos(an) * rr - pr, z.y - 8 + Math.sin(an) * rr * 0.55 - pr - k * 10, pr * 2, pr * 2); }
+  ctx.globalAlpha = 1;
 }
 function drawCloud(ctx, z, a, t) {
   // Vent Empoisonné: a toxic cloud wrapped around the caster
@@ -1923,7 +2022,7 @@ function drawCloud(ctx, z, a, t) {
     // 0.71: cawottes spinning round the zone (0.95: z.caw of them, 12 for the Pwout + Cawotte fusion)
     const nc = z.caw || 6; for (let i = 0; i < nc; i++) { const an = t * 1.8 + i * TAU / nc, x = Math.cos(an) * z.r * 0.8, y = 4 + Math.sin(an) * z.r * 0.44; ctx.save(); ctx.translate(x, y); ctx.rotate(t * 5 + i); ctx.globalAlpha = a; Game.icons.drawFit(ctx, 'it_68_31', 0, 0, 22); ctx.restore(); }
   }
-  ctx.globalAlpha = 0.5 * a; ctx.strokeStyle = z.fart ? z.rim || '#c0500e' : '#a8e05a'; ctx.lineWidth = 2; ctx.setLineDash([6, 8]); ctx.lineDashOffset = -t * 40;
+  ctx.globalAlpha = 0.2 * a; ctx.strokeStyle = z.fart ? z.rim || '#c0500e' : '#a8e05a'; ctx.lineWidth = 2; ctx.setLineDash([6, 8]);   // (0.98: a faint rim) ctx.lineDashOffset = -t * 40;
   ctx.beginPath(); ctx.ellipse(0, 10, z.r, z.r * 0.55, 0, 0, TAU); ctx.stroke();
   const fx = z.fart ? null : FxSheets.get(1011);
   if (fx) { const k = Object.keys(fx.anims)[0]; const f = fx.frameAt(k, (t - z.born), true); if (f) { ctx.setLineDash([]); ctx.globalAlpha = 0.8 * a; fx.draw(ctx, f, 0, 0, 0.8, false); } }
@@ -2246,7 +2345,7 @@ function drawWeb(ctx, z, a, t) {
     for (let i = 0; i < n; i++) { const an = i / n * TAU, rr = r * easeOut(grow) * wob(i, 0); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(an) * rr, Math.sin(an) * rr); }
     for (let ring = 1; ring <= 4; ring++) { const k = ringK(ring); if (!k) break; const rr = r * ring / 4.3, m = Math.max(1, Math.ceil(n * k));
       for (let i = 0; i <= m; i++) { const an = Math.min(i, n * k) / n * TAU, sag = rr * (i % 2 ? 0.92 : 1) * wob(i, ring); const x = Math.cos(an) * sag, y = Math.sin(an) * sag; if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y); } } };
-  ctx.globalAlpha = 0.85 * a; ctx.strokeStyle = 'rgba(30,30,40,0.55)'; ctx.lineWidth = 3.4; path(); ctx.stroke();
+  ctx.globalAlpha = 0.85 * a; ctx.strokeStyle = 'rgba(30,30,40,0.22)'; ctx.lineWidth = 3.4; path(); ctx.stroke();
   ctx.strokeStyle = 'rgba(245,245,255,0.95)'; ctx.lineWidth = 1.6; path(); ctx.stroke();
   }
   // dewdrops twinkling on the crossings (cached glow)

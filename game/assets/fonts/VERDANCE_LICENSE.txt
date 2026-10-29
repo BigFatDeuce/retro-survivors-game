@@ -1,0 +1,6 @@
+Verdance (Bold, Regular, Light), version 1.100
+
+Made by the author of Retro Survivors, who releases it free of rights: anyone may use, copy, modify and
+redistribute it, alone or in other works, for any purpose, with no conditions.
+
+verdance.woff2 is Verdance Bold with added accented letters and punctuation (tools/assets/build_verdance098.py).

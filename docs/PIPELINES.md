@@ -27,7 +27,7 @@ tools with UTF-8 (`python -X utf8 …` or `PYTHONUTF8=1`): the older ones open f
 ## Content pipeline → `game/data/content.json`
 
 ```
-work/content_v19.json → patch_v20 → patch_020 → patch_023 → … → patch_091 → patch_094 → patch_095 → patch_096 → patch_097 → content.json
+work/content_v19.json → patch_v20 → patch_020 → patch_023 → … → patch_091 → patch_094 → patch_095 → patch_096 → patch_097 → patch_098 → content.json
                         (tools/content/; each imports the previous one and changes C in memory)
 ```
 
@@ -38,7 +38,7 @@ work/content_v19.json → patch_v20 → patch_020 → patch_023 → … → patc
   only `if __name__ == '__main__':` writes the file. Data too big for a patch lives in a data module next to it
   (`weapons060.py`, `fusions060.py`, `credits079.py`…).
 - To change content: put the change in the newest patch when it belongs to the version being prepared, else add
-  `tools/content/patch_<version>.py` that imports the newest one (copy `patch_097.py`'s header and footer). Describe the
+  `tools/content/patch_<version>.py` that imports the newest one (copy `patch_098.py`'s header and footer). Describe the
   change in its docstring. Balance numbers are design decisions: change them only when asked.
 
 ## Asset pipeline → `game/assets/` + `game/data/sprites.json`
