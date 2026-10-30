@@ -116,7 +116,7 @@ const Prog = {
     // every achievement unlocked: the secret, the level 200 aura (shown when the character stands still)
     if (got.length && this.allDone() && !S.aura200) {
       S.aura200 = Date.now(); const msg = T('aura_secret');
-      if (R && !R.over) { R.chat('✨ ' + msg, '#e6c3ff'); R.banner(msg, '#e6c3ff'); } else if (typeof toast === 'function') toast('✨ ' + msg);
+      if (R && !R.over) R.announce(T('aura_secret_t'), '✨ ' + msg, '#e6c3ff'); else if (typeof toast === 'function') toast('✨ ' + msg);
       Audio2.sfx('EVENT', 0.8);
     }
     if (got.length) Store.save();

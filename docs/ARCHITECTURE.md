@@ -92,6 +92,11 @@ Main state: `player`, `mobs`, `projs` (player projectiles), `eprojs` (enemy proj
   armour, dodge, reflect, Phoenix.
 - Beginners' help (0.95): `run.aid` = `C.beginnerAid[zone]` while that zone was never won in Normal
   (`Store.data.clearedNormal`); every monster HP passes through `Run.aidHp()`, `damagePlayer` × `aid.dmg`.
+- Ganymède's blessing (0.98.2): `run.bless` = `C.gany.bless` on zone cards 1 to `bless.maps` (the position in `C.maps`, a hidden
+  zone counts: the cards are numbered so) in Normal, not Endless, won or not, on top of `run.aid`: `recompute` × might, the
+  bread's drop rate × `bless.bread`. On card 11 (`C.gany.taunt.map`) `Game.startRun` shows Dark Vlad's scene once
+  (`UI.ganyScene` key `'taunt'`, 5 s in; first visit = `Store.data.tuto.taunt`, or an older profile's `mapRuns`), and the
+  chat's `bless_end` line in every run until the zone is won in Normal (`clearedNormal`): two separate states.
 - The zone's clock drives the waves (`map.waves`, `map.events`, `map.bosses`, in minutes), scheduled elites
   (`C.elites`), ToT's door (`C.run.doorT`), the merchant (`C.merchant.t`), the Maîtres Corbacs (`C.doom.t` = 11:00).
 - Delayed actions inside a run use `Run.after(sec, fn)` (run time: paused with the run, dropped with it) — never
@@ -114,9 +119,9 @@ Main state: `player`, `mobs`, `projs` (player projectiles), `eprojs` (enemy proj
 - **PixiJS** (`pixi_render.js`, always; `?pixi=0|1` for tests): `nat(key, fn, box)` runs the same 2D code
   on `PXCtx`, a stand-in 2D context whose `drawImage` / rectangles / ellipses become PixiJS quads; the first path,
   gradient, text or filter throws `PXMiss` and that part is drawn by the real 2D code into a full-screen 2D layer or a
-  small proxy box at the same place in the order. Texts, HUD and cinematics stay on the 2D canvas on top. No WebGL (or
-  a lost context) → the 2D canvas draws everything. `tests/t_pixicmp.py` compares both renderers pixel by pixel. Details
-  and measurements: `docs/reports/pixijs-renderer.md` (private repository).
+  small proxy box at the same place in the order. Texts, HUD and cinematics stay on the 2D canvas on top: that layer is
+  part of the PixiJS path. PixiJS is the only renderer developed, tuned and tested (0.98.2): the whole-run drawing on the
+  2D canvas when WebGL is missing or lost stays as it is, neither maintained nor tested. Details and measurements: `docs/reports/pixijs-renderer.md` (private repository).
 - **Picture quality** (`QUALITY` in assets.js, Options; `?q=sd|hd|uhd|k4`): render buffer size, sheets decoded at
   0.5 / 0.75 / 1 (`img._k`), particles. Draw sheets through `Sheet.draw` / `CharSprite.draw`, which handle `_k`. Default:
   native resolution in the desktop app, 1080p on the web.
@@ -152,21 +157,36 @@ Main state: `player`, `mobs`, `projs` (player projectiles), `eprojs` (enemy proj
   countdown's emblem (a wreath of leaves, a glowing Dofus egg, the time as a vine) is `cdMedal` / `cdEgg`, the leaves
   `cdLeaf` / `CD_LEAVES` (events.js), GO!'s swords `goSword` (the Épée Royale du Bouftou, icons3 'go_sword'); the
   banners' frame `annPanel(…, t, style)` (`PANEL`: green; 'boss' light green with a blurred shade and glowing edge;
-  'fire' for the relics: green flames, sparks). The banners' words are in Lilita (`BAN_FONT`, render.js; `annLine`'s
-  `font`), the titles, names and the victory in the announcements' font. Use them for any new centre-screen message;
-  keep the UI's other fonts (DofusBold, Lilita, RetroNum) for the rest.
+  'fire' for the relics: green flames, sparks). A banner shows a name only (0.98.1): `Run.announce(title, text, color,
+  {center, force, kind, pre})` puts the title in the middle and the explanation in the chat for 28 s (`chat(msg, color,
+  life)`, 14 s by default); `pre` = a word in its own colour before the name (the critical summons' red « Coup critique
+  ! »). Titles come from the data's names or the `*_t` texts (tools/content/patch_098.py `TITLES`). Every central message
+  is in the victory's palette (0.98.2: `ANN.retro` passed to `annLine`, its gradient, outline and halo; the colour given to
+  `announce` stays the chat's; only `pre` keeps its own). The banners' words
+  and the relic's name are in the chat's lettering (`BAN_FONT` = `hudFont`, render.js; `annLine`'s `font`), the word
+  RELIQUE, the fusion names (in capitals, `ANN.retro` gold, sfusions.js `drawUnionName`) and the victory in the
+  announcements' font. A banner's clock runs in real time (not slowed by the slow motions). Use these for any new
+  centre-screen message; keep the UI's other fonts (DofusBold, Lilita, RetroNum) for the rest.
 - **Chromatic aberration** (0.98): `Run.chromaK()` (juice.js, read every frame) gives its strength of the moment, 0 to
-  2.6 (from the countdown's '2' to 0.5 s after GO!, the slow motions, a boss's fall, a relic, Libération, the
+  2.6 (rising over the countdown's first second, then strong to 0.5 s after GO!, the slow motions, a boss's fall, a relic, Libération, the
   victory; less in lowFx, none in minFx); `PX.end` then draws the frame into a texture and that onto the screen through
   `pxChroma`'s filter: a lens blur — the centre sharp, the edges smeared along the radius over 9 taps weighted by colour
   (small fringes). The strength widens the blur; it never shifts the picture. Its render texture is made again at each
   new render size (`PX.caOld`: the old ones destroyed 3 frames later). Tried once on a tiny texture, left out on
   a GPU that cannot run it. Only the world gets it (no copies drawn on the 2D layer); the Canvas 2D renderer has none
-  (t_pixicmp turns it off).
+ 
 - **Critical summon's show** (0.98): `Run.critSeq(A)` / `critK()` (juice.js): the run at 1 % for 2 s (slowUntil / slowK:
   `slowMo` does not cut it short), confetti (`drawConfetti`), `chromaK` 2.2; the camera (real time, `critK` 0..1: 1 s in,
   2 s held, 1 s out) zooms x1.75 towards the summon (`camTarget`, render.js `zk`); one show at a time (4 s). The Arakne
   majeure's x2 is in `Run.dmgMul` while one is in `R.allies`.
+- **A window over a run** (0.98.1): `Game.mustDraw` — while a choice / the pause holds the run (not a cinematic), the
+  scene is drawn for 0.5 s and while a timed effect plays (flash, slow motion, aberration fades, victory, critical summon,
+  death, and the shows timed in real time: a relic's message, achievement toasts, a revive, a broken combo), then not until the window closes, the screen changes or a setting changes (resize() clears the canvas even at the
+  same size): both canvases keep their last frame.
+  `warmIcons(run)` (ui.js) makes the level-up cards' pictures (iconImg data URLs) and the reroll die's sheets in idle
+  moments from the loading screen on; `run.warming` holds the countdown at its start until they are done (`tickCine`).
+  Everything else a run uses is ready before the Play button: sheets and sounds in `Run.load`, GPU uploads and the
+  aberration's shader in `PX.warm`.
 - **Controller cursor** (0.98): `Nav.glide` (nav.js) draws `#navglide`, one glowing frame eased each frame towards the
   focused element's box (a light running round its edge, a pulse at each move, clipped to the list that scrolls it);
   the element keeps `.navfocus` for its own styles, its outline hidden while the frame shows (`body.navglide`).
@@ -242,7 +262,10 @@ forgotten migration breaks players' profiles. Export / import: Options → profi
   started from main.js startRun / runOver; Hard is locked until `C.gany.unlockHard` is won (`Store.hardOk()`).
 - **Relics, Dofus, Archimonsters, chests, TTG boosters, Musha's treasure maps, the skin merchant, ToT's door / Tofuzmo,
   Coffre Animé, the Minotoror trapdoor, Maîtres Corbacs, Endless, Hard**: extras.js / events.js (`C.<system>`).
-- **Level-up**: `upgradeOptions`, `UI.levelUpMenu`, card fitting `fitCards`; Banish / Skip once a run.
+- **Level-up**: `upgradeOptions`, `UI.levelUpMenu`, card fitting `fitCards`; Banish `C.banishes` a run (one counter for spells,
+  weapons and characteristics), Skip `C.skips`.
+- **Sablier**: `Run.freezeUntil` is the freeze; `Run.sandFreeze` only says the timer is wanted (drawHud reads the time left from
+  `freezeUntil`, so every source of the freeze counts and the timer ends with it).
 - **Shop**: spells, characteristics (`passLv`), weapon masteries, scrolls, global spells, skins, shields.
 - **Monster states**: poison `poisonUntil`, bleed `bleedUntil`, burn `burnUntil/burnDps`, slow, stun, confusion.
   `Run.poisonCloud` = a short zone (`z.dose`) that poisons each monster in it once (the Piège Empoisonné's gas);

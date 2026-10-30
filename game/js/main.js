@@ -340,7 +340,7 @@ const Game = {
     this.dpr = Math.min(Math.min(2, window.devicePixelRatio || 1), Q.w / Math.max(w, h), Q.h / Math.min(w, h)) * (this.resScale || 1);
     if (Input.touch && Input.touch.id !== null && old && old !== this.dpr) { const k = this.dpr / old; Input.touch.sx *= k; Input.touch.sy *= k; }
     this.canvas.width = Math.round(w * this.dpr); this.canvas.height = Math.round(h * this.dpr);
-    this.cw = this.canvas.width; this.ch = this.canvas.height;
+    this.cw = this.canvas.width; this.ch = this.canvas.height; this._still = null;   // (a new width clears the canvas, even the same: a run held still is drawn again, mustDraw)
     // world zoom: show ~680 world px vertically (min 560 wide)
     this.zoomBase = Math.min(this.ch / 600, this.cw / 620) * 0.76;   // 0.22: about 25% more of the world around the character (0.65: 5 % further out)
     if (!this._zk) this._zk = this.zoomK(); this.applyZoom();   // (0.95: × the options' camera distance, easeZoom)
@@ -348,6 +348,19 @@ const Game = {
     // DOM menus: designed for 1280x720 (16:9), scaled up uniformly on bigger screens (never shrunk: phones keep their layout)
     const uiz = clamp(Math.min(w / 1280, h / 720), 1, 3);   // (0.85: 3 = 4K UHD, every menu keeps its 16:9 proportions)
     if (uiz !== this._uiz) { this._uiz = uiz; document.documentElement.style.setProperty('--uiz', uiz.toFixed(3)); }
+  },
+  // 0.98.1 (a choice open, the frozen scene behind it was drawn again 60 times a second: 11 ms a frame on a slow PC, 16 on
+  // a phone): while a window holds the run still (not a cinematic), the scene is drawn for its first 0.5 s and while a
+  // timed effect plays (flash, slow motion, the aberration's fades, the victory, a critical summon, the death, a relic's
+  // message, an achievement, a revive), then not until the window closes, the screen changes size or a setting changes
+  // (the pause's options: quality, effects, language…); its last frame stays on both canvases
+  mustDraw(R) {
+    if (!(UI.modalOpen() || this.paused) || R.cine) { this._still = null; return true; }
+    const now = performance.now(), key = this.cw + 'x' + this.ch + '|' + this.dpr + '|' + (PX.on ? 1 : 0) + '|' + JSON.stringify(Store.data.settings), S = this._still;
+    if (!S || S.key !== key) { this._still = { t0: now, key }; return true; }
+    if (now - S.t0 < 500) return true;
+    return !!(R.flashFx || R.victoryFx || R.critFx || R.deathFx || R.slowUntil > now || (R.chromaK && R.chromaK() > 0.01)
+      || R.relicShow || (R.achToasts && R.achToasts.length) || now - (R.reviveAt || -1e9) < 2800 || (R._comboEnd && now - R._comboEnd.t0 < 900));   // (the shows timed in real time: the relic's message, the achievements' toasts, a revive, a broken combo)
   },
   // clickable pause / menu button (same as Esc) shown during a run
   pauseBtn() {
@@ -390,7 +403,7 @@ const Game = {
       if (sp > 1) { for (let i = 0; i < sp; i++) { if (UI.modalOpen() && this.debug.bot) UI.botPick(); if (!this.paused && !UI.modalOpen()) R.update(1 / 60); } this._fc = (this._fc || 0) + 1; if (this._fc % 4 === 0 || !this.debug.nodraw) R.draw(ctx); }
       else {
         if (R.tofuShowUntil && performance.now() >= R.tofuShowUntil) { R.tofuShowUntil = 0; Audio2.stopJingle(0.6); for (const m of R.mobs) if (m._sh) { m.sh = m._sh; m._sh = null; } }
-        if (UI.modalOpen() && this.debug.bot) UI.botPick(); if (R.cine && !this.paused) R.tickCine(dt); else if (!this.paused && !UI.modalOpen() && !R.tofuShowUntil && !(R.reviveHold > performance.now()) && !R.frozenByHit()) R.update(dt * R.timeK()); R.draw(ctx);   // (0.60: hit-stop / slow motion, juice.js)   // (a cinematic freezes the run: events.js)
+        if (UI.modalOpen() && this.debug.bot) UI.botPick(); if (R.cine && !this.paused) R.tickCine(dt); else if (!this.paused && !UI.modalOpen() && !R.tofuShowUntil && !(R.reviveHold > performance.now()) && !R.frozenByHit()) R.update(dt * R.timeK()); if (this.mustDraw(R)) R.draw(ctx);   // (0.60: hit-stop / slow motion, juice.js)   // (a cinematic freezes the run: events.js)
       }
       if (Input.padPause() && !this._padP) { this._padP = true; this.togglePause(); } else if (!Input.padPause()) this._padP = false;
       const pd = Input.padDodge(); if (pd && !this._padD && !this.paused && !UI.modalOpen()) R.player.dodge(); this._padD = pd;
@@ -455,6 +468,7 @@ const Game = {
     const run = new Run(this.C, opts);
     await run.load(p => UI.loading(p, true));
     this.warmTextures(run); AccLib.trim();   // (0.44: the run's accessories live in their own small atlases: the big sheets are freed)
+    run.warming = true; warmIcons(run).then(() => { run.warming = false; });   // (0.98.1: the level-up's pictures made ahead, ui.js; 0.98.2: from here, the countdown waits if they are not done: Run.tickCine)
     // the loading screen stays at least 2 s, then waits for the Play button (time to read the tip)
     if (!this.debug.autostart) {
       const wait = 2000 - (performance.now() - t0); if (wait > 0) await new Promise(r => setTimeout(r, wait));
@@ -484,9 +498,19 @@ const Game = {
     const tut = id => run.after(this.debug.gany ? 1 : 5, () => { if (this.run === run && !run.over && !run.player.dead && !UI.modalOpen()) UI.ganyScene(run, id); });
     if (run.aid) {
       run.chat(T('aid_info', { g: L(this.C.gany.name), map: L(run.map.name), h: Math.round((1 - run.aid.hp) * 100), d: Math.round((1 - run.aid.dmg) * 100) }), '#9cff9a');
-      if (!(Store.data.tuto || {})[run.map.id] && !this.debug.bot && !this.debug.gany && (!this.debug.autostart || this.debug.tuto)) tut(run.map.id);   // (the tests' autostart runs: only with ?tuto=1 — it covered t_pixicmp's scenes)
+      if (!(Store.data.tuto || {})[run.map.id] && !this.debug.bot && !this.debug.gany && (!this.debug.autostart || this.debug.tuto)) tut(run.map.id);   // (the tests' autostart runs: only with ?tuto=1)
     }
     if (this.debug.gany) tut(this.debug.gany);
+    // 0.98.2: the blessing (Run.bless), once a run in the chat, apart from the help above; on its end's card Dark Vlad takes it
+    // away: his scene once, 5 s in, the first visit in Normal; the chat's line in every run until the zone is won in Normal
+    const G = this.C.gany || {}, B = G.bless, TA = G.taunt;
+    if (run.bless) { const n = { g: L(G.name), n: B.maps }; run.chat(T('bless_dmg', Object.assign({ p: Math.round(B.dmg * 100) }, n)), '#ffe08a', 28); run.chat(T('bless_bread', Object.assign({ k: B.bread }, n)), '#ffd2a0', 28); }
+    if (TA && run.map.id === TA.map && !run.hard && !run.infinite && !(Store.data.clearedNormal || {})[TA.map]) {
+      const gone = () => { if (this.run === run && !run.over) run.chat(T('bless_end', { g: L(G.name), v: L(this.C.bosses.dark_vlad.name) }), '#ff8a7a', 28); };
+      const S = Store.data, first = !(S.tuto || {}).taunt && (Prog.st().mapRuns || {})[TA.map] <= 1 && !this.debug.bot && (!this.debug.autostart || this.debug.tuto);   // (mapRuns counts this run: an old profile that already came here has no scene)
+      if (!first) gone();
+      else { const come = () => { if (this.run !== run || run.over || run.player.dead) return; if (UI.modalOpen()) { run.after(0.5, come); return; } S.tuto = S.tuto || {}; S.tuto.taunt = 1; Store.save(); UI.ganyScene(run, 'taunt', gone); }; run.after(5, come); }   // (a window open at that moment: as soon as it closes; saved as it starts)
+    }
   },
   // draw every texture of the run once, tiny, behind the loading screen: the GPU upload happens now, not mid-fight
   warmTextures(run) {
@@ -545,7 +569,7 @@ const Game = {
   totShortcut() {
     const R = this.run, C = this.C, buff = pick(C.totBuffs || [{ id: 'degats', stat: 'might', v: 0.1, icon: 'Icon_33', name: 'Dégâts' }]);
     R.totBuff = buff; R.weakUntil = R.time + 30; R.recompute();
-    R.banner(T('tot_slap'), '#ff9a8a', true); R.chat(T('tot_buff', { b: L(buff.name) }), '#e0b0ff'); R.chat(T('tot_slap'), '#ff8a65');
+    R.chat(T('tot_buff', { b: L(buff.name) }), '#e0b0ff', 28); R.announce(T('tot_slap_t'), T('tot_slap'), '#ff9a8a', { center: true });
     R.text(R.player.x, R.player.y - 80, '-50%', '#ff6a6a', 18); Audio2.sfx('EVENT', 0.7);
   },
   enterTot() {
@@ -559,8 +583,8 @@ const Game = {
         const dof = this.C.dofus.find(d => d.id === 'ocre');
         // ToT hands his Dofus over at once (nothing to pick up)
         if (rw.kind === 'dofus' && dof && !R.dofus.includes(dof)) { R.collect({ kind: 'dofus', v: 'ocre' }); R.celebrateDofus(dof, R.player.x, R.player.y, 'ToT'); }
-        else if (rw.kind === 'drago') { R.spawnDrago(); R.banner(T('tot_rare'), '#ffd24a'); R.chat(T('tot_drago', { n: L(this.C.drago.name) }), '#ffd24a'); }
-        else if (rw.buff) { R.totBuff = rw.buff; R.recompute(); R.banner('ToT : +10% ' + L(rw.buff.name), '#e0b0ff', true); R.chat(T('tot_buff', { b: L(rw.buff.name) }), '#e0b0ff'); }
+        else if (rw.kind === 'drago') { R.spawnDrago(); R.announce(L(this.C.drago.name), T('tot_drago', { n: L(this.C.drago.name) }), '#ffd24a'); }
+        else if (rw.buff) { R.totBuff = rw.buff; R.recompute(); R.announce('ToT : +10% ' + L(rw.buff.name), T('tot_buff', { b: L(rw.buff.name) }), '#e0b0ff', { center: true }); }
         R.dropPickup('chest', R.player.x - 30, R.player.y, 3);
         const k = this.C.totKamas || 50; R.kamas += k; R.text(R.player.x, R.player.y - 80, '+' + k + ' K', '#ffd700', 16);
         Store.data.tot = (Store.data.tot || 0) + 1; Store.save(); Prog.check(R);

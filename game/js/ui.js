@@ -14,7 +14,28 @@ function h(tag, attrs = {}, ...kids) {
 function btn(label, onclick, cls = '') { return h('button', { class: 'btn ' + cls, onclick: (e) => { Audio2.init(); Audio2.resume(); Audio2.blip('click'); onclick(e); } }, label); }
 // item pictures are drawn at the pixel size they are shown at (menus are zoomed on big screens): never upscaled in the page
 // (0.60: drawn at the exact device size: the page never resamples the picture again)
-function iconImg(name, size = 40, cls = '') { const k = Math.min(4, Math.max(1, (Game._uiz || 1) * (window.devicePixelRatio || 1))), px = Math.max(16, Math.round(size * k)); const im = h('img', { src: Game.icons.dataURL(name, px), width: size, height: size, class: 'ic ' + cls, draggable: 'false' }); return im; }
+function iconPx(size) { const k = Math.min(4, Math.max(1, (Game._uiz || 1) * (window.devicePixelRatio || 1))); return Math.max(16, Math.round(size * k)); }
+function iconImg(name, size = 40, cls = '') { const im = h('img', { src: Game.icons.dataURL(name, iconPx(size)), width: size, height: size, class: 'ic ' + cls, draggable: 'false' }); return im; }
+// 0.98.1 (the first level-up froze the game ~0.25 s: each card picture was made and PNG-encoded on the spot): the pictures a
+// level-up card of this run may show — its class's spells, the common spells, the fusions, the characteristics, the
+// weapons, at the sizes the cards show them (iconImg) — and the reroll die's sheets, made ahead in the idle moments of the
+// run's first seconds (the countdown gives plenty)
+// 0.98.2: from the loading screen on (Game.startRun); its promise ends when all is made: the countdown waits for it
+function warmIcons(R) {
+  const C = R.C, todo = [], add = (n, s) => { if (n) todo.push([n, s]); };
+  for (const sid of [...R.cls.spells, ...(C.globalSpells || []).map(g => g.id)]) { const sp = C.spells[sid]; if (sp) for (const z of [48, 24, 20, 18]) add('sp_' + sp.icon, z); }
+  for (const f of (C.spellFusions || []).filter(f => sfusionOf(f, R.cls.id))) { const sp = C.spells[f.id]; if (sp) for (const z of [54, 24, 20]) add('sp_' + sp.icon, z); }
+  for (const p of C.passives) { add(p.icon, 44); add(p.icon, 18); }
+  for (const w of C.weapons || []) add(w.icon, 50);
+  let done;
+  const step = (dl) => {   // (as many as the idle moment allows — the countdown gives plenty —; 2 when a busy run makes it wait)
+    if (R._disposed || !todo.length) return done();
+    let n = 0; do { const [nm, s] = todo.shift(); try { Game.icons.dataURL(nm, iconPx(s)); } catch (e) { } n++; } while (todo.length && (dl && !dl.didTimeout ? dl.timeRemaining() > 4 : n < 2));
+    if (todo.length) idle(step); else done();
+  };
+  const idle = fn => (window.requestIdleCallback ? requestIdleCallback(fn, { timeout: 250 }) : setTimeout(fn, 60));
+  return new Promise(res => { done = res; idle(async () => { if (R.rerolls > 0) await Promise.all(['ui603', 'ui611', 'ui605'].map(f => FxSheets.load(f))); idle(step); }); });   // (the reroll's die too: its sheets' decoding was 0.14 s of the first level-up on a phone)
+}
 // artworks are packed in a few atlases (assets/art/art_N.webp, SPR.art); each <img> gets a cached data URL of its frame
 const ArtAtlas = {
   imgs: {}, urls: {}, dir: 'art', meta: () => SPR.art,
@@ -1049,7 +1070,7 @@ const UI = {
     if (R.rerolls > 0) ['ui603', 'ui611', 'ui605'].forEach(f => FxSheets.load(f));   // (0.95: the die ready before a reroll: an emoji die showed first)
     let busy = false;
     const pick_ = (o) => { if (busy) return; busy = true; R.applyUpgrade(o); Audio2.blip('click'); this.closeModal(); };
-    // 0.60: Bannir (once a run): the next card clicked never comes back this run, new cards are dealt; Passer (once a run)
+    // 0.60: Bannir (C.banishes a run, shared by the spells, weapons and characteristics): the next card clicked never comes back this run, new cards are dealt; Passer (once a run)
     let banishing = false;
     const onCard = (o) => {
       if (!banishing) return pick_(o);
@@ -1496,7 +1517,7 @@ function fitCards(root) {
   if (grow) for (const c of cards) c.style.height = grow + 'px';
 }
 function fitCardsSoon(el) {
-  const go = () => { if (el.isConnected) fitCards(el); };
+  let q = false; const go = () => { if (q) return; q = true; requestAnimationFrame(() => { q = false; if (el.isConnected) fitCards(el); }); };   // (0.98.1: the asks of one frame — each card picture's load — fitted once)
   requestAnimationFrame(go); setTimeout(go, 450);
   for (const im of el.querySelectorAll('.up-cards img')) if (!im.complete) im.addEventListener('load', go, { once: true });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(go);
@@ -1526,8 +1547,14 @@ const fitAll = () => { if (typeof Game !== 'undefined' && Game.state === 'run' &
 { let tm = 0; const soon = () => { clearTimeout(tm); tm = setTimeout(fitAll, 90); };
   new MutationObserver(() => { fitAll(); soon(); }).observe(document.body, { childList: true, subtree: true }); window.addEventListener('resize', soon); }
 function fitText(el, min = 9) {
-  let fs = parseFloat(getComputedStyle(el).fontSize) || 12.5;
-  while (el.scrollHeight > el.clientHeight + 1 && fs > min) { fs -= 0.5; el.style.fontSize = fs + 'px'; el.style.lineHeight = '1.2'; }
+  // (0.98.1: the largest size that fits, by halves — 3 or 4 layouts instead of one per half pixel)
+  const fs0 = parseFloat(getComputedStyle(el).fontSize) || 12.5, over = () => el.scrollHeight > el.clientHeight + 1;
+  if (!over() || fs0 <= min) return;
+  const set = v => { el.style.fontSize = v + 'px'; el.style.lineHeight = '1.2'; };
+  let lo = min, hi = fs0 - 0.5;   // (sizes by 0.5 px, as before)
+  set(lo); if (over()) return;
+  while (hi - lo > 0.25) { const mid = Math.round((lo + hi)) / 2; if (mid <= lo) break; set(mid); if (over()) hi = mid - 0.5; else lo = mid; }
+  set(lo);
 }
 // 0.28: a button whose label is wider than the button gets a smaller font until it fits
 function fitWidth(el, min = 11) {

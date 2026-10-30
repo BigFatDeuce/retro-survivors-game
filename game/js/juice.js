@@ -24,13 +24,14 @@ Object.assign(Run.prototype, {
     const s = x => x * x * (3 - 2 * x); return e < 1 ? s(e) : e < 3 ? 1 : s(4 - e);
   },
   // 0.98: the chromatic aberration of the moment, 0..2.6 (PX.end: a lens blur of the world's edges with colour fringes;
-  // the strength widens the blur, it never shifts the picture): strong from the countdown's '2' to 0.5 s after GO!, the slow
+  // the strength widens the blur, it never shifts the picture): growing over the countdown's first second (0.98.2; it came
+  // with the '2'), strong to 0.5 s after GO!, the slow
   // motions, a boss's fall, a relic picked up, Libération taking a blow, the victory (the strongest); less in lowFx,
   // none in minFx
   chromaK() {
     let k = 0; const now = performance.now(), c = this.cine, fade = (t0, dur, k0) => t0 ? k0 * Math.max(0, 1 - (now - t0) / dur) : 0;
-    if (c && c.kind === 'countdown' && c.t >= 0.8) this._goCA = now;   // (from the countdown's '2' to GO!'s end: its clock held at now: full)
-    k = Math.max(k, fade(this._goCA, 500, 2.4));   // then gone 0.5 s after GO!
+    if (c && c.kind === 'countdown') { this._goCA = now; const q = Math.min(1, c.t); this._goK = q * q * (3 - 2 * q); }   // (all through the countdown: its clock held at now, _goK its rise from the very start)
+    k = Math.max(k, fade(this._goCA, 500, 2.4 * (this._goK === undefined ? 1 : this._goK)));   // then gone 0.5 s after GO!
     if (this.slowUntil > now) k = Math.max(k, 0.9 * Math.min(1, (this.slowUntil - now) / 350));   // the slow motions
     k = Math.max(k, fade(this._bossCA, 1800, 1.6));   // a boss's fall
     k = Math.max(k, fade(this._libCA, 700, 1.1));   // Libération taking a blow
@@ -225,11 +226,15 @@ function annRule(ctx, x, y, half, k, u, col = '#ffd65a') {
   ctx.fillStyle = '#fff6d0'; ctx.fillRect(-r, -r, r, r * 0.6); ctx.restore();
 }
 // one line of a smaller announcement (banners, the relic's and the Dofus' captions): Cinzel 700, a dark outline, a
-// light top edge, its colour; align as ctx.textAlign
+// light top edge, its colour — or an ANN palette (0.98.2: the victory's, its gradient, outline and halo); align as ctx.textAlign
 function annLine(ctx, s, x, y, fs, color, font) {   // (0.98: font, another lettering for this line — the banners' Lilita, render.js BAN_FONT)
   ctx.font = font ? font(fs) : annFont(fs, 700); ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
-  ctx.lineWidth = Math.max(2, fs * 0.2); ctx.strokeStyle = 'rgba(16,8,2,0.92)'; ctx.strokeText(s, x, y + fs * 0.03);
-  ctx.fillStyle = 'rgba(255,248,226,0.8)'; ctx.fillText(s, x, y - fs * 0.03); ctx.fillStyle = color; ctx.fillText(s, x, y);
+  const P = color.stops ? color : null;
+  if (P && P.halo) { ctx.strokeStyle = P.halo; ctx.lineWidth = fs * 0.3; ctx.strokeText(s, x, y + fs * 0.03); }
+  ctx.lineWidth = Math.max(2, fs * 0.2); ctx.strokeStyle = P ? P.edge : 'rgba(16,8,2,0.92)'; ctx.strokeText(s, x, y + fs * 0.03);
+  ctx.fillStyle = 'rgba(255,248,226,0.8)'; ctx.fillText(s, x, y - fs * 0.03);
+  if (P) { const g = ctx.createLinearGradient(0, y - fs * 0.48, 0, y + fs * 0.42); for (const [o, c] of P.stops) g.addColorStop(o, c); ctx.fillStyle = g; } else ctx.fillStyle = color;
+  ctx.fillText(s, x, y);
 }
 const annHash = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
 

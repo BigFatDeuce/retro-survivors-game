@@ -114,29 +114,31 @@ Object.assign(UI, {
   // isle of Incarnam over the clouds, the player on the left listening (its run CharSprite, a nod at each line), Ganymède
   // walking in from the right then gesturing as he talks (one gesture per line, back to standing when it ends); the text is
   // written out in a bubble of fixed size. The run is frozen by the modal (levelUpOpen: no pause menu on top); Échap / B
-  // skips, Suite / A / clicking the bubble goes on (the whole line first). key = a zone id or 'hard'
+  // skips, Suite / A / clicking the bubble goes on (the whole line first). key = a zone id or 'hard'.
+  // 0.98.2: key 'taunt' = Dark Vlad taking the blessing away (C.gany.taunt, Game.startRun): the same scene in the dark, his sheet
   ganyScene(R, key, done) {
-    const G = Game.C.gany, lines = G && G.scenes[key]; if (!lines) { if (done) done(); return; }
+    const G = Game.C.gany, TA = key === 'taunt' ? G.taunt : null, VL = TA && Game.C.bosses.dark_vlad, lines = G && (TA ? TA.lines : G.scenes[key]); if (!lines) { if (done) done(); return; }
     const M = R && R.map, A = R && R.aid, mapOf = id => Game.C.maps.find(m => m.id === id) || {}, fin = m => { const b = (m.bosses || []).slice(-1)[0]; return b ? L(Game.C.bosses[b[1]].name) : ''; };
     const zone = key === 'hard' ? mapOf(G.unlockHard) : M || mapOf(key), pos = Game.C.maps.indexOf(zone);
-    const vars = { g: L(G.name), map: L(zone.name || {}), b: fin(zone), p: pos > 0 ? fin(Game.C.maps[pos - 1]) : '', h: A ? Math.round((1 - A.hp) * 100) : 0, d: A ? Math.round((1 - A.dmg) * 100) : 0, v: L(Game.C.bosses.dark_vlad.name) };
+    const vars = { g: L(G.name), map: L(zone.name || {}), b: fin(zone), p: pos > 0 ? fin(Game.C.maps[pos - 1]) : '', h: A ? Math.round((1 - A.hp) * 100) : 0, d: A ? Math.round((1 - A.dmg) * 100) : 0, v: L(Game.C.bosses.dark_vlad.name), bd: Math.round(G.bless.dmg * 100), bp: G.bless.bread, bn: G.bless.maps };
     const say = s => s.replace(/\{(\w+)\}/g, (m, k) => vars[k] !== undefined ? vars[k] : m);
-    const GEST = ['attitude2R', 'emote3R', 'attitude1R', 'attitude3R'];
+    const GEST = VL ? ['atkR'] : ['attitude2R', 'emote3R', 'attitude1R', 'attitude3R'];
+    const PAL = VL ? { sky: ['#14060e', '#4a1018', '#7a1c1c'], cloud: 'rgba(70,14,24,0.7)', earth: '#2a1616', top: ['#4a3a34', '#2a2020'] } : { sky: ['#9fd2f2', '#f4e8c8', '#e8d6a8'], cloud: 'rgba(255,255,255,0.75)', earth: '#8a5a2c', top: ['#9ed05a', '#5f9a2c'] };
     const W = 600, H = 280, k = Math.min(3, (window.devicePixelRatio || 1) * (Game._uiz || 1)), cv = document.createElement('canvas'); cv.width = W * k; cv.height = H * k; cv.className = 'gany-stage';
     const g = cv.getContext('2d'), t0 = performance.now(), cs = R && R.player && R.player.sprite;
     let sh = null, raf = 0, i = -1, lineT = 0, shown = 0, closed = false;
-    MobSheets.load(G.sprite).then(s => { sh = s; });
+    MobSheets.load(VL ? VL.sprite : G.sprite).then(s => { sh = s; });
     const clouds = Array.from({ length: 9 }, (_, n) => ({ x: (n * 137) % W, y: 30 + (n * 53) % 150, r: 18 + (n * 29) % 26, v: 6 + (n % 4) * 3 }));
     const draw = () => {
       if (closed || !cv.isConnected && performance.now() - t0 > 2000) return; raf = requestAnimationFrame(draw);
       const t = (performance.now() - t0) / 1000, lt = t - lineT;
       g.setTransform(k, 0, 0, k, 0, 0);
-      const sky = g.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, '#9fd2f2'); sky.addColorStop(0.65, '#f4e8c8'); sky.addColorStop(1, '#e8d6a8'); g.fillStyle = sky; g.fillRect(0, 0, W, H);
-      g.fillStyle = 'rgba(255,255,255,0.75)';   // the clouds of Incarnam, drifting
+      const sky = g.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, PAL.sky[0]); sky.addColorStop(0.65, PAL.sky[1]); sky.addColorStop(1, PAL.sky[2]); g.fillStyle = sky; g.fillRect(0, 0, W, H);
+      g.fillStyle = PAL.cloud;   // the clouds of Incarnam, drifting
       for (const c of clouds) { const x = (c.x + t * c.v) % (W + 120) - 60; g.beginPath(); g.arc(x, c.y, c.r, 0, TAU); g.arc(x + c.r * 0.9, c.y + 4, c.r * 0.75, 0, TAU); g.arc(x - c.r * 0.9, c.y + 6, c.r * 0.65, 0, TAU); g.fill(); }
       // the floating isle: grass on top, earth hanging under it
-      g.fillStyle = '#8a5a2c'; g.beginPath(); g.moveTo(40, H - 46); g.quadraticCurveTo(W / 2, H + 40, W - 40, H - 46); g.fill();
-      const gr = g.createLinearGradient(0, H - 70, 0, H - 30); gr.addColorStop(0, '#9ed05a'); gr.addColorStop(1, '#5f9a2c'); g.fillStyle = gr; g.beginPath(); g.ellipse(W / 2, H - 50, W / 2 - 34, 26, 0, 0, TAU); g.fill();
+      g.fillStyle = PAL.earth; g.beginPath(); g.moveTo(40, H - 46); g.quadraticCurveTo(W / 2, H + 40, W - 40, H - 46); g.fill();
+      const gr = g.createLinearGradient(0, H - 70, 0, H - 30); gr.addColorStop(0, PAL.top[0]); gr.addColorStop(1, PAL.top[1]); g.fillStyle = gr; g.beginPath(); g.ellipse(W / 2, H - 50, W / 2 - 34, 26, 0, 0, TAU); g.fill();
       g.fillStyle = 'rgba(0,0,0,0.18)'; for (const x of [W * 0.27, W * 0.7]) { g.beginPath(); g.ellipse(x, H - 50, 34, 9, 0, 0, TAU); g.fill(); }
       // the player, listening (a small nod when a line starts)
       if (cs) { const nod = lt < 0.35 ? Math.sin(lt / 0.35 * Math.PI) * 0.035 : 0; g.save(); g.translate(W * 0.27, H - 50); g.scale(1, 1 - nod); cs.draw(g, 'staticR', t, 0, 0, 2.75, false, { loop: true, at: t }); g.restore(); }
@@ -153,7 +155,7 @@ Object.assign(UI, {
       if (i >= 0) { const full = lineTxt; shown = Math.min(full.length, Math.floor(lt * 55)); if (shown !== txtSpan.textContent.length) { txtSpan.textContent = full.slice(0, shown); restSpan.textContent = full.slice(shown); } }
     };
     let lineTxt = '';
-    const who = h('b', { class: 'vlad-who' }, L(G.name)), txtSpan = h('span'), restSpan = h('span', { class: 'gany-rest' }), bubble = h('div', { class: 'musha-bubble gany-bubble' }, txtSpan, restSpan);
+    const who = h('b', { class: 'vlad-who' }, L((VL || G).name)), txtSpan = h('span'), restSpan = h('span', { class: 'gany-rest' }), bubble = h('div', { class: 'musha-bubble gany-bubble' }, txtSpan, restSpan);
     const finish = () => { if (closed) return; closed = true; cancelAnimationFrame(raf); if (key !== 'hard') { const S = Store.data; S.tuto = S.tuto || {}; S.tuto[key] = 1; Store.save(); } this._luBack = null; this.closeModal(); Audio2.blip('click'); if (done) done(); };
     const next = (n) => {
       if (i >= 0 && shown < lineTxt.length) { lineT = (performance.now() - t0) / 1000 - lineTxt.length / 55; return; }   // (the whole line first)
@@ -163,14 +165,15 @@ Object.assign(UI, {
       bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop');
       const last = n === lines.length - 1; Audio2.blip('click');
       if (last && (key === 'hard' || A)) Audio2.ui('level', 0.7);   // (the line that says what it gives)
+      if (last && VL) Audio2.sfx('EVENT', 0.8);   // (the line that takes it away)
     };
     const nextB = btn(T('next'), () => next(i + 1), 'orange'), skipB = btn(T('gany_skip'), finish);
     bubble.addEventListener('click', () => next(i + 1));
-    const el = h('div', { class: 'window modal gany' }, h('div', { class: 'title' }, '✦ ' + L(G.name) + (key === 'hard' ? ' — ' + T('hard_unlocked') : ' — ' + L(zone.name || {}))),
+    const el = h('div', { class: 'window modal gany' }, h('div', { class: 'title' }, (VL ? '☠ ' : '✦ ') + L((VL || G).name) + (key === 'hard' ? ' — ' + T('hard_unlocked') : ' — ' + L(zone.name || {}))),
       h('div', { class: 'content' }, cv, h('div', { class: 'gany-side' }, who, bubble), h('div', { class: 'start-row' }, skipB, nextB)));
     this.openModal(el); this.levelUpOpen = true; this._luBack = finish;
     if (typeof Nav !== 'undefined') Nav.set(nextB);
-    Audio2.play('son_anim_ailes_dragondinde', 0.35, 0.9); if (key === 'hard' && Audio2.fanfare) Audio2.fanfare(0.8);   // (his arrival: wings; Difficile: a fanfare)
+    if (VL) Audio2.sfx('EVENT', 0.7); else Audio2.play('son_anim_ailes_dragondinde', 0.35, 0.9); if (key === 'hard' && Audio2.fanfare) Audio2.fanfare(0.8);   // (his arrival: wings; Difficile: a fanfare)
     raf = requestAnimationFrame(draw);
     setTimeout(() => { if (!closed && i < 0) next(0); }, 950);   // (the first line once he has walked in)
   },

@@ -116,7 +116,7 @@ Object.assign(Run.prototype, {
   },
   jackpot(x, y, n) {
     const v = n; this.kamas += v;
-    this.banner(T('pioche_jackpot', { n: fmtNum(v) }), '#ffd700', true); this.chat(T('pioche_jackpot', { n: fmtNum(v) }), '#ffd700');
+    this.announce(T('pioche_jackpot_t'), T('pioche_jackpot', { n: fmtNum(v) }), '#ffd700', { center: true });
     this.shake(4); this.rings.push({ x, y, r0: 10, r1: 160, t0: this.time, dur: 0.8, color: '#ffd700', fill: 1 });
     // a fountain of coins and the sound of money flowing
     for (let i = 0; i < 70; i++) this.particles.push({ x, y: y - 6, vx: rand(-160, 160), vy: rand(-420, -140), t: 0, life: rand(0.8, 1.5), c: pick(['#ffd700', '#ffe866', '#f0b020', '#fff6c0']), s: rand(3, 6), g: 520 });

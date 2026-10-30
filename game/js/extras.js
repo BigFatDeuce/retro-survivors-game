@@ -51,7 +51,7 @@ Object.assign(Run.prototype, {
     const r = this.C.relics.find(r => r.id === id); if (!r || this.relics.includes(r)) return;
     this.relics.push(r); this.recompute();
     const S = Store.data; S.relics = S.relics || {}; S.relics[id] = (S.relics[id] || 0) + 1; Store.save();
-    this.chat(T('relic_found', { n: L(r.name) }) + ' ' + L(r.desc), '#ffcf3a');
+    this.chat(T('relic_found', { n: L(r.name) }) + ' ' + L(r.desc), '#ffcf3a', 28);   // (0.98.1: twice as long, as an announcement's)
     // 0.38: a moment of its own: a fanfare, a golden burst around the character, the relic and its bonus in the middle of the screen.
     // 0.61: one second of light slow motion and a rewarding sound (Audio2.relicSfx: a rising magic chime over the fanfare)
     Audio2.fanfare(0.8); Audio2.relicSfx(); Audio2.play('stars', 0.8); this.shake(4); this.slowMo(1.0, 0.45); this.flash('255,230,150', 0.35, 0.3);
@@ -164,14 +164,14 @@ Object.assign(Run.prototype, {
       if (c > this.cycle) {
         this.cycle = c; this.zoneMul = (this.baseZoneMul || (this.baseZoneMul = this.zoneMul)) * (1 + I.grow * c);
         if (this.time < (I.bossT || 600)) for (const b of this.map.bosses || []) this.bossQueue.push({ t: this.time + b[0] * 60 * 0.5, id: b[1] });
-        this.banner(T('lb_cycle', { n: c + 1 }), '#ff8a65'); this.chat(T('lb_cycle', { n: c + 1 }), '#ff8a65'); Audio2.sfx('EVENT', 0.8);
+        this.announce(T('lb_cycle_t', { n: c + 1 }), T('lb_cycle', { n: c + 1 }), '#ff8a65'); Audio2.sfx('EVENT', 0.8);
       }
       // 0.37: from 10:00 on, the zone's final boss comes back every minute, twice as many each time (2, 4, 8…)
       const fb = (this.map.bosses || []).map(b => b[1]).find(id => this.C.bosses[id] && this.C.bosses[id].final), m0 = I.bossT || 600;
       if (fb && this.time >= m0) {
         const w = Math.floor((this.time - m0) / 60);
         if (w >= (this.endlessWave || 0)) {
-          if (!this.endlessWave) { this.banner(T('lb_finals', { n: L(this.C.bosses[fb].name) }), '#ff3b3b'); this.chat(T('lb_finals', { n: L(this.C.bosses[fb].name) }), '#ff3b3b'); this.shake(8); Audio2.playMusic(this.map.boss_music, 1.0); }
+          if (!this.endlessWave) { this.announce(L(this.C.bosses[fb].name), T('lb_finals', { n: L(this.C.bosses[fb].name) }), '#ff3b3b'); this.shake(8); Audio2.playMusic(this.map.boss_music, 1.0); }
           this.endlessWave = w + 1; Audio2.sfx('EVENT', 0.8);
           const alive = this.mobs.filter(o => o.endless && !o.dying).length, n = Math.max(0, Math.min(2 ** (w + 1), (I.bossCap || 64) - alive));
           for (let k = 0; k < n; k++) { const b = this.spawnBoss(fb); if (b) b.endless = true; }
@@ -181,7 +181,7 @@ Object.assign(Run.prototype, {
   },
   startEvent(kind) {
     const P = this.player, C = this.C, E = C.randEvents; Prog.add('randEvents');
-    this.banner(T('ev_' + kind), '#ffcf8a'); this.chat(T('ev_' + kind), '#ffcf8a'); Audio2.sfx('EVENT', 0.7);
+    this.announce(T('ev_' + kind + '_t'), T('ev_' + kind), '#ffcf8a'); Audio2.sfx('EVENT', 0.7);
     if (kind === 'bworks' && C.monsters.bwork) { this.swarm('bwork', 14); this.ring('bwork', 10); }
     else if (kind === 'tofus') { for (let i = 0; i < 40; i++) this.after(i * 0.12, () => { const a = rand(TAU), d = rand(120, 420); const m = this.spawnMob('tofu', clamp(P.x + Math.cos(a) * d, this.bounds.x0, this.bounds.x1), clamp(P.y + Math.sin(a) * d * 0.7, this.bounds.y0, this.bounds.y1), { force: true, noArchi: true }); if (m) { m.drop = 1; this.fxAt(1100, m.x, m.y, { scale: 0.5 }); } }); }
     else if (kind === 'merchant') {
@@ -199,7 +199,7 @@ Object.assign(Run.prototype, {
     let x, y, n = 0;
     do { x = rand(b.x0 + 80, b.x1 - 80); y = rand(b.y0 + 80, b.y1 - 80); } while (++n < 40 && (Math.hypot(x - P.x, y - P.y) < 500 || (this.isWater && this.isWater(x, y))));
     this.merchant = { x, y, until: this.time + MC.stay, open: false, sold: {}, offers };
-    this.banner(T('ev_merchant'), '#ffcf8a'); this.chat(T('ev_merchant'), '#ffcf8a'); Audio2.sfx('EVENT', 0.7);
+    this.announce(T('ev_merchant_t'), T('ev_merchant'), '#ffcf8a'); Audio2.sfx('EVENT', 0.7);
   },
   merchantWallet() { return this.kamas + (Store.data.kamas || 0); },   // 0.38: the run's kamas, then the profile's
   merchantBuySkin(o) {

@@ -25,7 +25,7 @@ const Nav = {
   // frame towards its box, so it also follows a list that scrolls or a card that grows), a light running round its edge,
   // a small pulse at each move; clipped to the list that scrolls it. Only while an element has the cursor
   glide() {
-    if (!this.el) { if (this._gl) this._gl.style.display = 'none'; return; }
+    if (!this.el) { if (this._gl) { this._gl.style.display = 'none'; this._glSt = null; } return; }
     if (!this._gl) { const g = document.createElement('div'); g.id = 'navglide';   // (0.98.1: tiny sparks round it, CSS-animated: placed once along its edge)
       const P = [[8, 0], [34, 0], [63, 0], [90, 0], [100, 30], [100, 72], [82, 100], [52, 100], [20, 100], [0, 66], [0, 24], [45, 0]];
       P.forEach(([x, y], i) => { const s = document.createElement('i'); s.style.left = x + '%'; s.style.top = y + '%'; s.style.setProperty('--d', (-i * 0.29).toFixed(2) + 's'); s.style.setProperty('--dx', ((x - 50) / 50 * 6).toFixed(1) + 'px'); s.style.setProperty('--dy', ((y - 50) / 50 * 6 - 4).toFixed(1) + 'px'); g.append(s); });
@@ -34,16 +34,23 @@ const Nav = {
     let last = performance.now();
     const step = (now) => {
       const e = this.el, g = this._gl;
-      if (!e || !e.isConnected) { g.style.display = 'none'; this._glRaf = 0; this._glBox = null; return; }
+      if (!e || !e.isConnected) { g.style.display = 'none'; this._glRaf = 0; this._glBox = null; this._glSt = null; this._glEl = null; return; }
       const r = e.getBoundingClientRect(), dt = Math.min(0.05, (now - last) / 1000); last = now;
       const B = this._glBox || (this._glBox = { x: r.left, y: r.top, w: r.width, h: r.height }), k = 1 - Math.exp(-dt * 20);
       B.x += (r.left - B.x) * k; B.y += (r.top - B.y) * k; B.w += (r.width - B.w) * k; B.h += (r.height - B.h) * k;
       const pk = Math.max(0, 1 - (now - (this.glidePop || 0)) / 260), pad = 3 + 3 * pk;
-      let sc = e.parentElement; while (sc && sc !== document.body && !/(auto|scroll)/.test(getComputedStyle(sc).overflowY + getComputedStyle(sc).overflowX)) sc = sc.parentElement;
-      const c = sc && sc !== document.body ? sc.getBoundingClientRect() : null, x = B.x - pad, y = B.y - pad, w = B.w + pad * 2, h = B.h + pad * 2;
-      Object.assign(g.style, { display: 'block', transform: `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`, width: w.toFixed(1) + 'px', height: h.toFixed(1) + 'px',
-        clipPath: c ? `inset(${Math.max(0, c.top - y - 8)}px ${Math.max(0, x + w - c.right - 8)}px ${Math.max(0, y + h - c.bottom - 8)}px ${Math.max(0, c.left - x - 8)}px round 10px)` : 'none',
-        borderRadius: Math.min(14, Math.max(6, getComputedStyle(e).borderTopLeftRadius === '50%' ? h / 2 : parseFloat(getComputedStyle(e).borderTopLeftRadius) + pad || 8)) + 'px' });
+      if (this._glEl !== e) {   // (0.98.1: its scrolling list and its corner read once per element, not every frame)
+        this._glEl = e; let sc = e.parentElement; while (sc && sc !== document.body) { const cs = getComputedStyle(sc); if (/(auto|scroll)/.test(cs.overflowY + cs.overflowX)) break; sc = sc.parentElement; }
+        this._glSc = sc && sc !== document.body ? sc : null; this._glRad = getComputedStyle(e).borderTopLeftRadius;
+      }
+      const c = this._glSc ? this._glSc.getBoundingClientRect() : null, x = B.x - pad, y = B.y - pad, w = B.w + pad * 2, h = B.h + pad * 2;
+      const st = `${x.toFixed(1)}|${y.toFixed(1)}|${w.toFixed(1)}|${h.toFixed(1)}|${pad.toFixed(2)}|${c ? c.top + ',' + c.left + ',' + c.right + ',' + c.bottom : ''}`;   // (pad: its corner follows the pulse to its end)
+      if (st !== this._glSt) {   // (nothing written while it stands still)
+        this._glSt = st;
+        Object.assign(g.style, { display: 'block', transform: `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`, width: w.toFixed(1) + 'px', height: h.toFixed(1) + 'px',
+          clipPath: c ? `inset(${Math.max(0, c.top - y - 8)}px ${Math.max(0, x + w - c.right - 8)}px ${Math.max(0, y + h - c.bottom - 8)}px ${Math.max(0, c.left - x - 8)}px round 10px)` : 'none',
+          borderRadius: Math.min(14, Math.max(6, this._glRad === '50%' ? h / 2 : parseFloat(this._glRad) + pad || 8)) + 'px' });
+      }
       this._glRaf = requestAnimationFrame(step);
     };
     this._glRaf = requestAnimationFrame(step);

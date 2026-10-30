@@ -16,10 +16,10 @@ Shorter checks when you know what you touched:
 | what you changed | run at least |
 |---|---|
 | game code (`game/js`, `index.html`) | `python tools/check.py` (~3 min); `python tools/qa.py quick` before committing |
-| `Run.draw` or a draw function | + `python tools/checks/pw_test.py tests/t_pixicmp.py work/t_pixicmp` |
+| `Run.draw` or a draw function | + a look in game, on PixiJS (screenshots through the test tools, or `play_local`) |
 | menus / CSS | + `tests/t_uiaudit.py`, `tests/t_overlap.py` (phones), `tests/t_cards.py` (level-up cards) |
 | the content chain | `python tools/make_content.py --check` before and after, then `node tools/checks/qa_unit.js` and `node tools/checks/qa_spells.js` |
-| a sprite sheet | `tests/t_pixicmp.py`, then a look in game (`play_local`) |
+| a sprite sheet | a look in game (`play_local`) |
 | tools / scripts only | run the tool you changed; `python tools/make_content.py --check` if it is imported by the content chain |
 
 Safety: every browser test starts from a **fresh profile** on a local server at a free port (never 8765 — the
@@ -34,13 +34,12 @@ is only read (`tools/checks/qa_web.py`: pages, headers, nothing sent).
 | spells | `tools/checks/qa_spells.js` (node, ~15 s) | every spell, fusion and global spell does what it says: cast alone at max level on fixed targets, its effects seen (damage, slow, stun, poison, burn, mark, heal, armour, pull, summon, life steal, bounce, kamas), cast rhythm = cooldown, areas within their radius, projectile counts; the words of its description must be visible in its effects. Seeded randomness: same result every run. Balance is NOT judged |
 | func-core | `tools/checks/qa_func.py` (browser, real GPU) | boot, damaged saves at boot, import, keyboard / mouse / simulated controller navigation, shop (price taken once, refusal without kamas, kept after reload, shield in runs), runs (countdown, level-up card, boss, pause, give up, death then Replay, cancelled run, victory, what is saved; after each run no timer, sound or loop left) |
 | t_save | `tests/t_save.py` | export / import through the options, refusal of a file that is not a save |
-| check | `tools/check.py` | the 0.59 safety net: simulations + 4 bot runs (PixiJS and Canvas 2D), no page error, no `Game._frameErr`, no missing file, load times, fps |
-| func-more | `tools/checks/qa_func.py` | 6 runs in a row (nothing accumulates), settings kept (volumes, language, quality, Canvas 2D), profiles, 6 PC screen sizes |
+| check | `tools/check.py` | the 0.59 safety net: simulations + 3 bot runs (PixiJS), no page error, no `Game._frameErr`, no missing file, load times, fps |
+| func-more | `tools/checks/qa_func.py` | 6 runs in a row (nothing accumulates), settings kept (volumes, language, quality), profiles, 6 PC screen sizes |
 | t_freeze, t_tmap, t_levelup, t_cards, t_noscroll, t_uiaudit | `tests/` | every zone started through the real menus keeps moving; treasure maps; level-up cards fit; scrolling; every menu at 6 PC sizes + phones |
 | t_overlap | `tests/t_overlap.py` | every menu, tab and window on 6 phones (3 upright, 3 sideways): overlapping texts / pictures / buttons, cut texts, squeezed lists; screenshots circled in red |
-| t_pixicmp | `tests/t_pixicmp.py` | the same frozen scene in PixiJS and Canvas 2D, mean difference ≤ 3 / 255 |
 | stress | `tools/checks/stress.py --reps 1` | memory, leaks, stutters (below) |
-| canvas2d, edge | `tools/checks/qa_func.py` | runs on the Canvas 2D renderer; boot, saves and runs in Microsoft Edge |
+| edge | `tools/checks/qa_func.py` | boot, saves and runs in Microsoft Edge |
 | web | `tools/checks/qa_web.py` | the deployed site: first load (HTTP errors, console), cache, one run, every requested file (exact case), deployed vs local version |
 
 One Playwright script by hand: `python tools/checks/pw_test.py tests/t_smoke.py <outdir>` (env `VW`, `VH`, `DPR`,
@@ -77,6 +76,12 @@ Options: `--seed` (1234), `--max-min` (40), `--size 1920x1080`, `--soft-gpu`, `-
 `work/stress/<date>/report.md` + `log.json`. An interrupted or incomplete scenario is a **failure**, never a pass.
 
 ## Performance — `tools/checks/perf_probe.py`
+
+0.98.1: `--phone` plays the scene as an average phone (844 x 390 landscape, 3 device px a px, touch, CPU x6, the game's own
+quality); `--choices` opens the level-up choice 6 times over the frozen crowd (the time of the call, the long tasks of its
+first second, the frames while it is open). Both start at 5:00, after ToT's door (the bot walked into it), the choice
+with the bot off (it picked the card at once). To compare with the last commit, serve its game/ (`git archive HEAD game`)
+with `RS_ROOT` pointing at that copy, and alternate the runs.
 
 One fixed heavy scene (~320 monsters, 3 bosses, the class's five spells at the top level, the character immortal):
 prints one JSON line (frame JS median / p95 split into update / draw, fps) and with `--profile` the top functions by

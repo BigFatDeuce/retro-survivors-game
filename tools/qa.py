@@ -9,8 +9,7 @@ test uses a fresh profile and a local server on a free port), the exe or the dep
                     nav / shop / runs + t_save (export / import through the options)
   full    (~1 h)    quick + check.py + qa_func restart / settings / profiles / sizes + t_freeze + t_tmap + t_levelup and
                     t_cards (PC and phone both ways) + t_noscroll + t_uiaudit (6 PC sizes, phone upright / sideways) +
-                    t_overlap (6 phones, upright and sideways) + t_pixicmp + stress.py (one pass) + the run tests on the
-                    Canvas 2D renderer and in Edge
+                    t_overlap (6 phones, upright and sideways) + stress.py (one pass) + the run tests in Edge
   --web             adds qa_web.py (the deployed site, read only)
   --only a,b        just those steps (names as printed);  --list   the steps
 
@@ -70,15 +69,6 @@ def unit(out, rc):
     return f or ([f'exit code {rc}'] if rc else [])
 
 
-def pixicmp(out, rc):
-    f = generic(out, rc)
-    for m in re.finditer(r'^(\S+)\s+mean\s+([\d.]+)', out, re.M):
-        if float(m.group(2)) > 3.0: f.append(f'{m.group(1)}: mean difference {m.group(2)} / 255 (over 3)')
-    m = re.search(r"^ERRS (\[.*\])", out, re.M)
-    if m and m.group(1) != '[]': f.append('errors: ' + m.group(1)[:300])
-    return f
-
-
 def stress(out, rc):
     return [] if re.search(r'^PASS ->', out, re.M) and not rc else [l for l in out.splitlines() if l.startswith('  ERR')][:10] or [f'stress FAIL (exit {rc})']
 
@@ -107,9 +97,7 @@ def steps(out):
     S.append(('t_uiaudit-phone-side', 'full', PW + ['tests/t_uiaudit.py', f'{out}/t_uiaudit-phone-side'], PHONE_SIDE, generic, 2400))
     for sz in ['390x844', '360x800', '412x915', '844x390', '800x360', '915x412']:   # (0.94: phones both ways — what overlaps, what is cut, squeezed lists)
         w, h = sz.split('x'); S.append((f't_overlap-{sz}', 'full', PW + ['tests/t_overlap.py', f'{out}/t_overlap-{sz}'], dict(VW=w, VH=h, DPR='3', MOBILE='1'), generic, 2400))
-    S += [('t_pixicmp', 'full', PW + ['tests/t_pixicmp.py', f'{out}/t_pixicmp'], {}, pixicmp, 2400),
-          ('stress', 'full', [PY, 'tools/checks/stress.py', '--reps', '1', '--max-min', '20', '--out', f'{out}/stress'], {}, stress, 2400),
-          ('canvas2d', 'full', [PY, 'tools/checks/qa_func.py', 'boot', 'runs', '--renderer', 'canvas', '--out', f'{out}/canvas2d'], {}, jsonl('test'), 1800),
+    S += [('stress', 'full', [PY, 'tools/checks/stress.py', '--reps', '1', '--max-min', '20', '--out', f'{out}/stress'], {}, stress, 2400),
           ('edge', 'full', [PY, 'tools/checks/qa_func.py', 'boot', 'saves', 'runs', '--out', f'{out}/edge'], dict(QA_CHANNEL='msedge'), jsonl('test'), 1800),
           ('web', 'web', [PY, 'tools/checks/qa_web.py', '--out', f'{out}/web'], {}, jsonl('check'), 1800)]
     return S

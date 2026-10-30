@@ -7,9 +7,7 @@
   3. --bench (or BENCH=1): 200 monsters on screen, CPU x1 and x4 (Chromium's throttling) — median fps and the main
      thread's ms, reported only (no pass / fail: it depends on the PC). 'poison' = the 0.58 audit's scenario (plain /
      poisoned / poisoned + bleeding); 'numbers' (0.60) = damage numbers kept at the run's cap (plain / values the text
-     cache finds again / every value new). --bench=poison or --bench=numbers runs one of them. 'pixi' (0.61) = the
-     poison scenario drawn by the 2D canvas, then by PixiJS (?pixi=0 / ?pixi=1, one browser, rows comparable), with the
-     time spent drawing (Run.draw, PixiJS's own work included) beside the game code's.
+     cache finds again / every value new). --bench=poison or --bench=numbers runs one of them.
 usage: python tools/check.py [--bench[=name,…]] [--only-bench[=name,…]] [--no-sim] [--no-browser]
        env: CHROME (a Chromium executable), VW / VH (viewport, default 1920x1080), SOFT_GPU=1 (draw with SwiftShader,
        a software GPU: about a weak PC's integrated graphics)
@@ -101,7 +99,6 @@ RUNS = [   # (label, query): short bot runs that go through the code the audit f
     ('cra + water fusion + poison arrows', 'cls=cra&weapon=arc&fusion=chance&spells=fleche_empoisonnee:6,fleche_magique:4&t=90'),
     ('feca orbiters + bouncing bubble', 'cls=feca&spells=bouclier_feca:6,bulle:6&t=60'),
     ('iop sword + water fusion', 'cls=iop&weapon=epee&fusion=chance&spells=epee_iop:6&t=100'),
-    ('canvas 2D fallback: cra + poison arrows', 'cls=cra&spells=fleche_empoisonnee:6,fleche_magique:4&t=90&pixi=0'),   # (0.62: PixiJS is the default, the 2D canvas the fallback)
 ]
 
 
@@ -129,7 +126,7 @@ def browser_runs(p, base):
         try: pg.wait_for_function(READY, timeout=120000)
         except Exception as e: fail(f'{label}: the run never started ({e})'); continue
         load = time.time() - t0
-        if 'pixi=0' not in q and not pg.evaluate('PX.on'): fail(f'{label}: PixiJS did not start (the 2D canvas drew the run)')
+        if not pg.evaluate('PX.on'): fail(f'{label}: PixiJS did not start (the 2D canvas drew the run)')
         a = json.loads(pg.evaluate(STATE))
         f = pg.evaluate(FPS + '(12000)')
         time.sleep(3)
@@ -167,9 +164,7 @@ NUMBERS = """(k => { window._num = k === 'plain' ? 0 : k.includes('new') ? 'new'
 BENCHES = {   # name: (setter, keys)
     'poison': (STATUS, ('plain', 'poison', 'poison+bleed')),
     'numbers': (NUMBERS, ('plain', 'numbers', 'numbers, all new')),
-    'pixi': (STATUS, ('plain', 'poison', 'poison+bleed')),
 }
-MODES = {'pixi': (('canvas', '&pixi=0'), ('pixi', '&pixi=1'))}   # (0.61: a bench drawn by each renderer in turn)
 MED = '(k => { const a = window[k].slice().sort((x, y) => x - y); return a.length ? +a[a.length >> 1].toFixed(2) : 0; })'
 
 
@@ -177,7 +172,7 @@ def bench(p, base, name):
     setter, keys = BENCHES[name]
     say('== %s bench (200 monsters on screen, %dx%d, UHD%s%s)' % (name, VW, VH, ', software GPU' if SOFT_GPU else '', ', no frame cap' if UNCAPPED else ''))
     b = launch(p); rows = []
-    for mode, mq in MODES.get(name, (('', ''),)):
+    for mode, mq in (('', ''),):
         ctx = b.new_context(viewport={'width': VW, 'height': VH})
         errs, bad = [], []
         pg = page_of(ctx, base, errs, bad)

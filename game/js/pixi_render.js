@@ -12,8 +12,7 @@
 // there (PX.layer: zones, glyphs, traps, telegraphs, rings, slashes, beams…), or a small box of its own for what stands
 // among the monsters (PX.proxy: the player, allies, bombs, the Double, the Mama, a monster's drain / marks). The 2D
 // canvas on top keeps the texts, the faint silhouette of the character, the HUD and the cinematics.
-// tests/t_pixicmp.py draws one frozen run with both renderers and compares them pixel by pixel; docs/reports/pixijs-renderer.md =
-// the plan and the measures (python tools/check.py --bench=pixi).
+// docs/reports/pixijs-renderer.md = the plan and the measures.
 // Drawing model: every frame the scene is a list of quads in drawing order (PX.q), laid on a pool of PIXI.Sprite that
 // stays in the same order; PixiJS batches them (one draw call for many sprites of the same textures).
 // 0.62: a stand-in for the 2D context. The game's own 2D drawing code (pickups, projectiles, effects, the marks over the
@@ -233,6 +232,7 @@ const PX = {
     for (const sh of Object.values(MobSheets.c)) if (sh && sh.img) { sh.img._pxBig = true; ups.push(this.src(sh.img, true)); if (sh.white) { sh.white._pxBig = true; ups.push(this.src(sh.white, true)); } }
     for (const im of this.common(run)) ups.push(this.src(im, true));
     for (const s of ups) if (s) try { this.r.texture.initSource(s); } catch (e) { }
+    if (this.caF === undefined && !Game.minFx) this.caF = pxChroma(this.r);   // (0.98.2: its shader made now: it shows from the countdown's first frame)
   },
   // 0.62: what the parts drawn through PXCtx use most: the loaded effect sheets (icons come as pieces: PX.crop)
   // 0.95 (memory audit: the menu's idle loading decodes all 87 effect sheets; every one went to the GPU at a run's start,

@@ -57,7 +57,7 @@ Shared rules for builders:
 | tool | what it does |
 |---|---|
 | `make_content.py [--check]` | runs the newest `content/patch_*.py`: rebuilds `game/data/content.json`; `--check` only compares |
-| `check.py [--bench…]` | the safety net (0.59): simulations of every class + 4 bot runs in Chromium (PixiJS and Canvas 2D), no page error, no missing file; exit code 0 = pass |
+| `check.py [--bench…]` | the safety net (0.59): simulations of every class + 3 bot runs in Chromium (PixiJS), no page error, no missing file; exit code 0 = pass |
 | `qa.py quick\|full [--web] [--only a,b] [--list]` | every automated test in order, report in `work/qa/<date>-<suite>/report.md` (see `docs/TESTING.md`) |
 | `serve_local.py [port] [--no-browser]` | local web server for `game/` (first free port from 8765, no cache), opens the browser |
 | `make_dist.py [baseline_dir]` | `dist/web`: the game with JS and fonts inlined, ready for any static host |
@@ -194,6 +194,7 @@ Bestiary, cards, worlds, sound:
 | `pw_test.py <script> <outdir>` | runs one `tests/t_*.py` Playwright script against a local server (env VW, VH, DPR, MOBILE, LG) |
 | `stress.py [scenario…]` | crashes, frozen states, memory growth, stutters (`docs/TESTING.md`) |
 | `perf_probe.py [--n 380] [--cpu 4] [--fx min] [--q sd] [--profile]` | a fixed heavy scene: frame time (update / draw), fps, top functions by self time |
+| `perf_probe.py --phone` / `--choices [--phone]` | the same scene as an average phone (844 x 390, 3 device px a px, CPU x6); the level-up choice opened 6 times (its call, long tasks, frames while open) |
 | `perf_probe.py --each spells\|weapons\|systems [--only id,…] [--profile]` | every spell / weapon / run system alone over the same crowd: extra main-thread time, entities, 2D layers / boxes sent to the GPU (`work/perf/`) |
 | `sim_node.js <cls\|all> <map> <minutes>` | headless simulator of the real game logic (balance sims, `BENCH=`, `AUDIT=1`) |
 | `bench_draw.py` | micro-bench of drawing small bitmaps in Chrome |

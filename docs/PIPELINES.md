@@ -59,7 +59,7 @@ cropped, packed into atlases (≤ 4096 px) and described in `sprites.json` (writ
 
 Order for a class sprite rebuild (e.g. after a client change): `build_move060 chars <sid>` → `build_still063 <sid>` →
 `build_wfront060 <sid>` → `fix_flash061` → `SHEET=_s|_r SLOT=1|2 build_accfront061 <sid>` → `remask091 <keys>` →
-`shield_anc092 <keys>`; then `tests/t_pixicmp.py` and a look in game.
+`shield_anc092 <keys>`; then a look in game.
 
 ### Worlds (the most delicate pipeline)
 

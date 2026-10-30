@@ -96,7 +96,7 @@ const results = [];
 const ids = only.length ? only : [...new Set([...C.classes.flatMap(c => c.spells), ...(C.globalSpells || []).map(g => g.id), ...(C.spellFusions || []).map(f => f.id)])];
 for (const id of ids) {
   const def = C.spells[id]; if (!def) { results.push({ id, ok: false, fails: ['unknown spell'] }); continue; }
-  let sc; try { sc = scene(id); } catch (e) { results.push({ id, ok: false, fails: ['error: ' + e.message] }); continue; }
+  let sc; try { sc = scene(id, def.t === 'trap' ? 'moving' : undefined); } catch (e) { results.push({ id, ok: false, fails: ['error: ' + e.message] }); continue; }   // (0.98.1: traps with walking monsters — since 0.98 one goes off when a monster steps on it)
   const { s, seen, T } = sc, p = s.p, t = def.t, fails = [], notes = [];
   const desc = (def.desc && def.desc.fr) || '';
   // damage: a spell with damage hurts something (its summons' blows count as its own)

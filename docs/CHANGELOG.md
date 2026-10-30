@@ -1,7 +1,35 @@
 # Changelog (player-visible changes)
 
 From the Git history and the technical notes. The version shown in
-game is **0.98.1** (0.94 was never released on its own: its changes come with 0.95).
+game is **0.98.2** (0.94 was never released on its own: its changes come with 0.95).
+
+## 0.98.2
+
+Balance
+- Every spell, global spell and spell fusion deals 10 % more damage (weapons and summoned allies from drops are unchanged).
+- The experience needed for levels 2 to 5 is 10 % lower, in every mode; from level 5 on nothing changes.
+- **2 Banishes** per run instead of 1, shared by spells, weapons and characteristics.
+- The **Arakne Agressive** and the **Arakne Majeure** from drops no longer push what they hit: they slow it by 90 % for 2 s
+  (not bosses, as with the push).
+- **Ganymède's blessing**: on the first 10 maps in Normal, +5 % damage and 3 times more bread on the ground (a gift from the
+  Incarnam baker), on top of the help on maps 1 to 3.
+
+What's new
+- On map 11 in Normal, Dark Vlad comes to take these blessings away.
+
+Quality of life
+- Every message in the middle of the screen is in the victory's gold (a critical hit's word stays red).
+- The Sablier shows a see-through timer in the middle of the screen while the monsters are frozen.
+- The countdown's chromatic aberration starts with the countdown and grows over its first second.
+- A run's sounds and pictures are all ready before the countdown, which waits if they are not.
+- The messages in the middle of the screen give a name only (Eclipse, Kama rain, Tofuzmo, a boss's name…); what it does
+  stays in the chat at the bottom left, twice as long as before. A critical summon shows « Critical hit! » in red before
+  its name. These names and the relics' names use the chat's lettering.
+- A spell fusion's name is written in capitals, in gold like the victory (was violet).
+- **Lethal Attack** (Sram) and its fusion hit their monster at once: no mark on the ground, no delay to step out of.
+- Smoother: the first level-up no longer freezes the game for a moment (its pictures are prepared during the countdown),
+  and while a choice or the pause is open the game no longer redraws the frozen fight behind it (less work, less battery
+  on phones).
 
 ## 0.98.1
 

@@ -132,7 +132,7 @@ class SpellInst {
           } else if (p.shovel) { // Pelle Massacrante: the client's giant shovel rises above the target, then crashes down (impact on frame ~25)
             R.fxAt(this.def.fx[0], x, y, { scale: p.radius * st.area / 70, fit: p.radius * st.area });
             R.strikes.push({ x, y, r: p.radius * st.area, at: R.time + 1.2, delay: 1.2, dmg: kd, spell: this, shake: 5, nofx: true });
-          } else if (p.single) R.strikes.push({ x: tg.x, y: tg.y, r: tg.r * 1.2, tgt: tg, bossK: p.bossK, at: R.time + p.delay, delay: p.delay, dmg: kd, spell: this });   // (it follows its monster and hits it alone)
+          } else if (p.single) R.strikes.push({ x: tg.x, y: tg.y, r: tg.r * 1.2, tgt: tg, bossK: p.bossK, at: R.time, delay: 0, dmg: kd, spell: this });   // (it hits its monster alone; 0.98.1: at once — no delay to step out of, no mark on the ground)
           else R.strikes.push({ x, y, r: p.radius * st.area, at: R.time + p.delay, delay: p.delay, dmg: kd, spell: this, gamble: p.gamble, shake: p.shake, slow: p.slow, slowDur: p.slowDur, mark: p.mark, markDur: p.markDur, stun: p.stun, rock: p.rock, transmute: p.transmute, gold: p.gold });
         }
         this.playAnim(); return true;

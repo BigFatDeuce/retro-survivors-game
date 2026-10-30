@@ -614,7 +614,7 @@ Run.prototype.draw = function (ctx) {
   }
   // v2.0: spells about to land (strikes with a delay): their area is already marked on the ground
   for (const s of this.strikes) {
-    if (s.at <= t || !inView(s.x, s.y, s.r)) continue;
+    if (s.at <= t || s.tgt || !inView(s.x, s.y, s.r)) continue;   // (0.98.1: s.tgt, a blow on one monster: nothing on the ground)
     const d = s.delay || 0.6, k = clamp(1 - (s.at - t) / d, 0, 1);
     const scol = (s.spell && s.spell.p && s.spell.p.color) || '#ffcc33'; drawArea(ctx, s.x, s.y, s.r, scol, 0.35 + 0.45 * k);
     { const cr = s.r * (1.6 - 0.6 * k); ctx.save(); ctx.globalAlpha = 0.25 + 0.6 * k; ctx.lineWidth = 2.5; ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.beginPath(); ctx.ellipse(s.x, s.y, cr, cr * 0.62, 0, 0, TAU); ctx.stroke(); ctx.lineWidth = 1.5; ctx.strokeStyle = scol; ctx.stroke(); ctx.restore(); }   // (0.87: a ring closing in on the impact)
@@ -1165,8 +1165,9 @@ function drawReviveFront(ctx, P, e) {   // over the character: the powder, the b
   ctx.restore();
 }
 // 0.98: the messages in the middle of the screen (monsters, bosses, events) in Lilita, rounder and easier to read; the
-// titles, names and the victory keep the announcements' font
-const BAN_FONT = px => `${Math.max(4, Math.round(px))}px Lilita, DofusBold, sans-serif`;
+// titles, names and the victory keep the announcements' font. 0.98.1: they are names now (what they do goes in the chat,
+// Run.announce), in the chat's lettering (hudFont)
+const BAN_FONT = px => hudFont(Math.max(4, Math.round(px)));
 // 0.95: the frame of the banners (and the relic's caption): x, y its top-left corner. 0.98 (it was too dark and plain: in
 // the Dofus logos' spirit, green and alive): a glow behind, a body lit from the top, a gold edge on a dark rim, an inner
 // line, swaying leaves held by a gold bud at each end, particles rising off it; t = the run's clock. Styles (PANEL): the
@@ -1605,7 +1606,11 @@ function drawKeyHint(ctx, kind, cx, cy, u, off) {
   ctx.globalAlpha = 1;
 }
 function hudFont(px, bold = true) { return `${bold ? 'bold ' : ''}${px}px ${bold ? 'DofusBold' : 'Dofus'}, Verdana, sans-serif`; }
-// outlined texts are rendered once into small cached canvases: strokeText every frame is one of the costliest canvas calls
+// outlined texts are rendered once into small cached canvases: strokeText every frame is one of the costliest canvas calls.
+// 0.98.1, measured on a phone's CPU: a cached text costs ~0.06 ms to draw, a new one ~3 ms (a canvas, its context, the
+// measure, the stroke); a text that changes often is made again 10 times a second at most (the boss bars). Tried and
+// dropped: <img> copies of the texts (drawn at their size, a canvas costs the same; the copies' toBlob cost more) and the
+// numbers drawn glyph by glyph from strips (more draws: 0.99 -> 1.38 ms a frame on a crowded fight)
 const TextCache = {
   m: new Map(), g0: null,
   get(s, fill, px, stroke, lw) {
@@ -1757,9 +1762,9 @@ function drawHud(ctx, R) {
   if (R.relicShow) { const D = 3, k = (performance.now() - R.relicShow.t0) / 1000; if (k > D) R.relicShow = null; else {
     const r = R.relicShow.r, a = Math.min(1, k * 3.5, (D - k) * 2.5), cx = W / 2, sc = 1 + Math.max(0, 0.45 - k) * 0.7;
     const e1 = 1 - Math.pow(1 - Math.min(1, k / 0.42), 3), out = Math.max(0, k - (D - 0.4)) / 0.4 * 10 * u;   // e1: the rise; out: a small lift as it fades
-    const maxW = Math.min(W * 0.9, 600 * u) - 44 * u, f1 = 13 * u; let f2 = 20 * u; ctx.font = annFont(f2, 700); const nw = ctx.measureText(L(r.name)).width; if (nw > maxW) f2 *= maxW / nw;
+    const maxW = Math.min(W * 0.9, 600 * u) - 44 * u, f1 = 13 * u; let f2 = 20 * u; ctx.font = BAN_FONT(f2); const nw = ctx.measureText(L(r.name)).width; if (nw > maxW) f2 *= maxW / nw;   // (0.98.1: its name in the chat's lettering, BAN_FONT)
     const f3 = 15 * u, F3 = px_ => `${px_}px Lilita, DofusBold, sans-serif`; ctx.font = F3(f3); const dl = wrapLines(ctx, L(r.desc), maxW), d3 = f3 * 1.22;   // (0.98: the bonus in Lilita: rounder, easier to read than the announcements' font)
-    ctx.font = annFont(f1, 700); const w1 = ctx.measureText(T('relic_got')).width; ctx.font = annFont(f2, 700); const w2 = ctx.measureText(L(r.name)).width; ctx.font = F3(f3);
+    ctx.font = annFont(f1, 700); const w1 = ctx.measureText(T('relic_got')).width; ctx.font = BAN_FONT(f2); const w2 = ctx.measureText(L(r.name)).width; ctx.font = F3(f3);
     const bw = Math.min(W * 0.94, Math.max(w1, w2, ...dl.map(l => ctx.measureText(l).width)) + 44 * u), gap = 5 * u, h1 = f1 * 1.15, h2 = f2 * 1.2, h3 = dl.length * d3, pad = 9 * u, bh = pad * 2 + h1 + h2 + gap + h3;
     const top = Math.max(H / 2 - 112 * u - 40 * u - bh, R.bannerMsg && R._banBot ? R._banBot + 6 * u : 0, 8 * u), cy = top + bh + 40 * u - out;
     const py0 = (R.player.y - 30 - R.cam.y) * Game.zoom + H / 2, ry = lerp(py0, cy, e1);   // the relic's height: from the character to its place
@@ -1773,9 +1778,9 @@ function drawHud(ctx, R) {
     const e2 = 1 - Math.pow(1 - Math.min(1, k / 0.3), 2), bx = cx - bw / 2, byy = top - (1 - e2) * 12 * u - out;
     ctx.globalAlpha = a * e2 * 0.6; annPanel(ctx, bx, byy, bw, bh, u, R.time, 'fire'); ctx.globalAlpha = a * e2;   // (0.98: green flames, see-through)
     ctx.textAlign = 'center'; let yy = byy + pad;
-    annLine(ctx, T('relic_got'), cx, yy + h1 / 2 + annInk('H', f1, 700).dy, f1, '#ffe9a8'); yy += h1;
-    { const ny = yy + h2 / 2 + annInk('H', f2, 700).dy;
-      annLine(ctx, L(r.name), cx, ny, f2, '#ffd24a'); } yy += h2 + gap;
+    annLine(ctx, T('relic_got'), cx, yy + h1 / 2 + annInk('H', f1, 700).dy, f1, ANN.retro); yy += h1;   // (0.98.2: the victory's gold)
+    { const ny = yy + h2 / 2 + annInk('H', f2, 700, BAN_FONT(100)).dy;
+      annLine(ctx, L(r.name), cx, ny, f2, ANN.retro, BAN_FONT); } yy += h2 + gap;
     const i3 = annInk('H', f3, 700, F3(100)).dy; ctx.font = F3(f3); ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = Math.max(2, f3 * 0.24); ctx.strokeStyle = 'rgba(30,8,0,0.92)';
     dl.forEach((l, i) => { const ly = yy + d3 * (i + 0.5) + i3; ctx.strokeText(l, cx, ly); ctx.fillStyle = '#fff6dc'; ctx.fillText(l, cx, ly); });
     ctx.textAlign = 'left';
@@ -1808,7 +1813,8 @@ function drawHud(ctx, R) {
     const gg = ctx.createLinearGradient(0, by, 0, by + 16 * u); gg.addColorStop(0, sub ? '#9cff6a' : '#ff6b5a'); gg.addColorStop(1, sub ? '#2f8a12' : '#a8160c');
     ctx.fillStyle = gg; ctx.fillRect(bx, by, bw * clamp(b.hp / b.maxHp, 0, 1), 16 * u);
     ctx.strokeStyle = '#ffd27a'; ctx.lineWidth = 2; ctx.strokeRect(bx - 2, by - 2, bw + 4, 16 * u + 4);
-    outlinedText(ctx, `${L(b.def.name)} — ${fmtNum(Math.max(0, b.hp))} / ${fmtNum(b.maxHp)}`, W / 2, by + 13 * u, '#fff', 12 * u, 'center');
+    if (!(R.time - (b._hpT || -9) < 0.1) || b.hp <= 0) { b._hpT = R.time; b._hpS = `${L(b.def.name)} — ${fmtNum(Math.max(0, b.hp))} / ${fmtNum(b.maxHp)}`; }   // (0.98.1: its text made again 10 times a second at most, not on every hit: a new picture each time)
+    outlinedText(ctx, b._hpS, W / 2, by + 13 * u, '#fff', 12 * u, 'center');
   }
   // heart (HP) bottom center, Dofus style
   const P = R.player, st = R.stats;
@@ -1911,11 +1917,11 @@ function drawHud(ctx, R) {
     // 0.94 (quality audit): a long line ran under the heart and the potion (their '/62' hidden): lines wrap before the
     // bottom-centre HUD (the heart at W / 2, the move-spell switch left of it)
     const cw = Math.max(160 * u, W / 2 - 116 * u), f0 = ctx.font; ctx.font = hudFont(13 * u);
-    { let n = 0, al = 0; for (const c of R.chats) { const age = now - c.t; if (age > 14) continue; n += c._w === cw ? c._ls.length : 1; al = Math.max(al, age > 11 ? (14 - age) / 3 : 1); }   // (0.98: a soft shade behind the lines: they read on bright grass)
+    { let n = 0, al = 0; for (const c of R.chats) { const age = now - c.t, lf = c.life || 14; if (age > lf) continue; n += c._w === cw ? c._ls.length : 1; al = Math.max(al, age > lf - 3 ? (lf - age) / 3 : 1); }   // (0.98: a soft shade behind the lines: they read on bright grass)
       if (n) { const hh = n * 18 * u + 26 * u; ctx.globalAlpha = 0.55 * al; ctx.drawImage(RCache.glow('rgba(0,10,4,0.85)'), -cw * 0.25, H - hh - 6 * u, cw * 1.45, hh * 1.6); ctx.globalAlpha = 1; } }
     for (let i = R.chats.length - 1; i >= 0; i--) {
-      const c = R.chats[i]; const age = now - c.t; if (age > 14) continue;
-      ctx.globalAlpha = age > 11 ? (14 - age) / 3 : 1;
+      const c = R.chats[i]; const age = now - c.t, lf = c.life || 14; if (age > lf) continue;   // (0.98.1: lf, an announcement's explanation 28 s)
+      ctx.globalAlpha = age > lf - 3 ? (lf - age) / 3 : 1;
       const ls = c._w === cw ? c._ls : (c._w = cw, c._ls = wrapLines(ctx, c.msg, cw));
       for (let j = ls.length - 1; j >= 0; j--) { outlinedText(ctx, ls[j], 12 * u, cy, c.color, 13 * u, 'left', 'rgba(0,0,0,0.9)'); cy -= 18 * u; }
     }
@@ -1946,8 +1952,9 @@ function drawHud(ctx, R) {
     // (0.95: the message in the announcements' Cinzel, juice.js annLine; it slides down a little as it comes in)
     const nb = Math.min(4, R.bossAlive.length + (R.mutant ? 1 : 0)), by0 = Math.max(b.center ? H * 0.24 : H * 0.17, 118 * u + nb * 24 * u) - (b.t < 0.3 ? (1 - b.t / 0.3) * (1 - b.t / 0.3) * 14 * u : 0); let fs = 22 * u * BS;   // (0.35: higher, out of the middle of the view, under the boss bars)
     ctx.font = BAN_FONT(fs);
-    const maxW = Math.min(W * 0.92, 900 * u) - 70 * u; let lines = wrapLines(ctx, b.text, maxW);
-    if (lines.length > 2) { fs = 19 * u * BS; ctx.font = BAN_FONT(fs); lines = wrapLines(ctx, b.text, maxW); }
+    const full = b.pre ? b.pre[0] + ' ' + b.text : b.text;   // (0.98.1: b.pre, a word before the name in its own colour)
+    const maxW = Math.min(W * 0.92, 900 * u) - 70 * u; let lines = wrapLines(ctx, full, maxW);
+    if (lines.length > 2) { fs = 19 * u * BS; ctx.font = BAN_FONT(fs); lines = wrapLines(ctx, full, maxW); }
     // (0.95: the messages sat low and off-centre in their frame: the frame was laid from a guess of the text's
     // height; now the block of lines — line height lh, the capitals' ink centred on each line, annInk — is centred in it)
     const lh = fs * 1.2, tw = Math.max(...lines.map(l => ctx.measureText(l).width)) + 70 * u * BS, ph = 46 * u * BS + (lines.length - 1) * lh, px = (W - tw) / 2, py = by0 - 46 * u * BS * 0.68;
@@ -1955,10 +1962,20 @@ function drawHud(ctx, R) {
    // (0.95: a relic's caption shown meanwhile goes under it)
     const dy = annInk('H', fs, 700, BAN_FONT(100)).dy, y0 = py + ph / 2 - (lines.length - 1) * lh / 2 + dy;
     ctx.textAlign = 'center';
-    if (b.kind === 'boss' && !Game.lowFx) { ctx.save(); ctx.font = BAN_FONT(fs); ctx.textBaseline = 'middle'; ctx.shadowColor = b.color; ctx.shadowBlur = (16 + 5 * Math.sin(R.time * 5)) * u; ctx.fillStyle = b.color; lines.forEach((l, i) => { ctx.fillText(l, W / 2, y0 + i * lh); ctx.fillText(l, W / 2, y0 + i * lh); }); ctx.restore(); }   // (its words glowing in their colour, under the outline)
-    lines.forEach((l, i) => annLine(ctx, l, W / 2, y0 + i * lh, fs, b.color, BAN_FONT)); ctx.textAlign = 'left';
+    if (b.kind === 'boss' && !Game.lowFx) { ctx.save(); ctx.font = BAN_FONT(fs); ctx.textBaseline = 'middle'; ctx.shadowColor = '#f5b52e'; ctx.shadowBlur = (16 + 5 * Math.sin(R.time * 5)) * u; ctx.fillStyle = '#f5b52e'; lines.forEach((l, i) => { ctx.fillText(l, W / 2, y0 + i * lh); ctx.fillText(l, W / 2, y0 + i * lh); }); ctx.restore(); }   // (its words glowing in their colour, under the outline)
+    lines.forEach((l, i) => {
+      if (!(b.pre && i === 0 && l.startsWith(b.pre[0] + ' '))) { annLine(ctx, l, W / 2, y0 + i * lh, fs, ANN.retro, BAN_FONT); return; }   // (0.98.2: every central message in the victory's gold, b.color stays the chat's)
+      ctx.font = BAN_FONT(fs); const x0 = W / 2 - ctx.measureText(l).width / 2, w0 = ctx.measureText(b.pre[0] + ' ').width; ctx.textAlign = 'left';
+      annLine(ctx, b.pre[0], x0, y0, fs, b.pre[1], BAN_FONT); annLine(ctx, l.slice(b.pre[0].length + 1), x0 + w0, y0, fs, ANN.retro, BAN_FONT); ctx.textAlign = 'center';
+    }); ctx.textAlign = 'left';
     ctx.globalAlpha = 1;
   }
+  // 0.98.2: the Sablier's freeze, what is left of it read from the freeze itself (Run.freezeUntil: every source of it), see-through
+  if (R.sandFreeze) { const left = R.freezeUntil - R.time; if (left <= 0) R.sandFreeze = false; else {
+    const fs = 40 * u, y = H / 2, s = left.toFixed(2).replace('.', LANG === 'en' ? '.' : ',') + ' s'; ctx.save(); ctx.globalAlpha = 0.55; ctx.font = hudFont(fs); ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    const x = W / 2 - ctx.measureText('8,88 s').width / 2, g = ctx.createLinearGradient(0, y - fs * 0.48, 0, y + fs * 0.42); for (const [o, c] of ANN.retro.stops) g.addColorStop(o, c);   // (a fixed left edge: the figures' widths differ, a centred text shook)
+    ctx.lineWidth = fs * 0.16; ctx.strokeStyle = ANN.retro.edge; ctx.strokeText(s, x, y); ctx.fillStyle = g; ctx.fillText(s, x, y); ctx.restore();
+  } }
   // touch joystick
   if (Input.touch.active) {
     ctx.globalAlpha = 0.35; ctx.fillStyle = '#fff';

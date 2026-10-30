@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------- asset loading
 let SPR = null; // merged sprite metadata (data/sprites.json)
 // every data / image URL carries the build: a browser never mixes files of two versions from its cache
-const BUILD = '0.98.1';
+const BUILD = '0.98.2';
 const vurl = (u) => u + (u.includes('?') ? '&' : '?') + 'v=' + BUILD;
 // 0.93: a versioned file never changes: on the published web version (https, not this machine) the browser takes its
 // cached copy without asking the server again (one revalidation round trip per file at each start); at home (the local

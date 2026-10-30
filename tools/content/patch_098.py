@@ -266,6 +266,147 @@ for lg in C['ui']:
 for kind, old_k, new_k in (('arakne', '1564_z60', '1564_z66'), ('majeure', '1161_z60', '1161_z104'), ('lancier', '1189_z32', '1189_z33')):
     assert C['allies'][kind]['sprite'] == old_k, kind; C['allies'][kind]['sprite'] = new_k
 
+# ================================================================ 0.98.1: the announcements are names
+# the middle of the screen shows a name (Run.announce, game.js), what it does stays in the chat (twice as long); the names
+# that are not already in the data (monsters, bosses, items, drops, allies) — the critical summons' red word before theirs
+LANGS7 = ('fr', 'en', 'de', 'es', 'it', 'nl', 'pt')
+TITLES = {
+    'crowd_grows_t': ('Renforts', 'Reinforcements', 'Verstärkung', 'Refuerzos', 'Rinforzi', 'Versterking', 'Reforços'),
+    'door_appears_t': ('Porte mystérieuse', 'Mysterious door', 'Geheimnisvolle Tür', 'Puerta misteriosa', 'Porta misteriosa', 'Mysterieuze deur', 'Porta misteriosa'),
+    'doom_t': ('Maîtres Corbacs', 'Lord Crows', 'Meister Raben', 'Maestros Cuerbok', 'Messer Cuervoc', 'Heren Kraai', 'Lordes Corvos'),
+    'jackpot_t': ('Jackpot', 'Jackpot', 'Jackpot', 'Premio gordo', 'Jackpot', 'Jackpot', 'Jackpot'),
+    'revived_t': ('Phénix', 'Phoenix', 'Phönix', 'Fénix', 'Fenice', 'Feniks', 'Fênix'),
+    'kamaboost_t': ('Bourse magique', 'Magic purse', 'Magischer Beutel', 'Bolsa mágica', 'Borsa magica', 'Magische buidel', 'Bolsa mágica'),
+    'batofu_t': ('Plume du Batofu', 'Batofu Feather', 'Batofu-Feder', 'Pluma del Batofu', 'Piuma del Batofu', 'Batofuveer', 'Pena do Batofu'),
+    'sandglass_t': ('Sablier de Xélor', "Xelor's Sandglass", 'Xelors Sanduhr', 'Reloj de arena de Xelor', 'Clessidra di Xelor', 'Zandloper van Xelor', 'Ampulheta de Xelor'),
+    'crit_t': ('Coup critique !', 'Critical hit!', 'Kritischer Treffer!', '¡Golpe crítico!', 'Colpo critico!', 'Kritieke treffer!', 'Golpe crítico!'),
+    'exploit_t': ('Exploit', 'Feat', 'Heldentat', 'Hazaña', 'Impresa', 'Heldendaad', 'Façanha'),
+    'fireworks_t': ("Fée d'Artifice", 'Firework Fairy', 'Feuerwerksfee', 'Hada de Artificio', 'Fata d’Artificio', 'Vuurwerkfee', 'Fada de Artifício'),
+    'booster_here_t': ('Booster TTG', 'TTG booster', 'TTG-Booster', 'Sobre TTG', 'Bustina TTG', 'TTG-booster', 'Booster TTG'),
+    'down_t': ('{n} vaincu', '{n} defeated', '{n} besiegt', '{n} vencido', '{n} sconfitto', '{n} verslagen', '{n} derrotado'),
+    'trap_found_t': ('Une trappe', 'A trapdoor', 'Eine Falltür', 'Una trampilla', 'Una botola', 'Een valluik', 'Um alçapão'),
+    'tmap_found_t': ('Trésor déterré', 'Treasure dug up', 'Schatz ausgegraben', 'Tesoro desenterrado', 'Tesoro dissotterrato', 'Schat opgegraven', 'Tesouro desenterrado'),
+    'lb_cycle_t': ('Cycle {n}', 'Cycle {n}', 'Zyklus {n}', 'Ciclo {n}', 'Ciclo {n}', 'Cyclus {n}', 'Ciclo {n}'),
+    'ev_bworks_t': ('Invasion de Bworks', 'Bwork invasion', 'Bwork-Invasion', 'Invasión de Bworks', 'Invasione di Bwork', 'Bwork-invasie', 'Invasão de Bworks'),
+    'ev_tofus_t': ('Pluie de Tofus', 'Tofu rain', 'Tofu-Regen', 'Lluvia de Tofus', 'Pioggia di Tofu', 'Tofuregen', 'Chuva de Tofus'),
+    'ev_kamarain_t': ('Pluie de kamas', 'Kama rain', 'Kama-Regen', 'Lluvia de kamas', 'Pioggia di kama', 'Kama-regen', 'Chuva de kamas'),
+    'ev_eclipse_t': ('Éclipse', 'Eclipse', 'Finsternis', 'Eclipse', 'Eclissi', 'Eclips', 'Eclipse'),
+    'ev_merchant_t': ('Marchand ambulant', 'Travelling merchant', 'Fahrender Händler', 'Mercader ambulante', 'Mercante ambulante', 'Rondreizende handelaar', 'Mercador ambulante'),
+    'pioche_jackpot_t': ('Filon', 'Motherlode', 'Goldader', 'Filón', 'Filone', 'Goudader', 'Filão'),
+    'tot_slap_t': ('La claque de ToT', "ToT's slap", 'ToTs Ohrfeige', 'La colleja de ToT', 'Lo schiaffo di ToT', 'De mep van ToT', 'A chapada do ToT'),
+    'nowel_gift_here_t': ('Cadeau de Nowel', 'Kwismas Present', 'Nowel-Geschenk', 'Regalo de Nowel', 'Regalo di Nowel', 'Nowelcadeau', 'Presente de Nowel'),
+    'aura_secret_t': ('Secret débloqué', 'Secret unlocked', 'Geheimnis freigeschaltet', 'Secreto desbloqueado', 'Segreto sbloccato', 'Geheim ontgrendeld', 'Segredo desbloqueado'),
+}
+for key, vals in TITLES.items():
+    for lg, v in zip(LANGS7, vals): assert key not in C['ui'][lg], (lg, key); C['ui'][lg][key] = v
+assert C['ui']['fr']['doom'] == 'Les Maîtres Corbac arrivent !'; C['ui']['fr']['doom'] = 'Les Maîtres Corbacs arrivent !'   # (the plural, as in doom_rw_*)
+
+# ================================================================ 0.98.2
+# every spell, global spell and spell fusion +10 %: in the data, each damage number of each spell once (a fusion is a spell of
+# its own, its riders are shares of its damage), so the menus and the blows read the same value; weapons, allies, drops apart
+for sid in S: scale(sid, ['dmg', 'poison', 'puddlePoison', 'burn', 'gas', 'wallDmg'], 1.1)
+# the first four thresholds (levels 2 to 5) -10 %; from level 5 on the same experience (xpBack untouched)
+XE = C['run']['xpEarly']; assert XE[:4] == [2.24, 2.24, 1.92, 1.52]; XE[:4] = [round(x * 0.9, 3) for x in XE[:4]]
+assert C['banishes'] == 1; C['banishes'] = 2
+# the ground drop's Araknes: no more push, a slow on what they hit (renewed, never added up: Run.updateAllies)
+for A in (C['drops']['arakne'], C['drops']['arakne']['majeure']):
+    del A['knock']; A['slow'] = 0.9; A['slowDur'] = 2
+del C['drops']['arakne']['majeure']['pushOnce']
+# Ganymède's blessing: zone cards 1 to 10 in Normal, on top of the first three zones' help (beginnerAid); Dark Vlad takes it
+# away on card 11 (Run.bless, Game.startRun, UI.ganyScene key 'taunt')
+GY = C['gany']; GY['bless'] = {'maps': 10, 'dmg': 0.05, 'bread': 3}
+assert C['maps'][10]['id'] == 'pandala'
+def line7(*v): return dict(zip(LANGS7, v))
+GY['scenes']['astrub'] += [
+    line7("Et ce n'est pas tout ! Ce coup de pouce, tu le gardes, et j'y ajoute ma bénédiction : +{bd} % de dégâts sur tes {bn} premières cartes. Ne me remercie pas, frappe !",
+          "And that's not all! You keep that helping hand, and I'm adding my blessing: +{bd}% damage on your first {bn} maps. Don't thank me, hit something!",
+          "Und das ist noch nicht alles! Diese Hilfe behältst du, und dazu kommt mein Segen: +{bd} % Schaden auf deinen ersten {bn} Karten. Dank mir nicht, schlag lieber zu!",
+          "¡Y eso no es todo! Esa ayudita te la quedas, y le sumo mi bendición: +{bd} % de daño en tus {bn} primeros mapas. No me des las gracias, ¡pega!",
+          "E non è tutto! Quell'aiuto te lo tieni, e ci aggiungo la mia benedizione: +{bd}% di danni sulle tue prime {bn} mappe. Non ringraziarmi, picchia!",
+          "En dat is nog niet alles! Dat steuntje houd je, en ik voeg er mijn zegen aan toe: +{bd}% schade op je eerste {bn} kaarten. Niet bedanken, gewoon meppen!",
+          "E não é tudo! Essa ajudinha fica contigo, e junto-lhe a minha bênção: +{bd}% de dano nos teus {bn} primeiros mapas. Não me agradeças, bate!"),
+    line7("Quant au boulanger d'Incarnam, il t'a à la bonne : {bp} fois plus de pain par terre pendant tes premières aventures. Il paraît que tu as une mine de Tofu mal nourri.",
+          "As for the Incarnam baker, he's taken a liking to you: {bp} times more bread on the ground during your first adventures. He says you look like an underfed Tofu.",
+          "Und der Bäcker von Incarnam mag dich: {bp}-mal mehr Brot auf dem Boden während deiner ersten Abenteuer. Er meint, du siehst aus wie ein unterernährtes Tofu.",
+          "En cuanto al panadero de Incarnam, le has caído bien: {bp} veces más pan por el suelo durante tus primeras aventuras. Dice que tienes cara de Tofu mal alimentado.",
+          "Quanto al fornaio di Incarnam, gli stai simpatico: {bp} volte più pane per terra durante le tue prime avventure. Dice che hai la faccia di un Tofu denutrito.",
+          "En de bakker van Incarnam mag je wel: {bp} keer meer brood op de grond tijdens je eerste avonturen. Hij zegt dat je eruitziet als een ondervoede Tofu.",
+          "Quanto ao padeiro de Incarnam, foi com a tua cara: {bp} vezes mais pão no chão durante as tuas primeiras aventuras. Diz que tens ar de Tofu mal alimentado."),
+]
+GY['scenes']['bonta'].append(
+    line7("Et bien sûr, ma bénédiction et le pain du boulanger d'Incarnam te suivent toujours. Je ne suis pas un monstre… enfin, pas comme ceux d'ici.",
+          "And of course, my blessing and the Incarnam baker's bread are still with you. I'm no monster… well, not like the ones around here.",
+          "Und natürlich begleiten dich mein Segen und das Brot des Bäckers von Incarnam weiterhin. Ich bin ja kein Monster … jedenfalls nicht wie die hier.",
+          "Y, por supuesto, mi bendición y el pan del panadero de Incarnam te siguen acompañando. No soy un monstruo… bueno, no como los de aquí.",
+          "E naturalmente la mia benedizione e il pane del fornaio di Incarnam ti seguono ancora. Non sono un mostro… be', non come quelli di qui.",
+          "En natuurlijk blijven mijn zegen en het brood van de bakker van Incarnam je volgen. Ik ben geen monster… nou ja, niet zoals die hier.",
+          "E claro, a minha bênção e o pão do padeiro de Incarnam continuam contigo. Não sou nenhum monstro… bem, não como os daqui."))
+GY['scenes']['chafer'][1] = line7(
+    "Mais c'est ma dernière visite. Après, il faudra avancer sans moi, comme une grande âme.",
+    "But this is my last visit. After that, you'll have to carry on without me, like a big soul.",
+    "Aber das ist mein letzter Besuch. Danach musst du ohne mich weiterziehen, wie eine große Seele.",
+    "Pero es mi última visita. Después tendrás que seguir sin mí, como un alma mayor.",
+    "Ma è la mia ultima visita. Dopo dovrai andare avanti senza di me, come un'anima grande.",
+    "Maar dit is mijn laatste bezoek. Daarna moet je zonder mij verder, als een grote ziel.",
+    "Mas é a minha última visita. Depois vais ter de continuar sem mim, como uma alma crescida.")
+GY['scenes']['chafer'][3] = line7(
+    "Allez, pour la route : sur cette carte, les monstres ont {h} % de points de vie en moins et infligent {d} % de dégâts en moins. Ce coup de pouce-là s'arrête ici.",
+    "One for the road: on this map, monsters have {h}% less HP and deal {d}% less damage. That particular helping hand stops here.",
+    "Und eins für unterwegs: Auf dieser Karte haben die Monster {h} % weniger LP und verursachen {d} % weniger Schaden. Diese Hilfe endet hier.",
+    "Y una para el camino: en este mapa, los monstruos tienen un {h} % menos de PV e infligen un {d} % menos de daño. Esa ayudita se acaba aquí.",
+    "E una per la strada: su questa mappa i mostri hanno il {h}% di PV in meno e infliggono il {d}% di danni in meno. Quest'aiuto finisce qui.",
+    "Nog eentje voor onderweg: op deze kaart hebben de monsters {h}% minder LP en doen ze {d}% minder schade. Dat steuntje stopt hier.",
+    "Mais uma para o caminho: neste mapa, os monstros têm menos {h}% de PV e causam menos {d}% de dano. Essa ajudinha acaba aqui.")
+GY['scenes']['chafer'].append(line7(
+    "Mais le boulanger d'Incarnam t'aime bien : il continue de te gâter, {bp} fois plus de pain jusqu'à la fin de la carte {bn}. Et je te laisse ma bénédiction : +{bd} % de dégâts jusque-là. Ne gâche pas tout !",
+    "But the Incarnam baker likes you: he'll keep spoiling you, {bp} times more bread until the end of map {bn}. And I'm leaving you my blessing: +{bd}% damage until then. Don't waste it!",
+    "Aber der Bäcker von Incarnam mag dich: Er verwöhnt dich weiter, {bp}-mal mehr Brot bis zum Ende von Karte {bn}. Und mein Segen bleibt dir: +{bd} % Schaden bis dahin. Vermassel es nicht!",
+    "Pero el panadero de Incarnam te aprecia: seguirá mimándote, {bp} veces más pan hasta el final del mapa {bn}. Y te dejo mi bendición: +{bd} % de daño hasta entonces. ¡No lo eches a perder!",
+    "Ma il fornaio di Incarnam ti vuole bene: continuerà a viziarti, {bp} volte più pane fino alla fine della mappa {bn}. E ti lascio la mia benedizione: +{bd}% di danni fin lì. Non sprecarla!",
+    "Maar de bakker van Incarnam mag je: hij blijft je verwennen, {bp} keer meer brood tot het einde van kaart {bn}. En mijn zegen laat ik bij je: +{bd}% schade tot dan. Verpruts het niet!",
+    "Mas o padeiro de Incarnam gosta de ti: vai continuar a mimar-te, {bp} vezes mais pão até ao fim do mapa {bn}. E deixo-te a minha bênção: +{bd}% de dano até lá. Não estragues tudo!"))
+GY['taunt'] = {'map': 'pandala', 'lines': [
+    line7("Tiens… une âme qui se cache derrière les plumes de {g} et les miches d'un boulanger. C'est quoi, ces bénédictions pour faiblards ?",
+          "Well now… a soul hiding behind {g}'s feathers and a baker's loaves. What are these blessings for weaklings?",
+          "Sieh an … eine Seele, die sich hinter {g}s Federn und den Broten eines Bäckers versteckt. Was sollen diese Segen für Schwächlinge?",
+          "Vaya… un alma que se esconde tras las plumas de {g} y las hogazas de un panadero. ¿Qué son estas bendiciones para debiluchos?",
+          "Guarda un po'… un'anima che si nasconde dietro le piume di {g} e le pagnotte di un fornaio. Cosa sono queste benedizioni da smidollati?",
+          "Kijk eens aan… een ziel die zich verschuilt achter de veren van {g} en de broden van een bakker. Wat moeten die zegens voor slappelingen?",
+          "Ora vejam… uma alma escondida atrás das penas de {g} e dos pães de um padeiro. Que bênçãos de fracotes são estas?"),
+    line7("Tu crois vraiment pouvoir me vaincre ? Alors tu n'as plus besoin de tout ça, n'est-ce pas ? Montre-moi ce que tu vaux, seul.",
+          "You truly think you can defeat me? Then you won't be needing all that, will you? Show me what you're worth, alone.",
+          "Glaubst du wirklich, du könntest mich besiegen? Dann brauchst du das alles ja nicht mehr, oder? Zeig mir, was du allein wert bist.",
+          "¿De verdad crees que puedes vencerme? Entonces ya no necesitas todo eso, ¿verdad? Muéstrame lo que vales, solo.",
+          "Credi davvero di potermi sconfiggere? Allora tutto questo non ti serve più, vero? Mostrami quanto vali, da solo.",
+          "Denk je echt dat je mij kunt verslaan? Dan heb je dat allemaal niet meer nodig, toch? Laat maar zien wat je alleen waard bent.",
+          "Achas mesmo que me consegues vencer? Então já não precisas de nada disso, pois não? Mostra-me o que vales, sozinho."),
+]}
+NEW_UI = {
+    'bless_dmg': ("✨ Bénédiction de {g} : +{p} % de dégâts sur les {n} premières cartes en Normale, en plus de ses autres faveurs.",
+                  "✨ {g}'s blessing: +{p}% damage on the first {n} maps in Normal, on top of his other favours.",
+                  "✨ Segen von {g}: +{p} % Schaden auf den ersten {n} Karten auf Normal, zusätzlich zu seinen anderen Gefallen.",
+                  "✨ Bendición de {g}: +{p} % de daño en los {n} primeros mapas en Normal, además de sus otros favores.",
+                  "✨ Benedizione di {g}: +{p}% di danni sulle prime {n} mappe in Normale, oltre ai suoi altri favori.",
+                  "✨ Zegen van {g}: +{p}% schade op de eerste {n} kaarten op Normaal, bovenop zijn andere gunsten.",
+                  "✨ Bênção de {g}: +{p}% de dano nos {n} primeiros mapas no Normal, além dos seus outros favores."),
+    'bless_bread': ("🥖 Cadeau du boulanger d'Incarnam : {k} fois plus de pain au sol sur les {n} premières cartes en Normale.",
+                    "🥖 Gift from the Incarnam baker: {k} times more bread on the ground on the first {n} maps in Normal.",
+                    "🥖 Geschenk des Bäckers von Incarnam: {k}-mal mehr Brot auf dem Boden auf den ersten {n} Karten auf Normal.",
+                    "🥖 Regalo del panadero de Incarnam: {k} veces más pan en el suelo en los {n} primeros mapas en Normal.",
+                    "🥖 Regalo del fornaio di Incarnam: {k} volte più pane per terra sulle prime {n} mappe in Normale.",
+                    "🥖 Cadeau van de bakker van Incarnam: {k} keer meer brood op de grond op de eerste {n} kaarten op Normaal.",
+                    "🥖 Presente do padeiro de Incarnam: {k} vezes mais pão no chão nos {n} primeiros mapas no Normal."),
+    'bless_end': ("💀 {v} a balayé vos bénédictions : plus d'aide de {g} ni du boulanger d'Incarnam ici.",
+                  "💀 {v} swept your blessings away: no more help from {g} or the Incarnam baker here.",
+                  "💀 {v} hat deine Segen hinweggefegt: Hier gibt es keine Hilfe mehr von {g} oder dem Bäcker von Incarnam.",
+                  "💀 {v} ha barrido tus bendiciones: aquí ya no hay ayuda de {g} ni del panadero de Incarnam.",
+                  "💀 {v} ha spazzato via le tue benedizioni: qui niente più aiuto da {g} né dal fornaio di Incarnam.",
+                  "💀 {v} heeft je zegens weggevaagd: hier geen hulp meer van {g} of de bakker van Incarnam.",
+                  "💀 {v} varreu as tuas bênçãos: aqui já não há ajuda de {g} nem do padeiro de Incarnam."),
+}
+for key, vals in NEW_UI.items():
+    for lg, v in zip(LANGS7, vals): assert key not in C['ui'][lg], (lg, key); C['ui'][lg][key] = v
+
 if __name__ == '__main__':
     json.dump(C, open(f'{G}/data/content.json', 'w', encoding='utf8'), ensure_ascii=False, separators=(',', ':'))
     print('0.98 ok: Invisibilité', [(l.get('cd'), l.get('duration')) for l in [S['invisibilite']['base']] + S['invisibilite']['lv']],

@@ -14,12 +14,12 @@ as a player does (its menus, keys, a simulated controller, clicks made from insi
              won; what each one saves; after each run back in the menu: no run left, no interval left running, no run
              sound, the same number of animation-frame callbacks
   restart    six runs in a row started and left: intervals, frame callbacks, listeners, characters kept stay level
-  settings   volumes, language, quality, the Canvas 2D renderer (a run on it), kept after a reload
+  settings   volumes, language, quality, kept after a reload
   profiles   a second profile kept apart, a name's sound clip and its achievement
   sizes      1280x720, 1920x1080, 2560x1440, 3840x2160, 3440x1440, 2560x1080: menu scale, picture buffer, the menu inside
              the window; screenshots of the menu, the play screen, a run and the pause (for the visual review)
 
-usage: python tools/checks/qa_func.py [test…] [--out DIR] [--renderer pixi|canvas] [--seed S] [--soft-gpu]
+usage: python tools/checks/qa_func.py [test…] [--out DIR] [--seed S] [--soft-gpu]
 prints one JSON line per test ({ test, ok, fails, info, s }) then 'FUNC <n> tests, <m> failed'; exit code 1 if any failed"""
 import sys as _sys, os as _os
 _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))   # tools/ (its folders: _root)
@@ -386,10 +386,6 @@ def t_settings(H):
     H.expect(H.ev("Store.data.settings.music === 0 && Store.data.settings.sfx === 0 && LANG === 'en' && Game.quality() === 'sd'"), 'after a reload the volumes / language / quality are not kept: ' + json.dumps(H.ev("[Store.data.settings.music, Store.data.settings.sfx, LANG, Game.quality()]")))
     w, h = H.ev("[Game.canvas.width, Game.canvas.height]"); H.expect(max(w, h) <= 1280 and min(w, h) <= 720, f'720p chosen: buffer {w}x{h}')
     H.expect(H.ev("document.querySelector('.menu-buttons .btn').textContent.includes('Play')"), 'English chosen: the menu is not in English')
-    # the Canvas 2D renderer, the fallback when WebGL fails (0.95: no longer in the options; ?pixi=0 forces it)
-    H.pg.goto(H.base + '?pixi=0'); H.wait("typeof Game !== 'undefined' && Game.state === 'menu' && document.querySelector('.menu-buttons')", 60); H.ev(QA_LIB)
-    H.expect(not H.ev("PX.on"), 'Canvas 2D chosen: PixiJS still draws')
-    H.menu_run('iop', 'astrub'); f = H.play(5); H.info['canvas_frames'] = f.get('frames'); H.give_up()
 
 
 def t_profiles(H):

@@ -18,7 +18,7 @@ Object.assign(Run.prototype, {
   },
   gotWeapon(def) {
     if (def.leech) this.recompute();
-    this.banner(T(def.blood ? 'blood_found' : 'unique_found', { n: L(def.name) }), def.blood ? '#ff5a5a' : '#ffb0ff'); Audio2.sfx('EVENT', 0.7); Audio2.ui('level', 0.7);
+    this.announce(L(def.name), T(def.blood ? 'blood_found' : 'unique_found', { n: L(def.name) }), def.blood ? '#ff5a5a' : '#ffb0ff'); Audio2.sfx('EVENT', 0.7); Audio2.ui('level', 0.7);
     const S = Store.data; S.uniques = S.uniques || {}; S.uniques[def.id] = (S.uniques[def.id] || 0) + 1; Store.save();
   },
   // ------------------------------------------------ fusion
@@ -36,7 +36,7 @@ Object.assign(Run.prototype, {
       for (let i = 0; i < f.stars.n; i++) this.orbiters.push({ spell: st, a: i * TAU / f.stars.n, until: Infinity, hit: new Map() });
     }
     const P = this.player, cols = FUSION_PART[f.fx];
-    this.banner(T('fusion_done', { w: L(W.def.name), n: L(f.name) }), f.color, true); this.chat(T('fusion_done', { w: L(W.def.name), n: L(f.name) }), f.color);
+    this.announce(L(f.name), T('fusion_done', { w: L(W.def.name), n: L(f.name) }), f.color, { center: true });
     for (let i = 0; i < 4; i++) this.rings.push({ x: P.x, y: P.y, r0: 10, r1: 90 + i * 60, t0: this.time + i * 0.12, dur: 0.7, color: f.color, fill: i === 0 ? 1 : 0 });
     for (let i = 0; i < 90; i++) { const a = rand(TAU), v = rand(80, 360); this.particles.push({ x: P.x, y: P.y - 30, vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.7 - 80, t: 0, life: rand(0.6, 1.3), c: pick(cols), s: rand(2, 6) }); }
     this.shake(5); Audio2.sfx('EVENT', 0.9); Audio2.ui('level', 0.9); Audio2.play('stars', 0.8);

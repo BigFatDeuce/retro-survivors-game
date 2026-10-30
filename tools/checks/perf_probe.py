@@ -12,6 +12,10 @@ the frame interval; optionally a CPU profile (top functions by self time).
     statuses on the whole crowd…); each measured after a warm-up, with the entities it keeps alive (projectiles, zones,
     effects, particles, texts, summons…). Prints a table sorted by the extra main-thread time over the crowd alone, and
     writes work/perf/<each>-<date>.json
+  python tools/checks/perf_probe.py --phone [...]   (0.98.1) an average phone: 844 x 390 landscape at 3 device px a px,
+    touch, CPU x6 unless --cpu says otherwise, the game's own quality choice unless --q says otherwise
+  python tools/checks/perf_probe.py --choices [--phone]   (0.98.1) the level-up choice: opened 6 times over the same
+    crowd, the time of the call, the long tasks (> 50 ms) of its first second, the frames while it is open
 Compare lines of one session (the machine's state moves between days). CPU 4 = Chrome's CPU throttling, a stand-in for
 a weak PC or a phone's main thread."""
 import sys as _sys, os as _os
@@ -107,12 +111,33 @@ def stats(a):
 
 
 def open_run(p, a, cls, extra=''):
-    b = check.launch(p); pg = b.new_page(viewport={'width': 1920, 'height': 1080})
+    b = check.launch(p)
+    pg = b.new_page(viewport={'width': 844, 'height': 390}, device_scale_factor=3, is_mobile=True, has_touch=True) if a.phone else b.new_page(viewport={'width': 1920, 'height': 1080})
     cdp = pg.context.new_cdp_session(pg)
-    # (--each starts at 2:20, before ToT's door at 2:30: the bot walked into its portal before the run was made steady)
-    q = f"autostart=1&fresh=1&bot=1&cls={cls}&map={a.map}&t={140 if a.each else 200}&q={a.q}&pixi={1 if a.renderer == 'pixi' else 0}" + (f'&fx={a.fx}' if a.fx else '') + extra
+    # (--each starts at 2:20, before ToT's door at 2:30: the bot walked into its portal before the run was made steady;
+    # --phone and --choices at 5:00, after the door: the bot reached it before the crowd was set or the choice opened)
+    q = f"autostart=1&fresh=1&bot=1&cls={cls}&map={a.map}&t={140 if a.each else 300 if a.phone or a.choices else 200}{'&q=' + a.q if a.q else ''}&pixi={1 if a.renderer == 'pixi' else 0}" + (f'&fx={a.fx}' if a.fx else '') + extra
     pg.goto(f'http://127.0.0.1:{a.port}/index.html?{q}'); pg.wait_for_function('typeof Game !== "undefined" && Game.run && Game.state === "run"', timeout=90000)
     return b, pg, cdp
+
+
+CHOICES = """async () => {
+  const R = Game.run, out = { call: [], long: [], open: [] };
+  const lt = []; const po = new PerformanceObserver(l => { for (const e of l.getEntries()) lt.push([e.startTime, e.duration]); }); po.observe({ type: 'longtask', buffered: false });
+  for (let i = 0; i < 6; i++) {
+    const t0 = performance.now(); UI.levelUpMenu(R, R.upgradeOptions(3)); const t1 = performance.now(); out.call.push(+(t1 - t0).toFixed(1));
+    const fr = []; let last = performance.now(); while (performance.now() - t0 < 1500) { await new Promise(r => requestAnimationFrame(r)); const n = performance.now(); fr.push(n - last); last = n; }
+    out.long.push(+lt.filter(([s]) => s >= t0 && s < t0 + 1000).reduce((a, [, d]) => a + d, 0).toFixed(0)); out.open.push(fr.slice(3));
+    UI.closeModal(); await new Promise(r => setTimeout(r, 400));
+  }
+  po.disconnect(); return out; }"""
+
+
+def choices(pg, a):
+    """the level-up choice opened 6 times: its call, the long tasks of its first second, the frame intervals while open"""
+    pg.evaluate('Game.run.update = () => {}; Game.debug.bot = false; 0')   # (the run frozen: only the window and the scene behind it; no bot: it picked the card at once)
+    w = pg.evaluate(CHOICES); iv = [x for f in w['open'] for x in f]
+    print(json.dumps({'label': a.label, 'phone': a.phone, 'cpu': a.cpu, 'call_ms': w['call'], 'longtasks_ms_first_s': w['long'], 'open_interval': stats(iv), 'frames_over_33': sum(1 for x in iv if x > 33)}))
 
 
 def each(a):
@@ -174,26 +199,28 @@ def main():
     ap.add_argument('--cpu', type=int, default=None); ap.add_argument('--cls', default='cra'); ap.add_argument('--renderer', default='pixi')
     ap.add_argument('--q', default=None); ap.add_argument('--profile', action='store_true'); ap.add_argument('--label', default='')
     ap.add_argument('--fx', default=''); ap.add_argument('--map', default='astrub')
+    ap.add_argument('--phone', action='store_true'); ap.add_argument('--choices', action='store_true')
     ap.add_argument('--each', choices=['spells', 'weapons', 'systems']); ap.add_argument('--only', default=''); ap.add_argument('--warm', type=float, default=1.5)
     a = ap.parse_args()
     # (--each defaults: a smaller crowd, shorter windows, CPU x4 and 1080p — many items to go through)
-    E = bool(a.each); a.n = a.n or (300 if E else 380); a.secs = a.secs or (3.5 if E else 10); a.cpu = a.cpu or (4 if E else 1); a.q = a.q or ('hd' if E else 'uhd')
+    E = bool(a.each); a.n = a.n or (300 if E else 380); a.secs = a.secs or (3.5 if E else 10); a.cpu = a.cpu or (4 if E else 6 if a.phone else 1); a.q = a.q or (None if a.phone else 'hd' if E else 'uhd')
     httpd = check.serve(); a.port = httpd.server_address[1]
     if E: each(a); httpd.shutdown(); return
     with sync_playwright() as p:
         b, pg, cdp = open_run(p, a, a.cls, f"&spells={SPELLS[a.cls]}" if a.cls in SPELLS else '')
         time.sleep(2); n = pg.evaluate(FILL, a.n); time.sleep(1.5)
         if a.cpu > 1: cdp.send('Emulation.setCPUThrottlingRate', {'rate': a.cpu})
+        if a.choices: choices(pg, a); b.close(); httpd.shutdown(); return
         pg.evaluate(PROBE)
         if a.profile: cdp.send('Profiler.enable'); cdp.send('Profiler.setSamplingInterval', {'interval': 200}); cdp.send('Profiler.start')
         time.sleep(a.secs)
         prof = cdp.send('Profiler.stop')['profile'] if a.profile else None
-        w = pg.evaluate('({ f: __pp.f, u: __pp.u, d: __pp.d, dt: __pp.dt, mobs: Game.run.mobs.length, parts: Game.run.particles.length, err: Game._frameErr })')
+        w = pg.evaluate('({ f: __pp.f, u: __pp.u, d: __pp.d, dt: __pp.dt, mobs: Game.run ? Game.run.mobs.length : 0, parts: Game.run ? Game.run.particles.length : 0, err: Game._frameErr, state: Game.state + (UI.modalOpen() ? "+modal" : "") + (Game.paused ? "+paused" : "") })')
         b.close()
     httpd.shutdown()
     dt = stats(w['dt'][5:])
     out = {'label': a.label, 'renderer': a.renderer, 'cpu': a.cpu, 'q': a.q, 'mobs': w['mobs'], 'frames': len(w['f']),
-           'fps': round(1000 / dt['med'], 1) if dt else 0, 'interval': dt, 'frame_js': stats(w['f'][5:]), 'update': stats(w['u'][5:]), 'draw': stats(w['d'][5:]), 'err': w['err']}
+           'fps': round(1000 / dt['med'], 1) if dt else 0, 'interval': dt, 'frame_js': stats(w['f'][5:]), 'update': stats(w['u'][5:]), 'draw': stats(w['d'][5:]), 'err': w['err'], 'state': w['state']}
     print(json.dumps(out))
     if prof: top_profile(prof)
 

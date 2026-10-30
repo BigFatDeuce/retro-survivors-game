@@ -146,11 +146,12 @@ Object.assign(Run.prototype, {
   // 0.92: violet energy gathers along a line, the name slams in big and settles (a white flash band, a crack of light,
   // sparks thrown out, a shake from tickUnion), violet flames lick up behind its letters while a light sweeps across
   // them, a few sparks drift round it, then it rises a little and fades into embers. Cached glows only (no particles). 0.95: in the
-  // announcements' Cinzel (juice.js annFont)
+  // announcements' Cinzel (juice.js annFont). 0.98.1: in capitals, carved in Dofus Retro's gold like the victory (ANN.retro),
+  // its energy, flames and sparks gold and orange
   drawUnionName(ctx, W, H, S, d, v, k) {
-    const cy = H * 0.66, name = L(d.def.name), kick = T('sfusion_union'), HIT = 0.5;
+    const cy = H * 0.66, name = L(d.def.name).toLocaleUpperCase(LANG), kick = T('sfusion_union'), HIT = 0.5;
     const hash = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
-    const glowV = RCache.glow('rgba(176,96,255,0.95)'), glowP = RCache.glow('rgba(255,120,240,0.9)'), glowW = RCache.glow('rgba(255,244,214,0.95)'), glowG = RCache.glow('rgba(255,214,110,0.95)');
+    const glowV = RCache.glow('rgba(255,150,40,0.95)'), glowP = RCache.glow('rgba(255,200,80,0.9)'), glowW = RCache.glow('rgba(255,244,214,0.95)'), glowG = RCache.glow('rgba(255,214,110,0.95)');
     let fs = Math.round(S * 0.105); ctx.font = annFont(fs); const tw0 = ctx.measureText(name).width; if (tw0 > W * 0.84) fs = Math.floor(fs * W * 0.84 / tw0);   // (big, never wider than the screen)
     ctx.font = annFont(fs); const tw = ctx.measureText(name).width, half = tw / 2 + fs * 0.3;
     const y = cy - (k < 1 && v > 1 ? (1 - k) * S * 0.03 : 0);
@@ -194,19 +195,15 @@ Object.assign(Run.prototype, {
     const sl = clamp(u / 0.14, 0, 1), sc = sl < 1 ? 1.9 - 0.9 * (1 - Math.pow(1 - sl, 3)) : 1 + 0.035 * Math.sin(clamp((u - 0.14) / 0.2, 0, 1) * Math.PI);
     const kfs = Math.round(fs * 0.42), ky = y - fs * 0.92, ktxt = '✦ ' + kick + ' ✦';
     ctx.font = annFont(kfs, 700); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
-    ctx.globalAlpha = k * clamp((v - 0.3) / 0.25, 0, 1); ctx.lineWidth = kfs * 0.22; ctx.strokeStyle = '#1e0a2c'; ctx.strokeText(ktxt, W / 2, ky);
+    ctx.globalAlpha = k * clamp((v - 0.3) / 0.25, 0, 1); ctx.lineWidth = kfs * 0.22; ctx.strokeStyle = '#1c0d03'; ctx.strokeText(ktxt, W / 2, ky);
     const kg = ctx.createLinearGradient(0, ky - kfs / 2, 0, ky + kfs / 2); kg.addColorStop(0, '#fff6c8'); kg.addColorStop(1, '#ffb43a'); ctx.fillStyle = kg; ctx.fillText(ktxt, W / 2, ky);
     // (composed whole in a canvas of its own, then laid at its opacity once: the stacked relief no longer stays dark
     // while the letters fade)
     const pad = fs * 0.5, cw = Math.ceil(tw + pad * 2), chh = Math.ceil(fs * 1.7), cv = this._unC || (this._unC = document.createElement('canvas'));
     if (cv.width < cw || cv.height < chh) { cv.width = Math.max(cv.width, cw); cv.height = Math.max(cv.height, chh); this._unG = null; }
     const g = this._unG || (this._unG = cv.getContext('2d')); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, cv.width, cv.height);
-    g.translate(cw / 2, chh * 0.45); g.font = annFont(fs); g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineJoin = 'round';
-    g.lineWidth = fs * 0.17; g.strokeStyle = '#1e0a2c'; g.fillStyle = '#1e0a2c';
-    for (let r = fs * 0.07; r > 0; r -= Math.max(1, fs * 0.014)) { g.strokeText(name, 0, r); g.fillText(name, 0, r); }   // the relief
-    g.strokeStyle = '#3a1252'; g.strokeText(name, 0, 0);
-    const ng = g.createLinearGradient(0, -fs * 0.5, 0, fs * 0.45); ng.addColorStop(0, '#ffffff'); ng.addColorStop(0.35, '#f2d8ff'); ng.addColorStop(0.62, '#c78bff'); ng.addColorStop(1, '#7a3fd0');
-    g.fillStyle = ng; g.fillText(name, 0, 0);
+    g.translate(cw / 2, chh * 0.45); g.textAlign = 'center';
+    annCarve(g, name, 0, 0, fs, ANN.retro, 900);   // (0.98.1: the victory's carved gold, its lime halo)
     const sw = clamp((u - 0.2) / 0.55, 0, 1);   // a light sweeping across the letters once they have settled
     if (sw > 0 && sw < 1) { g.globalCompositeOperation = 'source-atop'; const lx = -tw / 2 - fs + (tw + fs * 2) * sw, lg = g.createLinearGradient(lx - fs * 0.6, 0, lx + fs * 0.6, 0);
       lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(0.5, 'rgba(255,250,235,0.75)'); lg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = lg; g.fillRect(-cw / 2, -chh, cw, chh * 2); g.globalCompositeOperation = 'source-over'; }

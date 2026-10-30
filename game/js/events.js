@@ -71,7 +71,7 @@ Object.assign(Run.prototype, {
     for (let k = 0; k < 40; k++) {   // a dry spot near the corner
       let x = cx + rand(-w * 0.08, w * 0.08), y = cy + rand(-h * 0.08, h * 0.08);
       if (k === 39) { const a = rand(0, TAU); x = this.player.x + Math.cos(a) * 500; y = this.player.y + Math.sin(a) * 500; }   // 0.37: never lost in the water
-      if (!this.isWater(x, y) || k === 39) { this.dropPickup('booster', x, y, 1).pk = this.nextPack(); this.banner(T('booster_here'), '#9cff6a'); this.chat(T('booster_here'), '#9cff6a'); Audio2.play('pages', 0.6); return; }
+      if (!this.isWater(x, y) || k === 39) { this.dropPickup('booster', x, y, 1).pk = this.nextPack(); this.announce(T('booster_here_t'), T('booster_here'), '#9cff6a'); Audio2.play('pages', 0.6); return; }
     }
   },
   // ------------------------------------------------ 0.52: Dark Vlad beaten in Difficile in his clearing: the last zone
@@ -104,7 +104,8 @@ Object.assign(Run.prototype, {
     if (kind === 'treasure') { this.cine.dur = 1.4 + data.lines.length * TM_SAY + TM_LAST; Audio2.sfx('EVENT', 0.8); const mu = (this.C.tmap.ghost || {}).music; if (mu) Audio2.jingle(mu); }   // (0.97: his own music while he talks, C.tmap.ghost.music)   // (0.68: the dug treasure; 30.2 s for 3 bubbles: 8.6 s until 0.94, 15.8 in 0.95)
   },
   tickCine(dt) {
-    const c = this.cine, P = this.player; c.t += dt;
+    const c = this.cine, P = this.player; if (c.kind === 'countdown' && this.warming) return;   // (0.98.2: the countdown waits for what the run still prepares, Game.startRun)
+    c.t += dt;
     const once = (k, f) => { if (!c.fired[k]) { c.fired[k] = true; f(); } };
     if (c.kind === 'chest') {
       if (c.t > 0.6) once('chomp', () => { Audio2.play('coffre', 0.8); Audio2.play('grrr1', 0.5); });
@@ -183,7 +184,7 @@ Object.assign(Run.prototype, {
       const bw = tw + fs * 1.6, bh = fs * 2.2, bx = W / 2 - bw / 2, by = H * 0.8;
       ctx.globalAlpha = Math.min(1, Math.max(0, (c.t - 0.6) / 0.3)) * k;
       ctx.fillStyle = 'rgba(40,28,14,0.92)'; ctx.strokeStyle = '#c8a46a'; ctx.lineWidth = 3; ctx.fillRect(bx, by, bw, bh); ctx.strokeRect(bx, by, bw, bh);
-      ctx.textAlign = 'center'; annLine(ctx, txt, W / 2, by + bh / 2, fs, dof.color);   // (0.95: Cinzel)
+      ctx.textAlign = 'center'; annLine(ctx, txt, W / 2, by + bh / 2, fs, ANN.retro);   // (0.95: Cinzel; 0.98.2: the victory's gold, as every central message)
     }
     ctx.restore();
   },
@@ -444,7 +445,7 @@ Object.assign(Run.prototype, {
     const [x, y] = this.spawnPos(), m = this.spawnMob(jor ? 'jorbak' : 'tofu_mutant', x, y, { force: true, noArchi: true }); if (!m) return;
     m.hp = m.maxHp = (jor ? J.hp : this.C.mutant.hp) * this.aidHp(); m.mutant = true; m.speed = m.def.speed * (this.RUN.mobSpeed || 1); this.mutant = m;
     const msg = T(jor ? 'jorbak_appears' : 'mutant_appears', { hp: fmtNum(Math.round(m.maxHp)) });   // (0.96: its real life, the beginners' help included: the Tofuzmo said 1000 with 700)
-    this.banner(msg, '#9cff6a'); this.chat(msg, '#9cff6a'); Audio2.sfx('EVENT', 0.8); Audio2.play(jor ? 'son_attack' : 'tofu_king', 0.7);
+    this.announce(L(m.def.name), msg, '#9cff6a'); Audio2.sfx('EVENT', 0.8); Audio2.play(jor ? 'son_attack' : 'tofu_king', 0.7);
     this.fxAt(1100, x, y, { scale: 1.2 });
   },
   // Kleptomanie psychopathe: the player is thrown away from Jorbak like a monster by Libération (its fx, its sound)
@@ -488,11 +489,11 @@ Object.assign(Run.prototype, {
     if (m.def.id === 'tofu_mutant') {
       Prog.add('mutants');
       const b = pick(C.totBuffs); this.totBuff = b; this.recompute(); this.mutant = null;
-      this.banner(T('mutant_down', { b: L(b.name) }), '#9cff6a', true); this.chat(T('mutant_down', { b: L(b.name) }), '#9cff6a'); Audio2.ui('level', 0.9);
+      this.announce(T('down_t', { n: L(m.def.name) }), T('mutant_down', { b: L(b.name) }), '#9cff6a', { center: true }); Audio2.ui('level', 0.9);
       const S = Store.data; S.mutants = (S.mutants || 0) + 1; Store.save();
     } else if (m.def.id === 'jorbak') {   // 0.95: his bonus (+15 %, it takes the run's bonus slot: never on top of another) and a map, C.jorbak.tmap (50 %), while one is left to find
       const J = C.jorbak, b = Object.assign({}, pick(C.totBuffs), { v: J.buff }); this.totBuff = b; this.recompute(); this.mutant = null;
-      const msg = T('jorbak_down', { b: L(b.name), p: Math.round(J.buff * 100) }); this.banner(msg, '#9cff6a', true); this.chat(msg, '#9cff6a'); Audio2.ui('level', 0.9);
+      const msg = T('jorbak_down', { b: L(b.name), p: Math.round(J.buff * 100) }); this.announce(T('down_t', { n: L(m.def.name) }), msg, '#9cff6a', { center: true }); Audio2.ui('level', 0.9);
       if (this.tmapFree().length && Math.random() < J.tmap) this.dropPickup('tmap', m.x, m.y, 1);
     } else if (m.def.id === 'coffre_anime' && m.trapChest) {   // 0.40: the Minotoror trapdoor's blue chest: a relic
       const pool = C.relics.filter(r => !this.relics.includes(r)); Audio2.play('coffre', 0.8);
@@ -503,7 +504,7 @@ Object.assign(Run.prototype, {
       let r = Math.random(), got = C.coffre.drops[C.coffre.drops.length - 1][0];
       for (const [k, p] of C.coffre.drops) { if (r < p) { got = k; break; } r -= p; }
       if (got === 'manuel') this.collect({ kind: 'manuel' });
-      else { const it = C.coffre.items[got]; this.kamas += it.kamas; this.text(m.x, m.y - 60, '+' + it.kamas + ' K', '#ffd700', 20); this.banner(T('coffre_loot', { n: L(it.name), k: it.kamas }), '#ff7a7a'); this.chat(T('coffre_loot', { n: L(it.name), k: it.kamas }), '#ff7a7a'); }
+      else { const it = C.coffre.items[got]; this.kamas += it.kamas; this.text(m.x, m.y - 60, '+' + it.kamas + ' K', '#ffd700', 20); this.announce(L(it.name), T('coffre_loot', { n: L(it.name), k: it.kamas }), '#ff7a7a'); }
       Audio2.play('coffre', 0.8); Audio2.blip('coin');
       const S = Store.data; S.coffres = (S.coffres || 0) + 1; Store.save();
     }
@@ -523,13 +524,13 @@ Object.assign(Run.prototype, {
       this.fxAt(1100, cm.x, cm.y, { scale: 1.2 });
       [0, 260, 600].forEach((d, i) => setTimeout(() => Audio2.play('pet', 1, [0.85, 1.25, 0.6][i]), d));   // pfffrt, prrt… PRRROUT
       for (let i = 0; i < 24; i++) { const a = rand(TAU), v = rand(30, 120); this.particles.push({ x: cm.x - 20, y: cm.y - 10, vx: Math.cos(a) * v - 40, vy: Math.sin(a) * v * 0.5 - 20, g: -10, t: 0, life: rand(0.8, 1.6), s: rand(10, 20), grow: 1.8, round: 1, c: i % 3 ? '#9ccf4a' : '#c8b04a' }); }
-      this.banner(T('trap_found'), '#7ab8ff', true); this.chat(T('trap_found'), '#7ab8ff');
+      this.announce(T('trap_found_t'), T('trap_found'), '#7ab8ff', { center: true });
     }, 700);
   },
   maybeCoffre(m) {
     const K = this.C.coffre; if (!K || this.coffreDone || !this.isFinalKill(m) || this.time >= K.t || this.infinite) return;
     this.coffreDone = true;
-    this.banner(T('coffre_appears'), '#ff9a6a'); this.chat(T('coffre_appears'), '#ff9a6a');
+    this.announce(L(this.C.monsters.coffre_anime.name), T('coffre_appears'), '#ff9a6a');
     this.after(2, () => {   // (0.91: run time)
       const c = this.center, cm = this.spawnMob('coffre_anime', c.x, c.y, { force: true, noArchi: true }); if (!cm) return;
       cm.hp = cm.maxHp = 1; cm.home = { x: c.x, y: c.y }; this.fxAt(1100, c.x, c.y, { scale: 1.4 }); Audio2.play('coffre', 0.7);
@@ -575,12 +576,12 @@ Object.assign(Run.prototype, {
   },
   treasureGold(Z) {
     if (this.map.noKamas) {   // (0.68: Nowel gives no kamas: its treasure is a skin)
-      const x = this.nowelSkin(['hats', 'capes', 'pets']); if (x) { this.giveSkin(x); this.banner(T('nowel_gift_got', { n: this.skinName(x) }), '#9cff6a', true); }
+      const x = this.nowelSkin(['hats', 'capes', 'pets']); if (x) { this.giveSkin(x); this.announce(this.skinName(x), T('nowel_gift_got', { n: this.skinName(x) }), '#9cff6a', { center: true }); }
       for (let i = 0; i < 60; i++) this.particles.push({ x: Z.x, y: Z.y - 6, vx: rand(-190, 190), vy: rand(-460, -140), t: 0, life: rand(0.8, 1.5), c: pick(['#ff5a5a', '#7aff8a', '#ffffff']), s: rand(3, 7) });
       Audio2.play('stars', 0.8); return;
     }
     const k = Z.k; this.kamas += k;
-    this.banner(T('tmap_found', { k }), '#ffd700', true); this.chat(T('tmap_found', { k }), '#ffd700'); this.shake(6);
+    this.announce(T('tmap_found_t'), T('tmap_found', { k }), '#ffd700', { center: true }); this.shake(6);
     for (let i = 0; i < 90; i++) this.particles.push({ x: Z.x, y: Z.y - 6, vx: rand(-190, 190), vy: rand(-460, -140), t: 0, life: rand(0.8, 1.5), c: pick(['#ffd700', '#ffe866', '#f0b020', '#fff6c0']), s: rand(3, 7) });
     Audio2.play('coffre', 0.8); Audio2.play('stars', 0.8); for (let i = 0; i < 12; i++) setTimeout(() => Audio2.play('pok', 0.5, 0.9 + i * 0.05), i * 80);
     this.treasureBonus(Z);
@@ -596,7 +597,7 @@ Object.assign(Run.prototype, {
     if (kind === 'dofus') { this.dropPickup('dofus', Z.x + 60, Z.y + 20, pick(dofs).id); this.chat(T('tmap_dofus'), '#ffcf3a'); Audio2.sfx('EVENT', 0.6); }
     else if (kind === 'shield') {
       S.owned = S.owned || []; if (!S.owned.includes(sh.id)) S.owned.push(sh.id); Store.save();
-      const m = T('tmap_shield', { n: this.skinName(sh) }); this.banner(m, '#9cff6a', true); this.chat(m, '#9cff6a'); Prog.check(this);
+      this.announce(this.skinName(sh), T('tmap_shield', { n: this.skinName(sh) }), '#9cff6a', { center: true }); Prog.check(this);
     }
   },
   // 0.92: the Maîtres Corbacs' reward of the minute, a Manuel du Tailleur (0.95: no more treasure maps — Jorbak is
@@ -611,7 +612,7 @@ Object.assign(Run.prototype, {
     }
     this.dropPickup(kind, x, y, 1).doomRw = 1;
     const msg = T(kind === 'tmap' ? 'doom_rw_tmap' : 'doom_rw_manuel');
-    this.banner(msg, kind === 'tmap' ? '#ffcf3a' : '#ff9cf0', true, true); this.chat(msg, kind === 'tmap' ? '#ffcf3a' : '#ff9cf0');
+    this.announce(kind === 'tmap' ? T('tmap') : L(this.C.manuel.name), msg, kind === 'tmap' ? '#ffcf3a' : '#ff9cf0', { center: true, force: true });
     Audio2.sfx('EVENT', 0.6);
   },
   tmapFree() { const S = Store.data.tmaps || {}; return (this.C.tmap.maps || []).filter(id => !S[id] && this.C.maps.some(m => m.id === id && SPR.worlds[m.world])); },

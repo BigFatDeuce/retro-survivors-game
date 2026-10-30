@@ -21,7 +21,7 @@ Object.assign(Run.prototype, {
         const a = rand(TAU), x = clamp(P.x + Math.cos(a) * 260, this.bounds.x0, this.bounds.x1), y = clamp(P.y + Math.sin(a) * 170, this.bounds.y0, this.bounds.y1);
         if (!this.isWater(x, y) || k === 19) { this.dropPickup('nowelgift', x, y, 1); break; }
       }
-      this.banner(T('nowel_gift_here'), '#ff5a5a', true); this.chat(T('nowel_gift_here'), '#ff8a8a'); Audio2.play('stars', 0.8); Audio2.sfx('EVENT', 0.7);
+      this.announce(T('nowel_gift_here_t'), T('nowel_gift_here'), '#ff5a5a', { center: true }); Audio2.play('stars', 0.8); Audio2.sfx('EVENT', 0.7);
     }
   },
   // the gift is picked up: a skin is unlocked now (saved), then the show
@@ -30,7 +30,7 @@ Object.assign(Run.prototype, {
     if (x) { S.owned = S.owned || []; S.owned.push(x.id); Store.save(); }
     this.slowMo(0.5, 0.3);
     this.startCine('gift', { skin: x }, () => {
-      if (x) { this.chat(T('nowel_gift_got', { n: this.skinName(x) }), '#9cff6a'); this.banner(T('nowel_gift_got', { n: this.skinName(x) }), '#9cff6a', true); }
+      if (x) this.announce(this.skinName(x), T('nowel_gift_got', { n: this.skinName(x) }), '#9cff6a', { center: true });
       else this.chat(T('nowel_all'), '#ffd24a');
     });
   },

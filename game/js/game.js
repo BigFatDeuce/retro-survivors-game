@@ -234,6 +234,9 @@ class Run {
     this.cls = C.classes.find(c => c.id === opts.cls);
     this.map = C.maps.find(m => m.id === opts.map);
     this.mapPos = C.maps.indexOf(this.map); this.mapIdx = this.map.tier !== undefined ? this.map.tier : this.mapPos;   // (0.50: the zone's tier, its place before the new zones: kamas, XP gems, merchant, zone multiplier)
+    // 0.98.2: Ganymède's blessing, zone cards 1 to bless.maps in Normal (not Endless), won or not, on top of the help above:
+    // might x (1 + bless.dmg) in recompute, the bread's drop rate x bless.bread
+    { const BL = (C.gany || {}).bless; this.bless = BL && !this.hard && !opts.infinite && this.mapPos < BL.maps ? BL : null; }
     // the first zones are gentler (new players have no Dofus, mastery or experience yet)
     this.zoneMul = this.map.hidden ? 1 : 0.8 + 0.025 * Math.min(6, Math.max(0, this.mapIdx));   // v1.6: a bit gentler (life steal was cut by 15)
     this.time = 0; this.kills = 0; this.kamas = 0; this.level = 1; this.xp = 0; this.xpNext = Math.round(5 * (((C.run || {}).xpEarly || [])[0] || 1));
@@ -301,6 +304,8 @@ class Run {
     for (const sid of [...this.cls.spells, ...fus]) { const s = C.spells[sid]; if (!s || s.t !== 'summon') continue; const k = (s.spriteKeyBy && s.spriteKeyBy[this.charSid]) || s.base.spriteKey, cm = /^(\d+)_c$/.exec(k || '');
       if (cm && SPR.chars[cm[1]]) this.summonChars[k] = new CharSprite(+cm[1], this.opts.colors, null, null, null); else if (k) keys.add(k); }   // (0.61: the Sram's Double has no sheet: 'no mob undefined')
     if (C.doom) { keys.add(C.bosses[C.doom.boss].sprite); keys.add(C.doom.crowSprite); }
+    if (this.aid && C.gany) keys.add(C.gany.sprite);   // (0.98.2: the scenes' speakers, UI.ganyScene)
+    if (C.gany && C.gany.taunt && this.map.id === C.gany.taunt.map && !this.hard) keys.add(C.bosses.dark_vlad.sprite);
     for (const a of Object.values(C.allies)) keys.add(a.sprite);
     if (this.cls.spells.some(s => ['bomb', 'detonate'].includes(C.spells[s].t))) keys.add(C.bombSprite);
     { // free the decoded monster sheets and map tiles of earlier runs that this one does not use
@@ -340,6 +345,11 @@ class Run {
     snd.push(...(C.hitSnd || []), 'pain', 'dodge_604', 'stars', 'coffre', 'licrounch_1001b');
     for (const sid of this.cls.spells) if (C.spells[sid].snd) snd.push(C.spells[sid].snd);
     for (const g of C.globalSpells || []) if (C.spells[g.id].snd) snd.push(C.spells[g.id].snd);
+    for (const id of [...fus, ...(C.globalSpells || []).map(g => g.id)]) if (C.spells[id]) snd.push(...Audio2.spellKeys(C.spells[id]));   // (0.98.2: no sound decoded on its first use)
+    for (const u of C.uniqueWeapons || []) if (u.snd) snd.push(u.snd);
+    for (const o of [C.revive, C.kamaBoost, C.eat, C.massPotion]) if (o && o.snd) snd.push(o.snd);
+    for (const f of fx) { const k = S.fx[f]; if (k && k.length) snd.push(k[0]); }
+    snd.push('cybwork_hit_punch', 'krak_impact', ...Object.values(C.hitSfx || {}).map(h => h[0]));   // (Run.hitSfx)
     snd.push('pok', 'stars');
     const gfxs = new Set([...Object.values(C.monsters), ...Object.values(C.bosses)].filter(m => keys.has(m.sprite)).map(m => m.gfx));
     for (const g of gfxs) { const m = S.mobs[g]; if (m) for (const k in m) snd.push(...m[k]); else snd.push(...SFX_DIE_ALL.filter(Boolean).slice(0, 0)); }
@@ -424,6 +434,7 @@ class Run {
     this.relicStats(st); this.fusionStats(st);
     if (Store.data && Store.data.dofawa && this.C.dofawa) st.maxHp += this.C.dofawa.hp;   // the Dofawa (every achievement)
     if (this.totBuff) st[this.totBuff.stat] = (st[this.totBuff.stat] || 0) + this.totBuff.v;   // ToT's bonus for this run
+    if (this.bless) st.might *= 1 + this.bless.dmg;   // (0.98.2: here, once: every blow reads might — spells, weapons, poisons, burns, allies)
     st.maxHp = Math.round(st.maxHp);
     const oldMax = this.stats ? this.stats.maxHp : st.maxHp;
     this.stats = st;
@@ -451,7 +462,7 @@ class Run {
   finalHp() { const B = (this.map.bosses || []).map(b => this.C.bosses[b[1]]).filter(b => b && b.final); return B.length ? (B[0].finalGroup ? B.reduce((a, b) => a + b.hp, 0) : B[0].hp) : 0; }
   dmgMul() { let k = 1 + Math.min(this.RUN.lvDmgMax || 0, (this.RUN.lvDmg || 0) * (this.level - 1)); if (this.weakUntil > this.time) k *= 0.5; if (this.rally && this.time < this.rally.until) k *= 1 + this.rally.bonus; if (this.fortune && this.time < this.fortune.until) k *= 1 + this.fortune.bonus; if (this.mutate && this.time < this.mutate.until) k *= 1 + this.mutate.power; if (this.allies.some(a => a.kind === 'majeure')) k *= 2; return k; }   // (0.98: an Arakne majeure on the field: x2, once however many — it goes when it goes)
   // ------------------------------------------------ helpers
-  chat(msg, color = '#fff') { const l = this.chats[this.chats.length - 1]; if (l && l.msg === msg && l.t === this.time) return; this.chats.push({ msg, color, t: this.time }); if (this.chats.length > 7) this.chats.shift(); }
+  chat(msg, color = '#fff', life) { const l = this.chats[this.chats.length - 1]; if (l && l.msg === msg && l.t === this.time) return; this.chats.push({ msg, color, t: this.time, life }); if (this.chats.length > 7) this.chats.splice(Math.max(0, this.chats.findIndex(c => this.time - c.t > (c.life || 14))), 1); }   // (0.98.1: life, its seconds on screen — 14 unless said; the room goes to a line already gone first, an expired short line never pushes a long one out)
   text(x, y, s, color, size = 14, life = 0.9) { if (this.texts.length < ((typeof Game !== 'undefined' && Game.lowFx) ? (Game.minFx ? 30 : 45) : typeof Game !== 'undefined' && Game.Q && Game.Q().fx === 1 ? 70 : 100)) { const o = { x, y, s, color, size, t: 0, life }; this.texts.push(o); return o; } return null; }
   // 0.97: the heals that land together (the Cawotte's tick, Potagew Pwoutant's cloud, a potion…) add up in one green number
   // over the character for 0.4 s — each wrote its own at the same spot, and the Cawotte's two (heal + its own) overlapped
@@ -589,8 +600,7 @@ class Run {
     };
     this.mobs.push(m); this.bossAlive.push(m);
     this.seen(d.id);
-    this.banner(T('boss_appears', { n: L(d.name) }), d.final ? '#ff5050' : '#ffb347', false, true, 'boss');
-    this.chat(T('boss_appears', { n: L(d.name) }), '#ff8a65');
+    this.chat(T('boss_appears', { n: L(d.name) }), '#ff8a65', 28); this.banner(L(d.name), d.final ? '#ff5050' : '#ffb347', false, true, 'boss');
     Audio2.sfx('EVENT', 0.7); Audio2.bossSfx(d.final);   // (0.54: loud enough to be heard over the fight)
     if (d.final) Audio2.playMusic(this.map.boss_music, 2.0);
     return m;
@@ -598,7 +608,11 @@ class Run {
   // 0.84: while a boss fights (its bar at the top of the screen) no message in the middle of the screen: it goes
   // to the chat only (chat() drops the caller's own copy). force = the boss's own arrival.
   bossFight() { return this.bossAlive.some(b => !b.dying && b.hp > 0); }
-  banner(text, color, center, force, kind) { if (!force && this.bossFight()) { this.chat(text, color); return; } this.bannerMsg = { text, color, t: 0, center: !!center, kind }; }   // (kind 'boss': its frame, render.js annPanel)
+  banner(text, color, center, force, kind, o) { if (!force && this.bossFight()) { if (!(o && o.said)) this.chat(text, color); return; } this.bannerMsg = { text, color, t: 0, center: !!center, kind, pre: o && o.pre }; }   // (kind 'boss': its frame, render.js annPanel)
+  // 0.98.1: an announcement — its name alone in the middle of the screen (banner), what it does in the chat, twice as long
+  // as a line (28 s); o: the banner's center / force / kind, pre = [text, colour] before the name on its line (a critical
+  // summon's red word)
+  announce(title, text, color, o = {}) { this.chat(text, color, 28); this.banner(title, color, o.center, o.force, o.kind, { pre: o.pre, said: 1 }); }
   seen(id) { const s = Store.data.seen; if (!s[id]) { s[id] = 1; } }
   spawner(dt) {
     const tm = this.time / 60;
@@ -608,7 +622,7 @@ class Run {
     // 5:00 up to x1.25 at spawnLateEnd 10:00; before: spawnLate = x2 over one minute);
     // nothing new comes after spawnStopT (9:30): only the Maîtres Corbacs (the Doom) and the bosses
     const RU = this.RUN, lt = RU.spawnLateT || 1e9, late = RU.spawnLateK ? (tm < lt ? 1 : lerp(RU.spawnLateK[0], RU.spawnLateK[1], clamp((tm - lt) / Math.max(0.01, (RU.spawnLateEnd || 10) - lt), 0, 1))) : 1 + ((RU.spawnLate || 1) - 1) * clamp(tm - lt, 0, 1), grow = (1 + (RU.spawnGrow || 0) * tm) * late;
-    if (tm >= lt && !this.lateWarned) { this.lateWarned = true; this.banner(T('crowd_grows'), '#ff9a3c'); this.chat(T('crowd_grows'), '#ff9a3c'); Audio2.sfx('EVENT', 0.7); }
+    if (tm >= lt && !this.lateWarned) { this.lateWarned = true; this.announce(T('crowd_grows_t'), T('crowd_grows'), '#ff9a3c'); Audio2.sfx('EVENT', 0.7); }
     const stopped = !this.infinite && tm >= (RU.spawnStopT || 1e9);
     const target = Math.min(RU.spawnCap || 380, Math.round((wave[4] * (tm >= 3 && tm < 5.5 ? 0.88 : 1) + Math.floor(em * 1.5)) * (RU.spawnMul || 1) * grow));
     this.spawnT -= dt;
@@ -649,7 +663,7 @@ class Run {
     // ToT's door
     if (!this.door && !this.doorDone && this.time >= this.RUN.doorT && !this.doorTime()) {   // 0.26: a time portal in 10% of the runs, else the Tofu Mutant (events.js)
       this.door = { x: this.center.x, y: this.center.y, t0: this.time };
-      this.chat(T('door_appears'), '#e0b0ff'); this.banner(T('door_appears'), '#d7a6ff'); Audio2.blip('door');
+      this.announce(T('door_appears_t'), T('door_appears'), '#d7a6ff'); Audio2.blip('door');
     }
     if (this.door && this.time > this.RUN.doorEnd) { this.door = null; this.doorDone = true; }
     // the Doom (0.22): the Maîtres Corbacs come at 11:00 (DM.t), or at 10:00 (DM.tWon) once the zone's final boss is down;
@@ -660,7 +674,7 @@ class Run {
       if (this.time >= doomT) {
         if (!this.doom) {
           this.doom = { next: this.time, wave: 0, t0: this.time };
-          this.banner(T('doom'), '#ff3b3b'); this.chat(T('doom'), '#ff3b3b'); Audio2.sfx('EVENT', 0.9); this.shake(8);
+          this.announce(T('doom_t'), T('doom'), '#ff3b3b'); Audio2.sfx('EVENT', 0.9); this.shake(8);
           Prog.st().doomSeen = 1; Audio2.playMusic(this.map.boss_music, 1.0);
         }
         if (this.ps) this.ps.doomT = this.time - this.doom.t0;
@@ -783,12 +797,12 @@ class Run {
     if (m.def.special) this.specialDeath(m);   // Tofu Mutant, Coffre Animé (events.js)
     if (m.boss) return this.bossDeath(m);
     if (m.elite && this.ps) this.ps.elites++;
-    if (d.id === 'bandit_manchot' || d.jackpot) { const J = d.jackpot || [30, 60], k = this.addKamas(randi(J[0], J[1])); this.banner(T('jackpot', { n: k }), '#ffd700'); this.chat(T('jackpot', { n: k }), '#ffd700'); }
-    if (d.id === 'wabbit_gm') { this.addKamas(100); this.chat(T('gm_banned'), '#ff9de2'); this.banner('Wabbit GM', '#ff9de2'); Store.data.easter.gm = 1; }
+    if (d.id === 'bandit_manchot' || d.jackpot) { const J = d.jackpot || [30, 60], k = this.addKamas(randi(J[0], J[1])); this.announce(T('jackpot_t'), T('jackpot', { n: k }), '#ffd700'); }
+    if (d.id === 'wabbit_gm') { this.addKamas(100); this.announce('Wabbit GM', T('gm_banned'), '#ff9de2'); Store.data.easter.gm = 1; }
     if (d.xp > 0) { if (m.elite) this.dropGem(m.x, m.y, this.bigAmber(), 1); else if (!this.RUN.amber) this.dropGem(m.x, m.y, d.xp * (m.xpm || 1)); else for (let r = this.amberRate(); r > 0; r--) if (r >= 1 || Math.random() < r) this.dropGem(m.x + rand(-8, 8), m.y + rand(-6, 6), this.normalAmber()); }   // 0.81: an amber's worth = the run's clock only (same on every map), each map drops them at its own rate   // 0.60: an elite's amber = a big amber
     const luck = this.stats.luck, IK = luck * (this.RUN.itemDropK || 1);   // (0.60: itemDropK = every object on the ground x1.15)
     if (!this.map.noKamas && Math.random() < (this.RUN.kamaDrop || 0.05) * (this.hard ? this.hard.kamaDrop || 1 : 1) * luck) {   /* (0.94: Difficile x1.5, C.hard.kamaDrop) */ const KC = this.RUN.kamaCoins || [1, 1], n = randi(KC[0], KC[1]); for (let k = 0; k < n; k++) this.dropPickup('kama', m.x + rand(-14, 14), m.y + rand(-10, 10), randi(1, 3 + this.mapIdx)); }   // 0.60: 1 to 3 coins
-    if (Math.random() < (this.RUN.breadRate || 0.006) * IK) this.dropPickup('bread', m.x, m.y, this.breadKind());
+    if (Math.random() < (this.RUN.breadRate || 0.006) * IK * (this.bless ? this.bless.bread : 1)) this.dropPickup('bread', m.x, m.y, this.breadKind());
     if (!this.map.noKamas && Math.random() < (this.RUN.goldRate || 0) * IK) this.dropPickup('gold', m.x, m.y);   // Minerai d'Or (rare object: Chance helps)
     if (Math.random() < 0.0012 * IK && !this.pickups.some(p => p.kind === 'batofu')) this.dropPickup('batofu', m.x, m.y);   // Plume du Batofu
     const KB = this.C.kamaBoost;
@@ -963,7 +977,7 @@ class Run {
       this.reviveAt = typeof performance !== 'undefined' ? performance.now() : 0; this.reviveHold = this.reviveAt + 1400;
       for (const m of this.mobsInRadius(P.x, P.y, 220)) if (!m.boss) this.damageMob(m, st.maxHp * 2, { def: { id: 'phenix' }, p: {} }, true);
       Audio2.play(this.C.revive.snd, 0.9);
-      this.banner(T('revived'), '#ffcf3a'); this.chat(T('revived'), '#ffcf3a'); this.shake(6);
+      this.announce(T('revived_t'), T('revived'), '#ffcf3a'); this.shake(6);
       for (const m of this.mobsInRadius(P.x, P.y, 260)) if (!m.boss) { const dx = m.x - P.x, dy = m.y - P.y, dd = Math.hypot(dx, dy) || 1; m.kx += dx / dd * 700; m.ky += dy / dd * 700; }
       Prog.add('revived'); return;
     }
@@ -1098,7 +1112,7 @@ class Run {
     const [cx, cy] = this.camTarget();
     this.cam.x = lerp(this.cam.x || cx, cx, Math.min(1, dt * 10)); this.cam.y = lerp(this.cam.y || cy, cy, Math.min(1, dt * 10));
     this.shakeAmt = Math.max(0, this.shakeAmt - dt * 30);
-    if (this.bannerMsg) { this.bannerMsg.t += dt; if (this.bannerMsg.t > 3.2) this.bannerMsg = null; }
+    if (this.bannerMsg) { this.bannerMsg.t += Math.min(0.1, dt / Math.max(0.01, this.timeK())); if (this.bannerMsg.t > 3.2) this.bannerMsg = null; }   // (0.98.1: in real time — a critical summon's banner stayed see-through through its 1 % slow motion)
   }
   updateMobs(dt) {
     const P = this.player, frozen = this.time < this.freezeUntil;
@@ -1394,7 +1408,7 @@ class Run {
         if (!s.nofx) this.fxAt(s.fx || s.spell.def.fx[0], s.x, s.y, { scale: s.r / 45, fit: s.r });
         if (s.crack) for (let k = 0; k < 10; k++) { const a = rand(TAU), v = rand(80, 220); this.particles.push({ x: s.x + rand(-8, 8), y: s.y, vx: Math.cos(a) * v, vy: -rand(120, 300), g: 900, t: 0, life: rand(0.45, 0.8), s: rand(3, 6.5), c: pick(['#8a6a4a', '#a8865c', '#6b5038', '#c9a27a']) }); }   // (Crackler strike: earth chunks)
         // the real reach of the blow, always shown on the ground (the spell animation alone can be smaller or larger)
-        this.rings.push({ x: s.x, y: s.y, r0: s.r * 0.55, r1: s.r, t0: T_, dur: s.spell && s.spell.def && s.spell.def.weapon ? 0.9 : 0.5, color: (s.spell && s.spell.p && s.spell.p.color) || (s.nofx ? '#ffaa33' : '#ffcc33'), fill: 1 });
+        if (!s.tgt) this.rings.push({ x: s.x, y: s.y, r0: s.r * 0.55, r1: s.r, t0: T_, dur: s.spell && s.spell.def && s.spell.def.weapon ? 0.9 : 0.5, color: (s.spell && s.spell.p && s.spell.p.color) || (s.nofx ? '#ffaa33' : '#ffcc33'), fill: 1 });   // (0.98.1: not under a blow on one monster: no area)
         if (s.nofx) Audio2.play('impact_lourd', 0.5, rand(0.9, 1.1));
         if (s.shake) this.shake(s.shake);
         this.strikes.splice(i, 1);
@@ -1597,7 +1611,7 @@ class Run {
       } break;
       case 'kamaboost': {
         const KB = this.C.kamaBoost; this.kboostUntil = this.time + KB.dur;
-        this.banner(T('kamaboost'), '#ffd700'); this.chat(T('kamaboost'), '#ffd700'); Audio2.play(KB.snd, 0.9); Audio2.sfx('EVENT', 0.5);
+        this.announce(T('kamaboost_t'), T('kamaboost'), '#ffd700'); Audio2.play(KB.snd, 0.9); Audio2.sfx('EVENT', 0.5);
         this.fxAt(KB.fx, P.x, P.y, { follow: P, scale: 1.0 }); this.shake(3);
         for (let i = 0; i < 40; i++) this.particles.push({ x: P.x + rand(-30, 30), y: P.y - rand(0, 60), vx: rand(-120, 120), vy: rand(-260, -80), t: 0, life: rand(0.6, 1.2), c: pick(['#ffd700', '#fff3a0', '#e6b422']), s: rand(2.5, 5) });
         Prog.add('kamaBoosts');
@@ -1605,7 +1619,7 @@ class Run {
       case 'rappel': for (const q of this.pickups) if (q.kind === 'gem' || q.kind === 'kama') q.mag = true; this.chat(T('recall'), '#9fe0ff'); Audio2.ui('item', 0.7); break;
       case 'fee': this.fireworks(); break;
       case 'gold': { const v = this.C.goldKamas || 25; this.kamas += v; this.text(P.x, P.y - 80, '+' + v + ' K', '#ffd700', 18); this.chat(T('gold_found', { n: v }), '#ffd700'); Audio2.blip('coin'); Audio2.ui('item', 0.6); if (this.ps) this.ps.gold = (this.ps.gold || 0) + 1; } break;
-      case 'batofu': { const D = this.C.batofu; this.batofuUntil = this.time + D.dur; this.batofuDur = D.dur; this.banner(T('batofu'), '#9fe0ff'); this.chat(T('batofu'), '#9fe0ff'); Audio2.ui('item', 0.8); P.dodgeReady = Math.min(P.dodgeReady, this.time); } break;
+      case 'batofu': { const D = this.C.batofu; this.batofuUntil = this.time + D.dur; this.batofuDur = D.dur; this.announce(T('batofu_t'), T('batofu'), '#9fe0ff'); Audio2.ui('item', 0.8); P.dodgeReady = Math.min(P.dodgeReady, this.time); } break;
       case 'relic': this.gainRelic(p.v); break;
       case 'tmap': this.gotTmap(); break;
       case 'nowelgift': this.nowelGift(); break;   // (0.68: nowel.js)
@@ -1617,15 +1631,15 @@ class Run {
         this.chat(prize.kind === 'kamas' ? T('tailor_kamas', { n: prize.v }) : T('tailor_got', { n: L(prize.item.name) }), '#ff9cf0');
         Audio2.ui('item', 0.8); if (typeof Game !== 'undefined' && Game.tailorWin) Game.tailorWin(prize);
       } break;
-      case 'houx': this.rerolls++; this.chat(T('houx_got', { n: this.rerolls }), '#7fe08a'); this.banner(L(this.C.houx.name), '#7fe08a'); Audio2.ui('item', 0.8); break;   // 0.97: one more reroll, added to the run's (UI.levelUpMenu)
-      case 'sablier': this.freezeUntil = this.time + 8; this.chat(T('sandglass'), '#9fe0ff'); this.banner(T('time_stops'), '#9fe0ff'); Audio2.spell(this.C.spells.sablier_xelor, 0.8); break;
+      case 'houx': this.rerolls++; this.announce(L(this.C.houx.name), T('houx_got', { n: this.rerolls }), '#7fe08a'); Audio2.ui('item', 0.8); break;   // 0.97: one more reroll, added to the run's (UI.levelUpMenu)
+      case 'sablier': this.freezeUntil = Math.max(this.freezeUntil, this.time + 8); this.sandFreeze = true; this.announce(T('sandglass_t'), T('sandglass'), '#9fe0ff'); Audio2.spell(this.C.spells.sablier_xelor, 0.8); break;
       case 'power': this.activatePower(p.v); break;
       case 'dofus': {   // 0.26: the 'item get' show first, then the Dofus (events.js)
         const dof = this.C.dofus.find(d => d.id === p.v); if (!dof || this.dofus.includes(dof)) break;
         this.startCine('dofus', { dof }, () => {
         this.dofus.push(dof); this.recompute(); this.player.heal(this.stats.maxHp);
         Store.data.dofus[dof.id] = (Store.data.dofus[dof.id] || 0) + 1;
-        this.banner(T('dofus_found', { n: L(dof.name) }), dof.color); this.chat(T('dofus_found', { n: L(dof.name) }) + ' ' + L(dof.desc), dof.color);
+        this.announce(L(dof.name), T('dofus_found', { n: L(dof.name) }) + ' ' + L(dof.desc), dof.color);
         this.kamas += 500; this.text(P.x, P.y - 90, '+500 K', '#ffd700', 20); this.chat(T('dofus_kamas'), '#ffd700');
         Audio2.sfx('EVENT', 0.9); Audio2.blip('level');
         });
@@ -1636,7 +1650,7 @@ class Run {
   activatePower(id) {
     const d = this.C.drops[id]; if (!d) return;
     const P = this.player, t = this.time;
-    this.banner(T('pw_' + id), d.color); this.chat(T('pw_' + id), d.color);
+    this.announce(L(d.name), T('pw_' + id), d.color);
     Audio2.sfx('EVENT', 0.6);
     if (id === 'foudre') this.powers.foudre = { until: t + d.dur, next: t + 0.3 };
     else if (id === 'flamiche') this.powers.flamiche = { until: t + d.dur, next: t };
@@ -1646,7 +1660,7 @@ class Run {
       // critical summon (a fixed 1 in 30, never boosted): the Chaferfu Lancier, or the Arakne Majeure
       if (Math.random() < (d.crit || 1 / 30)) {
         kind = id === 'chaferfu' ? 'lancier' : 'majeure'; const cc = id === 'chaferfu' ? '#ffcf3a' : '#c47bff';
-        this.banner(T('pw_' + kind), cc); this.chat(T('pw_' + kind), cc); this.shake(6); Audio2.ui('level', 0.8); Audio2.play('stars', 0.6); Prog.add(kind); crit = true;   // (0.61: 'crit' is no UI sound)   // (the 'lancier' achievement counts it)
+        this.announce(L(this.C.allies[kind].name), T('pw_' + kind), cc, { pre: [T('crit_t'), '#ff3b3b'] }); this.shake(6); Audio2.ui('level', 0.8); Audio2.play('stars', 0.6); Prog.add(kind); crit = true;   // (0.61: 'crit' is no UI sound)   // (the 'lancier' achievement counts it)
       }
       const cfg = this.allyCfg(kind), al = this.C.allies[kind];
       this.allies = this.allies.filter(a => a.kind !== kind);
@@ -1709,14 +1723,15 @@ class Run {
         A.hitT = cfg.every || 0.35; A.atkT = 0;
         const m = A.target, src = { def: { id: A.kind === 'majeure' ? 'arakne_majeure' : 'arakne_agressive' }, p: {} }, dm = this.powerDmg(cfg.dmg);
         this.damageMob(m, dm, src);
-        if (cfg.aoe) { for (const o of this.mobsInRadius(m.x, m.y, cfg.aoe)) if (o !== m) this.damageMob(o, dm * 0.5, src, true); this.rings.push({ x: m.x, y: m.y, r0: cfg.aoe * 0.4, r1: cfg.aoe, t0: t, dur: 0.3, color: cfg.color, fill: 1 }); }
-        // (0.95: the Arakne majeure pushes once per summon, three times as far: cfg.pushOnce, its knock x3 in content)
-        if (!m.boss && !(cfg.pushOnce && A.pushed)) { m.kx += dx / d * cfg.knock * 3; m.ky += dy / d * cfg.knock * 3; if (cfg.pushOnce) A.pushed = true; }
+        this.allySlow(m, cfg);
+        if (cfg.aoe) { for (const o of this.mobsInRadius(m.x, m.y, cfg.aoe)) if (o !== m) { this.damageMob(o, dm * 0.5, src, true); this.allySlow(o, cfg); } this.rings.push({ x: m.x, y: m.y, r0: cfg.aoe * 0.4, r1: cfg.aoe, t0: t, dur: 0.3, color: cfg.color, fill: 1 }); }
         if (Math.random() < 0.5) this.allySnd(A.kind, 'atk', 0.38, rand(1.0, 1.2));
         A.target = null;
       }
     }
   }
+  // 0.98.2: the Araknes slow what they hit instead of pushing it (cfg.slow, cfg.slowDur): renewed, never added up; not the bosses, as the push
+  allySlow(m, cfg) { if (m.boss || m.dying) return; m.slowAmt = Math.max(m.slowUntil > this.time ? m.slowAmt || 0 : 0, cfg.slow); m.slowUntil = this.time + cfg.slowDur; }
   // spells that move the character (Bond, Assaut, Vol de Pièces): the player can switch them off and on
   moveSpell() { return this.spells.find(s => s.def.t === 'leap' || s.def.t === 'dash') || null; }
   toggleMoveSpells() {
@@ -1900,7 +1915,7 @@ class Run {
     this.freezeUntil = Math.max(this.freezeUntil || 0, t + 2.4);
     this.player.invulnUntil = Math.max(this.player.invulnUntil || 0, t + 3);
     this.fw = { next: t, until: t + 2.0, modalAt: t + 1.7, dof, from };
-    this.banner(T('exploit'), dof.color); Audio2.sfx('EVENT', 0.9); Audio2.blip('level');
+    this.banner(T('exploit_t'), dof.color); Audio2.sfx('EVENT', 0.9); Audio2.blip('level');
   }
   updateFireworks() {
     const F = this.fw, t = this.time;
@@ -1917,7 +1932,7 @@ class Run {
   }
   fireworks() {
     const P = this.player; const vw = Game.viewW / 2, vh = Game.viewH / 2;
-    this.banner(T('fireworks'), '#ff9de2');
+    this.banner(T('fireworks_t'), '#ff9de2');
     for (const m of this.mobs) {
       if (m.dying || m.boss) continue;
       if (Math.abs(m.x - P.x) < vw + 40 && Math.abs(m.y - P.y) < vh + 40) this.damageMob(m, 1e6, null, true);
