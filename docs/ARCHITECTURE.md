@@ -152,20 +152,21 @@ Main state: `player`, `mobs`, `projs` (player projectiles), `eprojs` (enemy proj
   share one lettering, in juice.js: the Verdance font (0.98, `ANN_FONT` / `annFont`, assets/fonts/verdance.woff2 built by
   `tools/assets/build_verdance098.py` with the accents and punctuation it lacked; Cinzel behind it for the rest), `annGlyph`
   = one string as carved letters (an optional lime `halo`, extrusion, outline, bevel line, light top edge, gradient) with
-  the palettes `ANN.cream / retro / lime` (the verdant set: the Dofus Unity and Dofus Retro logos) and `ANN.gold / ember /
-  blood`, `annLayout` (per-letter layout that shrinks to fit a width), `annSheen`, `annLine` (banners), `annRule`. The
+  the palettes `ANN.cream / retro / lime` (the verdant set: the Dofus Unity and Dofus Retro logos), `ANN.gold / ember /
+  blood`, and for `annLine`, `ANN.plate` (the victory's gold on the brown frames), `ANN.ice` and `ANN.violet`, `annLayout` (per-letter layout that shrinks to fit a width), `annSheen`, `annLine` (banners), `annRule`. The
   countdown's emblem (a wreath of leaves, a glowing Dofus egg, the time as a vine) is `cdMedal` / `cdEgg`, the leaves
-  `cdLeaf` / `CD_LEAVES` (events.js), GO!'s swords `goSword` (the Épée Royale du Bouftou, icons3 'go_sword'); the
-  banners' frame `annPanel(…, t, style)` (`PANEL`: green; 'boss' light green with a blurred shade and glowing edge;
-  'fire' for the relics: green flames, sparks). A banner shows a name only (0.98.1): `Run.announce(title, text, color,
+  `cdLeaf` / `cdLeafPic` / `CD_LEAVES` (events.js: a soft picture made once per colour), GO!'s swords `goSword` (the Épée Royale du Bouftou, icons3 'go_sword'); the
+  banners' frame `annPanel(…, t, style)` (`PANEL`, 0.98.2: Dofus Retro's brown wood and gold, two lights running along the
+  edge, sparks as the menus' cursor's, `panelStar`; 'boss' redder, a blurred shade; 'relic' with a spray out of each side; the
+  Dofus caption too). A banner shows a name only (0.98.1): `Run.announce(title, text, color,
   {center, force, kind, pre})` puts the title in the middle and the explanation in the chat for 28 s (`chat(msg, color,
   life)`, 14 s by default); `pre` = a word in its own colour before the name (the critical summons' red « Coup critique
   ! »). Titles come from the data's names or the `*_t` texts (tools/content/patch_098.py `TITLES`). Every central message
-  is in the victory's palette (0.98.2: `ANN.retro` passed to `annLine`, its gradient, outline and halo; the colour given to
+  is in the victory's palette (0.98.2: `ANN.plate` passed to `annLine`, its gradient, outline and halo; the colour given to
   `announce` stays the chat's; only `pre` keeps its own). The banners' words
-  and the relic's name are in the chat's lettering (`BAN_FONT` = `hudFont`, render.js; `annLine`'s `font`), the word
-  RELIQUE, the fusion names (in capitals, `ANN.retro` gold, sfusions.js `drawUnionName`) and the victory in the
-  announcements' font. A banner's clock runs in real time (not slowed by the slow motions). Use these for any new
+  and the relic's word and name are in the chat's lettering (`BAN_FONT` = `hudFont`, render.js; `annLine`'s `font`), and so are
+  the fusion names (0.98.2: sfusions.js `drawUnionName`: capitals, `ANN.violet`, red and cyan ghosts of the letters, sparks all
+  round, with `Run.chromaK` on the screen); the victory stays in the announcements' font. A banner's clock runs in real time (not slowed by the slow motions). Use these for any new
   centre-screen message; keep the UI's other fonts (DofusBold, Lilita, RetroNum) for the rest.
 - **Chromatic aberration** (0.98): `Run.chromaK()` (juice.js, read every frame) gives its strength of the moment, 0 to
   2.6 (rising over the countdown's first second, then strong to 0.5 s after GO!, the slow motions, a boss's fall, a relic, Libération, the
@@ -264,8 +265,25 @@ forgotten migration breaks players' profiles. Export / import: Options → profi
   Coffre Animé, the Minotoror trapdoor, Maîtres Corbacs, Endless, Hard**: extras.js / events.js (`C.<system>`).
 - **Level-up**: `upgradeOptions`, `UI.levelUpMenu`, card fitting `fitCards`; Banish `C.banishes` a run (one counter for spells,
   weapons and characteristics), Skip `C.skips`.
-- **Sablier**: `Run.freezeUntil` is the freeze; `Run.sandFreeze` only says the timer is wanted (drawHud reads the time left from
-  `freezeUntil`, so every source of the freeze counts and the timer ends with it).
+- **Sablier**: `Run.freezeUntil` is the freeze; `Run.sandFreeze` only says the timer is wanted (`drawSandTimer`, render.js, reads the
+  time left from `freezeUntil`, so every source of the freeze counts and the timer ends with it): ice blue, under the banners' place,
+  the drop's hourglass tinted (`sandIce`) on an orbit, crystals (`panelStar`).
+- **Bonus characteristic** (0.98.3): the Jeton d'entrée au Gladiatrool (`C.gladia`, gspells.js `dropGladia` / `gladiaToken`):
+  it appears at `C.gladia.t` anywhere dry on the map, `Run.gladiaOut` makes it one a run whatever becomes of it. Its wheel is `UI.troolWheel` with `w.pop` (own texts, one
+  slice a prize). The prize lives in `Run.passives` like the others (stats, levels, fusions) and `Run.bonusPassive` names it:
+  `upgradeOptions` leaves it out of the count of the 5, `drawHud` gives it the sixth place whatever the others are.
+- **Back from a window** (0.98.3): `UI.closeModal` in a run and ToT's end call `Run.easeIn`: `timeK` (the factor on `Run.update`'s dt) goes from 0.01 to 1 over
+  `EASE_T`, 0.5 s counted down in `Game.frame` only when the run updates, so a cinematic or the next window keeps it for when play comes back; it replaces the
+  one under way, never adds up. It is apart from `slowMo`, which brings the chromatic aberration (`chromaK`).
+- **Cursor and mouse** (0.98.3): `Nav.byMouse`: set by a mouse move or click (`Nav.mouse`), cleared by any key or the controller.
+  While it is set `Nav.set` only remembers its element (`Nav.hid`), which `Nav.ensure` shows again at the next key.
+- **TTG** (0.98.3): `assets/ttg/c<number>.webp` (one file a card, lazy in the binder) and `p<i>.webp`, `SPR.boosters.names[i]` = a
+  family (`C.ttg.cards[].fam`) or r0..r3. `Run.nextPack` deals the packs from a shuffled bag, `openBooster` draws a rarity among those
+  of the pack by `C.ttg.rw` (solved in patch_098 for 55 / 30 / 11.8 / 3.2 % overall), then one of its cards. The pictures have no text: names and numbers are the game's, in the player's language.
+- **HUD size**: `Game.ui` (`resize`) follows the buffer, with a floor in CSS px: at most 0.85 CSS px a unit, as much as leaves 560 x
+  480 units on the screen (phones). `drawHud`'s `narrow` (under 760 units wide, an upright phone): the spells under the timer and
+  the boss bars, the chat over the bottom row at the screen's whole width. Ganymède's and Dark Vlad's scenes: their own CSS by
+  aspect ratio (`.gany`, index.html): bigger lines upright, the stage beside the text on a low screen.
 - **Shop**: spells, characteristics (`passLv`), weapon masteries, scrolls, global spells, skins, shields.
 - **Monster states**: poison `poisonUntil`, bleed `bleedUntil`, burn `burnUntil/burnDps`, slow, stun, confusion.
   `Run.poisonCloud` = a short zone (`z.dose`) that poisons each monster in it once (the Piège Empoisonné's gas);

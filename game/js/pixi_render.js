@@ -526,8 +526,9 @@ const PX = {
     if (s.atkT !== undefined && sh.has('atkR') && s.atkT < sh.duration('atkR')) { anim = 'atkR'; at = s.atkT; loop = false; }
     const f = sh.frameAt(anim, at, loop); if (!f) return;
     const ga = Math.min(1, (t - s.born) * 4) * k;
-    this.ell(s.x, s.y, 16, 6, s.healer ? 0x78ff96 : 0x50a0ff, (s.healer ? 0.3 : 0.25) * ga);
-    this.sheet(sh, f, s.x, s.fly ? s.y - 8 + Math.sin(t * 5) * 3 : s.y, 0.9 * ES, s.flip, undefined, ga);
+    const sk = s.spell.p.sumK || 1;   // (0.98.3: the Bomberfus)
+    this.ell(s.x, s.y, 16 * sk, 6 * sk, s.healer ? 0x78ff96 : 0x50a0ff, (s.healer ? 0.3 : 0.25) * ga);
+    this.sheet(sh, f, s.x, s.fly ? s.y - 8 + Math.sin(t * 5) * 3 : s.y, 0.9 * ES * sk, s.flip, undefined, ga);
   },
   // the player at its depth among the monsters: everything its 2D drawing paints around it (dash trail, auras,
   // revival wings, drain, life bar) in one box

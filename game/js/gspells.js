@@ -146,6 +146,29 @@ Object.assign(Run.prototype, {
     if (typeof UI !== 'undefined' && UI.troolWheel && !(typeof Game !== 'undefined' && Game.debug && Game.debug.bot)) this.pendingWheel = { pool, won, give };
     else give();
   },
+  // 0.98.3: the Jeton d'entrée au Gladiatrool: at C.gladia.t, anywhere dry on the map, announced like a TTG pack; gladiaOut
+  // stays true whatever becomes of it: one a run
+  dropGladia() {
+    const G = this.C.gladia, b = this.bounds; this.gladiaOut = true; let x = this.player.x, y = this.player.y;
+    for (let k = 0; k < 60; k++) { x = rand(b.x0 + 100, b.x1 - 100); y = rand(b.y0 + 100, b.y1 - 100); if (!this.isWater(x, y)) break; }
+    this.dropPickup('gladia', x, y); this.announce(L(G.name), T('gl_here'), '#8fb4ff'); Audio2.sfx('EVENT', 0.45);
+  },
+  // what its wheel can give: every characteristic the character does not have (Borné only if a spell is left to learn, as in
+  // the choices; what was banished never comes back)
+  gladiaPool() {
+    return this.C.passives.filter(p => !this.passives[p.id] && !(p.stat === 'spellslot' && this.cls.spells.length <= (this.C.spellSlots || 4)) && !this.isBanned({ kind: 'passive', id: p.id }))
+      .map(p => ({ id: p.id, ic: p.icon, cls: { color: '#2a55c4' } }));
+  },
+  // the wheel gives a characteristic in the place outside the 5: `passives` holds it like the others (stats, levels, fusions),
+  // `bonusPassive` keeps it out of their count and shows it apart (upgradeOptions, drawHud, the pause)
+  gladiaToken() {
+    const pool = this.gladiaPool(); if (!pool.length || this.bonusPassive) { this.applyUpgrade({ kind: 'kamas' }); return; }
+    const won = pick(pool), p = this.C.passives.find(x => x.id === won.id);
+    const give = () => { this.bonusPassive = p.id; this.passives[p.id] = 1; this.recompute(); this.chat(T('gl_won', { n: L(p.name) }), '#8fb4ff'); };
+    const pop = { title: T('gl_title'), spin: T('gl_spin'), icon: p.icon, won: T('gl_won', { n: L(p.name) }), desc: L(p.desc) + ' ' + T('gl_note') };
+    if (typeof UI !== 'undefined' && UI.troolWheel && !(typeof Game !== 'undefined' && Game.debug && Game.debug.bot)) this.pendingWheel = { pool, won, give, pop };
+    else give();
+  },
   // drawn by render.js: the pickaxe swing beside the character
   updateGlobals() {
     if (this.pendingWheel && !UI.modalOpen()) { const w = this.pendingWheel; this.pendingWheel = null; UI.troolWheel(this, w); }

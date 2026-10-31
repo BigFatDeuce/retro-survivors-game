@@ -145,15 +145,15 @@ Object.assign(Run.prototype, {
   },
   // 0.92: violet energy gathers along a line, the name slams in big and settles (a white flash band, a crack of light,
   // sparks thrown out, a shake from tickUnion), violet flames lick up behind its letters while a light sweeps across
-  // them, a few sparks drift round it, then it rises a little and fades into embers. Cached glows only (no particles). 0.95: in the
-  // announcements' Cinzel (juice.js annFont). 0.98.1: in capitals, carved in Dofus Retro's gold like the victory (ANN.retro),
-  // its energy, flames and sparks gold and orange
+  // them, sparks drift round it, then it rises a little and fades into embers. Cached glows only (no particles). 0.98.1: in
+  // capitals. 0.98.2: in the chat's lettering (hudFont), violet (ANN.violet), red and cyan ghosts split off the letters and shaking
+  // (a lens aberration of its own, on top of the screen's, Run.chromaK), sparks all round
   drawUnionName(ctx, W, H, S, d, v, k) {
-    const cy = H * 0.66, name = L(d.def.name).toLocaleUpperCase(LANG), kick = T('sfusion_union'), HIT = 0.5;
+    const cy = H * 0.66, name = L(d.def.name).toLocaleUpperCase(LANG), kick = T('sfusion_union'), HIT = 0.5, F = px => hudFont(Math.max(4, Math.round(px)));
     const hash = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
-    const glowV = RCache.glow('rgba(255,150,40,0.95)'), glowP = RCache.glow('rgba(255,200,80,0.9)'), glowW = RCache.glow('rgba(255,244,214,0.95)'), glowG = RCache.glow('rgba(255,214,110,0.95)');
-    let fs = Math.round(S * 0.105); ctx.font = annFont(fs); const tw0 = ctx.measureText(name).width; if (tw0 > W * 0.84) fs = Math.floor(fs * W * 0.84 / tw0);   // (big, never wider than the screen)
-    ctx.font = annFont(fs); const tw = ctx.measureText(name).width, half = tw / 2 + fs * 0.3;
+    const glowV = RCache.glow('rgba(176,96,255,0.95)'), glowP = RCache.glow('rgba(255,120,240,0.9)'), glowW = RCache.glow('rgba(248,236,255,0.95)'), glowG = RCache.glow('rgba(214,170,255,0.95)');
+    let fs = Math.round(S * 0.1); ctx.font = F(fs); const tw0 = ctx.measureText(name).width; if (tw0 > W * 0.84) fs = Math.floor(fs * W * 0.84 / tw0);   // (big, never wider than the screen)
+    ctx.font = F(fs); const tw = ctx.measureText(name).width, half = tw / 2 + fs * 0.3;
     const y = cy - (k < 1 && v > 1 ? (1 - k) * S * 0.03 : 0);
     // 1) energy gathering on the line, before the hit
     if (v > 0.2 && v < HIT + 0.1) {
@@ -174,8 +174,8 @@ Object.assign(Run.prototype, {
     if (u < 0.35) {
       const q = u / 0.35, cw = half * 0.4 + W * 0.6 * Math.sqrt(q); ctx.save(); ctx.globalCompositeOperation = 'lighter';
       ctx.globalAlpha = (1 - q) * 0.95 * k; ctx.drawImage(glowW, W / 2 - half * 1.6, y - fs * 0.9, half * 3.2, fs * 1.8);
-      ctx.globalAlpha = (1 - q) * k; ctx.fillStyle = '#fff8e8'; ctx.fillRect(W / 2 - cw, y - fs * 0.025 * (1 - q) - 1, cw * 2, fs * 0.05 * (1 - q) + 2);
-      for (let i = 0; i < 26; i++) {
+      ctx.globalAlpha = (1 - q) * k; ctx.fillStyle = '#f6eaff'; ctx.fillRect(W / 2 - cw, y - fs * 0.025 * (1 - q) - 1, cw * 2, fs * 0.05 * (1 - q) + 2);
+      for (let i = 0; i < 60; i++) {
         const an = hash(i + 40) * TAU, sp = 0.4 + hash(i + 70) * 0.9, dd = fs * (0.4 + 3.2 * sp * Math.sqrt(q)), px = W / 2 + Math.cos(an) * dd * (half / fs), py = y + Math.sin(an) * dd * 0.55 + q * q * fs * 0.6, r = fs * 0.07 * (1 - q);
         if (r < 0.5) continue; ctx.globalAlpha = (1 - q) * k; ctx.drawImage(i % 4 ? glowG : glowW, px - r * 2, py - r * 2, r * 4, r * 4);
       }
@@ -194,28 +194,39 @@ Object.assign(Run.prototype, {
     // 4) 'FUSION !' above, then the name: it slams from big to its size with a slight overshoot; relief + outline
     const sl = clamp(u / 0.14, 0, 1), sc = sl < 1 ? 1.9 - 0.9 * (1 - Math.pow(1 - sl, 3)) : 1 + 0.035 * Math.sin(clamp((u - 0.14) / 0.2, 0, 1) * Math.PI);
     const kfs = Math.round(fs * 0.42), ky = y - fs * 0.92, ktxt = '✦ ' + kick + ' ✦';
-    ctx.font = annFont(kfs, 700); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
-    ctx.globalAlpha = k * clamp((v - 0.3) / 0.25, 0, 1); ctx.lineWidth = kfs * 0.22; ctx.strokeStyle = '#1c0d03'; ctx.strokeText(ktxt, W / 2, ky);
-    const kg = ctx.createLinearGradient(0, ky - kfs / 2, 0, ky + kfs / 2); kg.addColorStop(0, '#fff6c8'); kg.addColorStop(1, '#ffb43a'); ctx.fillStyle = kg; ctx.fillText(ktxt, W / 2, ky);
+    ctx.font = F(kfs); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    ctx.globalAlpha = k * clamp((v - 0.3) / 0.25, 0, 1); ctx.lineWidth = kfs * 0.22; ctx.strokeStyle = '#1a0632'; ctx.strokeText(ktxt, W / 2, ky);
+    const kg = ctx.createLinearGradient(0, ky - kfs / 2, 0, ky + kfs / 2); kg.addColorStop(0, '#f6e6ff'); kg.addColorStop(1, '#c084ff'); ctx.fillStyle = kg; ctx.fillText(ktxt, W / 2, ky);
     // (composed whole in a canvas of its own, then laid at its opacity once: the stacked relief no longer stays dark
     // while the letters fade)
     const pad = fs * 0.5, cw = Math.ceil(tw + pad * 2), chh = Math.ceil(fs * 1.7), cv = this._unC || (this._unC = document.createElement('canvas'));
     if (cv.width < cw || cv.height < chh) { cv.width = Math.max(cv.width, cw); cv.height = Math.max(cv.height, chh); this._unG = null; }
     const g = this._unG || (this._unG = cv.getContext('2d')); g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, cv.width, cv.height);
     g.translate(cw / 2, chh * 0.45); g.textAlign = 'center';
-    annCarve(g, name, 0, 0, fs, ANN.retro, 900);   // (0.98.1: the victory's carved gold, its lime halo)
+    annLine(g, name, 0, 0, fs, ANN.violet, F);
     const sw = clamp((u - 0.2) / 0.55, 0, 1);   // a light sweeping across the letters once they have settled
     if (sw > 0 && sw < 1) { g.globalCompositeOperation = 'source-atop'; const lx = -tw / 2 - fs + (tw + fs * 2) * sw, lg = g.createLinearGradient(lx - fs * 0.6, 0, lx + fs * 0.6, 0);
       lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(0.5, 'rgba(255,250,235,0.75)'); lg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = lg; g.fillRect(-cw / 2, -chh, cw, chh * 2); g.globalCompositeOperation = 'source-over'; }
-    ctx.save(); ctx.translate(W / 2, y); ctx.scale(sc, sc); ctx.globalAlpha = k * clamp(u / 0.06, 0, 1);
+    // the aberration: the letters in red and in cyan, pulled apart, far at the blow, then breathing; a kick now and then
+    const kicks = Math.pow(Math.max(0, Math.sin(u * 7.3) * Math.sin(u * 3.1 + 1)), 3), ab = fs * (0.08 + 0.22 * Math.max(0, 1 - u / 0.45) + 0.03 * Math.sin(u * 5.2) + 0.12 * kicks), av = fs * 0.03 * Math.sin(u * 11);
+    ctx.save(); ctx.translate(W / 2, y); ctx.scale(sc, sc); ctx.font = F(fs); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.globalAlpha = k * clamp(u / 0.06, 0, 1) * 0.85;
+    const ghosts = (d, al) => { ctx.fillStyle = `rgba(255,30,90,${al})`; ctx.fillText(name, -ab * d, av * d); ctx.fillStyle = `rgba(30,215,255,${al})`; ctx.fillText(name, ab * d, -av * d); };
+    ctx.globalCompositeOperation = 'lighter'; ghosts(1.9, 0.5); ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = k * clamp(u / 0.06, 0, 1);
     ctx.drawImage(cv, 0, 0, cw, chh, -cw / 2, -chh * 0.45, cw, chh);
+    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = k * clamp(u / 0.06, 0, 1) * 0.24; ghosts(1, 0.9);   // (over the letters too, faintly: under them the halo hid it, stronger they went white)
     ctx.restore();
-    // 5) sparks drifting round the name, embers rising off it as it fades
-    ctx.save(); ctx.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 14; i++) {
+    // 5) sparks drifting round the name, embers rising off it as it fades (stars: a glow makes a dull disc on bright ground)
+    const starV = panelStar('176,96,255'), starP = panelStar('255,120,240');
+    ctx.save();
+    for (let i = 0; i < 46; i++) {
       const an = hash(i + 100) * TAU + u * (0.6 + hash(i + 120)), rx = half * (0.85 + 0.3 * hash(i + 140)), ry = fs * (0.75 + 0.35 * hash(i + 160));
       const px = W / 2 + Math.cos(an) * rx, py = y + Math.sin(an) * ry - fs * 0.1, tw2 = 0.5 + 0.5 * Math.sin(u * 9 + i * 2.3), r = fs * (0.035 + 0.04 * tw2);
-      ctx.globalAlpha = k * clamp((u - 0.1) / 0.3, 0, 1) * (0.5 + 0.5 * tw2); ctx.drawImage(i % 2 ? glowG : glowP, px - r * 2, py - r * 2, r * 4, r * 4);
+      ctx.globalAlpha = k * clamp((u - 0.1) / 0.3, 0, 1) * (0.5 + 0.5 * tw2); ctx.drawImage(i % 2 ? starV : starP, px - r * 2.4, py - r * 2.4, r * 4.8, r * 4.8);
+    }
+    for (let i = 0; i < 26; i++) {   // and a steady rain of sparks off the letters
+      const q = (u * (0.55 + 0.5 * hash(i + 400)) + hash(i + 420)) % 1, px = W / 2 - tw / 2 + hash(i + 440) * tw + (hash(i + 460) - 0.5) * fs * q, py = y + (hash(i + 480) - 0.5) * fs * 0.8 - q * fs * (0.8 + hash(i + 500)), r = fs * 0.045 * (1.1 - q);
+      ctx.globalAlpha = k * clamp((u - 0.05) / 0.2, 0, 1) * Math.sin(q * Math.PI); ctx.drawImage(i % 3 ? starP : starV, px - r * 2.4, py - r * 2.4, r * 4.8, r * 4.8);
     }
     if (k < 1) for (let i = 0; i < 16; i++) {
       const q = 1 - k, px = W / 2 - tw / 2 + hash(i + 200) * tw, py = y - q * fs * (1 + hash(i + 220) * 1.5), r = fs * 0.06 * (1 - q * 0.5);

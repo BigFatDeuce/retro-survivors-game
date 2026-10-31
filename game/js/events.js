@@ -62,7 +62,7 @@ Object.assign(Run.prototype, {
   },
   // 0.38: the pack's look: every design comes once before any comes again (a shuffled bag kept in the profile)
   nextPack() {
-    const n = (SPR.boosters && SPR.boosters.n) || 14, S = Store.data;
+    const n = SPR.boosters.n, S = Store.data;
     if (!Array.isArray(S.packBag) || !S.packBag.length || S.packBag.some(i => i >= n)) { S.packBag = shuffle([...Array(n).keys()]); if (S.packBag[0] === S.lastPack) S.packBag.push(S.packBag.shift()); }
     const i = S.packBag.shift(); S.lastPack = i; Store.save(); return i;
   },
@@ -71,7 +71,7 @@ Object.assign(Run.prototype, {
     for (let k = 0; k < 40; k++) {   // a dry spot near the corner
       let x = cx + rand(-w * 0.08, w * 0.08), y = cy + rand(-h * 0.08, h * 0.08);
       if (k === 39) { const a = rand(0, TAU); x = this.player.x + Math.cos(a) * 500; y = this.player.y + Math.sin(a) * 500; }   // 0.37: never lost in the water
-      if (!this.isWater(x, y) || k === 39) { this.dropPickup('booster', x, y, 1).pk = this.nextPack(); this.announce(T('booster_here_t'), T('booster_here'), '#9cff6a'); Audio2.play('pages', 0.6); return; }
+      if (!this.isWater(x, y) || k === 39) { { const pk = this.nextPack(); this.dropPickup('booster', x, y, 1).pk = pk; BoosterArt.get(pk); } this.announce(T('booster_here_t'), T('booster_here'), '#9cff6a'); Audio2.play('pages', 0.6); return; }
     }
   },
   // ------------------------------------------------ 0.52: Dark Vlad beaten in Difficile in his clearing: the last zone
@@ -183,8 +183,8 @@ Object.assign(Run.prototype, {
       const txt = T('dofus_get', { n: L(dof.name) }); let fs = Math.round(Math.min(34, W / 28)); ctx.font = annFont(fs, 700); let tw = ctx.measureText(txt).width; if (tw > W * 0.84) { fs *= W * 0.84 / tw; tw = W * 0.84; }
       const bw = tw + fs * 1.6, bh = fs * 2.2, bx = W / 2 - bw / 2, by = H * 0.8;
       ctx.globalAlpha = Math.min(1, Math.max(0, (c.t - 0.6) / 0.3)) * k;
-      ctx.fillStyle = 'rgba(40,28,14,0.92)'; ctx.strokeStyle = '#c8a46a'; ctx.lineWidth = 3; ctx.fillRect(bx, by, bw, bh); ctx.strokeRect(bx, by, bw, bh);
-      ctx.textAlign = 'center'; annLine(ctx, txt, W / 2, by + bh / 2, fs, ANN.retro);   // (0.95: Cinzel; 0.98.2: the victory's gold, as every central message)
+      annPanel(ctx, bx, by, bw, bh, Game.ui, performance.now() / 1000);
+      ctx.textAlign = 'center'; annLine(ctx, txt, W / 2, by + bh / 2, fs, ANN.plate);   // (0.95: Cinzel; 0.98.2: the victory's gold, as every central message)
     }
     ctx.restore();
   },
@@ -297,7 +297,7 @@ Object.assign(Run.prototype, {
       ctx.globalAlpha = (1 - k); ctx.strokeStyle = '#c8f060'; ctx.lineWidth = S * 0.01 * (1 - k) + 1; ctx.beginPath(); ctx.ellipse(cx, cy, R * (1 + 3 * ke), R * (1 + 3 * ke) * 0.9, 0, 0, TAU); ctx.stroke(); ctx.restore();
       for (let i = 0; i < 14; i++) {
         const an = i / 14 * TAU + 0.2, d = R * (0.9 + 2.6 * ke * (0.7 + 0.5 * ((i * 41) % 7) / 7)), x = cx + Math.cos(an) * d, y = cy + Math.sin(an) * d + S * 0.25 * k * k, w = R * (i % 2 ? 0.24 : 0.16);
-        ctx.save(); ctx.globalAlpha = a * (1 - k); ctx.translate(x, y); ctx.rotate(an + k * (i % 2 ? 7 : -9)); ctx.scale(1, 0.6 + 0.4 * Math.abs(Math.cos(k * 8 + i)));
+        ctx.save(); ctx.globalAlpha = a * (1 - k) * 0.7; ctx.translate(x, y); ctx.rotate(an + k * (i % 2 ? 7 : -9)); ctx.scale(1, 0.6 + 0.4 * Math.abs(Math.cos(k * 8 + i)));
         cdLeaf(ctx, w * 2.4, CD_LEAVES[i % CD_LEAVES.length]); ctx.restore();   // (0.98: the wreath's leaves flung out)
       }
     }
@@ -358,8 +358,8 @@ Object.assign(Run.prototype, {
         const k = hk / 0.9;
         for (let i = 0; i < 18; i++) {
           const an = i / 18 * TAU + Math.sin(i * 3.7) * 0.3, sp = 0.55 + ((i * 29) % 11) / 11 * 0.7, d = S * 0.52 * sp * (1 - Math.pow(1 - k, 2)), x = X + Math.cos(an) * d, y = Y + Math.sin(an) * d * 0.75 + S * 0.3 * k * k * sp;
-          ctx.save(); ctx.globalAlpha = a * Math.min(1, (1 - k) * 2.2); ctx.translate(x, y); ctx.rotate(an + k * (5 + i % 4) * (i % 2 ? 1 : -1)); ctx.scale(1, 0.55 + 0.45 * Math.abs(Math.cos(k * 9 + i)));
-          const s = S * (0.03 + 0.022 * ((i * 17) % 5) / 5); ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= 0.7; ctx.drawImage(glowF, -s, -s, s * 2, s * 2); ctx.restore();
+          ctx.save(); ctx.globalAlpha = a * Math.min(1, (1 - k) * 2.2) * 0.7; ctx.translate(x, y); ctx.rotate(an + k * (5 + i % 4) * (i % 2 ? 1 : -1)); ctx.scale(1, 0.55 + 0.45 * Math.abs(Math.cos(k * 9 + i)));
+          const s = S * (0.03 + 0.022 * ((i * 17) % 5) / 5); ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha *= 0.4; ctx.drawImage(glowF, -s, -s, s * 2, s * 2); ctx.restore();
           cdLeaf(ctx, s, CD_LEAVES[i % CD_LEAVES.length]); ctx.restore();
         }
       }
@@ -539,6 +539,7 @@ Object.assign(Run.prototype, {
   // ------------------------------------------------ treasure maps
   updateEvents(dt) {
     if (this.boosterAt && this.time >= this.boosterAt) this.dropBooster();
+    if (!this.gladiaOut && this.C.gladia && this.time >= this.C.gladia.t) this.dropGladia();   // (0.98.3: gspells.js)
     this.checkTrap();
     const P = this.player, TM = this.C.tmap;
     if (this.mutant && !this.mutant.dying && this.time > this.C.mutant.escape) {   // it got away
@@ -651,8 +652,11 @@ Object.assign(Run.prototype, {
   },
   // ------------------------------------------------ TTG boosters
   openBooster(pk) {
-    const T_ = this.C.ttg, W = T_.rw || [55, 30, 12, 3], tot = T_.cards.reduce((a, c) => a + W[c.r || 0], 0); let x = Math.random() * tot, card = T_.cards[0];   // (0.34: the rarer, the less often)
-    for (const c of T_.cards) { x -= W[c.r || 0]; if (x <= 0) { card = c; break; } }
+    // 0.98.3: a pack holds its theme: its family's cards, or the cards of a rarity (SPR.boosters.names: a family or r0..r3); every card is in one
+    const T_ = this.C.ttg, W = T_.rw || [55, 30, 12, 3], nm = SPR.boosters.names[pk], rk = /^r\d$/.test(nm) ? +nm[1] : -1, pool = T_.cards.filter(c => rk >= 0 ? (c.r || 0) === rk : c.fam === nm);
+    const has = [0, 1, 2, 3].filter(r => pool.some(c => (c.r || 0) === r)); let x = Math.random() * has.reduce((a, r) => a + W[r], 0), rr = has[0];   // (a rarity first, among those the pack holds: C.ttg.rw gives the overall odds; then one of its cards)
+    for (const r of has) { x -= W[r]; if (x <= 0) { rr = r; break; } }
+    const card = pick(pool.filter(c => (c.r || 0) === rr));
     const S = Store.data; S.ttg = S.ttg || {}; Prog.add('boosters');
     const n = (S.ttg[card.id] || 0) + 1; S.ttg[card.id] = n; Store.save();
     if (typeof UI !== 'undefined' && UI.boosterOpen) UI.boosterOpen(this, card, n, pk);
@@ -703,7 +707,7 @@ function tmapZoneName(m) { const S = Store.data; return m.hidden && !(S.unlocked
 // its head, a Dofus egg glowing lime in the middle with the logo's swirl turning in it, fireflies drifting up around it.
 // Its glow warms as the count goes down (lime, yellow-green, gold); the egg flares when the number strikes (u 0.12).
 const CD_HEAT = ['#b6f04a', '#d8ec4a', '#f5c542'];
-const CD_LEAVES = ['#3fae3a', '#7cd04a', '#2e8b3a', '#a8e05a', '#5cbf3a'];
+const CD_LEAVES = ['#5aa45a', '#83bb68', '#4f9460', '#9cc47c', '#6db064'];   // (0.98.2: softer greens, the pure ones jumped out of the emblem)
 function cdEgg(ctx, w, h) {   // an egg, its widest part low, drawn around 0 (top -h, bottom h * 0.85)
   ctx.beginPath(); ctx.moveTo(0, -h); ctx.bezierCurveTo(w * 0.62, -h, w, -h * 0.25, w, h * 0.18); ctx.bezierCurveTo(w, h * 0.62, w * 0.55, h * 0.85, 0, h * 0.85);
   ctx.bezierCurveTo(-w * 0.55, h * 0.85, -w, h * 0.62, -w, h * 0.18); ctx.bezierCurveTo(-w, -h * 0.25, -w * 0.62, -h, 0, -h); ctx.closePath();
@@ -721,7 +725,7 @@ function cdMedal(ctx, R, u, n, t) {
   const wreath = (N, rr, s, spin, off) => {
     for (let i = 0; i < N; i++) {
       const an = i / N * TAU + t * spin + off, sw = Math.sin(t * 2.2 + i * 1.7) * 0.18;
-      ctx.save(); ctx.rotate(an); ctx.translate(0, -rr); ctx.rotate(-0.55 + sw); cdLeaf(ctx, s * (0.85 + 0.3 * ((i * 7) % 5) / 5), CD_LEAVES[(i * 3) % CD_LEAVES.length]); ctx.restore();
+      ctx.save(); ctx.globalAlpha *= 0.72; ctx.rotate(an); ctx.translate(0, -rr); ctx.rotate(-0.55 + sw); cdLeaf(ctx, s * (0.85 + 0.3 * ((i * 7) % 5) / 5), CD_LEAVES[(i * 3) % CD_LEAVES.length]); ctx.restore();
     }
   };
   wreath(20, R * 0.98, R * 0.36, 0.22, 0);
@@ -773,12 +777,20 @@ function cdMedal(ctx, R, u, n, t) {
   }
   ctx.restore();
 }
-// a leaf (the logos' leaves: the countdown's wreath, GO!'s burst, the panels, the victory): a pointed leaf with its midrib, drawn around 0, length s
-function cdLeaf(ctx, s, col) {
-  ctx.fillStyle = '#0f2a06'; ctx.beginPath(); ctx.moveTo(-s * 0.55, 0); ctx.quadraticCurveTo(0, -s * 0.36, s * 0.55, 0); ctx.quadraticCurveTo(0, s * 0.36, -s * 0.55, 0); ctx.fill();
-  ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-s * 0.47, 0); ctx.quadraticCurveTo(0, -s * 0.28, s * 0.47, 0); ctx.quadraticCurveTo(0, s * 0.28, -s * 0.47, 0); ctx.fill();
-  ctx.strokeStyle = 'rgba(15,42,6,0.8)'; ctx.lineWidth = Math.max(1, s * 0.05); ctx.beginPath(); ctx.moveTo(-s * 0.4, 0); ctx.lineTo(s * 0.4, 0); ctx.stroke();
+// a leaf (the logos' leaves: the countdown's wreath, GO!'s burst, the victory), drawn around 0, length s. 0.98.2 (a dark outline
+// round a flat colour: raw, they jumped out): a picture made once per colour: feathered edges, lit along one side, a faint midrib
+const _cdLeafC = new Map();
+function cdLeafPic(col) {
+  let c = _cdLeafC.get(col); if (c) return c;
+  const W = 128, H = 72, shape = (g, k) => { g.beginPath(); g.moveTo(-W * 0.48 * k, 0); g.quadraticCurveTo(0, -H * 0.6 * k, W * 0.48 * k, 0); g.quadraticCurveTo(0, H * 0.6 * k, -W * 0.48 * k, 0); };
+  c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d'); g.translate(W / 2, H / 2);
+  g.fillStyle = col; g.globalAlpha = 0.2; for (let i = 0; i < 6; i++) { shape(g, 1 - i * 0.055); g.fill(); }   // (shrinking layers: an edge that fades out)
+  g.globalAlpha = 1; g.globalCompositeOperation = 'source-atop';
+  const lit = g.createLinearGradient(0, -H * 0.3, 0, H * 0.3); lit.addColorStop(0, 'rgba(255,255,225,0.34)'); lit.addColorStop(0.5, 'rgba(255,255,225,0)'); lit.addColorStop(1, 'rgba(10,40,20,0.3)'); g.fillStyle = lit; g.fillRect(-W / 2, -H / 2, W, H);
+  g.strokeStyle = 'rgba(245,255,215,0.22)'; g.lineWidth = 2.5; g.lineCap = 'round'; g.beginPath(); g.moveTo(-W * 0.38, 0); g.lineTo(W * 0.38, 0); g.stroke();
+  _cdLeafC.set(col, c); return c;
 }
+function cdLeaf(ctx, s, col) { ctx.drawImage(cdLeafPic(col), -s * 0.56, -s * 0.315, s * 1.12, s * 0.63); }
 // 0.98: GO!'s swords are the Épée Royale du Bouftou (client item 2440, picture 6/30, rendered from its vector art at 640 px:
 // icons3 'go_sword', tools/assets/build_iconhd091.py gosword), drawn like cdSword around its guard, blade up, tip at
 // -0.8 L; the left one mirrored; the glint = the picture again, added, flashing as the light runs. cdSword if it is missing

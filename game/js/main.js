@@ -27,7 +27,8 @@ const Input = {
     });
     window.addEventListener('keyup', e => this.keys.delete(e.code));
     window.addEventListener('blur', () => { this.keys.clear(); Game.autoPause(); });
-    document.addEventListener('visibilitychange', () => { if (document.hidden) Game.autoPause(); });
+    // (0.98.2: a phone locked or in the background: silence at once, from the page's own signal; on a PC a hidden tab plays on)
+    document.addEventListener('visibilitychange', () => { if (document.hidden) Game.autoPause(); if (window.RSAndroid || this.dev === 'touch') { if (document.hidden) Audio2.halt(); else Audio2.resume(); } });
     const ts = (e) => {
       Audio2.init(); Audio2.resume(); this.dev = 'touch';
       if (Game.state !== 'run') return;
@@ -344,7 +345,9 @@ const Game = {
     // world zoom: show ~680 world px vertically (min 560 wide)
     this.zoomBase = Math.min(this.ch / 600, this.cw / 620) * 0.76;   // 0.22: about 25% more of the world around the character (0.65: 5 % further out)
     if (!this._zk) this._zk = this.zoomK(); this.applyZoom();   // (0.95: × the options' camera distance, easeZoom)
-    this.ui = clamp(Math.min(this.cw / 1280, this.ch / 720) * 1.0, 0.7, 3);   // (0.85: up to 4K = x3, the same proportions as QHD)
+    // (0.85: up to 4K = x3, the same proportions as QHD. 0.98.2: phones: read from the buffer alone, 14 u came out at 5 CSS px upright,
+    // 8 lying down; the floor: at most 0.85 CSS px a unit, as much as still leaves 560 x 480 units on the screen)
+    this.ui = clamp(Math.max(Math.min(this.cw / 1280, this.ch / 720), this.dpr * Math.min(0.85, w / 560, h / 480)), 0.7, 3);
     // DOM menus: designed for 1280x720 (16:9), scaled up uniformly on bigger screens (never shrunk: phones keep their layout)
     const uiz = clamp(Math.min(w / 1280, h / 720), 1, 3);   // (0.85: 3 = 4K UHD, every menu keeps its 16:9 proportions)
     if (uiz !== this._uiz) { this._uiz = uiz; document.documentElement.style.setProperty('--uiz', uiz.toFixed(3)); }
@@ -403,7 +406,7 @@ const Game = {
       if (sp > 1) { for (let i = 0; i < sp; i++) { if (UI.modalOpen() && this.debug.bot) UI.botPick(); if (!this.paused && !UI.modalOpen()) R.update(1 / 60); } this._fc = (this._fc || 0) + 1; if (this._fc % 4 === 0 || !this.debug.nodraw) R.draw(ctx); }
       else {
         if (R.tofuShowUntil && performance.now() >= R.tofuShowUntil) { R.tofuShowUntil = 0; Audio2.stopJingle(0.6); for (const m of R.mobs) if (m._sh) { m.sh = m._sh; m._sh = null; } }
-        if (UI.modalOpen() && this.debug.bot) UI.botPick(); if (R.cine && !this.paused) R.tickCine(dt); else if (!this.paused && !UI.modalOpen() && !R.tofuShowUntil && !(R.reviveHold > performance.now()) && !R.frozenByHit()) R.update(dt * R.timeK()); if (this.mustDraw(R)) R.draw(ctx);   // (0.60: hit-stop / slow motion, juice.js)   // (a cinematic freezes the run: events.js)
+        if (UI.modalOpen() && this.debug.bot) UI.botPick(); if (R.cine && !this.paused) R.tickCine(dt); else if (!this.paused && !UI.modalOpen() && !R.tofuShowUntil && !(R.reviveHold > performance.now()) && !R.frozenByHit()) { R.update(dt * R.timeK()); if (R.easeLeft > 0) R.easeLeft -= dt; } if (this.mustDraw(R)) R.draw(ctx);   // (0.60: hit-stop / slow motion, juice.js)   // (a cinematic freezes the run: events.js)
       }
       if (Input.padPause() && !this._padP) { this._padP = true; this.togglePause(); } else if (!Input.padPause()) this._padP = false;
       const pd = Input.padDodge(); if (pd && !this._padD && !this.paused && !UI.modalOpen()) R.player.dodge(); this._padD = pd;
@@ -496,15 +499,16 @@ const Game = {
     // 0.95: the beginners' help, once in the chat; Ganymède's tutorial 5 s of run time into the zone (after the
     // countdown: the run clock is frozen during it), until seen to its end (Store.data.tuto); ?gany=<zone|hard> shows one
     const tut = id => run.after(this.debug.gany ? 1 : 5, () => { if (this.run === run && !run.over && !run.player.dead && !UI.modalOpen()) UI.ganyScene(run, id); });
+    // (0.98.2: Run.bless on top of it: both in one line; bv its figures)
+    const G = this.C.gany || {}, B = G.bless, TA = G.taunt, bv = run.bless ? { p: Math.round(B.dmg * 100), k: B.bread, n: B.maps } : null;
     if (run.aid) {
-      run.chat(T('aid_info', { g: L(this.C.gany.name), map: L(run.map.name), h: Math.round((1 - run.aid.hp) * 100), d: Math.round((1 - run.aid.dmg) * 100) }), '#9cff9a');
+      run.chat(T(bv ? 'bless_all' : 'aid_info', Object.assign({ g: L(G.name), g2: L(G.name), map: L(run.map.name), h: Math.round((1 - run.aid.hp) * 100), d: Math.round((1 - run.aid.dmg) * 100) }, bv)), '#9cff9a', bv ? 28 : undefined);
       if (!(Store.data.tuto || {})[run.map.id] && !this.debug.bot && !this.debug.gany && (!this.debug.autostart || this.debug.tuto)) tut(run.map.id);   // (the tests' autostart runs: only with ?tuto=1)
     }
     if (this.debug.gany) tut(this.debug.gany);
-    // 0.98.2: the blessing (Run.bless), once a run in the chat, apart from the help above; on its end's card Dark Vlad takes it
-    // away: his scene once, 5 s in, the first visit in Normal; the chat's line in every run until the zone is won in Normal
-    const G = this.C.gany || {}, B = G.bless, TA = G.taunt;
-    if (run.bless) { const n = { g: L(G.name), n: B.maps }; run.chat(T('bless_dmg', Object.assign({ p: Math.round(B.dmg * 100) }, n)), '#ffe08a', 28); run.chat(T('bless_bread', Object.assign({ k: B.bread }, n)), '#ffd2a0', 28); }
+    // 0.98.2: the blessing (Run.bless), once a run in the chat, its own line once the help above is gone; on its end's card Dark
+    // Vlad takes it away: his scene once, 5 s in, the first visit in Normal; the chat's line in every run until the zone is won in Normal
+    if (bv && !run.aid) run.chat(T('bless_info', Object.assign({ g: L(G.name) }, bv)), '#ffe08a', 28);
     if (TA && run.map.id === TA.map && !run.hard && !run.infinite && !(Store.data.clearedNormal || {})[TA.map]) {
       const gone = () => { if (this.run === run && !run.over) run.chat(T('bless_end', { g: L(G.name), v: L(this.C.bosses.dark_vlad.name) }), '#ff8a7a', 28); };
       const S = Store.data, first = !(S.tuto || {}).taunt && (Prog.st().mapRuns || {})[TA.map] <= 1 && !this.debug.bot && (!this.debug.autostart || this.debug.tuto);   // (mapRuns counts this run: an old profile that already came here has no scene)
@@ -576,7 +580,7 @@ const Game = {
     const R = this.run; if (R.portalRun) Prog.add('portals');
     this.state = 'tot';
     Tot.start(R, (won, rw) => {
-      this.state = 'run';
+      this.state = 'run'; R.easeIn();
       if (won) {
         rw = rw || {};
         // ToT's Dofus only for a flawless 3-0; once it is owned (or after a mistake) he gives a bonus for the run, or very rarely a Dragodinde

@@ -1,7 +1,61 @@
 # Changelog (player-visible changes)
 
 From the Git history and the technical notes. The version shown in
-game is **0.98.2** (0.94 was never released on its own: its changes come with 0.95).
+game is **0.98.3** (0.94 was never released on its own: its changes come with 0.95).
+
+## 0.98.3
+
+Balance
+- Hard mode: monsters and bosses have +35 % life instead of +37.5 %.
+- Objects on the ground no longer have a hidden x1.15: the rates are now the real ones, so Recall Potions, Fairies, Hourglasses,
+  powers and the other objects fall 13 % less often than they did.
+- Bread drops at a real 0.300 % a monster (x Luck), three times that with Ganymède's blessing. It was 0.259 %.
+- **Manuel du Tailleur**: a real rate on every monster, 0.03 %, about one whole run in ten, instead of one roll a run. On a boss it
+  goes by the boss's real power: 1 % on the weakest, 5 % on the Goultard.
+- TTG cards: 55 % common, 30 % rare, 11.8 % epic, 3.2 % legendary.
+
+What's new
+- **Gladiatrool Entry Token**: at 7:30 a token appears anywhere on the map, once a run, shown on the minimap. Its wheel gives a
+  characteristic you do not have yet, in a place of its own: it never takes one of your 5. It can be levelled up like the others.
+- **Official TTG cards and packs**: the 464 cards and 48 packs are now Ankama's own pictures. A pack holds its theme: a family's
+  cards (Gobballs, Blops, Chafers…) or a rarity's. The packs come in a random order and every card can be found.
+- The pack opening is new: the pack falls spinning, trembles as stars close in, tears open in a flash with its colours splitting,
+  then the card rises and turns over among stars.
+
+Quality of life
+- The **Enutrof's thrown shovels** are bigger, with a gold rim and halo, kamas turning round them and a wake of gold.
+- The **Trool Fair Token** stands out in the choices: a dark blue rim and sparks.
+- The **boss life bars** at the top are redrawn in the XP bar's bronze and gold, the life lost melting away, embers inside. The
+  Tofuzmo's green is a little deeper.
+- The XP bar ends in a plain round edge instead of a gold cube.
+- After a choice or a meeting with ToT, the game comes back from a near stop to full speed over half a second: your keys are yours
+  again before the monsters move.
+- In the shop's spells, a spell that fuses with a weapon shows that weapon's icon beside the fusion's, which now stands in the middle.
+- Hats, Cloaks, Shields and Pets get an **Owned** filter beside the search, each tab its own; the two work together.
+- The Rogue's **Bomberfus** are 1.5 times bigger.
+- The keyboard and controller cursor goes away as soon as the mouse is used, and comes back with them. It no longer stays over a
+  window on the button behind it.
+- The frames of the messages (events, bosses, relics, a Dofus found) are in Dofus Retro's brown instead of green, without their
+  leaves, with lights running along their edge and tiny sparks like the menus' cursor; a relic's frame throws sparks out of both
+  sides, and its word « Relic » is a plain word in the chat's lettering.
+- The Sablier's timer is ice blue and high on the screen, little hourglasses turning round it among hanging crystals.
+- A spell fusion's name is back in violet, in capitals in the chat's lettering, its letters splitting into red and cyan, sparks
+  all round it.
+- The leaves of the countdown, GO! and the victory are softer and no longer jump out of the picture.
+- **Phones**: the in-game interface is much bigger, upright and lying down: spells, heart, chat, map, the touch joystick.
+  Upright, the spells sit under the timer and the chat over the heart, across the screen. Ganymède's and Dark Vlad's scenes
+  have bigger lines; lying down, the picture sits beside the text.
+- In the chat, the beginners' help and Ganymède's blessing share one message on the first three maps; after that the blessing has
+  its own.
+
+Fixes
+- The relics' tip said six per run: five can fall.
+- The blue light round the message frames passes behind their gold diamonds.
+- The last line of the end screen (« Your ghost… », « You beat the final boss… ») has the colour of the line beside the grade.
+- In dark mode, the monsters' names are white in the TTG binder and when a pack opens.
+- The manuals give the real odds: Luck where it counts, the new rates, the real rarity of the TTG cards.
+- Phones: the music and sounds stop at once when the screen is locked or the game goes to the background (the Android app kept
+  playing).
 
 ## 0.98.2
 

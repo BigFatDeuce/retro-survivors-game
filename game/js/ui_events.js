@@ -244,25 +244,29 @@ Object.assign(UI, {
   // ------------------------------------------------ a TTG booster (0.37: the real pack picture; it glows and shakes harder
   // and harder in turning light rays, bursts open in a flash and sparks, the card rises spinning out of it, then flips
   // in rays of its rarity's colour)
+  // 0.98.3: the official pack: it falls spinning and lands, trembles while stars close in, tears open in a flash with its colours
+  // split (CSS drop-shadows on the stage), the card rises and turns over in rays of its rarity's colour, stars round it, a light across it
   boosterOpen(R, card, n, pk = 0) {
-    const dup = n > 1, B = SPR.boosters || { cols: 5, n: 14 }, rows = Math.ceil(B.n / B.cols), i = pk % B.n;
-    const pos = `${(i % B.cols) / (B.cols - 1) * 100}% ${Math.floor(i / B.cols) / (rows - 1) * 100}%`;
-    const half = (c) => h('div', { class: 'bp-half ' + c, style: { backgroundImage: `url(${vurl('assets/ui/boosters.webp')})`, backgroundSize: `${B.cols * 100}% ${rows * 100}%`, backgroundPosition: pos } });
-    const face = h('div', { class: 'ttg-face' }, ttgCard(card));
-    const cardEl = h('div', { class: 'ttg-card' }, h('div', { class: 'ttg-back' }, 'TTG'), face);
+    const dup = n > 1, r = card.r || 0, url = vurl(`assets/ttg/p${pk}.webp`);
+    const half = (c) => h('div', { class: 'bp-half ' + c, style: { backgroundImage: `url(${url})` } });
+    const shown = ttgCard(card); shown.append(h('i', { class: 'bp-sheen' }));
+    const face = h('div', { class: 'ttg-face' }, shown), cardEl = h('div', { class: 'ttg-card' }, h('div', { class: 'ttg-back' }, 'TTG'), face);
     const pack = h('div', { class: 'ttg-pack' }, half('top'), half('body'));
-    const rays = h('div', { class: 'bp-rays' }), flash = h('div', { class: 'bp-flash' }), sparks = h('div', { class: 'bp-sparks' });
-    for (let k = 0; k < 28; k++) { const a = Math.random() * TAU, d = 120 + Math.random() * 160; sparks.appendChild(h('i', { style: { '--dx': Math.cos(a) * d + 'px', '--dy': Math.sin(a) * d + 'px', '--s': (0.5 + Math.random()).toFixed(2), animationDelay: (Math.random() * 0.15).toFixed(2) + 's' } })); }
+    const rays = h('div', { class: 'bp-rays' }), flash = h('div', { class: 'bp-flash' }), sparks = h('div', { class: 'bp-sparks' }), gather = h('div', { class: 'bp-gather' }), stars = h('div', { class: 'bp-stars' });
+    for (let k = 0; k < 36; k++) { const a = Math.random() * TAU, d = 120 + Math.random() * 170; sparks.appendChild(h('i', { style: { '--dx': Math.cos(a) * d + 'px', '--dy': Math.sin(a) * d + 'px', '--s': (0.5 + Math.random()).toFixed(2), animationDelay: (Math.random() * 0.15).toFixed(2) + 's' } })); }
+    for (let k = 0; k < 14; k++) { const a = k * TAU / 14; gather.appendChild(h('i', { style: { '--dx': Math.cos(a) * 190 + 'px', '--dy': Math.sin(a) * 150 + 'px', animationDelay: (k * 0.07).toFixed(2) + 's' } })); }
+    for (let k = 0, N = [8, 10, 14, 20][r]; k < N; k++) { const a = k * TAU / N; stars.appendChild(h('i', { style: { left: 50 + Math.cos(a) * 46 + '%', top: 50 + Math.sin(a) * 47 + '%', '--s': (0.6 + Math.random() * 0.8).toFixed(2), animationDelay: (-Math.random() * 1.8).toFixed(2) + 's' } })); }
     const RC = ['#d8d8d8', '#5fb8ff', '#c77dff', '#ffd24a'];
-    const stage = h('div', { class: 'ttg-stage', style: { '--rc': RC[card.r || 0] } }, rays, pack, cardEl, sparks, flash);
-    const msg = h('div', { class: 'ttg-msg' + (dup ? ' dup' : '') }), ok = btn(T('continue'), () => this.closeModal(), 'orange big'); ok.style.visibility = 'hidden';
-    const el = h('div', { class: 'window modal booster' }, h('div', { class: 'title' }, T('booster')), h('div', { class: 'content' }, stage, msg, h('div', { class: 'start-row' }, ok)));
-    this.openModal(el); this.levelUpOpen = true; Audio2.play('pages', 0.7); stage.classList.add('charge');
+    const stage = h('div', { class: 'ttg-stage', style: { '--rc': RC[r] } }, rays, gather, pack, cardEl, stars, sparks, flash);
+    const msg = h('div', { class: 'ttg-msg' + (dup ? ' dup' : '') }), nm = h('b', { class: 'ttg-nm' }), ok = btn(T('continue'), () => this.closeModal(), 'orange big'); ok.style.visibility = 'hidden';
+    const el = h('div', { class: 'window modal booster' }, h('div', { class: 'title' }, T('booster')), h('div', { class: 'content' }, stage, nm, msg, h('div', { class: 'start-row' }, ok)));
+    this.openModal(el); this.levelUpOpen = true; Audio2.play('pages', 0.7); stage.classList.add('land');
     setTimeout(() => { Audio2.play('rapid_swish', 0.5); Audio2.boosterSfx('riser'); }, 200);
+    setTimeout(() => { stage.classList.remove('land'); stage.classList.add('charge'); }, 600);
     setTimeout(() => { stage.classList.add('burst'); pack.classList.add('torn'); Audio2.play('rapid_swish', 0.8); Audio2.boosterSfx('burst'); Audio2.sfx('EVENT', 0.7); }, 1700);
-    setTimeout(() => { cardEl.classList.add('flip'); stage.classList.add('reveal', 'r' + (card.r || 0)); Audio2.play('pages', 0.6); }, 2500);
+    setTimeout(() => { cardEl.classList.add('flip'); stage.classList.add('reveal', 'r' + r); Audio2.play('pages', 0.6); }, 2500);
     setTimeout(() => {
-      msg.textContent = dup ? T('ttg_dup', { c: n }) : T('ttg_new', { n: L(card.name) });
+      nm.textContent = L(card.name) + ' · No.' + card.id; msg.textContent = dup ? T('ttg_dup', { c: n }) : T('ttg_new', { n: L(card.name) });
       if (dup) { el.classList.add('angry'); Audio2.play('grrr2', 0.7); Audio2.blip('wrong'); } else { Audio2.play('stars', 0.8); Audio2.ui('level', 0.7); }
       ok.style.visibility = 'visible'; Nav.el = null;
     }, 3200);

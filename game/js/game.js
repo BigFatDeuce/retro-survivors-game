@@ -244,11 +244,11 @@ class Run {
     this.cones = []; this.digs = []; this.cawottes = []; this.orbiters = []; this.summons = []; this.traps = []; this.pickups = []; this.effects = []; this.particles = [];
     this.texts = []; this.rings = []; this.teles = []; this.chats = [];
     this.grid = new Grid(72); this.dmgBy = {}; this.dmgTaken = 0;
-    this.spells = []; this.passives = {};
+    this.spells = []; this.passives = {}; this.bonusPassive = null; this.gladiaOut = false;   // (0.98.3: the characteristic of the Gladiatrool's token, outside the 5, and the token's one roll a run: gspells.js)
     // every Dofus found once stays active in all later runs (like the shop scrolls)
     { const own = (typeof Store !== 'undefined' && Store.data && Store.data.dofus) || {}; this.dofus = (C.dofus || []).filter(d => own[d.id]); }
     this.totBuff = null; this.moveOff = false; this.achToasts = [];
-    { const M = C.manuel, dbg = typeof Game !== 'undefined' && Game.debug && Game.debug.manuel; this.manuelAt = M && (dbg || Math.random() < M.chance) ? (dbg ? 3 : rand(M.t0, M.t1)) : null; }
+    this.manuelAt = typeof Game !== 'undefined' && Game.debug && Game.debug.manuel ? 3 : null;   // (a test's Manuel du Tailleur, at 3 s)
     this.idleT = 0;
     this.pendingLevels = 0; this.over = false; this.victory = false; this.paused = false;
     this.spawnT = 0; this.bossQueue = (this.map.bosses || []).map(b => ({ t: b[0] * 60, id: b[1] }));
@@ -800,23 +800,23 @@ class Run {
     if (d.id === 'bandit_manchot' || d.jackpot) { const J = d.jackpot || [30, 60], k = this.addKamas(randi(J[0], J[1])); this.announce(T('jackpot_t'), T('jackpot', { n: k }), '#ffd700'); }
     if (d.id === 'wabbit_gm') { this.addKamas(100); this.announce('Wabbit GM', T('gm_banned'), '#ff9de2'); Store.data.easter.gm = 1; }
     if (d.xp > 0) { if (m.elite) this.dropGem(m.x, m.y, this.bigAmber(), 1); else if (!this.RUN.amber) this.dropGem(m.x, m.y, d.xp * (m.xpm || 1)); else for (let r = this.amberRate(); r > 0; r--) if (r >= 1 || Math.random() < r) this.dropGem(m.x + rand(-8, 8), m.y + rand(-6, 6), this.normalAmber()); }   // 0.81: an amber's worth = the run's clock only (same on every map), each map drops them at its own rate   // 0.60: an elite's amber = a big amber
-    const luck = this.stats.luck, IK = luck * (this.RUN.itemDropK || 1);   // (0.60: itemDropK = every object on the ground x1.15)
+    const luck = this.stats.luck;
     if (!this.map.noKamas && Math.random() < (this.RUN.kamaDrop || 0.05) * (this.hard ? this.hard.kamaDrop || 1 : 1) * luck) {   /* (0.94: Difficile x1.5, C.hard.kamaDrop) */ const KC = this.RUN.kamaCoins || [1, 1], n = randi(KC[0], KC[1]); for (let k = 0; k < n; k++) this.dropPickup('kama', m.x + rand(-14, 14), m.y + rand(-10, 10), randi(1, 3 + this.mapIdx)); }   // 0.60: 1 to 3 coins
-    if (Math.random() < (this.RUN.breadRate || 0.006) * IK * (this.bless ? this.bless.bread : 1)) this.dropPickup('bread', m.x, m.y, this.breadKind());
-    if (!this.map.noKamas && Math.random() < (this.RUN.goldRate || 0) * IK) this.dropPickup('gold', m.x, m.y);   // Minerai d'Or (rare object: Chance helps)
-    if (Math.random() < 0.0012 * IK && !this.pickups.some(p => p.kind === 'batofu')) this.dropPickup('batofu', m.x, m.y);   // Plume du Batofu
+    if (Math.random() < (this.RUN.breadRate || 0.006) * luck * (this.bless ? this.bless.bread : 1)) this.dropPickup('bread', m.x, m.y, this.breadKind());
+    if (!this.map.noKamas && Math.random() < (this.RUN.goldRate || 0) * luck) this.dropPickup('gold', m.x, m.y);   // Minerai d'Or (rare object: Chance helps)
+    if (Math.random() < 0.0012 * luck && !this.pickups.some(p => p.kind === 'batofu')) this.dropPickup('batofu', m.x, m.y);   // Plume du Batofu
     const KB = this.C.kamaBoost;
-    if (KB && Math.random() < KB.rate * IK && this.kboostUntil < this.time && !this.pickups.some(p => p.kind === 'kamaboost')) this.dropPickup('kamaboost', m.x, m.y);
-    if (Math.random() < 0.0012 * IK) this.dropPickup('rappel', m.x, m.y);
-    if (Math.random() < 0.0008 * IK) this.dropPickup('fee', m.x, m.y);
-    if (Math.random() < 0.0009 * IK) this.dropPickup('sablier', m.x, m.y);
-    { const H = this.C.houx; if (H && Math.random() < H.rate * IK) this.dropPickup('houx', m.x, m.y); }   // 0.97: the Bague Houx (C.houx.rate: a third of a spell scroll's)
-    for (const k in this.C.drops) { const dr = this.C.drops[k]; if (Math.random() < dr.rate * IK && !this.pickups.some(p => p.kind === 'power' && p.v === k)) this.dropPickup('power', m.x, m.y, k); }
+    if (KB && Math.random() < KB.rate * luck && this.kboostUntil < this.time && !this.pickups.some(p => p.kind === 'kamaboost')) this.dropPickup('kamaboost', m.x, m.y);
+    if (Math.random() < 0.0012 * luck) this.dropPickup('rappel', m.x, m.y);
+    if (Math.random() < 0.0008 * luck) this.dropPickup('fee', m.x, m.y);
+    if (Math.random() < 0.0009 * luck) this.dropPickup('sablier', m.x, m.y);
+    { const H = this.C.houx; if (H && Math.random() < H.rate * luck) this.dropPickup('houx', m.x, m.y); }   // 0.97: the Bague Houx (C.houx.rate: a third of a spell scroll's)
+    for (const k in this.C.drops) { const dr = this.C.drops[k]; if (Math.random() < dr.rate * luck && !this.pickups.some(p => p.kind === 'power' && p.v === k)) this.dropPickup('power', m.x, m.y, k); }
     if (m.elite && !m.noChest) { this.dropPickup('chest', m.x, m.y, 1); }
     if (m.elite) this.maybeEliteRelic(m);   // 0.60: elites may drop a relic (extras.js)
     if (d.special) this.maybeRelic(m, true);   // 0.38: the mini-bosses with a big life bar (Tofuzmo, Coffre Animé)
-    // the Manuel du Tailleur: rolled once per run (about one full run in ten), dropped by the first monster killed after its time
-    if (this.manuelAt !== null && this.time >= this.manuelAt) {
+    // the Manuel du Tailleur (0.98.3): a rate on every monster, about one whole run in ten (C.manuel.rate; it was one roll a run)
+    if (Math.random() < this.C.manuel.rate || (this.manuelAt !== null && this.time >= this.manuelAt)) {
       this.manuelAt = null; this.dropPickup('manuel', m.x, m.y);
       this.chat(T('tailor_drop', { n: L(this.C.manuel.name) }), '#ff9cf0'); Audio2.sfx('EVENT', 0.45);
       this.rings.push({ x: m.x, y: m.y, r0: 10, r1: 70, t0: this.time, dur: 0.6, color: '#ff9cf0' });
@@ -843,7 +843,7 @@ class Run {
     this.maybeRelic(m); this.maybeCoffre(m);
     if (m.endless) Prog.add('endlessBosses');
     // 0.37: the Endless final bosses drop the Manuel du Tailleur; 0.95 (was 50 %): 5 % from 10:00, +2.5 % per minute after (C.infinite.manuelP / manuelStep)
-    // 0.98: every boss may drop it, by its place in the game (C.manuel.boss: Bouftou Royal 1 % ... Goultard 5 %; a boss of
+    // 0.98: every boss may drop it, by its power (0.98.3, C.manuel.boss: the weakest 1 % ... Goultard 5 %; a boss of
     // no zone's list: its zone's final boss's chance); an Endless one keeps the better of the two
     const IM = this.C.infinite, mw = Math.max(0, Math.floor((this.time - (IM.bossT || 600)) / 60)), MB = (this.C.manuel && this.C.manuel.boss) || {};
     const mp = d.finalGroup && !fin ? 0 : MB[d.id] !== undefined ? MB[d.id] : MB[(this.map.bosses[this.map.bosses.length - 1] || [])[1]] || 0;   // (the four Kwakeres: one roll, the last one)
@@ -1011,7 +1011,7 @@ class Run {
     // chests (ownedOnly) keep the old weight: only the level-up choices are concerned
     this.fusionOptions(opts, ownedOnly);   // 0.25 (weapons.js)
     this.sfusionOptions(opts);   // 0.60: spell fusions (sfusions.js), chests included
-    const pcount = Object.keys(this.passives).length;
+    const pcount = Object.keys(this.passives).length - (this.bonusPassive ? 1 : 0);   // (0.98.3: the bonus one holds none of the 5 places)
     for (const p of this.C.passives) {
       const lv = this.passives[p.id] || 0;
       if (lv >= p.max) continue;
@@ -1297,6 +1297,7 @@ class Run {
       }
       p.x += p.vx * dt; p.y += p.vy * dt;
       if (p.spin) p.rot = (p.rot || 0) + dt * 14;
+      if (p.coins && (p._cT = (p._cT || 0) - dt) <= 0) { p._cT = 0.09; this.particles.push({ x: p.x + rand(-8, 8), y: p.y + rand(-8, 8), vx: rand(-30, 30), vy: rand(-50, -10), t: 0, life: rand(0.3, 0.5), s: rand(3, 5), round: 1, c: pick(['#ffd700', '#ffe866', '#f0b020']) }); }   // (0.98.3: the shovels' wake of gold)
       if (p.trail) this.chaosTrail(p, dt);   // (0.96: the Boule de Chaos, gspells.js)
       let removed = false;
       for (const m of this.grid.query(p.x, p.y + 10, p.size + 30, _qProj)) {
@@ -1624,6 +1625,7 @@ class Run {
       case 'tmap': this.gotTmap(); break;
       case 'nowelgift': this.nowelGift(); break;   // (0.68: nowel.js)
       case 'trool': this.troolTicket(); break;
+      case 'gladia': this.gladiaToken(); break;   // (0.98.3: gspells.js)
       case 'booster': this.openBooster(p.pk || 0); break;
       case 'plumec': { Store.data.plumes = (Store.data.plumes || 0) + 1; Store.save(); this.chat(T('plumec', { n: Store.data.plumes }), '#c9a0ff'); Audio2.ui('item', 0.8); Prog.check(this); } break;
       case 'manuel': {
@@ -1997,7 +1999,7 @@ const SFX_DIE = {
   tikokoko: 'Palmifleur_Die', kokoko: 'Palmifleur_Die', nodkoko: 'Palmifleur_Die', boomba: 'Musafa_Die', nakunbra: 'Sergent_Zoth_Die', canon: 'Tonneau_Die', coffre: 'Tonneau_Die',
 };
 // 0.92: a drop's room on the ground (world px, its picture's half-size), Run.placeDrop
-const DROP_R = { kama: 8, bread: 11, chest: 22, nowelgift: 30, booster: 18, manuel: 18, tmap: 16, dofus: 16, relic: 16, power: 13, plumec: 14, trool: 16, kamaboost: 13, rappel: 13, fee: 13, sablier: 13, houx: 13 };
+const DROP_R = { kama: 8, bread: 11, chest: 22, nowelgift: 30, booster: 18, manuel: 18, tmap: 16, dofus: 16, relic: 16, power: 13, plumec: 14, trool: 16, gladia: 20, kamaboost: 13, rappel: 13, fee: 13, sablier: 13, houx: 13 };
 const SFX_BOSS_DIE = { le_chouque: 'Le_Flib_Die', flib_capitaine: 'Le_Flib_Die', boombata: 'Musafa_Die', chene_mou: 'Fecorce_Die', minotoror: 'Kimbo_Die', minotot: 'Kimbo_Die', dark_vlad: 'Tynril_Die', wa_wabbit: 'Rasboul_Majeur_Die', dragon_cochon: 'Kimbo_Die', bouftou_royal: 'Bitouf_Des_Plaines_Die' };
 const SFX_DIE_ALL = [...new Set([...Object.values(SFX_DIE), ...Object.values(SFX_BOSS_DIE), 'Kralamour_Die', 'Tynril_Die'])];
 function dieSoundFor(d) {

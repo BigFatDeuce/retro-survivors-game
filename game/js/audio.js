@@ -14,12 +14,13 @@ const Audio2 = {
   // runs on requestAnimationFrame, which stops with a hidden page, so a track fading out kept playing; resume() brings
   // the wanted music back (a class theme playing is dropped, the music it ducked comes back instead)
   halt() {
+    this.halted = true;   // (0.98.2: nothing starts until resume: a track still loading, a fade, a timer)
     try { if (this.ctx && this.ctx.state === 'running') this.ctx.suspend(); } catch (e) { }
     const j = this._jingle; if (j) { this._jingle = null; j._want = false; this._ducked = false; }
     for (const a of this._els || []) { a._fadeTok = (a._fadeTok || 0) + 1; try { a.pause(); } catch (e) { } }
   },
   track(a) { const s = (this._els = this._els || new Set()); for (const e of s) if (e.paused && !e._want && e !== this.music) s.delete(e); s.add(a); return a; },   // (the media elements alive, for halt)
-  resume() { if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); if (this.music && this.music.paused && this.wantMusic && !this._ducked) { this.music._want = true; this.music.play().catch(() => { }); } },
+  resume() { this.halted = false; if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume(); if (this.music && this.music.paused && this.wantMusic && !this._ducked) { this.music._want = true; this.music.volume = Math.max(0, Math.min(1, this.musicVol)); this.music.play().catch(() => { }); } },   // (0.98.2: its volume too, a halted fade-in stayed low)
   setVolumes(m, s) {
     this.musicVol = m; this.sfxVol = s;
     if (this.sfxGain) this.sfxGain.gain.value = s;
@@ -296,7 +297,7 @@ const Audio2 = {
   _start(a, vol, fade) {
     a._want = true;
     a._fadeTok = (a._fadeTok || 0) + 1;
-    if (a.paused) { a.volume = 0; const p = a.play(); if (p) p.catch(() => { }); }
+    if (a.paused && !this.halted) { a.volume = 0; const p = a.play(); if (p) p.catch(() => { }); }
     this.fadeEl(a, vol, fade);
   },
   _stop(a, sec = 0) {
@@ -331,7 +332,7 @@ const Audio2 = {
     const end = () => { if (this._jingle === a) { this._jingle = null; a._want = false; this.unduck(); } };
     a.addEventListener('ended', end);
     a._want = true; a.volume = Math.max(0, Math.min(1, o.fx ? this.sfxVol : this.musicVol * 0.9)); a._fx = !!o.fx;
-    const p = a.play(); if (p) p.catch(() => { /* the blob fallback retries while still wanted */ });
+    if (this.halted) return a; const p = a.play(); if (p) p.catch(() => { /* the blob fallback retries while still wanted */ });
     return a;
   },
   stopJingle(sec = 0.25, keepDucked = false) {
@@ -352,11 +353,11 @@ const Audio2 = {
       if (triedBlob) return; triedBlob = true;
       fetch(url).then(r => r.blob()).then(b => {
         a.src = URL.createObjectURL(b);
-        if (a._want && !(a._role === 'music' && this._ducked)) { const p = a.play(); if (p) p.catch(() => { }); }
+        if (a._want && !this.halted && !(a._role === 'music' && this._ducked)) { const p = a.play(); if (p) p.catch(() => { }); }
       }).catch(() => { });
     });
     // never let an unwanted element make noise (late loads, autoplay retries)
-    a.addEventListener('playing', () => { if (!a._want) a.pause(); });
+    a.addEventListener('playing', () => { if (!a._want || this.halted) a.pause(); });
     a.src = url;
     return a;
   },

@@ -149,13 +149,14 @@ Icons and interface (atlas `icons3*.webp`; `build_icons20.merge` adds pictures t
 | `build_verdance098.py [Verdance-Bold.ttf]` | the announcements' font `assets/fonts/verdance.woff2` (Verdance Bold from `raw/fonts/verdance/`, + the accents, ß, Œ and punctuation it lacks, drawn in its style) |
 | `build_cinzel095.py Cinzel[wght].ttf` | the announcements' font `assets/fonts/cinzel.woff2` (Cinzel, OFL: weights 700–900, the 7 languages' Latin subset) |
 | `build_phoenix36.py` | the death screen's Phoenix statue (the original picture upscaled with `lib/esrgan.py`) |
-| `build_boosters38.py`, `boosters/build_boosters.py` | the booster pack atlas from the original pictures; a standalone generator of booster designs (`dist/boosters/`) |
+| `boosters/build_boosters.py` | a standalone generator of booster designs (`dist/boosters/`) |
 
 Bestiary, cards, worlds, sound:
 
 | tool | what it does |
 |---|---|
-| `build_art21.py [A] [+gfx,…]`, `build_art38.py [gfx…]`, `build_ttg34.py` | bestiary artworks from client vectors / from the sprite when there is no artwork; TTG cards. Never stop `build_art21` during its repack (it deletes the atlases first: `git checkout -- game/assets/art/`) |
+| `build_art21.py [A] [+gfx,…]`, `build_art38.py [gfx…]`, `build_ttg34.py` | bestiary artworks from client vectors / from the sprite when there is no artwork; the TTG card list (`work/ttg34.json`: do not re-run it for pictures, it would write the old atlases). Never stop `build_art21` during its repack (it deletes the atlases first: `git checkout -- game/assets/art/`) |
+| `build_ttg098.py` | the official TTG cards and packs (dofusretrotools.com, kept in `work/ttg98/`) -> `assets/ttg/c*.webp`, `p*.webp`, `SPR.boosters`; stops if a card's family or rarity differs from the site's |
 | `RES=3.0 build_worlds20.py <world>…` | worlds rendered from client maps (4096-px tiles + `SPR.worlds`); `build_vlad51.py`, `build_grobe54.py`, `build_flat068.py zone…` compose the hand-made plains; `build_frigost097.py` the Île de Frigost (laid out by hand in quarters from the client's snow pieces, toned down) |
 | `decormask087.py <world>\|all` | each world's decor mask and depth map (ground effects under the scenery, characters behind trees) |
 | `build_minis071.py [world…]` | the zones' mini maps |
@@ -211,6 +212,7 @@ Removed because their output format no longer exists or another tool does the jo
 - `build_runfb40.py` (20-fps runs, superseded by `build_move060.py`), `build_art20.py` (superseded by `build_art21.py`),
   `hd_gfx52.py` (map decor upscale, dropped in 0.52), `build_sounds.py` (needed scripts that never were in
   the repository; sounds come from `build_sfx060.py` / `fix_sounds27.py`).
+- `build_boosters38.py` (the 14 drawn packs' atlas, replaced in 0.98.3 by the official packs of `build_ttg098.py`).
 - Merged: `build_musha47.py` → `build_npc57.py` (`GFX=1153 ANIMS=staticR,bonusR,anim1R,anim2R … 12`);
   `build_dofus38.py`, `build_relics061.py`, `build_gift091.py` → `build_iconhd091.py dofus|relics|gift`.
 - Root scripts: `jouer_local.*` → `play_local.*`, `publier_cloudflare.bat` → `publish_cloudflare.*`; the Windows build's

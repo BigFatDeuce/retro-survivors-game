@@ -15,6 +15,7 @@ const Nav = {
   // (0.92: a menu opened from elsewhere starts on its default element, not where the cursor was the last time)
   forget(screen) { if (this.mem) delete this.mem[screen]; },
   set(e) {
+    if (e && this.byMouse) { this.hid = e; return; }   // (0.98.3: the mouse has the screen: kept for the next key, not shown)
     if (this.el) this.el.classList.remove('navfocus');
     if (e && e !== this.el) this.glidePop = performance.now();
     this.el = e; this.glide();
@@ -55,9 +56,13 @@ const Nav = {
     };
     this._glRaf = requestAnimationFrame(step);
   },
+  // 0.98.3: the indicators follow the device used last: the mouse hides the cursor (and remembers where it was); a key or
+  // the controller brings it back there (Nav.ensure). Nav.byMouse, set below this object and in poll
+  mouse() { this.byMouse = true; if (this.el) { this.hid = this.el; this.set(null); } },
   ensure() {
     const it = this.items();
     if (this.el && it.includes(this.el) && this.el.isConnected) return it;
+    if (this.hid && !this.byMouse) { const e = this.hid; this.hid = null; if (it.includes(e)) { this.set(e); return it; } }
     const M = !UI.modal && this.mem && this.mem[UI.screen], back = M && it.find(e => e.className.replace(' navfocus', '') === M.cls && (e.textContent || '').slice(0, 40) === M.txt);   // (0.60: where it was)
     // (0.92: an element marked data-nav-first takes the cursor when a menu opens: the shop's first sub-tab, the first class)
     const pref = back || it.find(e => e.hasAttribute('data-nav-first')) || it.find(e => e.classList.contains('sel')) || it.find(e => e.classList.contains('orange') || e.classList.contains('active')) || it[0] || null;   // (0.92: a '.sel' wins over an orange button met first — the run given up: Menu principal, not Rejouer)
@@ -219,7 +224,7 @@ const Nav = {
     const pads = navigator.getGamepads ? [...navigator.getGamepads()].filter(Boolean) : [];
     if (!pads.length) return;
     const p = pads[0]; const b = i => !!(p.buttons[i] && p.buttons[i].pressed);
-    if (p.buttons.some(x => x && x.pressed) || Math.abs(p.axes[0] || 0) > 0.4 || Math.abs(p.axes[1] || 0) > 0.4 || Math.abs(p.axes[3] || 0) > 0.4) Input.dev = 'pad';
+    if (p.buttons.some(x => x && x.pressed) || Math.abs(p.axes[0] || 0) > 0.4 || Math.abs(p.axes[1] || 0) > 0.4 || Math.abs(p.axes[3] || 0) > 0.4) { Input.dev = 'pad'; this.byMouse = false; }
     // left stick: only its dominant axis counts (a slightly tilted 'right' is not an 'up'),
     // and the bounce of a released stick toward the opposite side is ignored for a short moment
     const lx = p.axes[0] || 0, ly = p.axes[1] || 0, hor = Math.abs(lx) > Math.abs(ly);
@@ -282,4 +287,8 @@ const Nav = {
     return false;
   },
 };
+// (a browser sends mousemove with no movement when the page changes under a still pointer: not the player's hand)
+document.addEventListener('mousemove', e => { if (Math.abs(e.movementX) + Math.abs(e.movementY) > 1) Nav.mouse(); }, { passive: true });
+document.addEventListener('mousedown', () => Nav.mouse(), true);
+document.addEventListener('keydown', () => { Nav.byMouse = false; }, true);
 

@@ -382,20 +382,14 @@ GY['taunt'] = {'map': 'pandala', 'lines': [
           "Achas mesmo que me consegues vencer? Então já não precisas de nada disso, pois não? Mostra-me o que vales, sozinho."),
 ]}
 NEW_UI = {
-    'bless_dmg': ("✨ Bénédiction de {g} : +{p} % de dégâts sur les {n} premières cartes en Normale, en plus de ses autres faveurs.",
-                  "✨ {g}'s blessing: +{p}% damage on the first {n} maps in Normal, on top of his other favours.",
-                  "✨ Segen von {g}: +{p} % Schaden auf den ersten {n} Karten auf Normal, zusätzlich zu seinen anderen Gefallen.",
-                  "✨ Bendición de {g}: +{p} % de daño en los {n} primeros mapas en Normal, además de sus otros favores.",
-                  "✨ Benedizione di {g}: +{p}% di danni sulle prime {n} mappe in Normale, oltre ai suoi altri favori.",
-                  "✨ Zegen van {g}: +{p}% schade op de eerste {n} kaarten op Normaal, bovenop zijn andere gunsten.",
-                  "✨ Bênção de {g}: +{p}% de dano nos {n} primeiros mapas no Normal, além dos seus outros favores."),
-    'bless_bread': ("🥖 Cadeau du boulanger d'Incarnam : {k} fois plus de pain au sol sur les {n} premières cartes en Normale.",
-                    "🥖 Gift from the Incarnam baker: {k} times more bread on the ground on the first {n} maps in Normal.",
-                    "🥖 Geschenk des Bäckers von Incarnam: {k}-mal mehr Brot auf dem Boden auf den ersten {n} Karten auf Normal.",
-                    "🥖 Regalo del panadero de Incarnam: {k} veces más pan en el suelo en los {n} primeros mapas en Normal.",
-                    "🥖 Regalo del fornaio di Incarnam: {k} volte più pane per terra sulle prime {n} mappe in Normale.",
-                    "🥖 Cadeau van de bakker van Incarnam: {k} keer meer brood op de grond op de eerste {n} kaarten op Normaal.",
-                    "🥖 Presente do padeiro de Incarnam: {k} vezes mais pão no chão nos {n} primeiros mapas no Normal."),
+    # the blessing alone (cards 4 to 10, or a beginners' zone already won); with the beginners' help it joins aid_info: one line
+    'bless_info': ("✨ Bénédiction de {g} : +{p} % de dégâts, et 🥖 {k} fois plus de pain au sol grâce au boulanger d'Incarnam, sur les {n} premières cartes en Normale.",
+                   "✨ {g}'s blessing: +{p}% damage, and 🥖 {k} times more bread on the ground thanks to the Incarnam baker, on the first {n} maps in Normal.",
+                   "✨ Segen von {g}: +{p} % Schaden und 🥖 {k}-mal mehr Brot auf dem Boden dank des Bäckers von Incarnam, auf den ersten {n} Karten auf Normal.",
+                   "✨ Bendición de {g}: +{p} % de daño y 🥖 {k} veces más pan en el suelo gracias al panadero de Incarnam, en los {n} primeros mapas en Normal.",
+                   "✨ Benedizione di {g}: +{p}% di danni e 🥖 {k} volte più pane per terra grazie al fornaio di Incarnam, sulle prime {n} mappe in Normale.",
+                   "✨ Zegen van {g}: +{p}% schade en 🥖 {k} keer meer brood op de grond dankzij de bakker van Incarnam, op de eerste {n} kaarten op Normaal.",
+                   "✨ Bênção de {g}: +{p}% de dano e 🥖 {k} vezes mais pão no chão graças ao padeiro de Incarnam, nos {n} primeiros mapas no Normal."),
     'bless_end': ("💀 {v} a balayé vos bénédictions : plus d'aide de {g} ni du boulanger d'Incarnam ici.",
                   "💀 {v} swept your blessings away: no more help from {g} or the Incarnam baker here.",
                   "💀 {v} hat deine Segen hinweggefegt: Hier gibt es keine Hilfe mehr von {g} oder dem Bäcker von Incarnam.",
@@ -405,6 +399,77 @@ NEW_UI = {
                   "💀 {v} varreu as tuas bênçãos: aqui já não há ajuda de {g} nem do padeiro de Incarnam."),
 }
 for key, vals in NEW_UI.items():
+    for lg, v in zip(LANGS7, vals): assert key not in C['ui'][lg], (lg, key); C['ui'][lg][key] = v
+for lg in LANGS7: C['ui'][lg]['relic_got'] = C['ui'][lg]['relic_got'].strip('¡! \u00a0')   # (a plain word in the relic's frame)
+for lg in LANGS7: C['ui'][lg]['bless_all'] = C['ui'][lg]['aid_info'] + ' ' + C['ui'][lg]['bless_info'].replace('{g}', '{g2}')   # (T fills a name once)
+
+# ================================================================ 0.98.3
+# Hard: monsters' and bosses' life +37.5 % -> +35 % (hardHp, bossHp: the elites' cap and the Maître Corbac follow it)
+assert H['hpMin'] == H['hpMax'] == 0.375 and H['bossHp'] == 1.375
+H['hpMin'] = H['hpMax'] = 0.35; H['bossHp'] = 1.35
+for lg in C['ui']:
+    for key in ('mode_hint', 'hard_info'):
+        v = C['ui'][lg][key]; old = '+37,5' if lg in ('fr', 'de', 'es', 'it', 'nl', 'pt') else '+37.5'; assert v.count(old) == 2, (lg, key); C['ui'][lg][key] = v.replace(old, '+35')
+# the ground's objects: the rates are the real ones: no more hidden x1.15 on all of them (C.run.itemDropK, 0.60, every mode)
+assert C['run'].pop('itemDropK') == 1.15
+# the bread: 0.1875 % -> 0.3 % a monster, x Chance (x a blessing, game.js)
+assert C['run']['breadRate'] == 0.001875; C['run']['breadRate'] = 0.003
+# the Manuel du Tailleur: a real rate on every monster instead of one roll a run: -ln(0.9) / the kills of a whole run, so
+# about 10 % of whole runs (280 to 370 kills: mean of the bot's 10-minute runs on 9 zones, no shop / shop 4; 350 taken)
+for key in ('chance', 't0', 't1'): C['manuel'].pop(key)
+C['manuel']['rate'] = 0.0003
+# its rate on a boss: by the boss's real power (life x (1 + damage / 10): hardHp's measure, with its zone's multiplier as spawnBoss
+# applies it; the four Kwakeres, one roll, count together): 1 % on the weakest, 5 % on the Goultard, proportional between
+_pw = {}
+for _m in C['maps']:
+    _z = 1 if _m.get('hidden') else 0.8 + 0.025 * min(6, max(0, _m['tier']))
+    for _t, _b in _m['bosses']:
+        _d = C['bosses'][_b]; _pw[_b] = max(_pw.get(_b, 0), _d['hp'] * _z * (4 if _b.startswith('kwakere') else 1) * (1 + _d['dmg'] * _z / 10))
+_lo, _hi = min(_pw.values()), _pw['goultard']; assert _hi == max(_pw.values())
+C['manuel']['boss'] = {_b: round(0.01 + 0.04 * (_v - _lo) / (_hi - _lo), 5) for _b, _v in sorted(_pw.items())}
+# TTG rarities: drawn first in a pack (among those it holds), then a card of that rarity (events.js openBooster): C.ttg.rw solved so
+# that one pack in 48 each gives 55 / 30 / 11.8 / 3.2 % overall (the four rarity packs alone give 2.08 % of each)
+_cards = C['ttg']['cards']; _fams = sorted({c['fam'] for c in _cards}); _np = len(_fams) + 4; _T = [0.55, 0.30, 0.118, 0.032]
+def _ttg(rw):
+    P = [0] * 4
+    for f in _fams:
+        has = {c['r'] for c in _cards if c['fam'] == f}; s = sum(rw[r] for r in has)
+        for r in has: P[r] += rw[r] / s / _np
+    return P
+_rw = [55.0, 30.0, 12.0, 3.0]
+for _ in range(400):
+    _p = _ttg(_rw); _rw = [_rw[r] * (_T[r] - 1 / _np) / _p[r] for r in range(4)]
+_k = 100 / sum(_rw); C['ttg']['rw'] = [round(x * _k, 3) for x in _rw]
+assert all(abs(_ttg(C['ttg']['rw'])[r] + 1 / _np - _T[r]) < 0.0002 for r in range(4))
+# the relic tip: at most C.relicDropMax (5) fall in a run (extras.js dropRelic), not C.relicMax (6)
+assert C['relicDropMax'] == 5
+TIP_R = {'fr': ('six par partie', 'cinq par partie'), 'en': ('six per run', 'five per run'), 'de': ('höchstens sechs', 'höchstens fünf'), 'es': ('seis por partida', 'cinco por partida'),
+         'it': ('sei per partita', 'cinque per partita'), 'nl': ('hoogstens zes', 'hoogstens vijf'), 'pt': ('seis por partida', 'cinco por partida')}
+_i = next(i for i, x in enumerate(C['tips']['fr']) if x.startswith('Les reliques tombent des boss'))
+for lg, (old, new) in TIP_R.items(): assert old in C['tips'][lg][_i], lg; C['tips'][lg][_i] = C['tips'][lg][_i].replace(old, new)
+# the thrown shovels: kamas round them, drawn bigger (spell `coins`: render.js shovelCoins, game.js their trail; the hitbox is unchanged)
+for sid in ('lancer_pelle', 'fu_enu_pelles', 'roulage_pelle'): S[sid]['base']['coins'] = 1
+# the Jeton d'entrée au Gladiatrool: at C.gladia.t, one a run, anywhere on the map (gspells.js dropGladia): its wheel gives
+# a characteristic in a place of its own, outside the 5 (gladiaToken)
+C['gladia'] = {'t': 450, 'icon': 'it_15_737',
+               'name': {'fr': "Jeton d'entrée au Gladiatrool", 'en': 'Gladiatrool Entry Token', 'de': 'Gladiatrool-Eintrittsjeton', 'es': 'Ficha de entrada al Gladiatrool',
+                        'it': "Gettone d'ingresso al Gladiatrool", 'nl': 'Gladiatrool-toegangsfiche', 'pt': 'Ficha de entrada no Gladiatrool'}}
+# the Roublard's Bomberfus 1.5 times as big (sumK: pixi_render.js summon, render.js drawSummon), from a sheet rendered at that size
+assert S['fu_rou_bomberfu']['base']['spriteKey'] == '1379_z30'; S['fu_rou_bomberfu']['base'].update(spriteKey='1379_z45', sumK=1.5)
+UI_983 = {
+    'owned_f': ("Obtenus", "Owned", "Erhalten", "Obtenidos", "Ottenuti", "Verkregen", "Obtidos"),
+    'gl_here': ("Un jeton est apparu quelque part sur la carte ! (voir la minicarte)", "A token has appeared somewhere on the map! (see the minimap)", "Ein Jeton ist irgendwo auf der Karte erschienen! (siehe Minikarte)",
+                "¡Ha aparecido una ficha en algún lugar del mapa! (mira el minimapa)", "Un gettone è apparso da qualche parte sulla mappa! (vedi la minimappa)", "Er is ergens op de kaart een fiche verschenen! (zie de minikaart)", "Apareceu uma ficha algures no mapa! (vê o minimapa)"),
+    'gl_title': ("Roue du Gladiatrool", "Gladiatrool Wheel", "Gladiatrool-Rad", "Rueda del Gladiatrool", "Ruota del Gladiatrool", "Gladiatrool-rad", "Roda do Gladiatrool"),
+    'gl_spin': ("Le Trool lance sa roue… tiens-toi prêt, l'arène n'attend pas.", "The Trool spins his wheel… get ready, the arena won't wait.", "Der Trool dreht sein Rad … mach dich bereit, die Arena wartet nicht.",
+                "El Trool hace girar su rueda… prepárate, la arena no espera.", "Il Trool gira la sua ruota… preparati, l'arena non aspetta.", "De Trool draait zijn rad… maak je klaar, de arena wacht niet.", "O Trool gira a sua roda… prepara-te, a arena não espera."),
+    'gl_won': ("{n} : caractéristique bonus !", "{n}: bonus characteristic!", "{n}: Bonus-Eigenschaft!", "{n}: ¡característica adicional!", "{n}: caratteristica bonus!", "{n}: bonuskenmerk!", "{n}: característica bónus!"),
+    'gl_note': ("Elle prend une place à part : vos 5 caractéristiques habituelles restent toutes disponibles.", "It takes a place of its own: your usual 5 characteristics all stay available.",
+                "Sie bekommt einen eigenen Platz: Deine üblichen 5 Eigenschaften bleiben alle verfügbar.", "Ocupa un lugar propio: tus 5 características habituales siguen disponibles.",
+                "Occupa un posto a parte: le tue 5 caratteristiche abituali restano tutte disponibili.", "Het krijgt een eigen plaats: je gebruikelijke 5 kenmerken blijven allemaal beschikbaar.",
+                "Ocupa um lugar à parte: as tuas 5 características habituais continuam disponíveis."),
+}
+for key, vals in UI_983.items():
     for lg, v in zip(LANGS7, vals): assert key not in C['ui'][lg], (lg, key); C['ui'][lg][key] = v
 
 if __name__ == '__main__':

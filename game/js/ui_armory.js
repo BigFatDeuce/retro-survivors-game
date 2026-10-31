@@ -131,7 +131,7 @@ Object.assign(UI, {
     const n = cards.filter(c => got[c.id]).length;
     body.append(h('div', { class: 'sub' }, `${n} / ${cards.length}`),
       h('div', { class: 'ttg-grid' }, ...cards.map(c => h('div', { class: 'ttg-slot' + (got[c.id] ? '' : ' missing') },
-        got[c.id] ? ttgCard(c) : h('div', { class: 'ttg-c empty' }, h('span', {}, '?'), h('div', { class: 'ttg-no' }, 'No.' + c.id)), got[c.id] > 1 ? h('i', {}, '×' + got[c.id]) : null))));
+        got[c.id] ? ttgCard(c) : h('div', { class: 'ttg-c empty' }, h('span', {}, '?')), got[c.id] ? h('b', { class: 'ttg-nm' }, L(c.name)) : null, h('div', { class: 'ttg-no' }, 'No.' + c.id), got[c.id] > 1 ? h('i', {}, '×' + got[c.id]) : null))));
   },
   // treasure maps (0.47: one treasure per zone): each zone's map with its cross, dug up or not, or still unknown
   arm_tmaps(body) {

@@ -202,13 +202,13 @@ Archimonstruos. Los <b>Logros</b> premian las hazañas… y los fracasos más ri
             "Around 5:00, a skin merchant sets up somewhere (on the minimap). His prices are slashed; the run's kamas are used first, then your purse.",
             "Hacia las 5:00, un mercader de aspectos se instala en algún lugar (en el minimapa). Sus precios están rebajados; primero se usan los kamas de la partida y luego los de tu bolsa.")),
         (t('Les boosters TTG', 'TTG boosters', 'Los sobres TTG'), t(
-            "Entre 3:00 et 6:00, un booster de cartes apparaît dans un coin de la carte : chaque booster contient une carte des 464 du jeu de cartes officiel. Rangez-les dans le classeur de l'Armurerie.",
-            "Between 3:00 and 6:00, a card booster appears in a corner of the map: each holds one of the 464 cards of the official card game. Keep them in the Armory's binder.",
-            "Entre las 3:00 y las 6:00, aparece un sobre de cartas en una esquina del mapa: cada uno contiene una de las 464 cartas del juego de cartas oficial. Guárdalas en la carpeta de la Armería.")),
+            "Entre 3:00 et 6:00, un booster de cartes apparaît dans un coin de la carte : chaque paquet officiel contient une carte de son thème, parmi les 464 du jeu de cartes. Rangez-les dans le classeur de l'Armurerie.",
+            "Between 3:00 and 6:00, a card booster appears in a corner of the map: each official pack holds a card of its theme, among the 464 of the card game. Keep them in the Armory's binder.",
+            "Entre las 3:00 y las 6:00, aparece un sobre de cartas en una esquina del mapa: cada sobre oficial contiene una carta de su tema, entre las 464 del juego de cartas. Guárdalas en la carpeta de la Armería.")),
         (t('Les reliques', 'Relics', 'Las reliquias'), t(
-            "Les boss, les mini-boss (grosse barre de vie) et parfois les élites en lâchent, 6 au plus par partie. Une relique dure toute la partie.",
-            "Bosses, mini-bosses (big life bar) and sometimes elites drop them, 6 at most per run. A relic lasts the whole run.",
-            "Los jefes, los minijefes (gran barra de vida) y a veces las élites las sueltan, 6 como máximo por partida. Una reliquia dura toda la partida.")),
+            f"Les boss, les mini-boss (grosse barre de vie) et parfois les élites en lâchent, {C['relicDropMax']} au plus par partie. Une relique dure toute la partie.",
+            f"Bosses, mini-bosses (big life bar) and sometimes elites drop them, {C['relicDropMax']} at most per run. A relic lasts the whole run.",
+            f"Los jefes, los minijefes (gran barra de vida) y a veces las élites las sueltan, {C['relicDropMax']} como máximo por partida. Una reliquia dura toda la partida.")),
         (t('Les Dofus', 'Dofus', 'Los Dofus'), t(
             "Certains boss lâchent un Dofus : son effet s'applique dans toutes vos parties suivantes.",
             "Some bosses drop a Dofus: its effect applies to all your following runs.",
@@ -440,6 +440,13 @@ def numbers(cont):
     nm = lambda v: (f'{v:.2f}'.rstrip('0').rstrip('.')).replace('.', sep)   # (5.0 s -> 5 s, 0.4 -> 0,4)
     R_ = C['run']; rw = C['ttg']['rw']; rws = sum(rw); A = C.get('archiCfg', {}); H_ = C.get('hard', {}); I_ = C.get('infinite', {}); M_ = C.get('manuel', {}); J = C.get('jorbak', {}); MB = list((M_.get('boss') or {0: 0}).values())   # (0.98: every boss's chance)
     tm = list(C['tmap'].get('prize', {}).values()) or [C['tmap']['kamas']]
+    GB = C['gany']['bless']; gt = f"{C['gladia']['t'] // 60}:{C['gladia']['t'] % 60:02d}"
+    def ttg_odds():   # (0.98.3: one of the packs, each as often: a rarity among those it holds, by C.ttg.rw; a rarity's pack gives its own)
+        fams = {c['fam'] for c in C['ttg']['cards']}; n = len(fams) + 4; P = [1 / n] * 4
+        for f in fams:
+            has = {c['r'] for c in C['ttg']['cards'] if c['fam'] == f}; s_ = sum(rw[r] for r in has)
+            for r in has: P[r] += rw[r] / s_ / n
+        return P
     per = t('par monstre', 'per monster', 'por monstruo'); luck = t('(× Chance)', '(× Luck)', '(× Suerte)')
     cb, ob, ev, md = t('Combat', 'Combat', 'Combate'), t('Objets', 'Items', 'Objetos'), t('Événements', 'Events', 'Eventos'), t('Modes', 'Modes', 'Modos')
     dofus_from = lambda b: 'ToT' if b == 'tot' else t('tout boss final', 'any final boss', 'cualquier jefe final') if b == 'any_final' else L(C['bosses'][b]['name']) if b in C['bosses'] else b
@@ -451,27 +458,28 @@ def numbers(cont):
         (cb, t('Renvoi de dommages', 'Damage reflection', 'Reenvío de daño'), t('au plus 30 par niveau (150 au niveau 5) et la moitié de la vie du monstre', 'at most 30 per level (150 at level 5) and half the monster\'s life', 'como máximo 30 por nivel (150 en el nivel 5) y la mitad de la vida del monstruo')),
         (cb, t('Aide aux débutants', "Beginners' help", 'Ayuda para principiantes'), ', '.join(f"{zname(z)} {t('PV', 'HP', 'PV')} × {nm(a['hp'])}" for z, a in C.get('beginnerAid', {}).items()) + t(', coups × 0,5', ', blows × 0.5', ', golpes × 0,5')),
         (ob, t('Kamas sur un monstre', 'Kamas on a monster', 'Kamas de un monstruo'), pc(R_['kamaDrop'], 2) + ' ' + luck),
-        (ob, t('Pain', 'Bread', 'Pan'), pc(R_.get('breadRate', 0), 3) + ' ' + per),
+        (ob, t('Pain', 'Bread', 'Pan'), f"{R_['breadRate'] * 100:.3f} %".replace('.', sep) + f" {per} {luck}" + t(f" ; × {GB['bread']} avec la bénédiction de Ganymède ({GB['maps']} premières cartes en Normale)", f"; × {GB['bread']} with Ganymede's blessing (first {GB['maps']} maps in Normal)", f"; × {GB['bread']} con la bendición de Ganimedes ({GB['maps']} primeros mapas en Normal)")),
         (ob, t('Potion de Rappel / Fée / Sablier', 'Recall Potion / Fairy / Hourglass', 'Poción de Recuerdo / Hada / Reloj de arena'), f"0{sep}12 % / 0{sep}08 % / 0{sep}09 % {per} {luck}"),
         *[(ob, L(d['name']), pc(d['rate'], 3) + f' {per} {luck}') for d in C['drops'].values()],
-        (ob, L(M_.get('name', {})), t(f"{pc(M_.get('chance', 0.1))} des parties ; chaque boss : {pc(min(MB), 1)} à {pc(max(MB), 1)}, plus il est loin dans le jeu ; Maîtres Corbacs : un par minute dès 11:00 ; boss du mode Infini : {pc(I_.get('manuelP', 0.05), 1)} à 10:00, +{pc(I_.get('manuelStep', 0.025), 1)} par minute ensuite",
-                                      f"{pc(M_.get('chance', 0.1))} of runs; every boss: {pc(min(MB), 1)} to {pc(max(MB), 1)}, more the further it is in the game; Lord Crows: one a minute from 11:00; Endless bosses: {pc(I_.get('manuelP', 0.05), 1)} at 10:00, +{pc(I_.get('manuelStep', 0.025), 1)} every minute after",
-                                      f"{pc(M_.get('chance', 0.1))} de las partidas; cada jefe: {pc(min(MB), 1)} a {pc(max(MB), 1)}, más cuanto más avanzado; Maestros Cuerbok: uno por minuto desde las 11:00; jefes del modo Infinito: {pc(I_.get('manuelP', 0.05), 1)} a las 10:00, +{pc(I_.get('manuelStep', 0.025), 1)} por minuto después")),
+        (ob, L(M_.get('name', {})), t(f"{pc(M_['rate'], 3)} {per}, soit environ 1 partie complète sur 10 ; chaque boss : {pc(min(MB), 1)} à {pc(max(MB), 1)} selon sa puissance ; Maîtres Corbacs : un par minute dès 11:00 ; boss du mode Infini : {pc(I_.get('manuelP', 0.05), 1)} à 10:00, +{pc(I_.get('manuelStep', 0.025), 1)} par minute ensuite",
+                                      f"{pc(M_['rate'], 3)} {per}, about 1 whole run in 10; every boss: {pc(min(MB), 1)} to {pc(max(MB), 1)} by its power; Lord Crows: one a minute from 11:00; Endless bosses: {pc(I_.get('manuelP', 0.05), 1)} at 10:00, +{pc(I_.get('manuelStep', 0.025), 1)} every minute after",
+                                      f"{pc(M_['rate'], 3)} {per}, cerca de 1 partida completa de cada 10; cada jefe: {pc(min(MB), 1)} a {pc(max(MB), 1)} según su poder; Maestros Cuerbok: uno por minuto desde las 11:00; jefes del modo Infinito: {pc(I_.get('manuelP', 0.05), 1)} a las 10:00, +{pc(I_.get('manuelStep', 0.025), 1)} por minuto después")),
         (ob, t('Carte au trésor', 'Treasure map', 'Mapa del tesoro'), t(f"Jorbak : {pc(J.get('tmap', 0.25))} ; trésor : {min(tm)} à {max(tm)} kamas", f"Jorbak: {pc(J.get('tmap', 0.25))}; treasure: {min(tm)} to {max(tm)} kamas", f"Jorbak: {pc(J.get('tmap', 0.25))}; tesoro: {min(tm)} a {max(tm)} kamas")),
         (ob, t('Coffre du trésor', "The treasure's chest", 'Cofre del tesoro'), t(f"en plus des kamas, {pc(C['tmap'].get('bonus', 0))} : un Dofus pas encore trouvé ({pc(C['tmap'].get('bonusDofus', 0.5))}) ou un bouclier pas encore possédé",
                                                                                f"besides the kamas, {pc(C['tmap'].get('bonus', 0))}: a Dofus not found yet ({pc(C['tmap'].get('bonusDofus', 0.5))}) or a shield not owned yet",
                                                                                f"además de los kamas, {pc(C['tmap'].get('bonus', 0))}: un Dofus aún no encontrado ({pc(C['tmap'].get('bonusDofus', 0.5))}) o un escudo aún no conseguido")) if C['tmap'].get('bonus') else None,
         (ob, L(C['houx']['name']), pc(C['houx']['rate'], 3) + f' {per} {luck} — ' + t('un relancement de plus', 'one more reroll', 'una tirada más')) if C.get('houx') else None,
-        (t('Reliques', 'Relics', 'Reliquias'), t('Boss', 'Boss', 'Jefe'), t(f"{pc(C.get('relicRate', 0.4))} (boss final : 100 %), {C.get('relicMax', 6)} au plus par partie", f"{pc(C.get('relicRate', 0.4))} (final boss: 100 %), {C.get('relicMax', 6)} at most per run", f"{pc(C.get('relicRate', 0.4))} (jefe final: 100 %), {C.get('relicMax', 6)} como máximo por partida")),
-        (t('Reliques', 'Relics', 'Reliquias'), t('Mini-boss (Tofuzmo, Jorbak, Coffre Animé)', 'Mini-bosses (Tofuzmo, Jorbak, Living Chest)', 'Minijefes (Tofuzmo, Jorbak, Cofre Animado)'), pc(C.get('relicMini', 0.5))),
+        (ob, L(C['gladia']['name']), t(f"à {gt}, un par partie, n'importe où sur la carte : une caractéristique en plus des 5", f"at {gt}, one per run, anywhere on the map: a characteristic on top of the 5", f"a las {gt}, una por partida, en cualquier lugar del mapa: una característica además de las 5")),
+        (t('Reliques', 'Relics', 'Reliquias'), t('Boss', 'Boss', 'Jefe'), t(f"{pc(C.get('relicRate', 0.4))} {luck} (boss final : 100 %), {C['relicDropMax']} au plus par partie", f"{pc(C.get('relicRate', 0.4))} {luck} (final boss: 100 %), {C['relicDropMax']} at most per run", f"{pc(C.get('relicRate', 0.4))} {luck} (jefe final: 100 %), {C['relicDropMax']} como máximo por partida")),
+        (t('Reliques', 'Relics', 'Reliquias'), t('Mini-boss (Tofuzmo, Jorbak, Coffre Animé)', 'Mini-bosses (Tofuzmo, Jorbak, Living Chest)', 'Minijefes (Tofuzmo, Jorbak, Cofre Animado)'), pc(C.get('relicMini', 0.5)) + ' ' + luck),
         (t('Reliques', 'Relics', 'Reliquias'), t('Élite', 'Elite', 'Élite'), pc(C['relicElite']) + ' ' + luck) if C.get('relicElite') else None,
-        *[('Dofus', L(d['name']), f"{pc(d['rate'])} — " + ', '.join(dofus_from(b) for b in d['from'])) for d in C['dofus']],
+        *[('Dofus', L(d['name']), f"{pc(d['rate'])} {luck} — " + ', '.join(dofus_from(b) for b in d['from'])) for d in C['dofus']],
         (ev, t('Porte de ToT', "ToT's door", 'Puerta de ToT'), t(f"à {R_['doorT'] // 60}:{R_['doorT'] % 60:02d} ; portail temporel : {pc(C['portal']['chance'])} des parties, sinon le Tofuzmo ({C['mutant']['hp']} PV) ou Jorbak ({J.get('hp', 3000)} PV, zone {J.get('from', 10) + 1} et après)",
                                                                f"at {R_['doorT'] // 60}:{R_['doorT'] % 60:02d}; time portal: {pc(C['portal']['chance'])} of runs, otherwise the Tofuzmo ({C['mutant']['hp']} HP) or Jorbak ({J.get('hp', 3000)} HP, zone {J.get('from', 10) + 1} and after)",
                                                                f"a las {R_['doorT'] // 60}:{R_['doorT'] % 60:02d}; portal temporal: {pc(C['portal']['chance'])} de las partidas, si no el Tofuzmo ({C['mutant']['hp']} PV) o Jorbak ({J.get('hp', 3000)} PV, zona {J.get('from', 10) + 1} y siguientes)")),
         (ev, t('Marchand de skins', 'Skin merchant', 'Mercader de aspectos'), t(f"à {C['merchant']['t'] // 60}:00, {C['merchant']['n']} skins à -25 / -75 %", f"at {C['merchant']['t'] // 60}:00, {C['merchant']['n']} skins at -25 / -75 %", f"a las {C['merchant']['t'] // 60}:00, {C['merchant']['n']} aspectos a -25 / -75 %")),
         (ev, t('Booster TTG', 'TTG booster', 'Sobre TTG'), t('entre 3:00 et 6:00, dans un coin de la carte', 'between 3:00 and 6:00, in a corner of the map', 'entre las 3:00 y las 6:00, en una esquina del mapa')),
-        (ev, t('Cartes TTG (rareté)', 'TTG cards (rarity)', 'Cartas TTG (rareza)'), ' / '.join(pc(x / rws) for x in rw) + t(' (commune → légendaire)', ' (common → legendary)', ' (común → legendaria)')),
+        (ev, t('Cartes TTG (rareté)', 'TTG cards (rarity)', 'Cartas TTG (rareza)'), ' / '.join(pc(x) for x in ttg_odds()) + t(' (commune → légendaire)', ' (common → legendary)', ' (común → legendaria)')),
         (ev, t('Archimonstre', 'Archmonster', 'Archimonstruo'), t(f"{pc(A.get('rate', 0), 2)} par monstre ; PV × {nm(A.get('hp'))}, dégâts × {nm(A.get('dmg'))}", f"{pc(A.get('rate', 0), 2)} per monster; HP × {nm(A.get('hp'))}, damage × {nm(A.get('dmg'))}", f"{pc(A.get('rate', 0), 2)} por monstruo; PV × {nm(A.get('hp'))}, daño × {nm(A.get('dmg'))}")),
         (ev, t('Arme unique', 'Unique weapon', 'Arma única'), pc(C.get('uniqueRate', 0.15)) + t(" à la place d'une arme de son type", ' instead of a weapon of its type', ' en lugar de un arma de su tipo')),
         (ev, t('Arme vampirique', 'Vampiric weapon', 'Arma vampírica'), pc(C.get('bloodRate', 0.1)) + t(" à la place d'une arme de son type", ' instead of a weapon of its type', ' en lugar de un arma de su tipo')),
@@ -484,8 +492,8 @@ def numbers(cont):
     ]
     rows = [r for r in rows if r]   # (0.97: the rows of a system the game has not)
     out, th = [], t(['Domaine', 'Quoi', 'Valeur'], ['Area', 'What', 'Value'], ['Ámbito', 'Qué', 'Valor'])
-    for i in range(0, len(rows), 16):
-        tb = ''.join(f'<tr><td>{E(a)}</td><td><b>{E(b)}</b></td><td>{E(c)}</td></tr>' for a, b, c in rows[i:i + 16])
+    for i in range(0, len(rows), 13):
+        tb = ''.join(f'<tr><td>{E(a)}</td><td><b>{E(b)}</b></td><td>{E(c)}</td></tr>' for a, b, c in rows[i:i + 13])
         out.append(f'<section class="page">{h2(t("Les chiffres exacts", "The exact numbers", "Las cifras exactas") + (cont if i else ""), "Icon_duree")}<table><tr>{"".join(f"<th>{x}</th>" for x in th)}</tr>{tb}</table></section>')
     return out
 

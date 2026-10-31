@@ -36,6 +36,11 @@ const say = (arr, n = 12) => arr.slice(0, n).join(', ') + (arr.length > n ? ` â€
 function integrity() {
   const sp = C.spells, cls = C.classes;
   check('integrity', 'class spells exist', !cls.flatMap(c => c.spells.filter(s => !sp[s]).map(s => c.id + ':' + s)).length, say(cls.flatMap(c => c.spells.filter(s => !sp[s]).map(s => c.id + ':' + s))));
+  { // 0.98.3: every TTG card is in a pack of its theme (a family's or a rarity's), and each pack and card has its picture
+    const B = SPR.boosters, cards = C.ttg.cards, fams = new Set(B.names);
+    check('integrity', 'every TTG card has its family pack and its picture', !cards.some(c => !fams.has(c.fam) || !exists(`assets/ttg/c${c.id}.webp`)), say(cards.filter(c => !fams.has(c.fam) || !exists(`assets/ttg/c${c.id}.webp`)).map(c => c.id)));
+    check('integrity', 'every TTG pack holds cards and has its picture', B.n === B.names.length && !B.names.some((n, i) => !exists(`assets/ttg/p${i}.webp`) || !cards.some(c => /^r\d$/.test(n) ? (c.r || 0) === +n[1] : c.fam === n)), say(B.names));
+  }
   check('integrity', 'class sprites in the sheets', !cls.flatMap(c => c.sprites.filter(s => !SPR.chars[String(s)]).map(s => c.id + ':' + s)).length, say(cls.flatMap(c => c.sprites.filter(s => !SPR.chars[String(s)]).map(s => c.id + ':' + s))));
   const fus = C.spellFusions || [];
   const badF = fus.filter(f => !sp[f.id] || !(f.src || []).every(s => sp[s] || (C.weapons || []).some(w => w.id === s) || (C.globalSpells || []).some(g => g.id === s)) || (f.cls && !cls.some(c => c.id === f.cls)));   // (0.95: cls null, two global spells: every class)

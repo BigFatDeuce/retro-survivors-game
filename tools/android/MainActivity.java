@@ -119,8 +119,9 @@ public class MainActivity extends Activity {
     }
 
     // in the background: the run paused, every sound stopped at once (Audio2.halt: the music, a track still fading out, a
-    // class theme, the one-off clips, Web Audio — 0.97: only the current track was paused, the others played on)
-    static final String HALT = "(()=>{try{if(window.Game&&Game.autoPause)Game.autoPause();if(window.Audio2)Audio2.halt();}catch(e){}})()";
+    // class theme, the one-off clips, Web Audio — 0.97: only the current track was paused, the others played on). 0.98.2:
+    // typeof, not window.Audio2: a script's top-level const is no property of window, this line never did anything
+    static final String HALT = "(()=>{try{if(typeof Game!=='undefined')Game.autoPause();if(typeof Audio2!=='undefined')Audio2.halt();}catch(e){}})()";
     @Override
     protected void onPause() {
         if (web != null) { web.evaluateJavascript(HALT, null); web.onPause(); }
@@ -143,7 +144,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume(); web.onResume(); immersive();
-        web.evaluateJavascript("(()=>{try{if(window.Audio2)Audio2.resume();}catch(e){}})()", null);
+        web.evaluateJavascript("(()=>{try{if(typeof Audio2!=='undefined')Audio2.resume();}catch(e){}})()", null);
     }
 
     // the game's 'Quitter' button (UI.quitGame) closes the app

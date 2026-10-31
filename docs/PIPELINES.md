@@ -53,7 +53,8 @@ cropped, packed into atlases (≤ 4096 px) and described in `sprites.json` (writ
 | monsters | `build_mobs20`, `hd_mobs51`, `pack_mobs20`, `build_coloured52`; scene NPCs `build_npc57` | `assets/mobs/`, `SPR.mobs` |
 | spell effects | `build_fx060`, `build_fxhd061`, `build_fist073`, `build_moon34`, `fix_whip54`, `build_aura20` | `assets/fx/`, `SPR.fx` |
 | icons | `build_icons20` (+ `merge`), `build_iconhd091`, `build_spellicons21`, `build_fusionicons060`, `build_globalicons*`, `build_staticons*`, … | `assets/ui/icons3*.webp` (pages), `icons2.webp`, `ui/hd/` |
-| bestiary, cards | `build_art21`, `build_art38`, `build_ttg34` | `assets/art/`, `assets/ttg/` |
+| bestiary | `build_art21`, `build_art38` | `assets/art/` |
+| TTG cards, packs | `build_ttg098` (official pictures, from dofusretrotools.com into `work/ttg98/`); `build_ttg34` only for the list `work/ttg34.json` | `assets/ttg/`, `SPR.boosters` |
 | worlds | `build_worlds20` (client maps), `build_vlad51`, `build_grobe54`, `build_flat068`, `build_frigost097` (composed plains), `decormask087`, `build_minis071` | `assets/worlds/<world>_<x>_<y>.webp` (4096-px tiles), `_decor` / `_depth` masks, `SPR.worlds` |
 | sounds, music | `build_sfx060`, `fix_sounds27` (+ `lib/sndanim27`), `music55` | `assets/audio/`, `data/sounds.json` |
 

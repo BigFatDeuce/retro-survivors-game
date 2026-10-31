@@ -1067,6 +1067,7 @@ function drawPickup(ctx, p, t) {
     case 'tmap': glow('rgba(255,210,90,0.7)', 26 + Math.sin(t * 6) * 4); Game.icons.drawFit(ctx, Game.C.tmap.icon, p.x, p.y - 14 + bob, 40); break;
     case 'nowelgift': glow('rgba(255,90,90,0.75)', 48 + Math.sin(t * 5) * 6); glow('rgba(120,255,140,0.45)', 34); Game.icons.drawFit(ctx, 'gift_hd', p.x, p.y - 28 + bob, 80); break;   // (0.68: twice an item's size; 0.91: the client's gift at 512 px, build_iconhd091 gift)
     case 'trool': glow('rgba(255,220,120,0.8)', 32 + Math.sin(t * 6) * 4); Game.icons.drawFit(ctx, 'it_24_94', p.x, p.y - 16 + bob, 52); break;
+    case 'gladia': glow('rgba(70,120,255,0.85)', 50 + Math.sin(t * 5) * 5); IC.drawFit(ctx, Game.C.gladia.icon, p.x, p.y - 26 + bob, 68); break;   // (0.98.3: twice a whole bread's 34)
     case 'booster': { // a TTG booster: one of the 20 packs (0.37: the: a client monster on each)
       glow('rgba(255,230,120,0.75)', 34 + Math.sin(t * 6) * 4); ctx.save(); ctx.translate(p.x, p.y - 26 + bob); ctx.rotate(Math.sin(t * 2) * 0.12);
       if (!boosterPack(ctx, p.pk || 0, -18, -29, 36)) { ctx.fillStyle = '#3fbf5a'; ctx.fillRect(-12, -16, 24, 32); }
@@ -1168,48 +1169,67 @@ function drawReviveFront(ctx, P, e) {   // over the character: the powder, the b
 // titles, names and the victory keep the announcements' font. 0.98.1: they are names now (what they do goes in the chat,
 // Run.announce), in the chat's lettering (hudFont)
 const BAN_FONT = px => hudFont(Math.max(4, Math.round(px)));
-// 0.95: the frame of the banners (and the relic's caption): x, y its top-left corner. 0.98 (it was too dark and plain: in
-// the Dofus logos' spirit, green and alive): a glow behind, a body lit from the top, a gold edge on a dark rim, an inner
-// line, swaying leaves held by a gold bud at each end, particles rising off it; t = the run's clock. Styles (PANEL): the
-// banners' deep green; 'boss' light green, a bigger blurred glow, more sparks; 'fire' (the relics) green flames licking up
-// its edges, sparks, a lime glow. The caller sets its opacity
+// 0.95: the frame of the banners (and the relic's caption): x, y its top-left corner; t = a clock. 0.98.2 (green with leaves, it
+// stood out from everything else): Dofus Retro's brown, the HUD's wood and gold: a dark rim, a body lit from the top, a gold
+// bevel, a beige inner line, a stud at each corner, a gold diamond at each end; round it the magic of the menus' cursor
+// (Nav.glide): two lights running along the edge, tiny sparks born on it and drifting out. Styles (PANEL): the banners; 'boss'
+// redder, a bigger blurred shade, more sparks; 'relic' more sparks yet and two sprays out of its sides. fxK: the magic's opacity
+// against the frame's (the relic's frame is see-through, not its sparks). The caller sets its opacity
 const PANEL = {
-  green: { glow: 'rgba(150,230,70,0.8)', glowA: 0.35, rim: '#132a0c', body: ['#3c8a4a', '#1f5a34', '#0f3a22'], edge: ['#fff1b0', '#f2b83a', '#9a6010'], inner: 'rgba(200,250,120,0.35)', leaves: 1, spark: 'rgba(220,255,120,0.95)', n: 7 },
-  boss: { glow: 'rgba(200,255,130,0.9)', glowA: 0.55, blur: 'rgba(10,50,14,0.75)', edgeGlow: 'rgba(230,255,150,1)', rim: '#1c3a12', body: ['#b4f08a', '#78cf62', '#459e48'], edge: ['#ffffff', '#f5d860', '#a87818'], inner: 'rgba(255,255,225,0.55)', leaves: 1, spark: 'rgba(255,215,90,0.95)', n: 16 },
-  fire: { glow: 'rgba(150,240,80,0.85)', glowA: 0.55, blur: 'rgba(8,50,20,0.55)', edgeGlow: 'rgba(190,255,110,1)', rim: '#0e2a10', body: ['#4caa58', '#24703a', '#0f3a22'], edge: ['#fffbe0', '#c8f060', '#3a8a1a'], inner: 'rgba(220,255,160,0.45)', spark: 'rgba(210,255,120,0.95)', n: 14, flames: 1, green: 1 },   // (0.98: green, the red was too much)
+  wood: { glow: 'rgba(90,225,225,0.8)', glowA: 0.22, body: ['#6e4e2a', '#452c14', '#28170a'], edge: ['#fff1b8', '#e2a53a', '#7a4210'], spark: 'rgba(90,235,235,0.95)', star: '70,230,235', run: 'rgba(215,255,250,0.95)', n: 20 },
+  boss: { glow: 'rgba(255,190,90,0.85)', glowA: 0.4, blur: 'rgba(24,10,2,0.75)', body: ['#7c4a24', '#512a12', '#2e1408'], edge: ['#fff6cc', '#f5b52e', '#8a4a10'], spark: 'rgba(255,205,110,0.95)', star: '255,190,80', run: 'rgba(255,245,205,0.95)', n: 34 },
+  relic: { glow: 'rgba(90,225,225,0.85)', glowA: 0.4, blur: 'rgba(24,10,2,0.55)', body: ['#6e4e2a', '#452c14', '#28170a'], edge: ['#fffbe0', '#f5c542', '#7a4210'], spark: 'rgba(90,235,235,0.95)', star: '70,230,235', run: 'rgba(215,255,250,0.95)', n: 30, sides: 30, fxK: 1.6 },
 };
+const panelHash = x => { const v = Math.sin(x * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+// a spark: a white four-pointed star in a soft halo of its colour ('r,g,b'), made once (a round glow turned to a muddy disc on bright ground)
+function panelStar(rgb) {
+  const key = 'star' + rgb; let c = RCache.m.get(key); if (c) return c; const S = 48; c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d'); g.translate(S / 2, S / 2);
+  const gl = g.createRadialGradient(0, 0, 0, 0, 0, S / 2); gl.addColorStop(0, `rgba(${rgb},0.9)`); gl.addColorStop(0.32, `rgba(${rgb},0.34)`); gl.addColorStop(1, `rgba(${rgb},0)`); g.fillStyle = gl; g.fillRect(-S / 2, -S / 2, S, S);
+  g.fillStyle = '#ffffff'; g.beginPath(); for (let i = 0; i < 8; i++) { const r = i % 2 ? 2.8 : S * 0.44, an = i / 8 * TAU; g.lineTo(Math.cos(an) * r, Math.sin(an) * r); } g.closePath(); g.fill();
+  return RCache.put(key, c);
+}
 function annPanel(ctx, px, py, tw, ph, u, t = 0, style) {
-  const S = PANEL[style] || PANEL.green, cx = px + tw / 2, cy = py + ph / 2, a0 = ctx.globalAlpha;
+  const S = PANEL[style] || PANEL.wood, cx = px + tw / 2, cy = py + ph / 2, a0 = ctx.globalAlpha, fa = Math.min(1, a0 * (S.fxK || 1));
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a0 * (S.glowA + 0.08 * Math.sin(t * 2.2)); ctx.drawImage(RCache.glow(S.glow), px - 30 * u, py - 26 * u, tw + 60 * u, ph + 52 * u); ctx.restore();
   if (S.blur) { ctx.save(); ctx.shadowColor = S.blur; ctx.shadowBlur = (30 + 6 * Math.sin(t * 3)) * u; ctx.fillStyle = S.blur; ctx.beginPath(); ctx.roundRect(px - 6 * u, py - 5 * u, tw + 12 * u, ph + 10 * u, 14 * u); ctx.fill(); ctx.fill(); ctx.fill(); ctx.restore(); }   // (a blurred shade round it, under the body: it stands out on any ground)
-  if (S.flames && !Game.minFx) {   // flames licking up its top edge, behind it
-    ctx.save(); const gf = RCache.glow(S.green ? 'rgba(60,190,60,0.85)' : 'rgba(255,90,20,0.9)'), go = RCache.glow(S.green ? 'rgba(170,240,80,0.95)' : 'rgba(255,170,40,0.95)'), gy = RCache.glow(S.green ? 'rgba(240,255,190,1)' : 'rgba(255,240,150,1)'), nf = Math.max(6, Math.round(tw / (14 * u)));   // (green flames for the relics)
-    for (const [yy, side] of [[py, 0], [py + ph, 1]]) for (let i = 0; i < nf; i++) { if (side && i % 2) continue; const fx = px + (i + 0.5) / nf * tw + Math.sin(t * 3 + i) * 2 * u, fl = 0.55 + 0.45 * Math.abs(Math.sin(t * (5 + (i % 4)) + i * 1.7)), hh = (20 + 16 * ((i * 37) % 7) / 7) * u * fl * (side ? 0.55 : 1), ww = 17 * u;
-      ctx.globalAlpha = a0 * 0.85; ctx.drawImage(gf, fx - ww / 2, yy - hh * 0.9, ww, hh * 1.2); ctx.globalAlpha = a0 * 0.8; ctx.drawImage(go, fx - ww * 0.33, yy - hh * 0.62, ww * 0.66, hh * 0.85); ctx.globalAlpha = a0 * 0.9; ctx.drawImage(gy, fx - ww * 0.16, yy - hh * 0.35, ww * 0.32, hh * 0.45); }
-    ctx.restore();
-  }
-  ctx.beginPath(); ctx.roundRect(px - 1.5 * u, py - 1.5 * u, tw + 3 * u, ph + 3 * u, 10.5 * u); ctx.fillStyle = S.rim; ctx.fill();   // (the dark rim)
+  ctx.beginPath(); ctx.roundRect(px - 2 * u, py - 2 * u, tw + 4 * u, ph + 4 * u, 8.5 * u); ctx.fillStyle = '#1c0d03'; ctx.fill();   // (the dark rim)
   const gr = ctx.createLinearGradient(0, py, 0, py + ph); gr.addColorStop(0, S.body[0]); gr.addColorStop(0.45, S.body[1]); gr.addColorStop(1, S.body[2]);
   const gd = ctx.createLinearGradient(0, py, 0, py + ph); gd.addColorStop(0, S.edge[0]); gd.addColorStop(0.5, S.edge[1]); gd.addColorStop(1, S.edge[2]);
-  ctx.beginPath(); ctx.roundRect(px, py, tw, ph, 9 * u); ctx.fillStyle = gr; ctx.fill();
-  if (S.edgeGlow && !Game.lowFx) { ctx.save(); ctx.shadowColor = S.edgeGlow; ctx.shadowBlur = (12 + 4 * Math.sin(t * 4)) * u; ctx.strokeStyle = gd; ctx.lineWidth = 2.6 * u; ctx.stroke(); ctx.stroke(); ctx.restore(); } else { ctx.strokeStyle = gd; ctx.lineWidth = 2.4 * u; ctx.stroke(); }   // (its edge glowing)
-  ctx.strokeStyle = S.inner; ctx.lineWidth = 1 * u; ctx.beginPath(); ctx.roundRect(px + 4 * u, py + 4 * u, tw - 8 * u, ph - 8 * u, 6 * u); ctx.stroke();
-  ctx.fillStyle = 'rgba(255,255,220,0.1)'; ctx.beginPath(); ctx.roundRect(px + 3 * u, py + 3 * u, tw - 6 * u, ph * 0.38, 7 * u); ctx.fill();   // (the light on its top)
-  if (S.leaves) for (const sd of [-1, 1]) {   // the leaves at both ends, fanned out and swaying
-    const lx = cx + sd * (tw / 2 + 2 * u), s = Math.min(26 * u, ph * 0.62);
-    for (let i = 0; i < 3; i++) { ctx.save(); ctx.translate(lx, cy); ctx.scale(sd, 1); ctx.rotate((i - 1) * 0.62 + Math.sin(t * 2 + i * 1.9 + sd) * 0.1); ctx.translate(s * 0.42, 0); cdLeaf(ctx, s * (i === 1 ? 1 : 0.8), CD_LEAVES[(i + (sd > 0 ? 2 : 0)) % CD_LEAVES.length]); ctx.restore(); }
-    ctx.fillStyle = '#132a0c'; ctx.beginPath(); ctx.arc(lx, cy, 4.2 * u, 0, TAU); ctx.fill(); ctx.fillStyle = '#f5c542'; ctx.beginPath(); ctx.arc(lx, cy, 2.8 * u, 0, TAU); ctx.fill();   // (a gold bud holding them)
+  ctx.beginPath(); ctx.roundRect(px, py, tw, ph, 7 * u); ctx.fillStyle = gr; ctx.fill(); ctx.strokeStyle = gd; ctx.lineWidth = 2 * u; ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,225,160,0.24)'; ctx.lineWidth = 1 * u; ctx.beginPath(); ctx.roundRect(px + 4 * u, py + 4 * u, tw - 8 * u, ph - 8 * u, 4 * u); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,240,205,0.07)'; ctx.beginPath(); ctx.roundRect(px + 3 * u, py + 3 * u, tw - 6 * u, ph * 0.36, 5 * u); ctx.fill();   // (the light on its top)
+  for (const [x, y] of [[px + 7 * u, py + 7 * u], [px + tw - 7 * u, py + 7 * u], [px + 7 * u, py + ph - 7 * u], [px + tw - 7 * u, py + ph - 7 * u]]) { ctx.fillStyle = '#1c0d03'; ctx.beginPath(); ctx.arc(x, y, 2 * u, 0, TAU); ctx.fill(); ctx.fillStyle = '#ffd56a'; ctx.beginPath(); ctx.arc(x, y, 1.2 * u, 0, TAU); ctx.fill(); }   // (studs)
+  if (!Game.minFx) {
+    // two lights running along the edge, one stroke with a long dash (0.98.3: under the gold diamonds)
+    const per = 2 * (tw + ph) - 8 * u, dash = Math.min(per * 0.12, 90 * u); ctx.save(); ctx.beginPath(); ctx.roundRect(px, py, tw, ph, 7 * u); ctx.setLineDash([dash, per / 2 - dash]); ctx.lineDashOffset = -t * 110 * u; ctx.lineCap = 'round';
+    ctx.globalAlpha = fa * 0.3; ctx.strokeStyle = S.spark; ctx.lineWidth = 5 * u; ctx.stroke(); ctx.globalAlpha = fa * 0.9; ctx.strokeStyle = S.run; ctx.lineWidth = 2 * u; ctx.stroke(); ctx.restore();
   }
-  if (!Game.lowFx) {   // sparks rising off it
-    ctx.save(); const sp = RCache.spark(S.spark);   // (normal blending: added, the sparks vanished on bright ground)
-    for (let i = 0; i < S.n; i++) { const q = (t * (0.4 + 0.12 * (i % 3)) + i / S.n) % 1, fx = px + (i + 0.5) / S.n * tw + Math.sin(t * 1.6 + i * 2.3) * 8 * u, fy = py + ph * 0.25 - q * 44 * u, w = (5 + 1.5 * (i % 3)) * u, h = w * 3;
-      ctx.globalAlpha = a0 * Math.sin(q * Math.PI) * 0.9; ctx.drawImage(sp, fx - w / 2, fy - h * 0.2, w, h); }
+  for (const sd of [-1, 1]) {   // a gold diamond at each end
+    const r = Math.min(7 * u, ph * 0.2); ctx.save(); ctx.translate(cx + sd * tw / 2, cy); ctx.rotate(Math.PI / 4); ctx.fillStyle = '#1c0d03'; ctx.fillRect(-r - 1.6 * u, -r - 1.6 * u, (r + 1.6 * u) * 2, (r + 1.6 * u) * 2);
+    const dg = ctx.createLinearGradient(-r, -r, r, r); dg.addColorStop(0, S.edge[0]); dg.addColorStop(0.5, S.edge[1]); dg.addColorStop(1, S.edge[2]); ctx.fillStyle = dg; ctx.fillRect(-r, -r, r * 2, r * 2); ctx.restore();
+  }
+  if (!Game.minFx) {
+    // sparks, as #navglide's: born on the edge, growing, drifting out, gone; each born somewhere else every time
+    const gl = panelStar(S.star), gg = panelStar('255,205,90'), n = Game.lowFx ? S.n >> 1 : S.n, TT = 1.6;
+    const spark = (x, y, q, r0, g) => { const k = q < 0.2 ? 0.4 + 4.5 * q : 1.3 - (q - 0.2) * 1.25, r = r0 * k * u * 3.2; ctx.globalAlpha = fa * (q < 0.2 ? q * 5 : q > 0.6 ? (1 - q) * 2.5 : 1); ctx.drawImage(g, x - r, y - r, r * 2, r * 2); };
+    ctx.save();
+    for (let i = 0; i < n; i++) {
+      const cyc = t / TT + i * 0.381966, c0 = Math.floor(cyc), q = cyc - c0, h0 = panelHash(i * 13 + c0), h1 = panelHash(i * 7 + c0 * 3), s0 = h0 * 2 * (tw + ph), d = (5 + 12 * h1) * u * q;
+      let x, y;
+      if (s0 < tw) { x = px + s0; y = py - d; } else if (s0 < tw + ph) { x = px + tw + d; y = py + s0 - tw; } else if (s0 < 2 * tw + ph) { x = px + s0 - tw - ph; y = py + ph + d; } else { x = px - d; y = py + s0 - 2 * tw - ph; }
+      spark(x, y - 4 * u * q, q, i % 3 ? 2 : 1.5, i % 4 ? gl : gg);
+    }
+    // the relics: a spray out of each side
+    if (S.sides) for (const sd of [-1, 1]) for (let i = 0, m = Game.lowFx ? S.sides >> 1 : S.sides; i < m; i++) {
+      const T2 = 1.1 + 0.5 * panelHash(i + 40), cyc = t / T2 + i * 0.618034 + (sd > 0 ? 0.37 : 0), c0 = Math.floor(cyc), q = cyc - c0, h0 = panelHash(i * 11 + c0 + sd), h1 = panelHash(i * 5 + c0 * 7 + sd);
+      spark(cx + sd * (tw / 2 + (6 + 62 * h1) * u * Math.sqrt(q)), py + ph * h0 - (10 + 26 * h1) * u * q, q, 1.4 + 1.4 * h0, i % 3 ? gg : gl);
+    }
     ctx.restore();
   }
   ctx.globalAlpha = a0;
 }
 // 0.95: the XP bar's frame (drawHud), made once per size: a bronze body with a gold bevel, a dark track, the level's plate
-// at the left (pw wide, standing out 2 u above and below) with two rivets, a gold finial at the right end. Drawn m px out
+// at the left (pw wide, standing out 2 u above and below) with two rivets, its right end round (0.98.3: was a gold diamond). Drawn m px out
 const _xpF = new Map();
 function xpFrame(wb, hb, pw, u) {
   const key = Math.round(wb) + '|' + Math.round(hb) + '|' + pw + '|' + u.toFixed(3); let c = _xpF.get(key); if (c) return c;
@@ -1218,12 +1238,10 @@ function xpFrame(wb, hb, pw, u) {
   const g = c.getContext('2d'); g.translate(m, m);
   const gold = (y0, y1) => { const gr = g.createLinearGradient(0, y0, 0, y1); gr.addColorStop(0, '#fff1b8'); gr.addColorStop(0.45, '#e2a53a'); gr.addColorStop(1, '#7a4210'); return gr; };
   const rr = (x, y, w, h, r) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
-  rr(0, 0, wb, hb, hb * 0.32); g.fillStyle = '#1c0d03'; g.fill();   // the body
-  rr(1.1 * u, 1.1 * u, wb - 2.2 * u, hb - 2.2 * u, hb * 0.26); g.strokeStyle = gold(0, hb); g.lineWidth = 1.5 * u; g.stroke();   // its gold bevel
-  const tx = pw + 2 * u, tw = wb - pw - 4.5 * u, ty = 3 * u, th = hb - 6 * u;   // the track
-  const wl = g.createLinearGradient(0, ty, 0, ty + th); wl.addColorStop(0, '#080401'); wl.addColorStop(1, '#2a1708'); g.fillStyle = wl; g.fillRect(tx, ty, tw, th);
-  // the finial: a gold diamond on the right end
-  g.save(); g.translate(wb, hb / 2); g.rotate(Math.PI / 4); const d = hb * 0.32; g.fillStyle = '#1c0d03'; g.fillRect(-d - u, -d - u, (d + u) * 2, (d + u) * 2); g.fillStyle = gold(-d, d); g.fillRect(-d, -d, d * 2, d * 2); g.restore();
+  rr(0, 0, wb, hb, [hb * 0.32, hb / 2, hb / 2, hb * 0.32]); g.fillStyle = '#1c0d03'; g.fill();   // the body
+  rr(1.1 * u, 1.1 * u, wb - 2.2 * u, hb - 2.2 * u, [hb * 0.26, hb / 2 - 1.1 * u, hb / 2 - 1.1 * u, hb * 0.26]); g.strokeStyle = gold(0, hb); g.lineWidth = 1.5 * u; g.stroke();   // its gold bevel
+  const tx = pw + 2 * u, tw = wb - pw - 5 * u, ty = 3 * u, th = hb - 6 * u;   // the track
+  const wl = g.createLinearGradient(0, ty, 0, ty + th); wl.addColorStop(0, '#080401'); wl.addColorStop(1, '#2a1708'); rr(tx, ty, tw, th, [0, th / 2, th / 2, 0]); g.fillStyle = wl; g.fill();
   // the level's plate
   rr(0, -2 * u, pw, hb + 4 * u, 4 * u); const pl = g.createLinearGradient(0, -2 * u, 0, hb + 2 * u); pl.addColorStop(0, '#6a4a26'); pl.addColorStop(0.55, '#3a2410'); pl.addColorStop(1, '#22140a');
   g.fillStyle = pl; g.fill(); g.strokeStyle = '#1c0d03'; g.lineWidth = 2.6 * u; g.stroke(); g.strokeStyle = gold(-2 * u, hb + 2 * u); g.lineWidth = 1.3 * u; g.stroke();
@@ -1239,6 +1257,49 @@ function xpFill(th) {
   const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#fff4c0'); gr.addColorStop(0.32, '#ffd04a'); gr.addColorStop(0.7, '#f0961e'); gr.addColorStop(1, '#a8500a');
   g.fillStyle = gr; g.fillRect(0, 0, 4, h); g.fillStyle = 'rgba(255,252,230,0.75)'; g.fillRect(0, 0, 4, Math.max(1, Math.round(h * 0.14)));
   _xpFill.set(h, c); return c;
+}
+// 0.98.3: a boss's bar at the top of the screen, of the XP bar's family: the same bronze and gold round a dark track, made
+// once per size (m px out); `bossFill`, its colour (a vertical gradient, a light top edge). The track is bh high at by
+const _bbF = new Map();
+function bossFrame(bw, bh, u) {
+  const key = Math.round(bw) + '|' + Math.round(bh); let c = _bbF.get(key); if (c) return c;
+  if (_bbF.size > 8) _bbF.clear();
+  const m = Math.ceil(5 * u), e = 3 * u; c = document.createElement('canvas'); c.width = Math.ceil(bw + 2 * m); c.height = Math.ceil(bh + 2 * m); c.m = m;
+  const g = c.getContext('2d'); g.translate(m, m);
+  const rr = (x, y, w, h, r) => { g.beginPath(); g.roundRect(x, y, w, h, r); };
+  const gold = g.createLinearGradient(0, -e, 0, bh + e); gold.addColorStop(0, '#fff1b8'); gold.addColorStop(0.45, '#e2a53a'); gold.addColorStop(1, '#7a4210');
+  rr(-e, -e, bw + 2 * e, bh + 2 * e, bh / 2 + e); g.fillStyle = '#1c0d03'; g.fill();   // the body
+  rr(-e + 1.1 * u, -e + 1.1 * u, bw + 2 * e - 2.2 * u, bh + 2 * e - 2.2 * u, bh / 2 + e - 1.1 * u); g.strokeStyle = gold; g.lineWidth = 1.5 * u; g.stroke();   // its gold bevel
+  const wl = g.createLinearGradient(0, 0, 0, bh); wl.addColorStop(0, '#080401'); wl.addColorStop(1, '#2a1708'); rr(0, 0, bw, bh, bh / 2); g.fillStyle = wl; g.fill();   // the track
+  _bbF.set(key, c); return c;
+}
+const _bbFill = new Map();
+function bossFill(th, sub) {
+  const h = Math.max(2, Math.round(th)), key = h * 2 + (sub ? 1 : 0); let c = _bbFill.get(key); if (c) return c;
+  c = document.createElement('canvas'); c.width = 4; c.height = h; const g = c.getContext('2d');
+  const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, sub ? '#84e658' : '#ff6b5a'); gr.addColorStop(1, sub ? '#277a0e' : '#a8160c');
+  g.fillStyle = gr; g.fillRect(0, 0, 4, h); g.fillStyle = 'rgba(255,255,255,0.32)'; g.fillRect(0, 0, 4, Math.max(1, Math.round(h * 0.14)));
+  _bbFill.set(key, c); return c;
+}
+// the bar: its frame, the life just lost melting away in a lighter band, the colour, a light sweeping across, a few embers
+// rising inside it (placed from the time alone: nothing to keep), quarter marks, a glow at the tip
+function drawBossHud(ctx, b, bx, by, bw, bh, u, t) {
+  const F = bossFrame(bw, bh, u), k = clamp(b.hp / b.maxHp, 0, 1), sub = !b.boss, fw = bw * k;
+  b._hudLag = b._hudLag === undefined || b._hudLag < k ? k : b._hudLag + (k - b._hudLag) * 0.06;
+  ctx.drawImage(F, bx - F.m, by - F.m);
+  ctx.save(); ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, bh / 2); ctx.clip();
+  if (b._hudLag > k) { ctx.fillStyle = sub ? 'rgba(214,255,180,0.6)' : 'rgba(255,208,160,0.7)'; ctx.fillRect(bx + fw - 1, by, bw * (b._hudLag - k) + 1, bh); }
+  if (fw > 0.5) {
+    ctx.drawImage(bossFill(bh, sub), bx, by, fw, bh);
+    const sx = (t * 0.45 % 1.5) - 0.25, sw = 26 * u;
+    if (sx > -0.1 && sx < 1.1) { const g = ctx.createLinearGradient(bx + fw * sx - sw, 0, bx + fw * sx + sw, 0); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, 'rgba(255,255,255,0.3)'); g.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.fillRect(bx, by, fw, bh); }
+    ctx.globalCompositeOperation = 'lighter'; const em = RCache.glow(sub ? 'rgba(210,255,170,0.95)' : 'rgba(255,200,130,0.95)'), sz = 5.5 * u;
+    for (let i = 0; i < 7; i++) { const p = (t * (0.32 + 0.09 * (i % 3)) + i * 0.29) % 1; ctx.globalAlpha = 0.75 * Math.sin(p * Math.PI); ctx.drawImage(em, bx + fw * ((i * 0.618 + t * 0.012 * (1 + i % 3)) % 1) - sz / 2, by + bh * (1 - p) - sz / 2, sz, sz); }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  }
+  ctx.fillStyle = 'rgba(30,10,4,0.32)'; for (let i = 1; i < 4; i++) ctx.fillRect(Math.round(bx + bw * i / 4), by, Math.max(1, u * 0.8), bh);
+  ctx.restore();
+  if (fw > bh && k < 1) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.5; ctx.drawImage(RCache.glow(sub ? 'rgba(170,255,120,0.9)' : 'rgba(255,150,100,0.9)'), bx + fw - bh, by - bh * 0.5, bh * 2, bh * 2); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; }
 }
 // the capitals' height of the HUD font at px (outlinedText / TextCache write on the baseline)
 function hudCap(px) { const g = annInk.g || (annInk.g = document.createElement('canvas').getContext('2d')); g.font = hudFont(100); g.textBaseline = 'alphabetic'; return g.measureText('H').actualBoundingBoxAscent / 100 * px; }
@@ -1471,18 +1532,35 @@ function drawCombo(ctx, R, W, u) {
   }
 }
 function hexRgb(h) { const n = parseInt(h.slice(1), 16); return `${n >> 16 & 255},${n >> 8 & 255},${n & 255}`; }
+// 0.98.3: a thrown shovel (spell `coins`), lost among the effects: a halo of gold under it and kamas turning round it, on
+// a ring wider than the shovel so none hides it; its own wake of gold is in game.js. The sprite is drawn bigger, a gold rim round it
+function shovelCoins(ctx, p, t) {
+  const r = p.size * 2.5, h = p.size * 3.1; ctx.globalAlpha *= 0.8; ctx.drawImage(RCache.glow('rgba(255,205,70,0.95)'), -h, -h, h * 2, h * 2); ctx.globalAlpha /= 0.8;
+  const c = kamaCoin();
+  for (let i = 0; i < 5; i++) { const a = t * 6 + i * TAU / 5, s = Math.sin(a), d = 15 + 3 * s, w = d * (0.45 + 0.55 * Math.abs(Math.cos(t * 9 + i))); ctx.drawImage(c, Math.cos(a) * r - w / 2, s * r * 0.55 - d / 2, w, d); }
+}
+// a gold coin with the Kama symbol on it (made once: the symbol alone reads as a small blue star at this size); it turns by its width
+function kamaCoin() {
+  if (kamaCoin.c) return kamaCoin.c;
+  const c = document.createElement('canvas'), S = 40, g = c.getContext('2d'); c.width = c.height = S;
+  const gr = g.createRadialGradient(S * 0.38, S * 0.32, 2, S / 2, S / 2, S / 2); gr.addColorStop(0, '#fff3b0'); gr.addColorStop(0.55, '#ffcc33'); gr.addColorStop(1, '#c98410');
+  g.beginPath(); g.arc(S / 2, S / 2, S / 2 - 2, 0, TAU); g.fillStyle = gr; g.fill(); g.lineWidth = 3; g.strokeStyle = '#7a4a08'; g.stroke();
+  const k = Game.icons.canvas('KamaSymbol', 24); if (k) g.drawImage(k, S / 2 - 12, S / 2 - 12, 24, 24);
+  return (kamaCoin.c = c);
+}
 function drawProj(ctx, p, t) {
   if (p.crescent) return drawCrescent(ctx, p, t);
   const fx = FxSheets.get(p.spell.def.fx[0]);
   const ang = Math.atan2(p.vy, p.vx);
   ctx.save(); ctx.translate(p.x, p.y);
   if (p.chaos) { drawChaosBall(ctx, p, t, ang); ctx.restore(); return; }   // (0.96: the Boule de Chaos)
+  if (p.coins) shovelCoins(ctx, p, t);
   if (p.dagger) { // Dagues Boomerang: the dagger itself, spinning
     const A = drawAccSym(ctx, (p.spell && p.spell.finale && p.spell.finale.skin) || '5_10', 'R', 0.55, p.rot || 0); if (A) { ctx.restore(); return; }
   }
   if (p.drawIcon) { // spinning object (rolling shovel, thrown hatchet)
     if (p.col) { const r = p.size * 2.2; ctx.drawImage(RCache.glow(p.col), -r, -r, r * 2, r * 2); }   // (0.91: the Otomaï's flask glows)
-    ctx.rotate(p.rot || t * 10); Game.icons.drawFit(ctx, p.drawIcon, 0, 0, p.size * 2.6); ctx.restore(); return;
+    ctx.rotate(p.rot || t * 10); Game.icons.drawFit(ctx, p.drawIcon, 0, 0, p.size * (p.coins ? 3.4 : 2.6)); ctx.restore(); return;
   }
   if (p.fireball || (p.col && !p.arrow && !(fx && fx.anims.move))) { // coloured magic orb
     const r = p.size * 1.8; ctx.drawImage(RCache.glow(p.col), -r, -r, r * 2, r * 2); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.45, 0, TAU); ctx.fill(); ctx.restore(); return;
@@ -1512,6 +1590,7 @@ function drawProj(ctx, p, t) {
     if (p.rot) ctx.rotate(p.rot); else ctx.rotate(ang);
     const f = fx.frameAt('move', t - p.t0, true);
     if (p.fxScale) { const r = p.size * 2.2; ctx.drawImage(RCache.glow('rgba(255,140,40,0.75)'), -r, -r, r * 2, r * 2); }   // Flamiche: bigger, with a glow
+    if (p.coins) { fx.draw(ctx, f, 0, 0, 1.5, false, tintedSheet(fx, '#ffd24a')); fx.draw(ctx, f, 0, 0, 1.32, false); } else
     fx.draw(ctx, f, 0, 0, p.fxScale || 1, false);
   } else if (fx && fx.anims.bulle) {
     const f = fx.frameAt('bulle', 0, true); fx.draw(ctx, f, 0, 0, 1.1, false);
@@ -1695,10 +1774,13 @@ function drawHud(ctx, R) {
   const F = xpFrame(wb, hb, lw, u); ctx.drawImage(F, xb - F.m, yb - F.m);
   { // 0.60: the bar slides to its value and shines when ambers come in
     const want = clamp(R.xp / R.xpNext, 0, 1); R._xpShow = R._xpShow === undefined || want < R._xpShow - 0.5 ? want : R._xpShow + (want - R._xpShow) * 0.25;
-    const tx = xb + lw + 2 * u, tw = wb - lw - 4.5 * u, ty = yb + 3 * u, th = hb - 6 * u, fw = tw * R._xpShow;
+    const tx = xb + lw + 2 * u, tw = wb - lw - 5 * u, ty = yb + 3 * u, th = hb - 6 * u, fw = tw * R._xpShow;
     if (fw > 0.5) {
+      const xk = R.bumpK('xp', 220);
+      ctx.save(); ctx.beginPath(); ctx.roundRect(tx, ty, tw, th, [0, th / 2, th / 2, 0]); ctx.clip();   // (0.98.3: the fill follows the track's round end)
       ctx.drawImage(xpFill(th), tx, ty, fw, th);
-      const xk = R.bumpK('xp', 220); if (xk > 0) { ctx.fillStyle = `rgba(255,250,225,${(0.5 * xk).toFixed(3)})`; ctx.fillRect(tx, ty, fw, th); }
+      if (xk > 0) { ctx.fillStyle = `rgba(255,250,225,${(0.5 * xk).toFixed(3)})`; ctx.fillRect(tx, ty, fw, th); }
+      ctx.restore();
       ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.55 + 0.25 * xk; ctx.drawImage(RCache.glow('rgba(255,200,90,0.9)'), tx + fw - th * 1.6, ty - th * 1.1, th * 3.2, th * 3.2); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     }
     ctx.fillStyle = 'rgba(40,18,2,0.35)'; for (let i = 1; i < 10; i++) ctx.fillRect(Math.round(tx + tw * i / 10), ty, Math.max(1, u * 0.8), th);   // (tenths)
@@ -1711,8 +1793,9 @@ function drawHud(ctx, R) {
   IC.draw(ctx, 'KamaSymbol', W - 24 * u, yb + hb + 40 * u, 0.4 * u);
   outlinedText(ctx, fmtNum(R.kamas), W - 38 * u, yb + hb + 45 * u, '#ffd700', Math.round(14 * u * (1 + 0.25 * R.bumpK('kamas', 220))), 'right');
   drawCombo(ctx, R, W, u);
-  // spells
-  let x = 10 * u, y = yb + hb + 10 * u; const s = 50 * u;
+  // spells (0.98.2: on an upright screen under the timer and the boss bars: no room beside them)
+  const narrow = W / u < 760;
+  let x = 10 * u, y = yb + hb + (narrow ? 38 + Math.min(6, R.bossAlive.length + (R.mutant ? 1 : 0)) * 24 : 10) * u; const s = 50 * u;
   for (const sp of R.spells) {
     ctx.fillStyle = 'rgba(40,30,15,0.8)'; ctx.fillRect(x, y, s, s);
     ctx.drawImage(IC.canvas('sp_' + sp.def.icon, 128), x, y, s, s);
@@ -1745,11 +1828,19 @@ function drawHud(ctx, R) {
   // passives
   x = 10 * u; y += s + 6 * u; const ps = 30 * u;
   for (const p of Game.C.passives) {
-    const lv = R.passives[p.id]; if (!lv) continue;
+    const lv = R.passives[p.id]; if (!lv || p.id === R.bonusPassive) continue;
     ctx.fillStyle = 'rgba(40,30,15,0.7)'; ctx.fillRect(x, y, ps, ps);
     IC.drawFit(ctx, p.icon, x + ps / 2, y + ps / 2, ps * 0.9);
     outlinedText(ctx, String(lv), x + ps - 2 * u, y + ps - 2 * u, lv >= p.max ? '#ffd24a' : '#fff', 9 * u, 'right');
     x += ps + 3 * u;
+  }
+  if (R.bonusPassive) {   // 0.98.3: the Gladiatrool's characteristic: its own place, after the five's, wherever they stand; dark blue
+    const p = Game.C.passives.find(q => q.id === R.bonusPassive), lv = R.passives[p.id], bx = 10 * u + 5 * (ps + 3 * u) + 4 * u;
+    ctx.fillStyle = 'rgba(12,30,92,0.85)'; ctx.fillRect(bx, y, ps, ps);
+    ctx.strokeStyle = '#12296e'; ctx.lineWidth = 3 * u; ctx.strokeRect(bx - u, y - u, ps + 2 * u, ps + 2 * u);
+    ctx.strokeStyle = 'rgba(140,180,255,0.9)'; ctx.lineWidth = u; ctx.strokeRect(bx - 2.5 * u, y - 2.5 * u, ps + 5 * u, ps + 5 * u);
+    IC.drawFit(ctx, p.icon, bx + ps / 2, y + ps / 2, ps * 0.9);
+    outlinedText(ctx, String(lv), bx + ps - 2 * u, y + ps - 2 * u, lv >= p.max ? '#ffd24a' : '#fff', 9 * u, 'right');
   }
   // dofus eggs: a column on the right side, under the kamas
   if (R.dofus.length) { const step = 34 * u; let dy = H / 2 - (R.dofus.length * step) / 2 + step / 2;
@@ -1762,9 +1853,9 @@ function drawHud(ctx, R) {
   if (R.relicShow) { const D = 3, k = (performance.now() - R.relicShow.t0) / 1000; if (k > D) R.relicShow = null; else {
     const r = R.relicShow.r, a = Math.min(1, k * 3.5, (D - k) * 2.5), cx = W / 2, sc = 1 + Math.max(0, 0.45 - k) * 0.7;
     const e1 = 1 - Math.pow(1 - Math.min(1, k / 0.42), 3), out = Math.max(0, k - (D - 0.4)) / 0.4 * 10 * u;   // e1: the rise; out: a small lift as it fades
-    const maxW = Math.min(W * 0.9, 600 * u) - 44 * u, f1 = 13 * u; let f2 = 20 * u; ctx.font = BAN_FONT(f2); const nw = ctx.measureText(L(r.name)).width; if (nw > maxW) f2 *= maxW / nw;   // (0.98.1: its name in the chat's lettering, BAN_FONT)
+    const maxW = Math.min(W * 0.9, 600 * u) - 44 * u, f1 = 14 * u; let f2 = 20 * u; ctx.font = BAN_FONT(f2); const nw = ctx.measureText(L(r.name)).width; if (nw > maxW) f2 *= maxW / nw;   // (0.98.1: its name in the chat's lettering, BAN_FONT)
     const f3 = 15 * u, F3 = px_ => `${px_}px Lilita, DofusBold, sans-serif`; ctx.font = F3(f3); const dl = wrapLines(ctx, L(r.desc), maxW), d3 = f3 * 1.22;   // (0.98: the bonus in Lilita: rounder, easier to read than the announcements' font)
-    ctx.font = annFont(f1, 700); const w1 = ctx.measureText(T('relic_got')).width; ctx.font = BAN_FONT(f2); const w2 = ctx.measureText(L(r.name)).width; ctx.font = F3(f3);
+    ctx.font = BAN_FONT(f1); const w1 = ctx.measureText(T('relic_got')).width; ctx.font = BAN_FONT(f2); const w2 = ctx.measureText(L(r.name)).width; ctx.font = F3(f3);
     const bw = Math.min(W * 0.94, Math.max(w1, w2, ...dl.map(l => ctx.measureText(l).width)) + 44 * u), gap = 5 * u, h1 = f1 * 1.15, h2 = f2 * 1.2, h3 = dl.length * d3, pad = 9 * u, bh = pad * 2 + h1 + h2 + gap + h3;
     const top = Math.max(H / 2 - 112 * u - 40 * u - bh, R.bannerMsg && R._banBot ? R._banBot + 6 * u : 0, 8 * u), cy = top + bh + 40 * u - out;
     const py0 = (R.player.y - 30 - R.cam.y) * Game.zoom + H / 2, ry = lerp(py0, cy, e1);   // the relic's height: from the character to its place
@@ -1776,11 +1867,11 @@ function drawHud(ctx, R) {
     // (0.95: 'RELIQUE' over the relic's name, not beside it, all centred in a frame): three blocks in a banner's
     // frame — the word, the name (bigger, shrunk to fit), the bonus (wrapped), all in the announcements' font —, each centred by its ink
     const e2 = 1 - Math.pow(1 - Math.min(1, k / 0.3), 2), bx = cx - bw / 2, byy = top - (1 - e2) * 12 * u - out;
-    ctx.globalAlpha = a * e2 * 0.6; annPanel(ctx, bx, byy, bw, bh, u, R.time, 'fire'); ctx.globalAlpha = a * e2;   // (0.98: green flames, see-through)
+    ctx.globalAlpha = a * e2 * 0.6; annPanel(ctx, bx, byy, bw, bh, u, performance.now() / 1000, 'relic'); ctx.globalAlpha = a * e2;   // (see-through, not its sparks)
     ctx.textAlign = 'center'; let yy = byy + pad;
-    annLine(ctx, T('relic_got'), cx, yy + h1 / 2 + annInk('H', f1, 700).dy, f1, ANN.retro); yy += h1;   // (0.98.2: the victory's gold)
+    annLine(ctx, T('relic_got'), cx, yy + h1 / 2 + annInk('H', f1, 700, BAN_FONT(100)).dy, f1, ANN.plate, BAN_FONT); yy += h1;   // (0.98.2: the victory's gold, the chat's lettering)
     { const ny = yy + h2 / 2 + annInk('H', f2, 700, BAN_FONT(100)).dy;
-      annLine(ctx, L(r.name), cx, ny, f2, ANN.retro, BAN_FONT); } yy += h2 + gap;
+      annLine(ctx, L(r.name), cx, ny, f2, ANN.plate, BAN_FONT); } yy += h2 + gap;
     const i3 = annInk('H', f3, 700, F3(100)).dy; ctx.font = F3(f3); ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = Math.max(2, f3 * 0.24); ctx.strokeStyle = 'rgba(30,8,0,0.92)';
     dl.forEach((l, i) => { const ly = yy + d3 * (i + 0.5) + i3; ctx.strokeText(l, cx, ly); ctx.fillStyle = '#fff6dc'; ctx.fillText(l, cx, ly); });
     ctx.textAlign = 'left';
@@ -1809,10 +1900,7 @@ function drawHud(ctx, R) {
   const bars = R.bossAlive.slice(0, 5); if (R.mutant && !R.mutant.dying && R.mutant.hp > 0 && bars.length < 6) bars.push(R.mutant);   // (0.71: up to 5 boss bars)
   for (let bi = 0; bi < bars.length; bi++) {
     const b = bars[bi], sub = !b.boss; const bw = Math.min((sub ? 380 : 520) * u, W * 0.6), bx = (W - bw) / 2, by = yb + hb + 36 * u + bi * 24 * u;
-    ctx.fillStyle = 'rgba(0,0,0,0.7)'; ctx.fillRect(bx - 2, by - 2, bw + 4, 16 * u + 4);
-    const gg = ctx.createLinearGradient(0, by, 0, by + 16 * u); gg.addColorStop(0, sub ? '#9cff6a' : '#ff6b5a'); gg.addColorStop(1, sub ? '#2f8a12' : '#a8160c');
-    ctx.fillStyle = gg; ctx.fillRect(bx, by, bw * clamp(b.hp / b.maxHp, 0, 1), 16 * u);
-    ctx.strokeStyle = '#ffd27a'; ctx.lineWidth = 2; ctx.strokeRect(bx - 2, by - 2, bw + 4, 16 * u + 4);
+    drawBossHud(ctx, b, bx, by, bw, 16 * u, u, performance.now() / 1000);
     if (!(R.time - (b._hpT || -9) < 0.1) || b.hp <= 0) { b._hpT = R.time; b._hpS = `${L(b.def.name)} — ${fmtNum(Math.max(0, b.hp))} / ${fmtNum(b.maxHp)}`; }   // (0.98.1: its text made again 10 times a second at most, not on every hit: a new picture each time)
     outlinedText(ctx, b._hpS, W / 2, by + 13 * u, '#fff', 12 * u, 'center');
   }
@@ -1878,7 +1966,7 @@ function drawHud(ctx, R) {
     } else R.hudMove = null; }
   // minimap
   if (R.mini) {
-    const mw = Math.min(240 * u, W * 0.28), mh = mw * R.world.h / R.world.w, mx = W - mw - 10 * u, my = H - mh - 10 * u;
+    const mw = Math.min(240 * u, W * 0.28, H * 0.42), mh = mw * R.world.h / R.world.w, mx = W - mw - 10 * u, my = H - mh - 10 * u;   // (0.98.2: H: a phone lying down)
     ctx.globalAlpha = 0.85; ctx.drawImage(R.mini, mx, my, mw, mh); ctx.globalAlpha = 1;
     ctx.strokeStyle = '#c8a46a'; ctx.lineWidth = 2; ctx.strokeRect(mx, my, mw, mh);
     const k = mw / R.world.w;
@@ -1888,8 +1976,8 @@ function drawHud(ctx, R) {
       const bl = 0.6 + 0.4 * Math.sin(R.time * 8); ctx.fillStyle = q.kind === 'dofus' ? `rgba(255,60,60,${bl})` : `rgba(255,200,40,${bl})`;
       ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(mx + q.x * k, my + q.y * k, 4.5 * u, 0, TAU); ctx.fill(); ctx.stroke();
     }
-    for (const q of R.pickups) if (q.kind === 'booster' || q.kind === 'relic') {   // 0.37: the TTG booster (green) and the relics (orange), on the minimap too
-      const x = mx + q.x * k, y = my + q.y * k, r = 4.5 * u + Math.sin(R.time * 6); ctx.fillStyle = q.kind === 'booster' ? '#9cff6a' : '#ffb03a'; ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5;
+    for (const q of R.pickups) if (q.kind === 'booster' || q.kind === 'relic' || q.kind === 'gladia') {   // 0.37: the TTG booster (green) and the relics (orange), on the minimap too
+      const x = mx + q.x * k, y = my + q.y * k, r = 4.5 * u + Math.sin(R.time * 6); ctx.fillStyle = q.kind === 'booster' ? '#9cff6a' : q.kind === 'gladia' ? '#6fa0ff' : '#ffb03a'; ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5;
       if (q.kind === 'booster') { ctx.fillRect(x - r * 0.7, y - r, r * 1.4, r * 2); ctx.strokeRect(x - r * 0.7, y - r, r * 1.4, r * 2); } else { ctx.beginPath(); ctx.moveTo(x, y - r); ctx.lineTo(x + r, y); ctx.lineTo(x, y + r); ctx.lineTo(x - r, y); ctx.closePath(); ctx.fill(); ctx.stroke(); }
     }
     if (R.door) { ctx.fillStyle = '#d7a6ff'; ctx.beginPath(); ctx.arc(mx + R.door.x * k, my + R.door.y * k, 4 * u + Math.sin(R.time * 6), 0, TAU); ctx.fill(); }
@@ -1913,12 +2001,14 @@ function drawHud(ctx, R) {
   }
   // chat
   if (Store.data.settings.chat) {
-    let cy = H - 24 * u; const now = R.time;   // v2.0: a bit bigger
+    // (0.98.2: an upright screen: over the bottom row, the screen's whole width; beside the heart it wrapped every 3 words)
+    const cb = narrow ? H - Math.max(112 * u, (R.mini ? Math.min(240 * u, W * 0.28, H * 0.42) * R.world.h / R.world.w : 0) + 18 * u) : H;
+    let cy = cb - 24 * u; const now = R.time;   // v2.0: a bit bigger
     // 0.94 (quality audit): a long line ran under the heart and the potion (their '/62' hidden): lines wrap before the
     // bottom-centre HUD (the heart at W / 2, the move-spell switch left of it)
-    const cw = Math.max(160 * u, W / 2 - 116 * u), f0 = ctx.font; ctx.font = hudFont(13 * u);
+    const cw = narrow ? W - 24 * u : Math.max(160 * u, W / 2 - 116 * u), f0 = ctx.font; ctx.font = hudFont(13 * u);
     { let n = 0, al = 0; for (const c of R.chats) { const age = now - c.t, lf = c.life || 14; if (age > lf) continue; n += c._w === cw ? c._ls.length : 1; al = Math.max(al, age > lf - 3 ? (lf - age) / 3 : 1); }   // (0.98: a soft shade behind the lines: they read on bright grass)
-      if (n) { const hh = n * 18 * u + 26 * u; ctx.globalAlpha = 0.55 * al; ctx.drawImage(RCache.glow('rgba(0,10,4,0.85)'), -cw * 0.25, H - hh - 6 * u, cw * 1.45, hh * 1.6); ctx.globalAlpha = 1; } }
+      if (n) { const hh = n * 18 * u + 26 * u; ctx.globalAlpha = 0.55 * al; ctx.drawImage(RCache.glow('rgba(0,10,4,0.85)'), -cw * 0.25, cb - hh - 6 * u, cw * 1.45, hh * 1.6); ctx.globalAlpha = 1; } }
     for (let i = R.chats.length - 1; i >= 0; i--) {
       const c = R.chats[i]; const age = now - c.t, lf = c.life || 14; if (age > lf) continue;   // (0.98.1: lf, an announcement's explanation 28 s)
       ctx.globalAlpha = age > lf - 3 ? (lf - age) / 3 : 1;
@@ -1958,30 +2048,55 @@ function drawHud(ctx, R) {
     // (0.95: the messages sat low and off-centre in their frame: the frame was laid from a guess of the text's
     // height; now the block of lines — line height lh, the capitals' ink centred on each line, annInk — is centred in it)
     const lh = fs * 1.2, tw = Math.max(...lines.map(l => ctx.measureText(l).width)) + 70 * u * BS, ph = 46 * u * BS + (lines.length - 1) * lh, px = (W - tw) / 2, py = by0 - 46 * u * BS * 0.68;
-    ctx.globalAlpha = clamp(k, 0, 1) * (b.kind === 'boss' ? 0.9 : 1); annPanel(ctx, px, py, tw, ph, u, R.time, b.kind === 'boss' ? 'boss' : null); R._banBot = py + ph; ctx.globalAlpha = clamp(k, 0, 1);
+    ctx.globalAlpha = clamp(k, 0, 1) * (b.kind === 'boss' ? 0.9 : 1); annPanel(ctx, px, py, tw, ph, u, performance.now() / 1000, b.kind === 'boss' ? 'boss' : null); R._banBot = py + ph; ctx.globalAlpha = clamp(k, 0, 1);
    // (0.95: a relic's caption shown meanwhile goes under it)
     const dy = annInk('H', fs, 700, BAN_FONT(100)).dy, y0 = py + ph / 2 - (lines.length - 1) * lh / 2 + dy;
     ctx.textAlign = 'center';
     if (b.kind === 'boss' && !Game.lowFx) { ctx.save(); ctx.font = BAN_FONT(fs); ctx.textBaseline = 'middle'; ctx.shadowColor = '#f5b52e'; ctx.shadowBlur = (16 + 5 * Math.sin(R.time * 5)) * u; ctx.fillStyle = '#f5b52e'; lines.forEach((l, i) => { ctx.fillText(l, W / 2, y0 + i * lh); ctx.fillText(l, W / 2, y0 + i * lh); }); ctx.restore(); }   // (its words glowing in their colour, under the outline)
     lines.forEach((l, i) => {
-      if (!(b.pre && i === 0 && l.startsWith(b.pre[0] + ' '))) { annLine(ctx, l, W / 2, y0 + i * lh, fs, ANN.retro, BAN_FONT); return; }   // (0.98.2: every central message in the victory's gold, b.color stays the chat's)
+      if (!(b.pre && i === 0 && l.startsWith(b.pre[0] + ' '))) { annLine(ctx, l, W / 2, y0 + i * lh, fs, ANN.plate, BAN_FONT); return; }   // (0.98.2: every central message in the victory's gold, b.color stays the chat's)
       ctx.font = BAN_FONT(fs); const x0 = W / 2 - ctx.measureText(l).width / 2, w0 = ctx.measureText(b.pre[0] + ' ').width; ctx.textAlign = 'left';
-      annLine(ctx, b.pre[0], x0, y0, fs, b.pre[1], BAN_FONT); annLine(ctx, l.slice(b.pre[0].length + 1), x0 + w0, y0, fs, ANN.retro, BAN_FONT); ctx.textAlign = 'center';
+      annLine(ctx, b.pre[0], x0, y0, fs, b.pre[1], BAN_FONT); annLine(ctx, l.slice(b.pre[0].length + 1), x0 + w0, y0, fs, ANN.plate, BAN_FONT); ctx.textAlign = 'center';
     }); ctx.textAlign = 'left';
     ctx.globalAlpha = 1;
   }
-  // 0.98.2: the Sablier's freeze, what is left of it read from the freeze itself (Run.freezeUntil: every source of it), see-through
-  if (R.sandFreeze) { const left = R.freezeUntil - R.time; if (left <= 0) R.sandFreeze = false; else {
-    const fs = 40 * u, y = H / 2, s = left.toFixed(2).replace('.', LANG === 'en' ? '.' : ',') + ' s'; ctx.save(); ctx.globalAlpha = 0.55; ctx.font = hudFont(fs); ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
-    const x = W / 2 - ctx.measureText('8,88 s').width / 2, g = ctx.createLinearGradient(0, y - fs * 0.48, 0, y + fs * 0.42); for (const [o, c] of ANN.retro.stops) g.addColorStop(o, c);   // (a fixed left edge: the figures' widths differ, a centred text shook)
-    ctx.lineWidth = fs * 0.16; ctx.strokeStyle = ANN.retro.edge; ctx.strokeText(s, x, y); ctx.fillStyle = g; ctx.fillText(s, x, y); ctx.restore();
-  } }
+  // 0.98.2: the Sablier's freeze, what is left of it read from the freeze itself (Run.freezeUntil: every source of it)
+  if (R.sandFreeze) { const left = R.freezeUntil - R.time; if (left <= 0) { R.sandFreeze = false; R._sandA = 0; } else { R._sandA = Math.min(1, (R._sandA || 0) + 0.05); drawSandTimer(ctx, R, W, H, u, left); } }
   // touch joystick
   if (Input.touch.active) {
     ctx.globalAlpha = 0.35; ctx.fillStyle = '#fff';
     ctx.beginPath(); ctx.arc(Input.touch.sx, Input.touch.sy, 55 * u, 0, TAU); ctx.fill();
     ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(Input.touch.sx + Input.touch.dx * 50 * u, Input.touch.sy + Input.touch.dy * 50 * u, 22 * u, 0, TAU); ctx.fill(); ctx.globalAlpha = 1;
   }
+}
+
+// the Sablier's timer: see-through ice, high up under the banners' place, time standing still round it: a slow frost halo, the
+// drop's own hourglass gone blue turning round it on a tilted orbit (behind the figures, then in front), crystals hanging in the
+// air, barely moving, each twinkling in its turn. Cached pictures only
+function sandIce() {   // the hourglass of the drop in ice blue, made once
+  let c = RCache.m.get('sandIce'); if (c) return c; const src = Game.icons && Game.icons.canvas(Game.C.sablierItem || 'sp_100', 96); if (!src) return null;
+  c = document.createElement('canvas'); c.width = src.width; c.height = src.height; const g = c.getContext('2d');
+  g.drawImage(src, 0, 0); g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(95,195,255,0.5)'; g.fillRect(0, 0, c.width, c.height);
+  return RCache.put('sandIce', c);
+}
+function drawSandTimer(ctx, R, W, H, u, left) {
+  const fs = 36 * u, nb = Math.min(4, R.bossAlive.length + (R.mutant ? 1 : 0)), y = Math.max(H * 0.17, 118 * u + nb * 24 * u) + 54 * u, t = performance.now() / 1000, a = 0.74 * R._sandA * Math.min(1, left / 0.4), s = left.toFixed(2).replace('.', LANG === 'en' ? '.' : ',') + ' s';
+  ctx.save(); ctx.font = hudFont(fs); ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+  const tw = ctx.measureText('8,88 s').width, x = W / 2 - tw / 2, rx = tw * 0.82, ry = fs * 1.02, ice = sandIce(), star = panelStar('120,200,255'), hs = fs * 0.78;   // (a fixed left edge: the figures' widths differ, a centred text shook)
+  ctx.globalAlpha = a * (0.5 + 0.08 * Math.sin(t * 1.3)); ctx.drawImage(RCache.glow('rgba(110,195,255,0.8)'), W / 2 - rx * 1.5, y - ry * 1.5, rx * 3, ry * 3);
+  ctx.globalAlpha = a * 0.28; ctx.strokeStyle = '#bfe8ff'; ctx.lineWidth = 1.2 * u; ctx.setLineDash([3 * u, 7 * u]); ctx.lineDashOffset = t * 4 * u; ctx.beginPath(); ctx.ellipse(W / 2, y, rx, ry, -0.1, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
+  const orbit = back => { if (!ice || Game.minFx) return; for (let i = 0, N = Game.lowFx ? 3 : 5; i < N; i++) { const an = t * 0.42 + i / N * TAU, sy = Math.sin(an); if ((sy < 0) !== back) continue;
+    const c = Math.cos(an), ox = c * rx, oy = sy * ry, px = W / 2 + ox * Math.cos(0.1) + oy * Math.sin(0.1), py = y - ox * Math.sin(0.1) + oy * Math.cos(0.1), k = 0.8 + 0.28 * sy, sz = hs * k;
+    ctx.save(); ctx.globalAlpha = Math.min(1, a * (1.1 + 0.25 * sy)); ctx.translate(px, py); ctx.rotate(Math.sin(t * 0.7 + i * 1.7) * 0.5 + i); ctx.drawImage(ice, -sz / 2, -sz / 2, sz, sz); ctx.restore(); } };
+  orbit(true);
+  const g = ctx.createLinearGradient(0, y - fs * 0.48, 0, y + fs * 0.42); for (const [o, c] of ANN.ice.stops) g.addColorStop(o, c);
+  ctx.globalAlpha = a; ctx.lineWidth = fs * 0.13; ctx.strokeStyle = ANN.ice.edge; ctx.strokeText(s, x, y); ctx.fillStyle = g; ctx.fillText(s, x, y);
+  orbit(false);
+  if (!Game.minFx) for (let i = 0, N = Game.lowFx ? 10 : 22; i < N; i++) {
+    const h0 = panelHash(i + 200), h1 = panelHash(i + 230), h2 = panelHash(i + 260), an = h0 * TAU, d = 0.55 + 0.85 * h1, sx = W / 2 + Math.cos(an) * rx * d * 1.15 + Math.sin(t * 0.18 + i) * 4 * u, sy = y + Math.sin(an) * ry * d * 1.25 + Math.cos(t * 0.15 + i * 1.3) * 3 * u - ((t * 0.05 + h2) % 1) * 6 * u;
+    const tw2 = Math.pow(0.5 + 0.5 * Math.sin(t * (0.7 + h2) + i * 2.1), 3), sz = (7 + 11 * h2) * u * (0.55 + 0.45 * tw2); ctx.globalAlpha = Math.min(1, a * 1.3) * (0.12 + 0.88 * tw2); ctx.drawImage(star, sx - sz / 2, sy - sz / 2, sz, sz);
+  }
+  ctx.restore();
 }
 
 // 0.71: the fart puff in a very dark orange (the client's 'Lâcher les gaz' puff, multiplied once, cached)
@@ -2145,7 +2260,7 @@ function drawFireWall(ctx, A, B, t) {
 }
 // screen-edge arrows (in-game arrow textures) pointing at off-screen special monsters and items
 const ARROW_SPECIAL_MOBS = new Set(['bandit_manchot', 'wabbit_gm', 'tiwabbit_kiafin', 'tofu_mutant', 'coffre_anime', 'jorbak']);
-const ARROW_ITEMS = new Set(['chest', 'dofus', 'power', 'fee', 'sablier', 'rappel', 'kamaboost', 'booster', 'tmap', 'relic', 'nowelgift', 'trool', 'manuel', 'houx']);   // (0.92: the Manuel too, the Maîtres Corbacs' rewards fall anywhere)
+const ARROW_ITEMS = new Set(['chest', 'dofus', 'power', 'fee', 'sablier', 'rappel', 'kamaboost', 'booster', 'tmap', 'relic', 'nowelgift', 'trool', 'gladia', 'manuel', 'houx']);   // (0.92: the Manuel too, the Maîtres Corbacs' rewards fall anywhere)
 function drawEdgeArrows(ctx, R, W, H, u) {
   const IC = Game.icons, z = Game.zoom;
   const one = (wx, wy, icon, scale, base, col, pulse) => {
@@ -2343,11 +2458,14 @@ function drawPadBtn(ctx, l, x, y, u) {
   TextCache.draw(ctx, l, x, y + 4 * u, '#fff', 10 * u, 'center', 'rgba(0,0,0,0.6)', 1.5 * u);
 }
 
-// the booster packs atlas (0.38: tools/assets/build_boosters38.py: SPR.boosters, 5 columns)
-const BoosterArt = { img: null, get() { if (!this.img) { this.img = new Image(); this.img.src = vurl('assets/ui/boosters.webp'); } return this.img.complete && this.img.naturalWidth ? this.img : null; } };
+// the booster packs (0.98.3: tools/assets/build_ttg098.py: SPR.boosters)
+const BoosterArt = { c: {}, get(i) {   // (0.98.3: each pack its file, assets/ttg/p<i>.webp; a smaller copy for the ground: no mipmaps there)
+  let e = this.c[i]; if (e) return e.t;
+  e = this.c[i] = { t: null }; const im = new Image(); im.onload = () => { const c = document.createElement('canvas'); c.width = 120; c.height = Math.round(120 * im.height / im.width); const g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(im, 0, 0, c.width, c.height); e.t = c; }; im.src = vurl(`assets/ttg/p${i}.webp`); return null;
+} };
 function boosterPack(ctx, i, x, y, w) {
-  const im = BoosterArt.get(), B = (typeof SPR !== 'undefined' && SPR.boosters) || { n: 14, cols: 5, w: 440, h: 704 }; if (!im) return false;
-  i = i % B.n; ctx.drawImage(im, (i % B.cols) * B.w, Math.floor(i / B.cols) * B.h, B.w, B.h, x, y, w, w * B.h / B.w); return true;
+  const B = SPR.boosters, t = BoosterArt.get(i % B.n); if (!t) return false;
+  ctx.drawImage(t, x, y, w, w * B.h / B.w); return true;
 }
 
 // a sheet recoloured once (0.40: the blue chest of the Minotoror trapdoor): the colour over its pixels, keeping the shading

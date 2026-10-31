@@ -5,6 +5,7 @@
 // Everything is cheap: no per-monster work, one cached full-screen picture at most.
 // 0.62: the combo's steps and their colours (juice.js, the HUD in render.js)
 const COMBO_MS = [25, 50, 100, 200, 400, 800], COMBO_COLS = ['#ffe27a', '#ffb02e', '#ff7a3a', '#ff4d8a', '#c050ff', '#5ad1ff'];
+const EASE_T = 0.5;   // (Run.easeIn)
 Object.assign(Run.prototype, {
   // the game stops for a few milliseconds (the run is drawn, not updated): the impact reads as heavy
   hitStop(ms) { const S = Store.data.settings; if (S.shake === false) ms *= 0.5; const t = performance.now() + ms; if (!(this.hitStopUntil > t)) this.hitStopUntil = t; },
@@ -26,13 +27,14 @@ Object.assign(Run.prototype, {
   // 0.98: the chromatic aberration of the moment, 0..2.6 (PX.end: a lens blur of the world's edges with colour fringes;
   // the strength widens the blur, it never shifts the picture): growing over the countdown's first second (0.98.2; it came
   // with the '2'), strong to 0.5 s after GO!, the slow
-  // motions, a boss's fall, a relic picked up, Libération taking a blow, the victory (the strongest); less in lowFx,
+  // motions, a boss's fall, a relic picked up, Libération taking a blow, a spell fusion, the victory (the strongest); less in lowFx,
   // none in minFx
   chromaK() {
     let k = 0; const now = performance.now(), c = this.cine, fade = (t0, dur, k0) => t0 ? k0 * Math.max(0, 1 - (now - t0) / dur) : 0;
     if (c && c.kind === 'countdown') { this._goCA = now; const q = Math.min(1, c.t); this._goK = q * q * (3 - 2 * q); }   // (all through the countdown: its clock held at now, _goK its rise from the very start)
     k = Math.max(k, fade(this._goCA, 500, 2.4 * (this._goK === undefined ? 1 : this._goK)));   // then gone 0.5 s after GO!
     if (this.slowUntil > now) k = Math.max(k, 0.9 * Math.min(1, (this.slowUntil - now) / 350));   // the slow motions
+    if (c && c.kind === 'union') k = Math.max(k, Math.min(1.2, c.t * 1.4) + (c.t > 1.75 ? 1.4 * Math.max(0, Math.min(1, (c.t - 1.75) / 0.1)) : 0) * Math.min(1, (c.dur - c.t) / 0.5));   // a spell fusion: rising, at its height from the name's blow on
     k = Math.max(k, fade(this._bossCA, 1800, 1.6));   // a boss's fall
     k = Math.max(k, fade(this._libCA, 700, 1.1));   // Libération taking a blow
     if (this.critFx) { const e = (now - this.critFx.t0) / 1000; k = Math.max(k, e < 2 ? 2.2 : 2.2 * Math.max(0, 1 - (e - 2) / 1.2)); }   // a critical summon
@@ -40,7 +42,15 @@ Object.assign(Run.prototype, {
     const V = this.victoryFx; if (V) { const e = (now - V.t0) / 1000; k = Math.max(k, e < 0.7 ? 1 + 2 * e : e < 3.2 ? 2 + 0.35 * Math.sin(e * 4) : Math.max(0, 2 * (1 - (e - 3.2) / 0.7))); }   // the victory: the strongest
     return clamp(k, 0, 2.6) * (Game.minFx ? 0 : Game.lowFx ? 0.6 : 1);
   },
-  timeK() { if (!(this.slowUntil > performance.now())) return 1; const left = (this.slowUntil - performance.now()) / 1000; return lerp(this.slowK, 1, clamp(1 - left / 0.35, 0, 1) * (left < 0.35 ? 1 : 0)); },   // (eases back the last 0.35 s)
+  // 0.98.3: after a window of choices or ToT, the keys still held for the menu: the game comes back from 1 % of its speed to all of
+  // it over 0.5 s, counted only while the run runs (a cinematic or the next window holds it); a new one restarts it, none adds up
+  easeIn() { this.easeLeft = EASE_T; },
+  timeK() {
+    let k = 1; const left = (this.slowUntil - performance.now()) / 1000;
+    if (left > 0) k = lerp(this.slowK, 1, clamp(1 - left / 0.35, 0, 1) * (left < 0.35 ? 1 : 0));
+    if (this.easeLeft > 0) { const e = 1 - this.easeLeft / EASE_T; k = Math.min(k, 0.01 + 0.99 * e * e); }
+    return k;
+  },   // (eases back the last 0.35 s)
   flash(color, sec, a) { this.flashFx = { color, t0: performance.now(), dur: sec * 1000, a }; },
   // ambers picked within 0.6 s of each other: the pickup sound goes up a step each time (up to an octave)
   amberSound() {
@@ -160,6 +170,10 @@ const ANN = {
   cream: { stops: [[0, '#ffffff'], [0.45, '#f7f0dc'], [0.8, '#e2d2a6'], [1, '#c4ab72']], edge: '#2a2414', bevel: '#f2b24a', deep: '#173a1c', hi: '#ffffff', halo: 'rgba(170,236,60,0.55)' },
   retro: { stops: [[0, '#fffbe0'], [0.32, '#ffe27a'], [0.62, '#f5b52e'], [1, '#a8650c']], edge: '#2a1a06', bevel: '#7a4a10', deep: '#1c3a16', hi: '#fffbe8', halo: 'rgba(160,232,60,0.55)' },
   lime: { stops: [[0, '#fbffe0'], [0.35, '#d8f870'], [0.66, '#9ad83a'], [1, '#4a8a16']], edge: '#14300c', bevel: '#f2e27a', deep: '#0e2a0c', hi: '#ffffff', halo: 'rgba(255,226,110,0.5)' },
+  // 0.98.2: the victory's gold on the brown frames (a warm halo, not its lime); the Sablier's ice; the fusions' violet
+  plate: { stops: [[0, '#fffbe0'], [0.32, '#ffe27a'], [0.62, '#f5b52e'], [1, '#a8650c']], edge: '#2a1a06', halo: 'rgba(255,190,80,0.32)' },
+  ice: { stops: [[0, '#f0fbff'], [0.34, '#b4e8ff'], [0.68, '#62c0ff'], [1, '#2a7ee8']], edge: '#0a3478' },
+  violet: { stops: [[0, '#ffffff'], [0.3, '#f0d6ff'], [0.62, '#bd78ff'], [1, '#6a26d0']], edge: '#1a0632', halo: 'rgba(190,110,255,0.6)' },
 };
 // (centred on x; while see-through — fades — the layers are composed whole in a scratch canvas at the size on screen and
 // laid at that opacity once: drawn one by one, the dark extrusion showed through the face)

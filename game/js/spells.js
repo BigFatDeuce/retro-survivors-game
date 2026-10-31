@@ -350,7 +350,7 @@ class SpellInst {
         x: P.x, y: P.y - 22, vx, vy, sp, dmg: this.dmg() * this.extraK(i), pierce: p.pierce, life: p.life * st.projspeed, size: p.size * Math.sqrt(st.area),
         spell: this, hit: new Set(), homing: p.homing, target: tg.m, boomerang: p.boomerang, bounce: p.bounce || 0,
         aoe: p.aoe ? p.aoe * st.area : 0, chaos: p.chaos, trail: p.chaos ? [] : null, tint: p.tint, slow: p.slow, slowDur: p.slowDur, burn: p.burn, gamble: p.gamble, arrow: p.arrow, spin: p.spin, stone: p.stone, dagger: p.dagger, ice: p.ice,
-        lob: p.lob, puddle: p.puddle, puddleColor: p.puddleColor, puddlePoison: p.puddlePoison, puddleDur: p.puddleDur, poison: p.poison, poisonDur: p.poisonDur, knock: p.knock, push: p.push, leech: p.leech, drawIcon: p.drawIcon, col: p.col, backAt: p.backAt,
+        lob: p.lob, puddle: p.puddle, puddleColor: p.puddleColor, puddlePoison: p.puddlePoison, puddleDur: p.puddleDur, poison: p.poison, poisonDur: p.poisonDur, knock: p.knock, push: p.push, leech: p.leech, drawIcon: p.drawIcon, coins: p.coins, col: p.col, backAt: p.backAt,
         curve: p.curve ? p.curve * rand(0.6, 1.1) * (Math.random() < 0.5 ? -1 : 1) : 0, t0: R.time, delay: i * 0.05, ox: P.x, oy: P.y, back: false,
       };
       if (p.lob && tg.m) { pr.lobTo = { x: tg.m.x, y: tg.m.y }; pr.lobT = 0; pr.lobDur = Math.max(0.35, Math.hypot(tg.m.x - P.x, tg.m.y - P.y) / sp); }

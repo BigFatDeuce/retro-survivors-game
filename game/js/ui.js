@@ -50,17 +50,9 @@ const ArtAtlas = {
     return (this.urls[k] = c.toDataURL('image/webp', 0.92));
   },
 };
-// 0.34: the TTG card pictures, same kind of atlas (assets/ttg/ttg_N.webp, SPR.ttg)
-const TtgAtlas = Object.assign(Object.create(ArtAtlas), { imgs: {}, urls: {}, dir: 'ttg', meta: () => SPR.ttg });
-function ttgImg(name, max = 160) {
-  const im = h('img', { draggable: 'false', alt: '' }), k = Math.min(3, Math.max(1, (Game._uiz || 1) * (window.devicePixelRatio || 1)));
-  TtgAtlas.url(name, Math.round(max * k)).then(u => { if (u) im.src = u; });
-  return im;
-}
-// a TTG card as the game draws it: parchment card, the picture in a window tinted by rarity, its stars, number and name
+// a TTG card: Ankama's official picture (0.98.3: tools/assets/build_ttg098.py, one file a card; no text on it: name and number beside it)
 function ttgCard(c, cls = '') {
-  return h('div', { class: 'ttg-c r' + (c.r || 0) + ' ' + cls }, h('div', { class: 'ttg-win' }, ttgImg(c.art)),
-    h('div', { class: 'ttg-stars' }, '★'.repeat((c.r || 0) + 1)), h('b', { class: 'ttg-nm' }, L(c.name)), h('div', { class: 'ttg-no' }, 'No.' + c.id));
+  return h('div', { class: 'ttg-c off r' + (c.r || 0) + ' ' + cls }, h('img', { src: vurl(`assets/ttg/c${c.id}.webp`), loading: 'lazy', decoding: 'async', draggable: 'false', alt: L(c.name) }));
 }
 function artImg(name, cls = '', max = 380) {
   const im = h('img', { class: cls, draggable: 'false', alt: '' });
@@ -106,13 +98,13 @@ const UI = {
     requestAnimationFrame(() => { if (this.modal) return; const t = o.isConnected ? o : Nav.items().find(e => (e.className || '').replace(' navfocus', '') + '|' + (e.textContent || '').slice(0, 40) === sig); if (t) Nav.set(t); });
   },
   closeModal() { const had = !!this.modal; if (this.modal) { this.modal.remove(); this.modal = null; }
-    if (had) this._refocus();
+    if (had) { this._refocus(); if (typeof Game !== 'undefined' && Game.state === 'run' && Game.run && !Game.run.over) Game.run.easeIn(); }   // (0.98.3: juice.js)
     this.levelUpOpen = false; this._luBack = null; if (this._doorJ) { this._doorJ = false; Audio2.stopJingle(0.3); } },
   // (0.60: a menu that set levelUpOpen just before keeps it: openModal used to clear it, so B / Échap acted on the cards' window)
   PICK_GUARD: 300,   // 0.98: ms a choice opened in a run ignores the dash keys (Space, E) — was 2000, it blocked real picks
   openModal(el) { if (typeof Game !== 'undefined' && Game.state === 'run') this._modalAt = performance.now();   // (0.84: Nav.key, the dash keys wait UI.PICK_GUARD)
     if (!this.modal && typeof Nav !== 'undefined' && Nav.el && Nav.el.isConnected) this._opener = Nav.el;
-    const lu = this.levelUpOpen, back = this._luBack, opener = this._opener; this.closeModal(); this._opener = opener; this.levelUpOpen = lu; this._luBack = back; this.modal = h('div', { class: 'modal-wrap' }, el); this.rootEl.append(this.modal); return this.modal; },
+    const lu = this.levelUpOpen, back = this._luBack, opener = this._opener; this.closeModal(); this._opener = opener; this.levelUpOpen = lu; this._luBack = back; this.modal = h('div', { class: 'modal-wrap' }, el); this.rootEl.append(this.modal); if (typeof Nav !== 'undefined' && Nav.el && !this.modal.contains(Nav.el)) Nav.set(null); return this.modal; },   // (0.98.3: the cursor's frame stayed over the window, on the button behind it)
   loading(p, inRun) {
     let el = $('#loading');
     if (!el) {
@@ -551,6 +543,7 @@ const UI = {
     const KINDS = ['spells', 'traits', 'mastery', 'scrolls', 'hats', 'capes', 'shields', 'pets'];   // (0.92: the shields)
     let kind = KINDS.includes(this._shopKind) ? this._shopKind : 'spells';
     let query = '';   // (0.65: the skin search, typed on the keyboard or the on-screen one)
+    const ownedOn = {};   // (0.98.3: the 'Owned' filter, one for each skin tab)
     const norm = v => String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
     const wallet = h('div', { class: 'wallet' });
     const grid = h('div', { class: 'shop-grid' });
@@ -662,8 +655,9 @@ const UI = {
         return;
       }
       const all = kind === 'hats' ? C.hats : kind === 'pets' ? C.pets : kind === 'shields' ? C.shields || [] : C.capes; const slot = kind === 'hats' ? 'hat' : kind === 'pets' ? 'pet' : kind === 'shields' ? 'shield' : 'cape';
-      const nq = norm(query), list = nq ? all.filter(it => norm(L(it.name)).includes(nq) || Object.values(it.name || {}).some(v => norm(v).includes(nq))) : all;
-      searchSlot.append(h('div', { class: 'skin-search' }, btn(['🔍 ', h('span', { class: query ? 'sq' : 'sq ph' }, query || T('search_ph'))], () => this.searchMenu(query, v => { query = v; refresh(); }), 'search-btn'),
+      const nq = norm(query), mine = ownedOn[kind] ? all.filter(it => S.owned.includes(it.id)) : all, list = nq ? mine.filter(it => norm(L(it.name)).includes(nq) || Object.values(it.name || {}).some(v => norm(v).includes(nq))) : mine;
+      const fb = btn(T('owned_f'), () => { ownedOn[kind] = !ownedOn[kind]; refresh(); grid.scrollTop = 0; }, 'owned-f' + (ownedOn[kind] ? ' orange' : '')); fb.setAttribute('data-nav', 'owned-f');   // (data-nav: the cursor stays on it, Nav.press)
+      searchSlot.append(h('div', { class: 'skin-search' }, fb, btn(['🔍 ', h('span', { class: query ? 'sq' : 'sq ph' }, query || T('search_ph'))], () => this.searchMenu(query, v => { query = v; refresh(); }), 'search-btn'),
         query ? btn('✕', () => { query = ''; refresh(); }, 'search-clear') : null, h('small', null, list.length + ' / ' + all.length)));
       if (!list.length) grid.append(h('div', { class: 'mastery-intro' }, T('search_none')));
       if (kind === 'pets' && !query) grid.append(h('div', { class: 'mastery-intro' }, T('pet_bonus')));
@@ -900,7 +894,7 @@ const UI = {
         R.weapon && R.weapon.finale ? h('div', { class: 'bitem weapon evo', title: L(R.weapon.finale.name) + ' — ' + L(R.weapon.finale.desc) }, h('b', { class: 'evo-mini' }, '✦'), h('small', {}, L(R.weapon.finale.name))) : null,
         R.totBuff ? h('div', { class: 'bitem evo', title: T('tot_bonus') }, iconImg(R.totBuff.icon, 26), h('small', {}, '+' + (Math.round(R.totBuff.v * 1000) / 10).toLocaleString(LANG) + '% ' + L(R.totBuff.name))) : null,
         R.allies.some(a => a.kind === 'drago') ? h('div', { class: 'bitem evo', title: L(Game.C.drago.name) }, iconImg(Game.C.drago.icon, 30), h('small', {}, L(Game.C.drago.name))) : null),
-      h('div', { class: 'brow' }, ...C.passives.filter(p => R.passives[p.id]).map(p => h('div', { class: 'bitem', title: L(p.name) }, iconImg(p.icon, 28), h('span', {}, R.passives[p.id] + '/' + p.max)))),
+      h('div', { class: 'brow' }, ...C.passives.filter(p => R.passives[p.id] && p.id !== R.bonusPassive).concat(C.passives.filter(p => p.id === R.bonusPassive)).map(p => h('div', { class: 'bitem' + (p.id === R.bonusPassive ? ' sp-blue' : ''), title: L(p.name) }, iconImg(p.icon, 28), h('span', {}, R.passives[p.id] + '/' + p.max)))),
       this.relicSummary(R),   // 0.85: what the relics give, between the characteristics and the Dofus
       h('div', { class: 'brow' }, ...R.dofus.map(d => h('div', { class: 'bitem', title: L(d.name) + ' — ' + L(d.desc) }, iconImg('dofus_hd_' + d.icon, 30)))),
       h('div', { class: 'brow sf-brow' }, ...(C.spellFusions || []).filter(f => sfusionOf(f, R.cls.id)).map(f => h('div', { class: 'bitem sf' + (R.sfused.has(f.id) ? ' done' : ''), title: L(C.spells[f.id].name) + ' — ' + L(C.spells[f.id].desc) }, ...sfRecipe(R, f), h('b', null, '→'), iconImg('sp_' + C.spells[f.id].icon, 28)))));   // 0.60: the spell fusions
@@ -1062,8 +1056,11 @@ const UI = {
     if (o.kind === 'spell' && C.spells[o.id].glob) extra += ' glob';
     { const hint = R && (o.kind === 'spell' || o.kind === 'weapon') ? sfHint(R, o) : null; if (hint) desc = [].concat(desc, hint); }   // (0.60: what it fuses into)
     if (R && (o.kind === 'spell' || o.kind === 'weapon') && sfReady(R, o)) extra += ' fusable';   // (0.91: it fuses with something already owned)
+    // 0.98.3: the special ones stand out from the other cards: the Trool's token and the Gladiatrool's characteristic, a dark blue rim and sparks (#navglide's, CSS-animated)
+    const blue = (o.kind === 'spell' && C.spells[o.id].t === 'wheel') || (o.kind === 'passive' && R && R.bonusPassive === o.id);
+    if (blue) { extra += ' sp-blue'; icon = [icon, ...Array.from({ length: 10 }, (_, i) => { const a = i * TAU / 10, dx = Math.cos(a), dy = Math.sin(a); return h('i', { style: { left: 50 + dx * 50 + '%', top: 50 + dy * 50 + '%', '--d': (-i * 0.17 * 3 % 1.6).toFixed(2) + 's', '--dx': (dx * 12).toFixed(1) + 'px', '--dy': (dy * 12 - 4).toFixed(1) + 'px' } }); })]; }
     return h('div', { class: 'up-card' + (o.lv === 1 ? ' new' : '') + extra + (o.kind === 'passive' ? ' passive' : ''), onclick: () => onPick(o) },
-      h('div', { class: 'up-kind' + (kindTxt.length > 13 ? ' long' : '') }, kindTxt), h('div', { class: 'up-icon' }, icon), h('div', { class: 'up-name' }, name), h('div', { class: 'up-lv' }, lvtxt), stars, h('div', { class: 'up-desc' }, ...[].concat(desc)), R ? this.synergyLine(R, o) : null);   // 0.28: what it works with (ui_armory.js)
+      h('div', { class: 'up-kind' + (kindTxt.length > 13 ? ' long' : '') }, kindTxt), h('div', { class: 'up-icon' }, ...[].concat(icon)), h('div', { class: 'up-name' }, name), h('div', { class: 'up-lv' }, lvtxt), stars, h('div', { class: 'up-desc' }, ...[].concat(desc)), R ? this.synergyLine(R, o) : null);   // 0.28: what it works with (ui_armory.js)
   },
   levelUpMenu(R, opts, rolled) {
     this.levelUpOpen = true;
@@ -1160,27 +1157,28 @@ const UI = {
       g.fillStyle = segs[i].cls.color || '#888'; g.fill(); g.fillStyle = i % 2 ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,0.12)'; g.fill();
       g.strokeStyle = '#3a2410'; g.lineWidth = R * 0.02; g.stroke();
       g.save(); g.rotate(a0 + Math.PI / n + Math.PI / 2); const s = R * 0.2;   // (0.34: smaller, inside its slice)
-      g.drawImage(Game.icons.canvas('sp_' + Game.C.spells[segs[i].id].icon, Math.round(s * 1.5)), -s / 2, -R * 0.82, s, s); g.restore();
+      g.drawImage(Game.icons.canvas(segs[i].ic || 'sp_' + Game.C.spells[segs[i].id].icon, Math.round(s * 1.5)), -s / 2, -R * 0.82, s, s); g.restore();
     }
     g.beginPath(); g.arc(0, 0, R * 0.96, 0, TAU); g.lineWidth = R * 0.05; g.strokeStyle = '#8a5a1e'; g.stroke();
     for (let i = 0; i < n; i++) { const a = i * TAU / n - Math.PI / 2 - Math.PI / n; g.beginPath(); g.arc(Math.cos(a) * R * 0.96, Math.sin(a) * R * 0.96, R * 0.028, 0, TAU); g.fillStyle = '#ffe9a0'; g.fill(); }
     g.beginPath(); g.arc(0, 0, R * 0.15, 0, TAU); g.fillStyle = '#5a3a14'; g.fill(); g.lineWidth = R * 0.025; g.strokeStyle = '#ffd24a'; g.stroke();
     return c;
   },
+  // (0.98.3: w.pop: the Gladiatrool's wheel: its own texts, every possible prize on a slice)
   troolWheel(R, w) {
-    const C = Game.C, N = 12;
+    const C = Game.C, N = w.pop ? w.pool.length : 12;
     const others = shuffle(w.pool.filter(o => o.id !== w.won.id)).slice(0, N - 1);
     while (others.length < N - 1) others.push(pick(w.pool));
     const P = randi(0, N - 1), segs = others.slice(); segs.splice(P, 0, w.won);
     const size = 340, wheel = this.trollWheelCanvas(segs, size);
     const box = h('div', { class: 'troll-wheel' }, wheel, h('div', { class: 'troll-ptr' }), h('div', { class: 'troll-hub' }, iconImg('it_15_737', 44)));
-    const status = h('div', { class: 't-status' }, T('wheel_spin'));
-    const sp = C.spells[w.won.id], prizeEl = h('div', { class: 't-prize' }, iconImg('sp_' + sp.icon, 40), ' ', T('wheel_won', { n: L(sp.name), c: L(w.won.cls.name) }));
-    const desc = h('p', { class: 'sub fx-desc', style: { opacity: 0 } }, L(sp.desc));   // (0.98: a spell's description in the effect colours)
+    const status = h('div', { class: 't-status' }, w.pop ? w.pop.spin : T('wheel_spin'));
+    const sp = C.spells[w.won.id], prizeEl = h('div', { class: 't-prize' }, iconImg(w.pop ? w.pop.icon : 'sp_' + sp.icon, 40), ' ', w.pop ? w.pop.won : T('wheel_won', { n: L(sp.name), c: L(w.won.cls.name) }));
+    const desc = h('p', { class: 'sub fx-desc', style: { opacity: 0 } }, w.pop ? w.pop.desc : L(sp.desc));   // (0.98: a spell's description in the effect colours)
     let raf = 0, given = false;
     const done = () => { if (given) return; given = true; cancelAnimationFrame(raf); w.give(); this.closeModal(); };
     const okBtn = btn(T('wheel_ok'), done, 'orange big'); okBtn.style.visibility = 'hidden';
-    const el = h('div', { class: 'window modal tailor trool' }, h('div', { class: 'title' }, T('wheel_title')), h('div', { class: 'content' },
+    const el = h('div', { class: 'window modal tailor trool' }, h('div', { class: 'title' }, w.pop ? w.pop.title : T('wheel_title')), h('div', { class: 'content' },
       box, h('div', { class: 'troll-side' }, status, prizeEl, desc, h('div', { class: 'start-row' }, okBtn))));
     this.openModal(el); this.levelUpOpen = true;
     // several turns, slowing down, the pointer on top: slice P ends under it
@@ -1633,10 +1631,12 @@ function sfHint(R, o) {
 // 0.60: the shop's spell card: its fusions (cls null: a global spell, the fusions of every class using it)
 function sfMini(cls, sid) {
   const C = Game.C, fs = (C.spellFusions || []).filter(f => (!cls || sfusionOf(f, cls)) && f.src.includes(sid)); if (!fs.length) return null;
-  return h('div', { class: 'sf-recipe sf-mini' }, '✦', ...fs.map(f => {
+  // (0.98.3: three columns: the fusion's picture stays in the middle, the star on its left, on its right the weapon a fusion needs)
+  const wps = [...new Set(fs.filter(f => f.kind === 'weapon').map(f => C.weapons.find(w => w.id === f.src[1])))];
+  return h('div', { class: 'sf-recipe sf-mini' }, h('span', { class: 'sf-star' }, '✦'), h('span', { class: 'sf-ics' }, ...fs.map(f => {
     const cl = C.classes.find(c => c.id === f.cls), b = f.kind === 'weapon' ? L(C.weapons.find(w => w.id === f.src[1]).name) : L(C.spells[f.src[1]].name);
     return tipIcon('sp_' + C.spells[f.id].icon, L(C.spells[f.id].name) + (cls || !cl ? '' : ' (' + L(cl.name) + ')') + ' — ' + T('sfusion_with', { a: L(C.spells[f.src[0]].name), b, n: L(C.spells[f.id].name) }), 18);
-  }));
+  })), h('span', { class: 'sf-wps' }, ...wps.map(w => tipIcon(w.icon, L(w.name), 18))));
 }
 
 // 0.95: the level-up cards' way to their centre (--dx, --dy, in their own layout px) and their tilt in the deck (--rz),
