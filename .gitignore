@@ -1,0 +1,10 @@
+# Python caches (play_local's server)
+__pycache__/
+*.pyc
+
+# editors and systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
