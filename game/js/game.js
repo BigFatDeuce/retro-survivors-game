@@ -387,7 +387,7 @@ class Run {
   inRange(m) { const P = this.player, g = this.C.range || { x: 800, y: 450 }; return Math.abs(m.x - P.x) <= g.x && Math.abs(m.y - P.y) <= g.y; }
   // ------------------------------------------------ stats
   camTarget() {   // (0.53: also used to place the camera before the countdown)
-    const ck = this.critK ? this.critK() : 0, zk = 1 + 0.75 * ck, P = this.player, vw = Game.viewW / zk, vh = Game.viewH / zk;
+    const ck = this.critK ? this.critK() : 0, zk = (1 + 0.75 * ck) * (this.winZoom ? this.winZoomK() : 1), P = this.player, vw = Game.viewW / zk, vh = Game.viewH / zk;
     let cx = P.x, cy = P.y - 30;
     if (ck > 0) { const F = this.critFx; if (F.A && this.allies.includes(F.A)) { F.x = F.A.x; F.y = F.A.y - 40; } cx = lerp(cx, F.x, ck); cy = lerp(cy, F.y, ck); }   // (0.98: a critical summon's show: towards it)
     if (this.world.w > vw) cx = clamp(cx, vw / 2, this.world.w - vw / 2); else cx = this.world.w / 2;
@@ -1176,7 +1176,8 @@ class Run {
         m.atkT -= dt; if (d < 500 && m.atkT <= 0) { m.atkT = m.def.atk.cd * this.atkK(); for (let k = 0; k < m.def.atk.count; k++) this.spawnMob(m.def.atk.mob, m.x + rand(-30, 30), m.y + rand(-20, 20)); this.fxAt(1100, m.x, m.y); }
         if (d < 180 && !m.def.melee) { mx = -mx; my = -my; sp *= 0.6; }   // (a melee summoner, the Wo Wabbit, comes to hit you)
       } else if (beh === 'healer') {   // (0.95: a monster is healed once per run at most, by a healer or by its own heal — m.healed)
-        m.atkT -= dt; if (m.atkT <= 0) { m.atkT = 4; for (const o of this.mobsInRadius(m.x, m.y, 120)) if (o.hp < o.maxHp && !o.boss && !o.healed) { o.healed = true; o.hp = Math.min(o.maxHp, o.hp + o.maxHp * 0.15); } this.rings.push({ x: m.x, y: m.y, r0: 10, r1: 120, t0: this.time, dur: 0.4, color: '#7dff9a' }); }
+        m.atkT -= dt; if (m.atkT <= 0) { m.atkT = 4; let n = 0; for (const o of this.mobsInRadius(m.x, m.y, 120)) if (o.hp < o.maxHp && !o.boss && !o.healed) { o.healed = true; o.hp = Math.min(o.maxHp, o.hp + o.maxHp * 0.15); n++; }
+          if (n) this.rings.push({ x: m.x, y: m.y, r0: 10, r1: 120, t0: this.time, dur: 0.4, color: '#7dff9a' }); }   // (1.02: its ring only when it healed someone: a late crowd of Jellies kept ~40 rings on screen, a third of the frame)
       } else if (beh === 'invisible') {
         m.alpha = 0.25 + 0.75 * Math.max(0, Math.sin(m.t * 1.3 + i)) ** 4;
       } else if (beh === 'roam' || beh === 'circle' || beh === 'keep') { const r = this.specialMove(m, dt); mx = r[0]; my = r[1]; }   // (0.95: keep = Jorbak)
@@ -1274,7 +1275,7 @@ class Run {
     }
     return [mx, my, sp];
   }
-  areaHitPlayer(x, y, r, dmg, proj) { const P = this.player; if (dist2(x, y, P.x, P.y) < (r + 10) ** 2) this.damagePlayer(dmg, null, !proj); }
+  areaHitPlayer(x, y, r, dmg, proj) { const P = this.player; if (inGround(P.x, P.y, x, y, r + 10)) this.damagePlayer(dmg, null, !proj); }   // (1.02: the drawn ellipse, not a circle 1.6 x taller than it)
   lineHitPlayer(x, y, a, len, w, dmg) {
     const P = this.player; const dx = P.x - x, dy = P.y - 15 - y; const ca = Math.cos(a), sa = Math.sin(a);
     const along = dx * ca + dy * sa, perp = Math.abs(-dx * sa + dy * ca);
@@ -1347,7 +1348,7 @@ class Run {
         e.t += dt; const k = Math.min(1, e.t / e.dur);
         e.x = lerp(e.sx, e.tx, k); e.y = lerp(e.sy, e.ty, k) - Math.sin(k * Math.PI) * 110;
         if (k >= 1) {
-          if (!(dist2(P.x, P.y, e.tx, e.ty) < e.aoe * e.aoe && this.blockSpell())) this.areaHitPlayer(e.tx, e.ty, e.aoe, e.dmg, true);   // (a thrown projectile: misses an invisible Sram)   // (0.53: Sagesse may block a thrown spell)
+          if (!(inGround(P.x, P.y, e.tx, e.ty, e.aoe + 10) && this.blockSpell())) this.areaHitPlayer(e.tx, e.ty, e.aoe, e.dmg, true);   // (a thrown projectile: misses an invisible Sram)   // (0.53: Sagesse may block a thrown spell)
           if (e.fx) this.fxAt(e.fx, e.tx, e.ty);
           this.rings.push({ x: e.tx, y: e.ty, r0: 8, r1: e.aoe, t0: this.time, dur: 0.3, color: '#ffae5a' });
           if (e.mob) this.spawnMob(e.mob, e.tx, e.ty, { force: true });
@@ -2014,6 +2015,8 @@ const SFX_DIE = {
 const DROP_R = { kama: 8, bread: 11, chest: 22, nowelgift: 30, booster: 18, manuel: 18, tmap: 16, dofus: 16, relic: 16, power: 13, plumec: 14, trool: 16, gladia: 20, kamaboost: 13, rappel: 13, fee: 13, sablier: 13, houx: 13 };
 const SFX_BOSS_DIE = { le_chouque: 'Le_Flib_Die', flib_capitaine: 'Le_Flib_Die', boombata: 'Musafa_Die', chene_mou: 'Fecorce_Die', minotoror: 'Kimbo_Die', minotot: 'Kimbo_Die', dark_vlad: 'Tynril_Die', wa_wabbit: 'Rasboul_Majeur_Die', dragon_cochon: 'Kimbo_Die', bouftou_royal: 'Bitouf_Des_Plaines_Die' };
 const SFX_DIE_ALL = [...new Set([...Object.values(SFX_DIE), ...Object.values(SFX_BOSS_DIE), 'Kralamour_Die', 'Tynril_Die'])];
+// 1.02: a ground area (warnings, puddles, blasts) is drawn as an ellipse of height 0.62 x its width: hits follow it
+function inGround(px, py, x, y, r) { const dx = px - x, dy = (py - y) / 0.62; return dx * dx + dy * dy < r * r; }
 function dieSoundFor(d) {
   if (d.boss) return SFX_BOSS_DIE[d.id] || 'Kralamour_Die';
   for (const k in SFX_DIE) if (d.id.startsWith(k)) return SFX_DIE[k];

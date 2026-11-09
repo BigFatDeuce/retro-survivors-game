@@ -47,7 +47,7 @@ Object.assign(Run.prototype, {
       case 'roar': {
         const r = a.radius || 220;
         this.teles.push({ boss: 1, kind: 'circle', x: m.x, y: m.y, r, t0: T0, dur: 0.8, cb: () => {
-          if (dist2(P.x, P.y, m.x, m.y) < r * r) { this.damagePlayer(a.dmg * MEL, m, true); this.pSlowUntil = this.time + (a.slowDur || 2); this.pSlowAmt = 1 - (a.slow || 0.45); this.text(P.x, P.y - 80, '💢', '#ff8a50', 18); }
+          if (inGround(P.x, P.y, m.x, m.y, r)) { this.damagePlayer(a.dmg * MEL, m, true); this.pSlowUntil = this.time + (a.slowDur || 2); this.pSlowAmt = 1 - (a.slow || 0.45); this.text(P.x, P.y - 80, '💢', '#ff8a50', 18); }
           for (let i = 0; i < 3; i++) this.rings.push({ x: m.x, y: m.y, r0: 20, r1: r, t0: this.time + i * 0.1, dur: 0.5, color: col });
           this.shake(6); const k = Audio2.mobSnd(m.def.gfx, 'atk'); Audio2.play(k ? k[k.length - 1] : 'growl', 0.9, 0.85);
         } });
@@ -75,7 +75,7 @@ Object.assign(Run.prototype, {
     const P = this.player;
     for (let i = this.hzones.length - 1; i >= 0; i--) {
       const z = this.hzones[i]; if (this.time > z.until) { this.hzones.splice(i, 1); continue; }
-      if ((z.next -= dt) <= 0 && dist2(P.x, P.y, z.x, z.y) < z.r * z.r * 0.8) { z.next = z.tick; if (!this.cleansed()) this.damagePlayer(z.dmg, null, true); }
+      if ((z.next -= dt) <= 0 && inGround(P.x, P.y, z.x, z.y, z.r * 0.9)) { z.next = z.tick; if (!this.cleansed()) this.damagePlayer(z.dmg, null, true); }
     }
     const pl = this.pull;
     if (pl && this.cleansed()) this.pull = null;

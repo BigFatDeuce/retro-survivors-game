@@ -548,7 +548,7 @@ function drawArea(ctx, x, y, r, col, a, soft) {
 }
 function drawTinted(ctx, name, kind, x, y, scale) { const c = RCache.tinted(name, kind); if (!c) { Game.icons.draw(ctx, name, x, y, scale); return; } const s = scale / c.sc; ctx.drawImage(c, x - c.width * s / 2, y - c.height * s / 2, c.width * s, c.height * s); }
 Run.prototype.draw = function (ctx) {
-  const G = Game, ck = this.critK ? this.critK() : 0, zk = (this.deathFx ? this.deathZoomK() : 1) * (1 + 0.75 * ck), z = G.zoom * zk, P = this.player;   // (0.61: zk, the death's close-in, juice.js; 0.98: a critical summon's)
+  const G = Game, ck = this.critK ? this.critK() : 0, zk = (this.deathFx ? this.deathZoomK() : 1) * (1 + 0.75 * ck) * (this.winZoom ? this.winZoomK() : 1), z = G.zoom * zk, P = this.player;   // (0.61: zk, the death's close-in, juice.js; 0.98: a critical summon's)
   if (ck > 0) { const [tx, ty] = this.camTarget(); this.cam.x = tx; this.cam.y = ty; }   // (the run runs at 1 %: the camera moves in real time, eased by critK)
   const W = G.cw, H = G.ch;
   let sx = 0, sy = 0;
@@ -623,7 +623,7 @@ Run.prototype.draw = function (ctx) {
   for (const r of this.rings) {
     if (t < r.t0) continue;
     const k = clamp((t - r.t0) / r.dur, 0, 1); const rr = lerp(r.r0, r.r1, r.r0 === r.r1 ? 1 : easeOut(k));
-    const x = r.follow ? r.follow.x : r.x, y = r.follow ? r.follow.y : r.y;
+    const x = r.follow ? r.follow.x : r.x, y = r.follow ? r.follow.y : r.y; if (!inView(x, y, r.r1 + 20)) continue;   // (1.02: off-screen rings cost their ~200 outline pieces too)
     // v2.0: a spell's area (filled ring) shows its whole reach at once, then fades; the expanding rim keeps the punch
     if (r.fill) drawArea(ctx, x, y, r.r1, r.color, Math.pow(1 - k, 0.6) * (r.crack ? 0.5 : 1), !!r.crack);   // (0.99: a weapon's slam fainter, its edge soft)
     if (r.crack) { drawCracks(ctx, x, y, r.r1, k, r.t0 * 31.7 + x); continue; }   // (0.90: a slam splits the ground; 0.99: no hard rim round it)

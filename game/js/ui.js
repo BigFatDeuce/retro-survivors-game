@@ -1293,6 +1293,8 @@ const UI = {
       R.daily ? h('p', { class: 'unlock' }, '📅 ' + (R.dailyPaid ? T('daily_done', { n: fmtNum(R.dailyPaid) }) : R.time >= R.daily.goal ? T('daily_claimed') : T('daily_fail', { t: fmtTime(R.daily.goal) }))) : null,   // (0.99)
       (R.dofus.length || (R.relics || []).length) ? h('div', { class: 'ov-items' }, ...R.dofus.map(d => tipIcon('dofus_hd_' + d.icon, L(d.name), 34)), ...(R.relics || []).map(r => tipIcon(r.icon, L(r.name), 30))) : null,
       ach.length ? h('div', { class: 'ov-ach' }, h('small', null, T('ov_ach')), ...ach.map(a => h('span', { class: 'ov-a' }, iconImg(a.icon, 24), L(a.name)))) : null);
+    // (1.02: the medallion's gradients could stay black once its stamp animation ended — GPU raster, nothing repainted it
+    // with a gamepad until a click: animationend paints a fresh copy)
     const stamp = h('div', { class: 'ov-grade g' + grade }, rankMedal(grade), h('small', null, T('ov_grade_' + grade)));
     const head = victory ? h('div', { class: 'ov-head win' }, h('div', { class: 'ov-title' }, T('victory_big')))   // (0.98: written in Verdance, verdant; was the banner picture)
       : h('div', { class: 'ov-head lose' }, iconImg('phoenix_statue', 130), h('div', { class: 'ov-title' }, T(R.cancelled ? 'run_cancelled' : 'dead_title')));   // (0.79: given up before 20 s)
@@ -1314,7 +1316,7 @@ const UI = {
       const k = Math.min(1, (performance.now() - t0) / 1300), e = 1 - Math.pow(1 - k, 3);
       for (const n of nums) n.textContent = n._f(Math.round(+n.dataset.v * e));
       if (k < 1) { if (performance.now() - lastTick > 90) { lastTick = performance.now(); Audio2.blip('click'); } requestAnimationFrame(step); }
-      else { Audio2.blip('coin'); setTimeout(() => { if (!el.isConnected || R.cancelled) return; stamp.classList.add('on'); Audio2.play('impact_lourd', 0.7, grade === 'A' ? 0.85 : 1); if (grade === 'A' || grade === 'B') Audio2.play('stars', 0.7); }, 250); }
+      else { Audio2.blip('coin'); setTimeout(() => { if (!el.isConnected || R.cancelled) return; stamp.classList.add('on'); stamp.addEventListener('animationend', () => { const m = $('.ov-rank', stamp); if (m) m.replaceWith(m.cloneNode(true)); }, { once: true }); Audio2.play('impact_lourd', 0.7, grade === 'A' ? 0.85 : 1); if (grade === 'A' || grade === 'B') Audio2.play('stars', 0.7); }, 250); }
     };
     requestAnimationFrame(step);
   },

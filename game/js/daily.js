@@ -11,8 +11,9 @@ const DAILY_MODS = {   // k: [who, min %, max %] — 'p' the character, 'm' the 
   mhp: ['m', 5, 10], mdmg: ['m', 5, 10], mspeed: ['m', 5, 10], matk: ['m', 5, 10],
 };
 const Daily = {
-  // the challenge's day: it changes at noon (before 12:00, yesterday's)
-  key(now = new Date()) { const d = new Date(now.getTime() - 12 * 3600e3), p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`; },
+  // the challenge's day: it changes at noon (before 12:00, yesterday's; 1.02: by the calendar — a fixed -12 h moved the
+  // change to 11:00 / 13:00 on the days the clocks change)
+  key(now = new Date()) { const d = new Date(now); if (d.getHours() < 12) d.setDate(d.getDate() - 1); const p = n => String(n).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`; },
   nextReset(now = new Date()) { const d = new Date(now); d.setHours(12, 0, 0, 0); if (d <= now) d.setDate(d.getDate() + 1); return d; },
   rng(str) { let h = 1779033703 ^ str.length; for (let i = 0; i < str.length; i++) { h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); }
     return () => { h = Math.imul(h ^ (h >>> 16), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); h ^= h >>> 16; return (h >>> 0) / 4294967296; }; },

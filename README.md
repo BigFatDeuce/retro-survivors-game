@@ -17,7 +17,7 @@
   <img alt="License: MIT (code)" src="https://img.shields.io/badge/code-MIT-green">
   <img alt="Languages" src="https://img.shields.io/badge/languages-7-blue">
   <img alt="Made with" src="https://img.shields.io/badge/made%20with-JavaScript%20%2B%20PixiJS-yellow">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.01-brightgreen">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.02-brightgreen">
 </p>
 
 <p align="center">

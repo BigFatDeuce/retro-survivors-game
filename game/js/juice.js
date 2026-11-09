@@ -6,6 +6,7 @@
 // 0.62: the combo's steps and their colours (juice.js, the HUD in render.js)
 const COMBO_MS = [25, 50, 100, 200, 400, 800], COMBO_COLS = ['#ffe27a', '#ffb02e', '#ff7a3a', '#ff4d8a', '#c050ff', '#5ad1ff'];
 const EASE_T = 0.5;   // (Run.easeIn)
+const WINRARE_DUR = 6.73;   // (1.02: assets/audio/fx/winrare.mp3's length, s)
 Object.assign(Run.prototype, {
   // the game stops for a few milliseconds (the run is drawn, not updated): the impact reads as heavy
   hitStop(ms) { const S = Store.data.settings; if (S.shake === false) ms *= 0.5; const t = performance.now() + ms; if (!(this.hitStopUntil > t)) this.hitStopUntil = t; },
@@ -123,10 +124,18 @@ Object.assign(Run.prototype, {
   },
   // screen-space layer drawn before the HUD: the flash and the low-life vignette
   // the big 'VICTOIRE !' (drawVictory) with its confetti; 0.92: one roll per victory, 1 in 4 the 'fah' clip plays
-  // once, a little after the fanfare
+  // once, a little after the fanfare. 1.02: 1 in 5 the 'winrare' clip instead (never both): the camera pulls back 20 %,
+  // comes back from the clip's half, and a kama rain twice as long as the event's falls
   startVictoryFx() {
-    this.victoryFx = { t0: performance.now(), conf: makeConfetti(), fah: Math.random() < 0.25 };
+    const rare = Math.random() < 0.2;
+    this.victoryFx = { t0: performance.now(), conf: makeConfetti(), fah: !rare && Math.random() < 0.25, rare };
     Audio2.fanfare && Audio2.fanfare(1);
+  },
+  winZoomK() {   // (1.02: 1 -> 0.8 in 0.6 s from the clip's start, back to 1 in 0.6 s from its half; real time: the slow motion runs then)
+    const W = this.winZoom; if (!W) return 1; const e = (performance.now() - W.t0) / 1000, h = WINRARE_DUR / 2;
+    if (e >= h + 0.6) { this.winZoom = null; return 1; }
+    const s = x => { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); };
+    return 1 - 0.2 * (e < h ? s(e / 0.6) : 1 - s((e - h) / 0.6));
   },
   drawJuice(ctx, W, H) {
     if (this._combo >= 25 && !this._comboDone && this.time - this._comboT > 1.6) { this._comboDone = true; this._comboEnd = { n: this._combo, t0: performance.now() }; Audio2.comboSfx('end'); }   // (0.62: a big combo broken)
@@ -134,6 +143,8 @@ Object.assign(Run.prototype, {
     if (F) { const k = (performance.now() - F.t0) / F.dur; if (k >= 1) this.flashFx = null; else { ctx.fillStyle = `rgba(${F.color},${(F.a * (1 - k) * (1 - k)).toFixed(3)})`; ctx.fillRect(0, 0, W, H); } }
     const V = this.victoryFx;
     if (V) { const e = (performance.now() - V.t0) / 1000; if (V.fah && e > 0.7) { V.fah = false; Audio2.fxFile('fah', 1); Prog.add('fahHeard'); Prog.check(this); }
+      if (V.rare && e > 0.7) { V.rare = false; Audio2.fxFile('winrare', 1); this.winZoom = { t0: performance.now() };
+        if (!this.map.noKamas) { this.kamaRainUntil = Math.max(this.kamaRainUntil || 0, this.time + 2 * this.C.randEvents.kamarain.dur); this.chat(T('ev_kamarain'), '#ffd27a'); } }
       if (e > 3.9) this.victoryFx = null; else drawVictory(ctx, W, H, e, T('victory_big'), V.conf); }
     if (this.critFx) { const e = (performance.now() - this.critFx.t0) / 1000; if (e < 2.6) drawConfetti(ctx, W, H, e, this.critFx.conf, e > 2 ? Math.max(0, 1 - (e - 2) / 0.6) : 1); }   // (0.98: a critical summon's confetti)
     if (this.deathFx) drawDeath(ctx, this, W, H, this.deathE());
