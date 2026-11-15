@@ -1056,6 +1056,7 @@ function drawPickup(ctx, p, t) {
     case 'plumec': glow('rgba(190,140,255,0.8)', 30); IC.drawFit(ctx, 'it_53_362', p.x, p.y - 14 + bob, 40); break;
     case 'fee': glow('rgba(255,120,220,0.75)', 28); IC.drawFit(ctx, 'it_74_30', p.x, p.y - 15 + bob, 46); break;
     case 'houx': glow('rgba(120,230,140,0.7)', 28); IC.drawFit(ctx, Game.C.houx.item, p.x, p.y - 15 + bob, 44); break;   // 0.97: the Bague Houx: one more reroll
+    case 'coffreit': { const it = Game.C.coffre.items[p.v] || {}, z = it.ground || 1; glow('rgba(255,90,110,0.7)', 26 * z); IC.drawFit(ctx, it.icon || 'it_51_150', p.x, p.y - 14 * z + bob, 40 * z); } break;   // 1.03: the Coffre Animé's stone (the Ruby Stone x4: C.coffre.items[].ground)
     case 'sablier': glow('rgba(140,220,255,0.65)', 30); IC.drawFit(ctx, Game.C.sablierItem || 'sp_100', p.x, p.y - 16 + bob, 50); break;   // an hourglass: time stops
     case 'manuel': { glow('rgba(255,120,255,0.8)', 32 + Math.sin(t * 6) * 3); IC.drawFit(ctx, Game.C.manuel.icon, p.x, p.y - 16 + bob, 48); // the Manuel du Tailleur: sparkles
       for (let i = 0; i < 3; i++) { const a = t * 2.2 + i * TAU / 3; IC.draw(ctx, 'Star', p.x + Math.cos(a) * 28, p.y - 18 + Math.sin(a) * 10 + bob, 0.28); } } break;
@@ -1612,10 +1613,17 @@ function drawEProj(ctx, e, t) {
   const fx = e.fx && FxSheets.get(e.fx);
   if (e.crow) { // the Maîtres Corbacs throw corbacs
     const sh = MobSheets.c[Game.C.doom.crowSprite];
-    if (sh) { const f = sh.frameAt('walkR', t * 1.5 + e.t0, true); ctx.restore(); ctx.save(); ctx.globalAlpha = 0.95; sh.draw(ctx, f, e.x, e.y + 14, ES * 0.85, e.vx < 0); ctx.restore(); return; }
+    if (sh) { const f = sh.frameAt('walkR', t * 1.5 + e.t0, true), r = (e.size || 11) * 2.6; ctx.globalAlpha = 0.85; ctx.drawImage(RCache.glow('rgba(255,40,210,0.95)'), -r, -r, r * 2, r * 2); ctx.restore(); ctx.save(); ctx.globalAlpha = 0.95; sh.draw(ctx, f, e.x, e.y + 14, ES * 0.85, e.vx < 0); ctx.restore(); return; }
   }
-  if (fx && fx.anims.move) { const r = (e.size || 8) * 2.4; ctx.globalAlpha = 0.55; ctx.drawImage(RCache.glow(e.color || 'rgba(255,210,120,0.9)'), -r, -r, r * 2, r * 2); ctx.globalAlpha = 1; ctx.rotate(Math.atan2(e.vy || 0, e.vx || 1)); fx.draw(ctx, fx.frameAt('move', t, true), 0, 0, 1.2, false); }   // (0.68: 20 % bigger, a halo)
-  else if (e.arrow) {   // (0.68: bigger, a faint streak behind; the hitbox is unchanged)
+  // 1.03: every monster shot sits on a fluo-pink bubble with a white heart (an arrow: a pink glow along it): seen on any ground
+  const s0 = e.size || 8, disc = (r, c, a) => { ctx.globalAlpha = a; ctx.fillStyle = c; ctx.beginPath(); ctx.arc(0, 0, r, 0, TAU); ctx.fill(); };
+  if (e.arrow) { ctx.save(); ctx.rotate(Math.atan2(e.vy || 0, e.vx || 1)); ctx.globalAlpha = 0.5; ctx.drawImage(RCache.glow('rgba(255,40,210,0.95)'), -s0 * 5.4, -s0 * 1.6, s0 * 8, s0 * 3.2); ctx.restore(); }   // (an arrow stays an arrow: a pink glow along it)
+  else { const r0 = s0 * 3.2; ctx.globalAlpha = 0.5; ctx.drawImage(RCache.glow('rgba(255,40,210,0.95)'), -r0, -r0, r0 * 2, r0 * 2); disc(s0 * 1.5, '#ff2bd6', 0.5); disc(s0 * 0.75, '#ffffff', 0.95); }
+  ctx.globalAlpha = 1;
+  const AS = e.arrow && ((fx && fx.anims.move) ? fx : FxSheets.get(901));   // (an arrow: the client's arrow sprite, Flèche Empoisonnée's, loaded with the monsters' attacks)
+  if (AS && AS.anims.move) { ctx.rotate(Math.atan2(e.vy || 0, e.vx || 1)); AS.draw(ctx, AS.frameAt('move', t, true), 0, 0, 2, false); }
+  else if (fx && fx.anims.move) { const r = (e.size || 8) * 2.4; ctx.globalAlpha = 0.55; ctx.drawImage(RCache.glow(e.color || 'rgba(255,210,120,0.9)'), -r, -r, r * 2, r * 2); ctx.globalAlpha = 1; ctx.rotate(Math.atan2(e.vy || 0, e.vx || 1)); fx.draw(ctx, fx.frameAt('move', t, true), 0, 0, 1.2, false); }   // (0.68: 20 % bigger, a halo)
+  else if (e.arrow) {   // (0.68: bigger, a faint streak behind; the hitbox is unchanged; 1.03: only if the sprite is missing)
     ctx.rotate(Math.atan2(e.vy, e.vx));
     ctx.globalAlpha = 0.35; ctx.drawImage(RCache.glow('rgba(255,245,220,0.9)'), -40, -5, 40, 10); ctx.globalAlpha = 1;
     ctx.drawImage(RCache.arrow(), -30, -7, 48, 14);
@@ -2275,7 +2283,7 @@ function drawFireWall(ctx, A, B, t) {
 }
 // screen-edge arrows (in-game arrow textures) pointing at off-screen special monsters and items
 const ARROW_SPECIAL_MOBS = new Set(['bandit_manchot', 'wabbit_gm', 'tiwabbit_kiafin', 'tofu_mutant', 'coffre_anime', 'jorbak']);
-const ARROW_ITEMS = new Set(['chest', 'dofus', 'power', 'fee', 'sablier', 'rappel', 'kamaboost', 'booster', 'tmap', 'relic', 'nowelgift', 'trool', 'gladia', 'manuel', 'houx']);   // (0.92: the Manuel too, the Maîtres Corbacs' rewards fall anywhere)
+const ARROW_ITEMS = new Set(['coffreit', 'chest', 'dofus', 'power', 'fee', 'sablier', 'rappel', 'kamaboost', 'booster', 'tmap', 'relic', 'nowelgift', 'trool', 'gladia', 'manuel', 'houx']);   // (0.92: the Manuel too, the Maîtres Corbacs' rewards fall anywhere)
 function drawEdgeArrows(ctx, R, W, H, u) {
   const IC = Game.icons, z = Game.zoom;
   const one = (wx, wy, icon, scale, base, col, pulse) => {

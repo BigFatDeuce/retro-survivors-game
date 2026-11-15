@@ -238,7 +238,7 @@ class Run {
     this.mapPos = C.maps.indexOf(this.map); this.mapIdx = this.map.tier !== undefined ? this.map.tier : this.mapPos;   // (0.50: the zone's tier, its place before the new zones: kamas, XP gems, merchant, zone multiplier)
     // 0.98.2: Ganymède's blessing, zone cards 1 to bless.maps in Normal (not Endless), won or not, on top of the help above:
     // might x (1 + bless.dmg) in recompute, the bread's drop rate x bless.bread
-    { const BL = (C.gany || {}).bless; this.bless = BL && !this.hard && !opts.infinite && this.mapPos < BL.maps ? BL : null; }
+    { const BL = (C.gany || {}).bless; this.bless = BL && !this.hard && this.mapPos < BL.maps ? BL : null; }   // (1.03: Endless too)
     // the first zones are gentler (new players have no Dofus, mastery or experience yet)
     this.zoneMul = this.map.hidden ? 1 : 0.8 + 0.025 * Math.min(6, Math.max(0, this.mapIdx));   // v1.6: a bit gentler (life steal was cut by 15)
     this.time = 0; this.kills = 0; this.kamas = 0; this.level = 1; this.xp = 0; this.xpNext = Math.round(5 * (((C.run || {}).xpEarly || [])[0] || 1));
@@ -409,7 +409,7 @@ class Run {
     if (id === 'sadida') st.area += 0.15;
     if (id === 'roublard') st.area += 0.2;
     const ps = this.cls.passiveStats || {}; for (const k in ps) st[k] = (st[k] || 0) + ps[k];
-    { const pb = this.opts.pet && this.C.petBonus ? this.C.petBonus[this.opts.pet] || this.C.petBonus['*'] : null; if (pb) for (const k in pb) { if (k === 'hp') st.maxHp += pb[k]; else st[k] = (st[k] || 0) + pb[k]; } }   // (0.99: a worn pet: +1 % dodge; the Chacha +1 HP, the Kouin-Kouin +0.1 % area)
+    { const SB = this.C.skinBonus || {}, PB = this.C.petBonus || {}; for (const pb of [this.opts.pet && (PB[this.opts.pet] || PB['*']), this.opts.hat && (SB[this.opts.hat] || SB['*']), this.opts.cape && (SB[this.opts.cape] || SB['*'])]) if (pb) for (const k in pb) { if (k === 'hp') st.maxHp += pb[k]; else st[k] = (st[k] || 0) + pb[k]; } }   // (0.99: a worn pet's bonus; 1.03: a worn hat's and cape's too, C.skinBonus — +1 in the item's main characteristic)
     if (this.shieldOn()) st.armor += this.C.shieldArmor || 1;   // 0.92: a worn shield, +1 resistance (the stats are rebuilt each time: never twice)
     // characteristic scrolls bought in the shop (every character)
     const SC = (Store.data && Store.data.scrolls) || {};
@@ -459,7 +459,9 @@ class Run {
   // temporary damage buffs: Cri de l'Ours (rally), Roue de la Fortune
   hardHp(d) { const H = this.hard; if (!H) return 1; const [a, b] = this.hardPw, k = clamp((Math.log(d.hp * (1 + d.dmg / 10)) - a) / ((b - a) || 1), 0, 1); return 1 + H.hpMin + (H.hpMax - H.hpMin) * k; }
   spellSlots() { return (this.C.spellSlots || 4) + (this.passives.borne || 0); }   // 0.20: 4 attack spells, a 5th with 'Borné'
-  aidHp() { return this.aid ? this.aid.hp : 1; }   // 0.95: the beginners' help
+  aidHp() { return this.aid ? this.aid.hp : 1; }
+  // 1.03: HP rounded up to round steps (C.hpRound): a boss to 250 (Hard: the next 1000, bossHp), a monster to 25 from 100 HP, 5 below (Hard: as they come)
+  roundHp(v, boss) { const H = this.C.hpRound; if (this.hard || !H) return boss ? bossHp(v) : v; const s = boss ? H.boss : v >= H.mobFrom ? H.mob : H.mobSmall; return Math.ceil(v / s - 1e-9) * s; }   // 0.95: the beginners' help
   atkK() { return (this.hard ? 1 / this.hard.atk : 1) / (1 + this.dmod('matk')); }   // monsters' attack intervals (Difficile: 15% faster; a daily challenge's malus)
   // 0.99: the Féca's class bonus — a monster in an area he casts round himself (a zone following him, an aura, his
   // orbiting shields) slowed by st.fecaSlow for 0.6 s, a stronger slow kept
@@ -579,7 +581,7 @@ class Run {
     const RU = this.RUN, zm = this.zoneMul || 1, hpm = this.scaleHp() * nm[0] * zm * (o.elite ? 5 : 1) * (RU.hpMul || 1) * this.hardHp(def) * this.hpLateK() * this.aidHp() * (1 + this.dmod('mhp')), dmul = this.scaleDmg() * nm[1] * zm * (1 + this.dmod('mdmg'));   // (0.99: a daily challenge's maluses)
     const m = {
       dmul: dmul * (RU.rangedMul || 1), xpm: nm[2],
-      def, sh, x, y, hp: def.hp * hpm, maxHp: def.hp * hpm, dmg: def.dmg * dmul * (o.elite ? 1.5 : 1) * (RU.meleeMul || 1), speed: def.speed * (this.RUN.mobSpeed || 1) * (o.elite ? 0.95 : 1) * (this.hard ? this.hard.speed : 1) * (1 + this.dmod('mspeed')) * rand(0.92, 1.08),
+      def, sh, x, y, hp: this.roundHp(def.hp * hpm), maxHp: this.roundHp(def.hp * hpm), dmg: def.dmg * dmul * (o.elite ? 1.5 : 1) * (RU.meleeMul || 1), speed: def.speed * (this.RUN.mobSpeed || 1) * (o.elite ? 0.95 : 1) * (this.hard ? this.hard.speed : 1) * (1 + this.dmod('mspeed')) * rand(0.92, 1.08),
       r: def.size * ES * (o.elite ? 1.3 : 1), kx: 0, ky: 0, t: rand(1), flip: false, view: 'R', dying: false, dieT: 0, flash: 0,
       slowUntil: 0, slowAmt: 0, stunUntil: 0, confuseUntil: 0, burnUntil: 0, burnDps: 0, poisonT: 0, hitCd: new Map(), atkT: rand(1, 3) * (this.RUN.firstAtk || 1),
       elite: !!o.elite, boss: false, dirT: 0, ex: 0, ey: 0, scale: ES * (def.scale || 1) * (o.elite ? 1.3 : 1), state: 'move', alpha: 1, born: this.time,
@@ -596,13 +598,13 @@ class Run {
     if (d.doom) {
       const ramp = 1 + 0.12 * Math.max(0, this.time - (this.doom ? this.doom.t0 : 600));  // the Doom only gets worse
       if (!this._doomHp) this._doomHp = Math.max(...Object.values(this.C.bosses).filter(b => !b.doom).map(b => b.hp));   // as strong as the strongest boss
-      const bhp = bossHp(this._doomHp * (this.C.doomHpK || 1) * (this.hard ? this.hard.bossHp : 1) * this.aidHp()), m = { def: d, sh, x, y, hp: bhp, maxHp: bhp, dmg: d.dmg * this.scaleDmg() * ramp * (this.RUN.meleeMul || 1), speed: d.speed * (this.RUN.mobSpeed || 1) * (this.hard ? this.hard.speed : 1) * rand(0.9, 1.1), r: d.size * ES, kx: 0, ky: 0, t: rand(1), flip: false,
+      const bhp = this.roundHp(this._doomHp * (this.C.doomHpK || 1) * (this.hard ? this.hard.bossHp : 1) * this.aidHp(), true), m = { def: d, sh, x, y, hp: bhp, maxHp: bhp, dmg: d.dmg * this.scaleDmg() * ramp * (this.RUN.meleeMul || 1), speed: d.speed * (this.RUN.mobSpeed || 1) * (this.hard ? this.hard.speed : 1) * rand(0.9, 1.1), r: d.size * ES, kx: 0, ky: 0, t: rand(1), flip: false,
         view: 'R', dying: false, dieT: 0, flash: 0, slowUntil: 0, slowAmt: 0, stunUntil: 0, confuseUntil: 0, burnUntil: 0, burnDps: 0, hitCd: new Map(),
         atkT: 2, elite: false, boss: true, doom: true, dirT: 0, ex: 0, ey: 0, ab: d.abilities.map(a => ({ a, t: (a.cd || 5) * rand(0.2, 1.0) })), state: 'move', scale: ES * d.scale, alpha: 1, born: this.time };
       this.mobs.push(m); this.seen(d.id); return m;
     }
     const hpm = (1 + 0.01 * this.level) * (1 + 0.04 * this.em()) * (this.zoneMul || 1) * (this.RUN.hpMul || 1);
-    const bhp = bossHp(d.hp * hpm * (this.hard ? this.hard.bossHp : 1) * this.aidHp()), m = {
+    const bhp = this.roundHp(d.hp * hpm * (this.hard ? this.hard.bossHp : 1) * this.aidHp(), true), m = {
       def: d, sh, x, y, hp: bhp, maxHp: bhp, dmg: d.dmg * this.scaleDmg() * (this.zoneMul || 1) * (this.RUN.meleeMul || 1), dmul: this.scaleDmg() * (this.zoneMul || 1), speed: d.speed * (this.RUN.mobSpeed || 1) * (this.hard ? this.hard.speed : 1), r: d.size * ES, kx: 0, ky: 0, t: 0, flip: false,
       view: 'R', dying: false, dieT: 0, flash: 0, slowUntil: 0, slowAmt: 0, stunUntil: 0, confuseUntil: 0, burnUntil: 0, burnDps: 0, hitCd: new Map(),
       atkT: 2, elite: false, boss: true, dirT: 0, ex: 0, ey: 0, ab: d.abilities.map(a => ({ a, t: (a.cd || 5) * rand(0.4, 0.9) })), state: 'move', scale: ES * d.scale, alpha: 1, born: this.time,
@@ -933,6 +935,7 @@ class Run {
     if (this.hard) { const CH = S.clearedHard = S.clearedHard || {}; CH[this.map.id] = (CH[this.map.id] || 0) + 1; }   // (0.92: the zone won in Difficile, its mark on the play screen)
     else if (!this.infinite) { const CN = S.clearedNormal = S.clearedNormal || {}; CN[this.map.id] = (CN[this.map.id] || 0) + 1; }   // (0.95: won in Normal: the zone's beginners' help ends)
     if (this.map.id === (this.C.gany || {}).unlockHard && !S.hardUnlocked) { S.hardUnlocked = 1; this.hardUnlockedNow = true; }   // (0.95: Grobe won: Difficile opens; Ganymède says so at the end, Game.runOver)
+    { const GF = (this.C.gany || {}).gift; if (GF && this.map.id === GF.map && !this.hard && !this.infinite && !S.ganyGift) { S.ganyGift = 1; S.kamas += GF.kamas; this.ganyGiftNow = true; } }   // (1.03: the Chafers won the first time in Normal: Ganymède's kamas, his scene in Game.runOver)
     this.unlockNext();
     const vis = this.C.maps.filter(m => !m.hidden);
     if (vis.every(m => S.cleared[m.id])) for (const m of this.C.maps.filter(m => m.hidden && !m.unlockAch && !m.unlockBy)) if (!S.unlocked.includes(m.id)) { S.unlocked.push(m.id); this.unlockedNow.push(Object.assign({ secret: true }, m)); }
@@ -1152,6 +1155,7 @@ class Run {
       let dx = tx - m.x, dy = ty - m.y; let d = Math.hypot(dx, dy) || 1;
       let mx = dx / d, my = dy / d;
       let sp = m.speed * (m.slowUntil > this.time ? 1 - m.slowAmt : 1) * (this.eclipseUntil > this.time ? this.C.randEvents.eclipse.speed : 1);
+      if (!m.boss && this.water && this.isWater(m.x, m.y)) sp *= 1 - (this.C.water.mobSlow || 0);   // (1.03: slower in water, like the player; no marker)
       const beh = m.boss ? 'boss' : m.def.beh;
       if (invis && !m.boss) { mx = Math.cos(m.t * 0.7 + i); my = Math.sin(m.t * 0.9 + i); sp *= 0.4; }
       else if (m.confuseUntil > this.time) { mx = Math.cos(m.t * 3 + i); my = Math.sin(m.t * 2.3 + i); sp *= 0.6; }
@@ -1623,6 +1627,7 @@ class Run {
         for (let i = 0; i < 12; i++) this.particles.push({ x: P.x + rand(-10, 10), y: P.y - 40 + rand(-6, 6), vx: rand(-50, 50), vy: rand(-90, -20), t: 0, life: rand(0.4, 0.8), c: pick(['#e8b864', '#c88a3a', '#f6d79a']), s: rand(2, 3.5) });
         if (this.ps) this.ps.breads++;
       } break;
+      case 'coffreit': { const it = this.C.coffre.items[p.v]; if (!it) break; this.kamas += it.kamas; this.text(P.x, P.y - 70, '+' + it.kamas + ' K', '#ffd700', 20); this.announce(L(it.name), T('coffre_loot', { n: L(it.name), k: it.kamas }), '#ff7a7a'); Audio2.blip('coin'); } break;   // (1.03: the Coffre Animé's stone, events.js)
       case 'kamaboost': {
         const KB = this.C.kamaBoost; this.kboostUntil = this.time + KB.dur;
         this.announce(T('kamaboost_t'), T('kamaboost'), '#ffd700'); Audio2.play(KB.snd, 0.9); Audio2.sfx('EVENT', 0.5);
@@ -2012,7 +2017,7 @@ const SFX_DIE = {
   tikokoko: 'Palmifleur_Die', kokoko: 'Palmifleur_Die', nodkoko: 'Palmifleur_Die', boomba: 'Musafa_Die', nakunbra: 'Sergent_Zoth_Die', canon: 'Tonneau_Die', coffre: 'Tonneau_Die',
 };
 // 0.92: a drop's room on the ground (world px, its picture's half-size), Run.placeDrop
-const DROP_R = { kama: 8, bread: 11, chest: 22, nowelgift: 30, booster: 18, manuel: 18, tmap: 16, dofus: 16, relic: 16, power: 13, plumec: 14, trool: 16, gladia: 20, kamaboost: 13, rappel: 13, fee: 13, sablier: 13, houx: 13 };
+const DROP_R = { kama: 8, bread: 11, chest: 22, nowelgift: 30, booster: 18, manuel: 18, tmap: 16, dofus: 16, relic: 16, power: 13, plumec: 14, trool: 16, gladia: 20, kamaboost: 13, coffreit: 16, rappel: 13, fee: 13, sablier: 13, houx: 13 };
 const SFX_BOSS_DIE = { le_chouque: 'Le_Flib_Die', flib_capitaine: 'Le_Flib_Die', boombata: 'Musafa_Die', chene_mou: 'Fecorce_Die', minotoror: 'Kimbo_Die', minotot: 'Kimbo_Die', dark_vlad: 'Tynril_Die', wa_wabbit: 'Rasboul_Majeur_Die', dragon_cochon: 'Kimbo_Die', bouftou_royal: 'Bitouf_Des_Plaines_Die' };
 const SFX_DIE_ALL = [...new Set([...Object.values(SFX_DIE), ...Object.values(SFX_BOSS_DIE), 'Kralamour_Die', 'Tynril_Die'])];
 // 1.02: a ground area (warnings, puddles, blasts) is drawn as an ellipse of height 0.62 x its width: hits follow it

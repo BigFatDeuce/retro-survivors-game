@@ -101,7 +101,7 @@ const UI = {
     if (had) { this._refocus(); if (typeof Game !== 'undefined' && Game.state === 'run' && Game.run && !Game.run.over) Game.run.easeIn(); }   // (0.98.3: juice.js)
     this.levelUpOpen = false; this._luBack = null; if (this._doorJ) { this._doorJ = false; Audio2.stopJingle(0.3); } },
   // (0.60: a menu that set levelUpOpen just before keeps it: openModal used to clear it, so B / Échap acted on the cards' window)
-  PICK_GUARD: 300,   // 0.98: ms a choice opened in a run ignores the dash keys (Space, E) — was 2000, it blocked real picks
+  PICK_GUARD: 500,   // ms a choice opened in a run ignores the dash keys (Space, E) — 0.98: 2000 blocked real picks, 300; 1.03: 500
   openModal(el) { if (typeof Game !== 'undefined' && Game.state === 'run') this._modalAt = performance.now();   // (0.84: Nav.key, the dash keys wait UI.PICK_GUARD)
     if (!this.modal && typeof Nav !== 'undefined' && Nav.el && Nav.el.isConnected) this._opener = Nav.el;
     const lu = this.levelUpOpen, back = this._luBack, opener = this._opener; this.closeModal(); this._opener = opener; this.levelUpOpen = lu; this._luBack = back; this.modal = h('div', { class: 'modal-wrap' }, el); this.rootEl.append(this.modal); if (typeof Nav !== 'undefined' && Nav.el && !this.modal.contains(Nav.el)) Nav.set(null); return this.modal; },   // (0.98.3: the cursor's frame stayed over the window, on the button behind it)
@@ -669,6 +669,7 @@ const UI = {
       if (!list.length) grid.append(h('div', { class: 'mastery-intro' }, T('search_none')));
       if (kind === 'pets' && !query) grid.append(h('div', { class: 'mastery-intro' }, T('pet_bonus')));
       if (kind === 'shields' && !query) grid.append(h('div', { class: 'mastery-intro' }, T('shield_bonus')));   // (0.92: +1 resistance, Run.shieldOn)
+      if ((kind === 'hats' || kind === 'capes') && !query && C.skinBonus) grid.append(h('div', { class: 'mastery-intro' }, T('skin_bonus')));   // (1.03: C.skinBonus, Run.recompute)
       if (!query) {
       const none = h('div', { class: 'shop-item' + (!S.equip[slot] ? ' equipped' : ''), 'data-nav': slot + ':none', 'data-prev': slot + ':' }, h('div', { class: 'noitem' }, iconImg('ui_none', 46)), h('div', { class: 'iname' }, T('none')),
         btn(!S.equip[slot] ? T('equipped') : T('equip'), () => { S.equip[slot] = null; Store.save(); if (sprite) sprite[slot] = null; refresh(); }, !S.equip[slot] ? 'orange' : ''));
@@ -678,7 +679,7 @@ const UI = {
         const owned = S.owned.includes(it.id); const eq = S.equip[slot] === it.id;
         const [t, n] = it.id.split('_');
         const card = h('div', { class: 'shop-item' + (owned ? ' owned' : '') + (eq ? ' equipped' : ''), 'data-nav': slot + ':' + it.id, 'data-prev': slot + ':' + it.id },
-          iconImg(`it_${t}_${n}`, 52), h('div', { class: 'iname' }, L(it.name)), kind === 'shields' ? h('div', { class: 'isub' }, T('shield_res')) : kind === 'pets' && C.petBonus ? h('div', { class: 'isub fx-eff' }, Object.keys(C.petBonus[it.id] || C.petBonus['*']).map(k => T('pet_b_' + k)).join(' · ')) : null,   // (0.99: what a pet gives, game.js recompute)
+          iconImg(`it_${t}_${n}`, 52), h('div', { class: 'iname' }, L(it.name)), kind === 'shields' ? h('div', { class: 'isub' }, T('shield_res')) : (kind === 'pets' || kind === 'hats' || kind === 'capes') && itemBonusText(kind === 'pets', it.id) ? h('div', { class: 'isub fx-eff' }, itemBonusText(kind === 'pets', it.id)) : null,   // (0.99: what a pet gives, game.js recompute)
           owned ? btn(eq ? T('equipped') : T('equip'), () => { S.equip[slot] = it.id; Store.save(); if (sprite) sprite[slot] = it.id; refresh(); }, eq ? 'orange' : '')
             : btn([iconImg('KamaSymbol', 14), ' ' + fmtNum(it.price)], () => {
               if (S.kamas < it.price) return buyFail(card);
@@ -1225,7 +1226,7 @@ const UI = {
       msg, h('div', { class: 'merchant-wallet' }, iconImg('KamaSymbol', 18), ' ', wal),
       h('div', { class: 'merchant-offers skins' }, ...(M.offers || []).map((o, i) => {
         const [t, g] = o.it.id.split('_'), owned = M.sold[i];
-        const b = btn([h('span', { class: 'm-promo' }, '-' + o.off + ' %'), iconImg(`it_${t}_${g}`, 44), h('span', { class: 'm-name' }, L(o.it.name)), h('small', {}, T(o.slot === 'hat' ? 'hats' : o.slot === 'cape' ? 'capes' : 'pets')),
+        const b = btn([h('span', { class: 'm-promo' }, '-' + o.off + ' %'), iconImg(`it_${t}_${g}`, 44), h('span', { class: 'm-name' }, L(o.it.name)), h('small', {}, T(o.slot === 'hat' ? 'hats' : o.slot === 'cape' ? 'capes' : 'pets')), itemBonusText(o.slot === 'pet', o.it.id) ? h('small', { class: 'm-bonus fx-eff' }, itemBonusText(o.slot === 'pet', o.it.id)) : null,   // (1.03: what it gives)
           h('span', { class: 'm-price' }, h('s', {}, fmtNum(o.it.price)), ' ', h('b', {}, fmtNum(o.price) + ' K'))], () => {
           if (M.sold[i]) return;
           if (!R.merchantBuySkin(o)) { msg.textContent = T('m_broke'); Audio2.blip('wrong'); return; }
@@ -1511,6 +1512,8 @@ function shopSpellReal(sp, cls, lv, next) { return fxText(shopSpellParts(sp, cls
 // 0.99: every number of the fusion — heals, armour, buffs, statuses, its summons, the riders' own blows — with the
 // formulas the run uses (riderHit, poisonMob, the burns' might, a trap's gas, the dome's riposte), from one blow's damage
 const SF_PROPS = ['hp', 'duration', 'radius', 'range', 'dist', 'sides', 'pierce', 'bounce', 'knock'];
+// 1.03: what a worn hat / cape (C.skinBonus) or pet (C.petBonus) gives, as the shop and the merchant show it ('' if nothing)
+function itemBonusText(pet, id) { const C = Game.C, B = pet ? C.petBonus : C.skinBonus; if (!B) return ''; return Object.entries(B[id] || B['*'] || {}).map(([k, v]) => T('pet_b_' + k, { n: k === 'hp' ? v : Math.round(Math.abs(v) * 100) })).join(' · '); }
 const SF_EFFS = ['slow', 'stun', 'mark', 'crit', 'execute', 'transmute', 'gold', 'power', 'haste', 'wallDmg'];
 function sfStats(f, cls) {
   const C = Game.C, SL = (Store.data && Store.data.spellLv) || {}, sp = C.spells[f.id], p = menuSpellParams(sp, cls, Math.max(...f.src.map(k => SL[k] || 0)));

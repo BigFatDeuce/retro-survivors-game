@@ -505,8 +505,8 @@ Object.assign(Run.prototype, {
       let r = Math.random(), got = C.coffre.drops[C.coffre.drops.length - 1][0];
       for (const [k, p] of C.coffre.drops) { if (r < p) { got = k; break; } r -= p; }
       if (got === 'manuel') this.collect({ kind: 'manuel' });
-      else { const it = C.coffre.items[got]; this.kamas += it.kamas; this.text(m.x, m.y - 60, '+' + it.kamas + ' K', '#ffd700', 20); this.announce(L(it.name), T('coffre_loot', { n: L(it.name), k: it.kamas }), '#ff7a7a'); }
-      Audio2.play('coffre', 0.8); Audio2.blip('coin');
+      else this.dropPickup('coffreit', m.x, m.y, got);   // (1.03: its stone falls on the ground, picked up for its kamas: Run.collect)
+      Audio2.play('coffre', 0.8);
       const S = Store.data; S.coffres = (S.coffres || 0) + 1; Store.save();
     }
   },

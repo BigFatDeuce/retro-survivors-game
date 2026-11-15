@@ -555,7 +555,7 @@ const Game = {
       else { const k = { kind: 'kamas' }; R.applyUpgrade(k); got.push(k); }
     }
     R.chestN = 0;
-    const k = R.addKamas(randi(4, 12) * (1 + R.mapIdx) * (n >= 3 ? 2 : 1));
+    const k = R.addKamas(Math.max(randi(25, 35), randi(4, 12) * (1 + R.mapIdx) * (n >= 3 ? 2 : 1)));   // (1.03: 25-35 kamas at least, the richer chests as they were)
     if (R.ps) R.ps.chests++;
     const kamasOnly = got.every(o => o.kind === 'kamas');
     if (kamasOnly) { // nothing left to learn: no pop-up, just a line in the chat
@@ -617,6 +617,7 @@ const Game = {
     window.RESULT = { victory, time: R.time, level: R.level, kills: R.kills, kamas: R.kamas, cls: R.cls.id, map: R.map.id, spells: R.spells.map(s => s.def.id + ':' + s.level), dofus: R.dofus.map(d => d.id) };
     const show = () => UI.runOverMenu(this.run, victory, unlocked);
     if (R.hardUnlockedNow && this.C.gany && !this.debug.bot) { R.hardUnlockedNow = false; setTimeout(() => UI.ganyScene(R, 'hard', show), 600); }   // (0.95: Grobe won the first time: Ganymède opens Difficile)
+    else if (R.ganyGiftNow && !this.debug.bot) { R.ganyGiftNow = false; setTimeout(() => UI.ganyScene(R, 'gift', show), 600); }   // (1.03: his 15,000 kamas, already in the bank: game.js claimVictory)
     else setTimeout(show, victory ? 300 : 0);
   },
   toMenu() {

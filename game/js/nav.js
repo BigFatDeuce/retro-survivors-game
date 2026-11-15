@@ -285,8 +285,8 @@ const Nav = {
     if (m) { if ((m[0]) && this.adjust(m[0])) return true; this.move(m[0], m[1]); return true; }
     // 0.85: Tab / Shift + Tab go through the items in reading order (the same items as the arrows and the controller)
     if (e.code === 'Tab') { const it = this.ensure(); if (it.length) { const i = it.indexOf(this.el), n = it.length; this.set(it[((i < 0 ? 0 : i) + (e.shiftKey ? -1 : 1) + n) % n]); Audio2.blip('click'); } e.preventDefault(); return true; }
-    // 0.84: a choice opened during a run ignores the dash keys (Space, E) for its first moments (UI.PICK_GUARD, 0.98: 0.3 s,
-    // was 2 s): a dash pressed as it popped up no longer picks a card (Enter, the mouse and the controller stay immediate:
+    // 0.84: a choice opened during a run ignores the dash keys (Space, E) for its first moments (UI.PICK_GUARD, 1.03: 0.5 s;
+    // 0.98: 0.3 s, was 2 s): a dash pressed as it popped up no longer picks a card (Enter, the mouse and the controller stay immediate:
     // the controller's dash is a trigger, never its A)
     if ((e.code === 'Space' || e.code === 'KeyE') && UI.modal && UI._modalAt && Game.state === 'run' && performance.now() - UI._modalAt < UI.PICK_GUARD) { e.preventDefault(); return true; }
     // Enter, and also Space / E (0.22), validate the highlighted choice
