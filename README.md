@@ -17,7 +17,7 @@
   <img alt="License: MIT (code)" src="https://img.shields.io/badge/code-MIT-green">
   <img alt="Languages" src="https://img.shields.io/badge/languages-7-blue">
   <img alt="Made with" src="https://img.shields.io/badge/made%20with-JavaScript%20%2B%20PixiJS-yellow">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.02-brightgreen">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.04-brightgreen">
 </p>
 
 <p align="center">
@@ -61,6 +61,8 @@ spells' effects, the sounds and the music. The Dofus music is by **Guillaume Pla
   **24 relics** (4 of them rare and mythical), the **6 Dofus** to find, scrolls and characteristics to raise between runs.
 - **The Gladiatrool's token**: at 7:30 it appears somewhere on the map, and its wheel grants a sixth characteristic on
   top of your usual five.
+- **A hooded stranger**: in some runs a mysterious ??? waits on the map and takes you to his sanctuary for a game of
+  cards — find the best poker hand and win a unique weapon, or lose a few kamas.
 - **Random events**: eclipses, invasions, kama rains, time stops… and rare visitors such as the Tofuzmo or Jorbak, the
   kleptomaniac with a bag of stolen kamas (and, sometimes, a treasure map).
 - **Treasure maps** to dig up, the **Living Chest**, ToT's quizzes, **100 achievements**, and the **464 official TTG
@@ -112,6 +114,7 @@ an issue here.
   assets found in `game/`.
 - [PixiJS](https://github.com/pixijs/pixijs) (MIT), the [Cinzel](https://fonts.google.com/specimen/Cinzel) and
   [Lilita One](https://fonts.google.com/specimen/Lilita+One) fonts (SIL Open Font License); the Verdance font was made for this game and is free of rights.
+- The playing cards of the ??? NPC's game: [Vecteezy.com](https://www.vecteezy.com) (free licence, attribution).
 - The real values of many relics, monsters and drops come from the Dofus 1.29 data gathered by the **StarLoco** server
   emulator project.
 - The few pictures that exist in the client only as small bitmaps were enlarged with

@@ -17,6 +17,16 @@ function sheetStage(key, w, h, anims, scale) {
   raf = requestAnimationFrame(step); c._stage = st; return c;
 }
 Object.assign(UI, {
+  // 1.03: the ??? NPC's offer (poker.js): his picture, his line, then the kinds of weapon; a refusal lets him wait
+  pokerOffer(R, N) {
+    if (this.modalOpen() || Game.debug.bot) { N.open = false; N.away = true; return; }
+    const C = Game.C, no = () => { this.closeModal(); N.open = false; N.away = true; };
+    const kinds = () => { body.replaceChildren(h('p', {}, T('pk_pick')), h('div', { class: 'pk-kinds' }, ...C.weapons.filter(w => C.uniqueWeapons.some(u => u.of === w.id)).map(w =>
+      btn([iconImg(w.icon, 40), h('span', {}, L(w.name))], () => { this.closeModal(); R.pokerNpc = null; Game.enterPoker(w.id); }, 'pk-kind')))); };
+    const body = h('div', {}, h('p', { class: 'pk-line' }, '« ' + T('pk_offer') + ' »'), h('div', { class: 'start-row' }, btn(T('pk_accept'), kinds, 'orange big'), btn(T('pk_refuse'), no, 'big')));
+    const el = h('div', { class: 'window modal pk-offer' }, h('div', { class: 'title' }, T('pk_name')), h('div', { class: 'content' }, sheetStage(C.poker.sprite, 200, 240, [['staticR']]), body));
+    this.openModal(el);
+  },
   // 0.68: the title is the original picture (work/art068/83.webp cut out of its black background, upscaled by
   // tools/lib/esrgan.py -> assets/ui/logo.webp); it floats and a light sweeps over it now and then (CSS). The
   // 0.26 Dofawa egg as the title's 'O' is gone with the old vector logo.

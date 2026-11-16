@@ -7,6 +7,7 @@ function sfusionOf(f, cls) { return !f.cls || f.cls === cls; }
 // [id], sfusion: 1, src: [a, b]) replaces its spells (the weapon stays) and frees their slot, then the 'union' cinematic
 // plays. On every hit a fused spell adds its rider (r* params: burn, poison, slow, stun, bleed, mark, blast, web, cloud,
 // rock, kamas) and its real Dofus spell's effect (def.fx2). Run.prototype methods, same pattern as extras.js.
+const U_HOLD = 0.9, U_MEET = 2.3;   // (1.03: the union's ingredients hold with their names, then meet; Run.startCine 'union' lasts 5 s)
 Object.assign(Run.prototype, {
   // the fusions this run could make now
   sfusionOptions(opts) {
@@ -24,6 +25,7 @@ Object.assign(Run.prototype, {
     if (!d || !f || this.sfused.has(id)) return;
     const gone = f.kind === 'weapon' ? [f.src[0]] : f.src.slice(), old = this.spells.filter(s => gone.includes(s.def.id));
     const icons = old.map(s => 'sp_' + s.icon); if (f.kind === 'weapon' && this.weapon) icons.push(this.weapon.icon);
+    const names = old.map(s => L(s.def.name)); if (f.kind === 'weapon' && this.weapon) names.push(L(this.weapon.def.name));   // (1.03: shown under the ingredients)
     this.spells = this.spells.filter(s => !gone.includes(s.def.id));
     this.orbiters = this.orbiters.filter(o => !old.includes(o.spell));   // (a permanent orbit leaves with its spell)
     for (const g of gone) this.consumed.add(g);
@@ -33,7 +35,7 @@ Object.assign(Run.prototype, {
     this.chat('✦ ' + T('sfusion_union') + ' ' + L(d.name), '#ffcf6a');
     // (0.61: made by a chest, the show waits for its window to close: it played unseen behind it)
     const big = this.chestN >= 3;   // (0.98: made by a boss chest: no slow motion after the show)
-    const show = () => this.startCine('union', { def: d, icons, kind: f.kind }, () => {
+    const show = () => this.startCine('union', { def: d, icons, names, kind: f.kind }, () => {
       const P = this.player; if (!big) this.slowMo(0.9, 0.4); this.flash('255,240,200', 0.4, 0.5); this.shake(6);
       this.rings.push({ x: P.x, y: P.y, r0: 20, r1: 300, t0: this.time, dur: 0.7, color: '#ffcf6a', fill: 1 });
       if (d.fx2) this.fxAt(d.fx2, P.x, P.y - 10, { scale: 1.6 });
@@ -90,19 +92,21 @@ Object.assign(Run.prototype, {
   // ------------------------------------------------ the union (cinematic, ~2.6 s, the run frozen)
   // the two spells' icons circle the character, faster and closer, meet in a white flash and a shockwave; the fused
   // spell's icon rises with turning rays, 'FUSION !' and its name in a Dofus box
+  // 1.03 (alchemy, ~5 s): the ingredients first hold still with their names (U_HOLD), then dive into the character, who
+  // glows in their two colours under a column of light; the fused spell comes out of the column, its name half as big
   tickUnion(c, dt) {
     const P = this.player, once = (k, f) => { if (!c.fired[k]) { c.fired[k] = true; f(); } };
     const anim = (this.cls.casts && this.cls.casts[0]) || 'anim1', key = P.sprite.has(anim + 'R') ? anim + 'R' : null;
     if (key) { P.castAnim = key; P.castT = Math.min(c.t * 0.7, P.sprite.duration(key) * 0.45); }
     once('riser', () => { Audio2.boosterSfx && Audio2.boosterSfx('riser'); });
-    if (c.t < 1.25 && this.particles.length < 300) {   // sparks drawn in by the icons
+    if (c.t > U_HOLD && c.t < U_MEET && this.particles.length < 300) {   // sparks drawn in by the icons
       const a = rand(TAU), r = rand(90, 180); this.particles.push({ x: P.x + Math.cos(a) * r, y: P.y - 40 + Math.sin(a) * r * 0.6, vx: -Math.cos(a) * r * 1.4, vy: -Math.sin(a) * r * 0.9, g: 0, t: 0, life: 0.6, c: pick(['#ffe27a', '#fff6d0', '#c89cff']), s: rand(2, 4) });
     }
-    if (c.t > 1.25) once('burst', () => {
+    if (c.t > U_MEET) once('burst', () => {
       Audio2.boosterSfx && Audio2.boosterSfx('burst'); Audio2.play('stars', 0.9); Audio2.ui('level', 0.9); this.shake(10);
       for (let i = 0; i < 90; i++) { const a = rand(TAU), v = rand(160, 520); this.particles.push({ x: P.x, y: P.y - 40, vx: Math.cos(a) * v, vy: Math.sin(a) * v * 0.7 - 120, t: 0, life: rand(0.6, 1.3), c: pick(['#ffd700', '#fff3a0', '#ffffff', '#c89cff', '#ff9cf0']), s: rand(3, 7), star: i % 7 === 0 ? 1 : 0 }); }
     });
-    if (c.t > 1.75) once('name', () => { Audio2.sfx('EVENT', 0.7); Audio2.play('impact_lourd', 0.6, 1.15); this.shake(5); });   // (0.92: the name slams in)
+    if (c.t > U_MEET + 0.5) once('name', () => { Audio2.play('impact_lourd', 0.6, 1.15); this.shake(5); });   // (0.92: the name slams in; 1.03: without the event horn)
   },
   drawUnion(ctx, W, H, c) {
     const P = this.player, z = Game.zoom, sx = (P.x - this.cam.x) * z + W / 2, sy = (P.y - 40 - this.cam.y) * z + H / 2, S = Math.min(W, H);
@@ -110,9 +114,14 @@ Object.assign(Run.prototype, {
     // darkness with a light on the character
     const g = ctx.createRadialGradient(sx, sy, S * 0.08, sx, sy, S * 0.75); g.addColorStop(0, 'rgba(20,8,30,0)'); g.addColorStop(1, `rgba(20,8,30,${0.8 * k})`);
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-    const meet = 1.25, isz = S * 0.085;
-    if (c.t < meet) {   // the ingredients spiral in, leaving ghost trails
-      const u = c.t / meet, rad = S * 0.26 * (1 - u * u), n = d.icons.length || 2;
+    const meet = U_MEET, isz = S * 0.085;
+    if (c.t < meet) {   // the ingredients hold with their names, then spiral in, leaving ghost trails
+      const u = clamp((c.t - U_HOLD) / (meet - U_HOLD), 0, 1), rad = S * 0.26 * (1 - u * u), n = d.icons.length || 2;
+      if (d.names && u < 0.35) {   // (their names under them while they hold, fading as they start to turn)
+        const fs = Math.round(S * 0.03); ctx.font = hudFont(fs); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineJoin = 'round'; ctx.lineWidth = fs * 0.25; ctx.strokeStyle = '#1a0632'; ctx.fillStyle = '#fff3d0';
+        ctx.globalAlpha = k * (1 - u / 0.35) * Math.min(1, c.t / 0.4);
+        for (let i = 0; i < n; i++) { const a = i * TAU / n, x = sx + Math.cos(a) * rad, y = sy + Math.sin(a) * rad * 0.62 + isz * 0.62; if (d.names[i]) { ctx.strokeText(d.names[i], x, y); ctx.fillText(d.names[i], x, y); } }
+      }
       ctx.globalCompositeOperation = 'lighter';
       for (let i = 0; i < n; i++) for (let tr = 5; tr >= 0; tr--) {
         const uu = Math.max(0, u - tr * 0.025), rr = S * 0.26 * (1 - uu * uu), a = i * TAU / n + uu * uu * 9;
@@ -127,6 +136,26 @@ Object.assign(Run.prototype, {
       }
     } else {   // the burst, then the fused spell's icon
       const v = c.t - meet;
+      if (v < 1.6) {   // (1.03) the character glows in the ingredients' two colours under a column of light
+        const q = Math.min(1, v / 0.25) * Math.min(1, (1.6 - v) / 0.5), pu = 1 + 0.12 * Math.sin(v * 14), r = S * 0.16 * pu;
+        ctx.save(); ctx.globalCompositeOperation = 'lighter';
+        ctx.globalAlpha = 0.75 * q * k; ctx.drawImage(RCache.glow('rgba(255,220,120,0.95)'), sx - r * 1.2 - S * 0.02, sy - r, r * 2.4, r * 2);
+        ctx.globalAlpha = 0.65 * q * k; ctx.drawImage(RCache.glow('rgba(200,150,255,0.95)'), sx - r * 1.2 + S * 0.02, sy - r * 0.9, r * 2.4, r * 1.8);
+        // the light rises in waves: three ribbons swaying out of phase, thinning as they go up, and blaze sparks of the same colours
+        const y0 = sy + S * 0.05, rib = (c0, c1) => { const g = ctx.createLinearGradient(0, y0, 0, 0); g.addColorStop(0, c0); g.addColorStop(0.5, c1); g.addColorStop(1, 'rgba(0,0,0,0)'); return g; };
+        const fills = [rib('rgba(255,214,110,0.75)', 'rgba(255,190,90,0.3)'), rib('rgba(200,150,255,0.75)', 'rgba(170,110,255,0.3)'), rib('rgba(255,250,235,0.7)', 'rgba(255,240,220,0.2)')];
+        for (let j = 0; j < 3; j++) {
+          const amp = S * (j < 2 ? 0.03 : 0.012), wd = S * (j < 2 ? 0.013 : 0.006), ph = j * 2.6, N = 18, xs = []; ctx.fillStyle = fills[j];
+          for (let m = 0; m <= N; m++) { const f = m / N, y = y0 * (1 - f); xs.push([sx + Math.sin(f * 9 - v * 7 + ph) * amp * (0.4 + f), y, wd * (1 - 0.7 * f) * (0.85 + 0.15 * Math.sin(v * 11 + j + f * 6))]); }
+          ctx.beginPath(); for (const [x, y, w] of xs) ctx.lineTo(x - w, y); for (let m = N; m >= 0; m--) ctx.lineTo(xs[m][0] + xs[m][2], xs[m][1]); ctx.closePath();
+          ctx.globalAlpha = 0.85 * q * k; ctx.fill();
+        }
+        for (let i = 0; i < 26; i++) {   // stateless sparks: each one's height is its own phase of the rise
+          const f = (v * 0.8 + i * 0.618) % 1, x = sx + Math.sin(i * 12.9 + f * 7) * S * 0.035 * (0.5 + f), y = y0 * (1 - f) - S * 0.02, z = S * 0.018 * (1 - f * 0.7);
+          ctx.globalAlpha = q * k * (1 - f) * 0.9; ctx.drawImage(RCache.glow(i & 1 ? 'rgba(200,150,255,0.95)' : 'rgba(255,214,110,0.95)'), x - z, y - z, z * 2, z * 2);
+        }
+        ctx.restore();
+      }
       if (v < 0.5) { ctx.globalAlpha = (1 - v / 0.5) * 0.9; ctx.fillStyle = '#fffaf0'; ctx.fillRect(0, 0, W, H); }
       for (let i = 0; i < 2; i++) {   // shockwaves
         const w = clamp((v - i * 0.12) / 0.6, 0, 1); if (w <= 0 || w >= 1) continue;
@@ -153,7 +182,7 @@ Object.assign(Run.prototype, {
     const cy = H * 0.66, name = L(d.def.name).toLocaleUpperCase(LANG), kick = T('sfusion_union'), HIT = 0.5, F = px => hudFont(Math.max(4, Math.round(px)));
     const hash = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
     const glowV = RCache.glow('rgba(176,96,255,0.95)'), glowP = RCache.glow('rgba(255,120,240,0.9)'), glowW = RCache.glow('rgba(248,236,255,0.95)'), glowG = RCache.glow('rgba(214,170,255,0.95)');
-    let fs = Math.round(S * 0.1); ctx.font = F(fs); const tw0 = ctx.measureText(name).width; if (tw0 > W * 0.84) fs = Math.floor(fs * W * 0.84 / tw0);   // (big, never wider than the screen)
+    let fs = Math.round(S * 0.055); ctx.font = F(fs);   // (1.03: half as big; S * 0.1 before) const tw0 = ctx.measureText(name).width; if (tw0 > W * 0.84) fs = Math.floor(fs * W * 0.84 / tw0);   // (big, never wider than the screen)
     ctx.font = F(fs); const tw = ctx.measureText(name).width, half = tw / 2 + fs * 0.3;
     const y = cy - (k < 1 && v > 1 ? (1 - k) * S * 0.03 : 0);
     // 1) energy gathering on the line, before the hit

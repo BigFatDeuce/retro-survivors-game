@@ -53,6 +53,15 @@ const RCache = {
     for (const [dy, col] of [[-1, '#d8333a'], [1, '#f4efe4']]) { g.fillStyle = col; g.beginPath(); g.moveTo(3, 7); g.lineTo(0.5, 7 + dy * 5.5); g.lineTo(11, 7 + dy * 5); g.lineTo(13, 7); g.closePath(); g.fill(); g.stroke(); }
     return this.put('arrow', c);
   },
+  // 1.03: the monsters' shots' pink bubble (glow, pink disc, white heart) in one picture: one draw a shot instead of three
+  // (two of them paths); drawn 6.4 x its size, centred
+  pinkShot() {
+    let c = this.m.get('pinkShot'); if (c) return c;
+    c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d'), u = 64 / 3.2;
+    g.globalAlpha = 0.5; g.drawImage(this.glow('rgba(255,40,210,0.95)'), 0, 0, 128, 128);
+    for (const [r, col, a] of [[1.5, '#ff2bd6', 0.5], [0.75, '#ffffff', 0.95]]) { g.globalAlpha = a; g.fillStyle = col; g.beginPath(); g.arc(64, 64, r * u, 0, TAU); g.fill(); }
+    return this.put('pinkShot', c);
+  },
   glow(col) {
     let c = this.m.get('g' + col); if (c) return c;
     c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
@@ -670,6 +679,9 @@ Run.prototype.draw = function (ctx) {
     if (!inView(p.x, p.y, 20)) continue;
     nat('pk' + p.kind, ctx => drawPickup(ctx, p, t));
   }
+  // 1.03: objects on the ground behind the scenery, as the characters (gems and kamas excepted: too many, too small)
+  { let n = 0; const nMax = Game.lowFx ? 4 : 10;
+    for (const p of this.pickups) { if (n >= nMax || p.kind === 'gem' || p.kind === 'kama' || !inView(p.x, p.y, 20)) continue; const g = p.kind === 'coffreit' ? 1.6 : 1; if (this.occludeAt(ctx, px, p.x - 50 * g, p.y - 100 * g, p.x + 50 * g, p.y + 20, p.y, c => drawPickup(c, p, t))) n++; } }
   // Roublard walls of fire between bombs
   if (this.walls.length) nat(null, ctx => { for (const [A, B] of this.walls) drawFireWall(ctx, A, B, t); });
   // entities sorted by y
@@ -708,6 +720,7 @@ Run.prototype.draw = function (ctx) {
     const bob = Math.sin(t * 3) * 3; ctx.drawImage(Game.icons.canvas('KamaSymbol', 64), M.x - 13, M.y - 104 + bob, 26, 26);
     outlinedText(ctx, T('merchant'), M.x, M.y - 112 + bob, '#ffd27a', 12, 'center');
   }
+  this.drawPokerNpc(ctx, t);   // (1.03: the ??? NPC, poker.js)
   // a dropped Dofus: a big animated red arrow above it, drawn over the monsters
   for (const q of this.pickups) if (q.kind === 'dofus') {
     const by = q.y - 62 - Math.abs(Math.sin(t * 5)) * 14;
@@ -716,6 +729,9 @@ Run.prototype.draw = function (ctx) {
     ctx.restore();
   }
   });
+  // 1.03: the merchant and the ??? NPC behind the scenery too
+  if (this.merchant && this.merchantSprite && this.merchantSprite.ready) { const M = this.merchant; this.occludeAt(ctx, px, M.x - 70, M.y - 140, M.x + 70, M.y + 16, M.y, c => this.merchantSprite.draw(c, 'staticR', t, M.x, M.y, ES, M.x > P.x, { loop: true })); }
+  if (this.pokerNpc && this.pokerSheet) { const N = this.pokerNpc, sh = this.pokerSheet; this.occludeAt(ctx, px, N.x - 100, N.y - 230, N.x + 100, N.y + 16, N.y, c => sh.draw(c, sh.frameAt('staticR', t, true), N.x, N.y, ES * 1.6, N.x > P.x)); }
   // orbiters
   for (const o of this.orbiters) nat('orb' + (o.spell.p.star ? 's' : o.spell.p.hourglass ? 'h' : o.spell.p.drawIcon ? 'i' : o.spell.def.weapon ? 'w' : 'f'), ctx => {
     if (o.spell.p.star) { drawAuraOrb(ctx, o, t, this); return; }   // Sagesse fusion (0.61: violet aura orbs, no more star icons)
@@ -731,14 +747,16 @@ Run.prototype.draw = function (ctx) {
       ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.a * 2.5);
       const sz = o.spell.p.size * 2.4; ctx.drawImage(Game.icons.canvas(o.spell.icon || o.spell.def.icon, 96), -sz / 2, -sz / 2, sz, sz); ctx.restore(); return;
     }
-    // Bouclier Féca: the client's glyph (fx 802) tinted red, on a red glow, so it reads well on every ground
+    // Bouclier Féca: the client's glyph (fx 802) tinted red, smaller and see-through, with rune glints circling it
+    // (1.03: no more big red glow and ring round it)
     const fx = FxSheets.get(802), sz = o.spell.p.size, pulse = 0.8 + 0.2 * Math.sin(t * 7 + o.a);
     ctx.save(); ctx.translate(o.x, o.y);
-    ctx.drawImage(RCache.glow('rgba(255,60,40,0.8)'), -sz * 2.3, -sz * 2.3, sz * 4.6, sz * 4.6);
-    ctx.globalAlpha = pulse; ctx.strokeStyle = '#ff5a3c'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(0, 0, sz + 5, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1;
-    const tc = fx && fx.anims.root && redGlyph(fx, fx.anims.root.f[0]);
-    if (tc) { ctx.rotate(o.a); ctx.drawImage(tc, -tc.width / 2, -tc.height / 2); }
-    else { ctx.strokeStyle = '#ff6a4a'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0, 0, sz, 0, TAU); ctx.stroke(); }
+    ctx.globalAlpha = 0.35 * pulse; ctx.drawImage(RCache.glow('rgba(255,70,50,0.8)'), -sz * 1.3, -sz * 1.3, sz * 2.6, sz * 2.6);
+    const an = fx && fx.anims.root, tc = an && redGlyph(fx, an.f[Math.min(an.f.length - 1, 7)]);   // (a fully formed frame of the dome: frame 0 is nearly empty)
+    ctx.globalAlpha = 0.7; ctx.rotate(o.a);
+    if (tc) ctx.drawImage(tc, -sz * 0.9, -sz * 0.9, sz * 1.8, sz * 1.8);
+    ctx.rotate(-o.a - t * 2.5); ctx.globalCompositeOperation = 'lighter'; const gl = RCache.glow('rgba(255,170,120,0.9)'), gr = sz * 0.75, gs = sz * 0.22;
+    for (let k = 0; k < 4; k++) { const a = k * TAU / 4; ctx.globalAlpha = 0.45 + 0.35 * Math.sin(t * 9 + k * 1.7 + o.a); ctx.drawImage(gl, Math.cos(a) * gr - gs, Math.sin(a) * gr - gs, gs * 2, gs * 2); }
     ctx.restore();
   });
   nat(null, ctx => {
@@ -840,6 +858,8 @@ Run.prototype.draw = function (ctx) {
       const p = k < 0.12 ? (0.12 - k) / 0.12 : 0; NumCache.draw(ctx, tx.s, tx.color, tx.size * z, tx.x, tx.y, (1 + p * 0.8) / z, p);
       continue;
     }
+    if (tx.icon) { const q = Math.min(1, k / 0.12), ps = q < 1 ? 0.5 + q * 0.5 + Math.sin(q * Math.PI) * 0.3 : 1, gs = 76 * ps;   // (1.03: a small chest's improvement, Run.text + .icon: the icon pops in over its name)
+      ctx.drawImage(RCache.glow('rgba(255,225,130,0.6)'), tx.x - gs / 2, tx.y - 32 - gs / 2, gs, gs); Game.icons.drawFit(ctx, tx.icon, tx.x, tx.y - 32, 44 * ps); }
     const c = tx.c || (tx.c = TextCache.get(tx.s, tx.color, tx.size * z, 'rgba(0,0,0,0.85)', 3 * z));
     const sc = (k < 0.12 ? 1 + (0.12 - k) * 4 : 1) / z, ax = c.tw / 2;
     ctx.drawImage(c, tx.x - (c.bx + ax) * sc, tx.y - c.by * sc, c.width * sc, c.height * sc);
@@ -942,6 +962,14 @@ Run.prototype.decorFront = function (ctx, x0, y0, x1, y1, fy, alpha, sil) {
     g.globalCompositeOperation = 'destination-in'; g.drawImage(c2, 0, 0, W, H, 0, 0, W, H); g.globalCompositeOperation = 'source-over';
   }
   ctx.save(); ctx.globalAlpha = alpha; ctx.drawImage(c, 0, 0, W, H, M.x0, M.y0, M.x1 - M.x0, M.y1 - M.y0); ctx.restore();
+  return true;
+};
+// 1.03: a thing standing behind the scenery (an object on the ground, the merchant, the ??? NPC): the scenery in front of
+// its foot drawn over it at the see-through the character reaches (55 %); px: through a PixiJS proxy box. True when it did
+Run.prototype.occludeAt = function (ctx, px, x0, y0, x1, y1, fy, sil) {
+  if (!this.depth || Game.minFx || !this.frontMask(x0, y0, x1, y1, fy)) return false;
+  const fn = c => this.decorFront(c, x0, y0, x1, y1, fy, 0.55, sil);
+  if (px) PX.proxy(x0, y0, x1, y1, fn); else fn(ctx);
   return true;
 };
 // the character: its scenery in front, fading in 0.3 s from opaque to see-through while it stays behind
@@ -1616,9 +1644,9 @@ function drawEProj(ctx, e, t) {
     if (sh) { const f = sh.frameAt('walkR', t * 1.5 + e.t0, true), r = (e.size || 11) * 2.6; ctx.globalAlpha = 0.85; ctx.drawImage(RCache.glow('rgba(255,40,210,0.95)'), -r, -r, r * 2, r * 2); ctx.restore(); ctx.save(); ctx.globalAlpha = 0.95; sh.draw(ctx, f, e.x, e.y + 14, ES * 0.85, e.vx < 0); ctx.restore(); return; }
   }
   // 1.03: every monster shot sits on a fluo-pink bubble with a white heart (an arrow: a pink glow along it): seen on any ground
-  const s0 = e.size || 8, disc = (r, c, a) => { ctx.globalAlpha = a; ctx.fillStyle = c; ctx.beginPath(); ctx.arc(0, 0, r, 0, TAU); ctx.fill(); };
+  const s0 = e.size || 8;
   if (e.arrow) { ctx.save(); ctx.rotate(Math.atan2(e.vy || 0, e.vx || 1)); ctx.globalAlpha = 0.5; ctx.drawImage(RCache.glow('rgba(255,40,210,0.95)'), -s0 * 5.4, -s0 * 1.6, s0 * 8, s0 * 3.2); ctx.restore(); }   // (an arrow stays an arrow: a pink glow along it)
-  else { const r0 = s0 * 3.2; ctx.globalAlpha = 0.5; ctx.drawImage(RCache.glow('rgba(255,40,210,0.95)'), -r0, -r0, r0 * 2, r0 * 2); disc(s0 * 1.5, '#ff2bd6', 0.5); disc(s0 * 0.75, '#ffffff', 0.95); }
+  else { const r0 = s0 * 3.2; ctx.drawImage(RCache.pinkShot(), -r0, -r0, r0 * 2, r0 * 2); }
   ctx.globalAlpha = 1;
   const AS = e.arrow && ((fx && fx.anims.move) ? fx : FxSheets.get(901));   // (an arrow: the client's arrow sprite, Flèche Empoisonnée's, loaded with the monsters' attacks)
   if (AS && AS.anims.move) { ctx.rotate(Math.atan2(e.vy || 0, e.vx || 1)); AS.draw(ctx, AS.frameAt('move', t, true), 0, 0, 2, false); }
@@ -1863,7 +1891,7 @@ function drawHud(ctx, R) {
   // the relic springs out of the character and settles over its head (cy, 112 u above the screen's middle), the frame
   // slides down into place above the relic, its wood 78 % opaque; 3 s on screen instead of 3.8; under a banner shown at
   // the same time (Jorbak defeated…) both move down below it (R._banBot, the banner's bottom of the last frame)
-  if (R.relicShow) { const D = 3, k = (performance.now() - R.relicShow.t0) / 1000; if (k > D) R.relicShow = null; else {
+  if (R.relicShow) { const D = 3, k = (performance.now() - R.relicShow.t0) / 1000 * (R.relicShow.sp || 1); if (k > D) R.relicShow = null; else {
     const r = R.relicShow.r, a = Math.min(1, k * 3.5, (D - k) * 2.5), cx = W / 2, sc = 1 + Math.max(0, 0.45 - k) * 0.7;
     const e1 = 1 - Math.pow(1 - Math.min(1, k / 0.42), 3), out = Math.max(0, k - (D - 0.4)) / 0.4 * 10 * u;   // e1: the rise; out: a small lift as it fades
     const maxW = Math.min(W * 0.9, 600 * u) - 44 * u, f1 = 14 * u; let f2 = 20 * u; ctx.font = BAN_FONT(f2); const nw = ctx.measureText(L(r.name)).width; if (nw > maxW) f2 *= maxW / nw;   // (0.98.1: its name in the chat's lettering, BAN_FONT)
@@ -2007,6 +2035,7 @@ function drawHud(ctx, R) {
     // 0.26: the Tofu Mutant, the Coffre Animé (green / red dots) and the cross of a treasure map
     for (const m of R.mobs) if (m.def.special && !m.dying) { ctx.fillStyle = m.def.id === 'coffre_anime' ? '#ff6a4a' : '#9cff6a'; ctx.beginPath(); ctx.arc(mx + m.x * k, my + m.y * k, 4 * u + Math.sin(R.time * 8), 0, TAU); ctx.fill(); }
     if (R.merchant) { const x = mx + R.merchant.x * k, y = my + R.merchant.y * k; ctx.fillStyle = '#ffd24a'; ctx.strokeStyle = '#3a2408'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, 4.5 * u + Math.sin(R.time * 6), 0, TAU); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#3a2408'; ctx.font = `bold ${7 * u}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('K', x, y + 0.5); }   // 0.33: the skin merchant
+    if (R.pokerNpc) { const x = mx + R.pokerNpc.x * k, y = my + R.pokerNpc.y * k; ctx.fillStyle = '#b07cff'; ctx.strokeStyle = '#1a0830'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, 4.5 * u + Math.sin(R.time * 6), 0, TAU); ctx.fill(); ctx.stroke(); ctx.fillStyle = '#1a0830'; ctx.font = `bold ${7 * u}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', x, y + 0.5); }   // 1.03: the ??? NPC
     if (R.tmapHere) { const x = mx + R.tmapHere.x * k, y = my + R.tmapHere.y * k, a = 4 * u; ctx.strokeStyle = '#ff2a1a'; ctx.lineWidth = 2.5 * u; ctx.beginPath(); ctx.moveTo(x - a, y - a); ctx.lineTo(x + a, y + a); ctx.moveTo(x + a, y - a); ctx.lineTo(x - a, y + a); ctx.stroke(); }
     ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.beginPath(); ctx.arc(mx + P.x * k, my + P.y * k, 3.5 * u, 0, TAU); ctx.fill(); ctx.stroke();
   }
@@ -2305,6 +2334,7 @@ function drawEdgeArrows(ctx, R, W, H, u) {
     if (m.boss || m.elite || ARROW_SPECIAL_MOBS.has(m.def.id)) one(m.x, m.y - m.r, ARROW_BIG, m.boss ? 0.62 : 0.48, ARROW_BIG_BASE, m.boss ? '#ff4040' : '#ffd24a', m.boss);
   }
   if (R.merchant) one(R.merchant.x, R.merchant.y - 40, ARROW_SMALL, 1.3, ARROW_SMALL_BASE, '#ffd24a', true);
+  if (R.pokerNpc) one(R.pokerNpc.x, R.pokerNpc.y - 40, ARROW_SMALL, 1.3, ARROW_SMALL_BASE, '#c9a0ff', true);
   for (const p of R.pickups) if (ARROW_ITEMS.has(p.kind)) one(p.x, p.y, ARROW_SMALL, 1.1, ARROW_SMALL_BASE, '#ffe9a8', p.kind === 'dofus');
 }
 

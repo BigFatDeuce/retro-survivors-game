@@ -39,7 +39,7 @@ Object.assign(Run.prototype, {
     k = Math.max(k, fade(this._bossCA, 1800, 1.6));   // a boss's fall
     k = Math.max(k, fade(this._libCA, 700, 1.1));   // Libération taking a blow
     if (this.critFx) { const e = (now - this.critFx.t0) / 1000; k = Math.max(k, e < 2 ? 2.2 : 2.2 * Math.max(0, 1 - (e - 2) / 1.2)); }   // a critical summon
-    if (this.relicShow) { const e = (now - this.relicShow.t0) / 1000; k = Math.max(k, e < 1 ? 1.3 - 0.8 * e : 0.5 * Math.max(0, 1 - (e - 2.4) / 0.6)); }   // a relic picked up
+    if (this.relicShow) { const e = (now - this.relicShow.t0) / 1000 * (this.relicShow.sp || 1); k = Math.max(k, e < 1 ? 1.3 - 0.8 * e : 0.5 * Math.max(0, 1 - (e - 2.4) / 0.6)); }   // a relic picked up
     const V = this.victoryFx; if (V) { const e = (now - V.t0) / 1000; k = Math.max(k, e < 0.7 ? 1 + 2 * e : e < 3.2 ? 2 + 0.35 * Math.sin(e * 4) : Math.max(0, 2 * (1 - (e - 3.2) / 0.7))); }   // the victory: the strongest
     return clamp(k, 0, 2.6) * (Game.minFx ? 0 : Game.lowFx ? 0.6 : 1);
   },

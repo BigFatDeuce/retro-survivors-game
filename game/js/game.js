@@ -1063,7 +1063,7 @@ class Run {
     else if (o.kind === 'fusion') this.applyFusion(o.id);
     else if (o.kind === 'sfusion') this.applySFusion(o.id);
     else if (o.kind === 'passive') { this.passives[o.id] = (this.passives[o.id] || 0) + 1; this.recompute(); }
-    else if (o.kind === 'kamas') { const v = this.addKamas(this.C.maxKamas || 10); this.text(this.player.x, this.player.y - 80, '+' + v + ' K', '#ffd700', 16); }
+    else if (o.kind === 'kamas') { const v = this.addKamas(this.C.maxKamas || 10); if (!o.quiet) this.text(this.player.x, this.player.y - 80, '+' + v + ' K', '#ffd700', 16); }
     else if (o.kind === 'bread') this.massPotion();   // (0.53: the mass healing potion; the kind keeps its old name, saved in the settings)
   }
   // ------------------------------------------------ summons
@@ -1599,6 +1599,7 @@ class Run {
     for (let i = this.pickups.length - 1; i >= 0; i--) {
       const p = this.pickups[i]; p.t += dt;
       const d2 = dist2(p.x, p.y, P.x, P.y - 15);
+      if (p.t < 0.5 && (p.kind === 'fee' || p.kind === 'power' && PICK_LATE[p.v])) continue;   // (1.03: these can't be picked up in their first 0.5 s, a melee build would take them as they fall)
       if (!p.mag && p.kind !== 'chest' && d2 < ((p.kind === 'gem' || p.kind === 'kama') ? mr * mr : ir * ir)) { p.mag = true; p.mt = 0; }
       if (p.kind === 'chest' && d2 < 46 * 46 && !p.cine) {   // 0.26: a boss chest has its little show first (events.js)
         if (p.boss) { p.cine = true; this.startCine('chest', { p }, () => { const k = this.pickups.indexOf(p); if (k >= 0) this.pickups.splice(k, 1); Game.openChest(p.v || 1); }); continue; }
@@ -2000,6 +2001,7 @@ function fxRadius(sh, sym) {
   const a = sh.anims[sym], s = (a && a.f || []).map(f => Math.max(f[2], f[3]) / 2).filter(v => v > 1).sort((x, y) => x - y);
   return (c[sym] = s.length ? s[Math.floor(s.length * 0.8)] / (sh.zoom || 1) : 0);
 }
+const PICK_LATE = { foudre: 1, flamiche: 1, liberation: 1 };
 const FLAMICHE = { def: { id: 'flamiche', fx: [4600] }, p: {} };
 
 // die sounds per monster family (1.01: the larvas a soft mollusc's, not the Kaskargo's shell that sounded like glass)

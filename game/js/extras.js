@@ -69,7 +69,7 @@ Object.assign(Run.prototype, {
     // 0.38: a moment of its own: a fanfare, a golden burst around the character, the relic and its bonus in the middle of the screen.
     // 0.61: one second of light slow motion and a rewarding sound (Audio2.relicSfx: a rising magic chime over the fanfare)
     Audio2.fanfare(0.8); Audio2.relicSfx(); Audio2.play('stars', 0.8); this.shake(4); this.slowMo(1.0, 0.45); this.flash('255,230,150', 0.35, 0.3);
-    if (!this.bossFight()) this.relicShow = { r, t0: performance.now() };   // (0.84: nothing in the middle of the screen during a boss fight)
+    this.relicShow = { r, t0: performance.now(), sp: this.bossFight() ? 2 : 1 };   // (1.04: during a boss fight too, twice as fast; 0.84-1.03 hid it)
     const P = this.player; for (let k = 0; k < 3; k++) this.rings.push({ x: P.x, y: P.y - 30, r0: 10, r1: 90 + k * 50, t0: this.time + k * 0.12, dur: 0.6, color: '#ffcf3a' });
     for (let k = 0; k < 40; k++) { const a = rand(TAU), v = rand(120, 320); this.particles.push({ x: P.x, y: P.y - 40, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 80, t: 0, life: rand(0.6, 1.1), s: rand(3, 6), c: pick(['#ffe27a', '#ffcf3a', '#fff6d0']) }); }
   },
@@ -162,9 +162,10 @@ Object.assign(Run.prototype, {
       this._krT = E.kamarain.every; const a = rand(TAU), d = rand(30, 260);
       this.dropPickup('kama', clamp(P.x + Math.cos(a) * d, this.bounds.x0, this.bounds.x1), clamp(P.y + Math.sin(a) * d * 0.7, this.bounds.y0, this.bounds.y1), randi(1, 3));
     }
-    // 0.33: the skin merchant comes once, after 5 minutes, somewhere on the map (shown on the minimap)
-    const MC = C_MERCHANT(this.C);
-    if (!this.merchantDone && this.time >= MC.t && !this.over && !this.map.noMerchant) { this.merchantDone = true; this.spawnMerchant(); }
+    // 0.33: the skin merchant comes once, somewhere on the map (shown on the minimap); 1.03: C.merchant.t may list times, one picked per run
+    const MC = C_MERCHANT(this.C), mt = this.merchantT || (this.merchantT = Array.isArray(MC.t) ? pick(MC.t) : MC.t);
+    if (!this.merchantDone && this.time >= mt && !this.over && !this.map.noMerchant) { this.merchantDone = true; this.spawnMerchant(); }
+    this.updatePoker();   // (1.03: the ??? NPC, poker.js)
     // the merchant: talk to him when close
     const M = this.merchant;
     if (M) {

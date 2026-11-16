@@ -417,6 +417,8 @@ const Game = {
       if (this._pendingTailor && !UI.modalOpen() && !this.paused) { const p = this._pendingTailor; this._pendingTailor = null; UI.tailorMenu(p); }
     } else if (this.state === 'tot' && Tot.active) {
       Tot.update(dt); Tot.draw(ctx);
+    } else if (this.state === 'poker' && Poker.active) {
+      Poker.update(dt); Poker.draw(ctx);
     } else {
       UI.drawMenuBg(ctx, dt);
     }
@@ -552,17 +554,25 @@ const Game = {
     for (let i = 0; i < count; i++) {
       const o = R.upgradeOptions(1, true)[0];   // chests only improve what was already picked
       if (o) { R.applyUpgrade(o); got.push(o); }
-      else { const k = { kind: 'kamas' }; R.applyUpgrade(k); got.push(k); }
+      else { const k = { kind: 'kamas', quiet: true }; R.applyUpgrade(k); got.push(k); }   // (1.03: quiet, the chest's whole sum shows once below)
     }
     R.chestN = 0;
-    const k = R.addKamas(Math.max(randi(25, 35), randi(4, 12) * (1 + R.mapIdx) * (n >= 3 ? 2 : 1)));   // (1.03: 25-35 kamas at least, the richer chests as they were)
+    R.addKamas(Math.max(randi(25, 35), randi(4, 12) * (1 + R.mapIdx) * (n >= 3 ? 2 : 1)));   // (1.03: 25-35 kamas at least, the richer chests as they were)
     if (R.ps) R.ps.chests++;
+    R.text(R.player.x, R.player.y - 55, '+' + fmtNum(R.kamas - before) + ' K', '#ffd700', 18);   // (1.03: the real total; each kamas purse used to show its own +3 K alone)
     const kamasOnly = got.every(o => o.kind === 'kamas');
     if (kamasOnly) { // nothing left to learn: no pop-up, just a line in the chat
       R.chat(T('chest_kamas', { n: fmtNum(R.kamas - before) }), '#ffd700'); Audio2.blip('coin'); return;
     }
+    if (n < 3) {   // 1.03: a small chest pauses nothing: what it improved pops over the character (icon, name, level)
+      const C = this.C, o = got.find(o => o.kind !== 'kamas'), sp = C.spells[o.id], w = o.kind === 'weapon' && weaponById(C, o.id), E = o.kind === 'wevo' && evoDef(o.id), ps = o.kind === 'passive' && C.passives.find(p => p.id === o.id);
+      const [icon, name, lv] = sp && (o.kind === 'spell' || o.kind === 'sfusion') ? ['sp_' + sp.icon, L(sp.name), o.kind === 'spell' ? (R.spells.find(s => s.def.id === o.id) || {}).level : 0]
+        : w ? [w.icon, L(w.name), R.weapon.level] : E ? [E.w.icon, L(E.e.name), R.weapon.evo[o.id] || 0] : ps ? [ps.icon, L(ps.name), R.passives[o.id]] : ['KamaSymbol', T('take_kamas'), 0];
+      const t = R.text(R.player.x, R.player.y - 95, name + (lv ? ' — ' + T('level') + ' ' + lv : ''), '#ffe9a0', 15, 1.8); if (t) t.icon = icon;
+      Audio2.play('stars', 0.7); return;   // (the event horn of the big chests grew tiresome on every small one)
+    }
     Audio2.sfx('EVENT', 0.6);
-    UI.chestMenu(R, got, k);
+    UI.chestMenu(R, got, R.kamas - before);
   },
   doorPrompt() {
     if (this.debug.bot) { this.run.door = null; this.run.doorDone = true; this.enterTot(); return; }
@@ -575,6 +585,16 @@ const Game = {
     R.totBuff = buff; R.weakUntil = R.time + 30; R.recompute();
     R.chat(T('tot_buff', { b: L(buff.name) }), '#e0b0ff', 28); R.announce(T('tot_slap_t'), T('tot_slap'), '#ff9a8a', { center: true });
     R.text(R.player.x, R.player.y - 80, '-50%', '#ff6a6a', 18); Audio2.sfx('EVENT', 0.7);
+  },
+  // 1.03: the ??? NPC's room (poker.js): back in the run, the prize is equipped or the kamas are gone, the zone's music again
+  enterPoker(kind) {
+    const R = this.run; this.state = 'poker';
+    Poker.start(R, kind, (prize, lost) => {
+      this.state = 'run'; R.easeIn();
+      if (prize) R.pokerWeapon(prize);
+      if (lost) R.text(R.player.x, R.player.y - 80, '-' + fmtNum(lost) + ' K', '#ff6a6a', 18);
+      Audio2.playMusic(R.doom || R.bossAlive.some(b => b.def.final) ? R.map.boss_music : R.map.music);
+    });
   },
   enterTot() {
     const R = this.run; if (R.portalRun) Prog.add('portals');

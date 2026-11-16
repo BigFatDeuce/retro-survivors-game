@@ -99,7 +99,7 @@ Object.assign(Run.prototype, {
     if (kind === 'chest') Audio2.play('saut', 0.6, 1.2);
     if (kind === 'vlad') { Audio2.sfx('EVENT', 0.9); Audio2.blip('boom'); }
     if (kind === 'countdown') this.cine.dur = 3.3;
-    if (kind === 'union') this.cine.dur = 3.0;   // (0.60: spell fusion, sfusions.js)
+    if (kind === 'union') this.cine.dur = 5.0;   // (0.60: spell fusion, sfusions.js; 1.03: 5 s, 3 before — time to see what fused)
     if (kind === 'gift') this.cine.dur = 4.6;   // (0.68: Nowel's gift, nowel.js)
     if (kind === 'treasure') { this.cine.dur = 1.4 + data.lines.length * TM_SAY + TM_LAST; Audio2.sfx('EVENT', 0.8); const mu = (this.C.tmap.ghost || {}).music; if (mu) Audio2.jingle(mu); }   // (0.97: his own music while he talks, C.tmap.ghost.music)   // (0.68: the dug treasure; 30.2 s for 3 bubbles: 8.6 s until 0.94, 15.8 in 0.95)
   },

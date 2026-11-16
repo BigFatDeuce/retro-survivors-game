@@ -1451,8 +1451,8 @@ function buffParts(def, a, b) {
 }
 function buffy(def) { return def.t === 'buff' || (def.t === 'heal' && !!((def.base || {}).armorBuff || (def.base || {}).haste || (def.base || {}).cleanse)); }
 // the main numbers of a spell / weapon now (a new one; 0.99: its heal, life steal, armour and a summon's life too)
-function realSummaryParts(R, def) {
-  const p = realParams(R, def, 1), out = [], f = spellFmt(def, p);
+function realSummaryParts(R, def, lv = 1) {   // (1.03: lv, the ??? NPC's weapon at the level it would take)
+  const p = realParams(R, def, lv), out = [], f = spellFmt(def, p);
   if (def.t === 'wheel') return out;   // (0.60: the Jeton de la Foire du Trool is used at once: no recharge to show)
   const bf = buffy(def);
   for (const k of ['dmg', 'heal', 'leech', 'armorBuff', 'hp', 'count', 'radius', 'aoe', 'range', 'width', 'duration', 'cd']) if (!(bf && BUFF_KEYS.has(k)) && p[k] !== undefined && typeof p[k] === 'number' && p[k] > 0 && !(k === 'cd' && (p.perm || p.cd >= 900)) && !(k === 'hp' && def.t !== 'summon')) { const lab = T('p_' + k); if (lab !== 'p_' + k) out.push(fxPart(k, lab, f(k, p[k]))); }
