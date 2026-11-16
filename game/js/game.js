@@ -238,7 +238,7 @@ class Run {
     this.mapPos = C.maps.indexOf(this.map); this.mapIdx = this.map.tier !== undefined ? this.map.tier : this.mapPos;   // (0.50: the zone's tier, its place before the new zones: kamas, XP gems, merchant, zone multiplier)
     // 0.98.2: Ganymède's blessing, zone cards 1 to bless.maps in Normal (not Endless), won or not, on top of the help above:
     // might x (1 + bless.dmg) in recompute, the bread's drop rate x bless.bread
-    { const BL = (C.gany || {}).bless; this.bless = BL && !this.hard && this.mapPos < BL.maps ? BL : null; }   // (1.03: Endless too)
+    { const BL = (C.gany || {}).bless; this.bless = BL && !this.hard && !opts.infinite && this.mapPos < BL.maps ? BL : null; }   // (1.05: Normal only again; 1.03-1.04 Endless too)
     // the first zones are gentler (new players have no Dofus, mastery or experience yet)
     this.zoneMul = this.map.hidden ? 1 : 0.8 + 0.025 * Math.min(6, Math.max(0, this.mapIdx));   // v1.6: a bit gentler (life steal was cut by 15)
     this.time = 0; this.kills = 0; this.kamas = 0; this.level = 1; this.xp = 0; this.xpNext = Math.round(5 * (((C.run || {}).xpEarly || [])[0] || 1));
@@ -437,6 +437,7 @@ class Run {
     }
     this.relicStats(st); this.fusionStats(st);
     if (Store.data && Store.data.dofawa && this.C.dofawa) st.maxHp += this.C.dofawa.hp;   // the Dofawa (every achievement)
+    if (Store.data && Store.data.slip && this.C.slip) st.maxHp += this.C.slip.hp;   // (1.05: the Slip de Trool, every TTG card)
     if (this.totBuff) st[this.totBuff.stat] = (st[this.totBuff.stat] || 0) + this.totBuff.v;   // ToT's bonus for this run
     if (this.daily) this.dailyStats(st);   // (0.99: daily.js)
     if (this.bless) st.might *= 1 + this.bless.dmg;   // (0.98.2: here, once: every blow reads might — spells, weapons, poisons, burns, allies)
@@ -827,13 +828,21 @@ class Run {
     if (m.elite) this.maybeEliteRelic(m);   // 0.60: elites may drop a relic (extras.js)
     if (d.special) this.maybeRelic(m, true);   // 0.38: the mini-bosses with a big life bar (Tofuzmo, Coffre Animé)
     // the Manuel du Tailleur (0.98.3): a rate on every monster, about one whole run in ten (C.manuel.rate; it was one roll a run)
-    if (Math.random() < this.C.manuel.rate || (this.manuelAt !== null && this.time >= this.manuelAt)) {
-      this.manuelAt = null; this.dropPickup('manuel', m.x, m.y);
+    if ((Math.random() < this.C.manuel.rate || (this.manuelAt !== null && this.time >= this.manuelAt)) && this.manuelOk()) {
+      this.manuelAt = null; this.dropPickup('manuel', m.x, m.y); this.manuelGot();
       this.chat(T('tailor_drop', { n: L(this.C.manuel.name) }), '#ff9cf0'); Audio2.sfx('EVENT', 0.45);
       this.rings.push({ x: m.x, y: m.y, r0: 10, r1: 70, t0: this.time, dur: 0.6, color: '#ff9cf0' });
     }
   }
   // a random look (hat, cape or pet) not owned yet; everything owned: kamas instead. Saved at once (the show comes after)
+  // 1.05: Manuels du Tailleur a run at most: C.manuel.maxRun on the first maxPer zone cards, +1 every maxPer cards after; the Nowel zone has no limit
+  manuelMax(pos) { const M = this.C.manuel; return (M.maxRun || Infinity) + Math.floor((pos === undefined ? this.mapPos : pos) / (M.maxPer || Infinity)); }
+  manuelOk() { return !!this.map.nowel || (this.manuelN || 0) < this.manuelMax(); }
+  manuelGot() {   // one more dropped: the last one allowed, Dark Vlad complains (go to a stronger zone: only where one gives more)
+    this.manuelN = (this.manuelN || 0) + 1; if (this.map.nowel || this.manuelN < this.manuelMax()) return;
+    const top = Math.max(...this.C.maps.filter(z => !z.nowel).map((z, i) => this.manuelMax(this.C.maps.indexOf(z)))), v = L(this.C.bosses.dark_vlad.name);
+    this.after(2, () => this.chat(T('manuel_vlad', { v, n: this.manuelN }) + (this.manuelN < top ? T('manuel_vlad_more') : ''), '#ff8a7a', 22));
+  }
   tailorPrize() {
     const S = Store.data, C = this.C;
     const pool = [...C.hats.map(i => ['hats', i]), ...C.capes.map(i => ['capes', i]), ...C.pets.map(i => ['pets', i])].filter(([, i]) => !S.owned.includes(i.id));
@@ -850,16 +859,20 @@ class Run {
     this.shake(10); Audio2.blip('boom');
     this.dropGem(m.x, m.y, this.rareAmber(), 2);   // 0.82: the Ambre du Chêne Mou = 5x an ancestral amber
     const fin = this.isFinalKill(m);   // (0.68: a group of final bosses — the four Kwakeres — counts when the last one falls)
-    this.dropPickup('chest', m.x, m.y + 10, fin ? 5 : 3).boss = true;   // the boss chest: bigger, red aura, on the minimap
+    const bc = this.dropPickup('chest', m.x, m.y + 10, fin ? 5 : 3); bc.boss = true;   // the boss chest: bigger, red aura, on the minimap
+    if (m.endless && this.time >= (this.RUN.bossSlowT || 660)) bc.quick = 1;   // (1.05: Endless from 11:00: it opens at once, no show, no window, no slow motion)
     this.maybeRelic(m); this.maybeCoffre(m);
+    { const TT = this.C.ttg; if (TT && TT.bossRate && !this.bossPack && Math.random() < TT.bossRate) { this.bossPack = 1; const pk = this.nextPack(); this.dropPickup('booster', m.x - 30, m.y + 10, 1).pk = pk; BoosterArt.get(pk); this.announce(T('booster_here_t'), T('booster_boss'), '#9cff6a'); Audio2.play('pages', 0.6); } }   // (1.05: a TTG booster, once a run, on top of the run's own)
     if (m.endless) Prog.add('endlessBosses');
     // 0.37: the Endless final bosses drop the Manuel du Tailleur; 0.95 (was 50 %): 5 % from 10:00, +2.5 % per minute after (C.infinite.manuelP / manuelStep)
     // 0.98: every boss may drop it, by its power (0.98.3, C.manuel.boss: the weakest 1 % ... Goultard 5 %; a boss of
     // no zone's list: its zone's final boss's chance); an Endless one keeps the better of the two
-    const IM = this.C.infinite, mw = Math.max(0, Math.floor((this.time - (IM.bossT || 600)) / 60)), MB = (this.C.manuel && this.C.manuel.boss) || {};
+    // 1.05: the Endless part x manuelLow on the first zone, rising with the tier to x1 on the last one (end-game zones pay better)
+    const IM = this.C.infinite, mw = Math.max(0, Math.floor((this.time - (IM.bossT || 600)) / 60)), MB = (this.C.manuel && this.C.manuel.boss) || {}, lo = IM.manuelLow || 1, topT = this._topTier || (this._topTier = Math.max(...this.C.maps.map(z => z.tier || 0)) || 1);
+    const ek = lo + (1 - lo) * Math.min(1, this.mapIdx / topT);
     const mp = d.finalGroup && !fin ? 0 : MB[d.id] !== undefined ? MB[d.id] : MB[(this.map.bosses[this.map.bosses.length - 1] || [])[1]] || 0;   // (the four Kwakeres: one roll, the last one)
-    if (this.C.manuel && Math.random() < Math.max(mp, m.endless ? (IM.manuelP || 0.05) + (IM.manuelStep || 0.025) * mw : 0)) {
-      this.dropPickup('manuel', m.x + 30, m.y); this.chat(T('tailor_drop', { n: L(this.C.manuel.name) }), '#ff9cf0'); Audio2.sfx('EVENT', 0.45);
+    if (this.C.manuel && this.manuelOk() && Math.random() < Math.max(mp, m.endless ? ((IM.manuelP || 0.05) + (IM.manuelStep || 0.025) * mw) * ek : 0)) {
+      this.dropPickup('manuel', m.x + 30, m.y); this.manuelGot(); this.chat(T('tailor_drop', { n: L(this.C.manuel.name) }), '#ff9cf0'); Audio2.sfx('EVENT', 0.45);
     }
     for (let i = 0; i < 6; i++) this.dropPickup('kama', m.x + rand(-40, 40), m.y + rand(-30, 30), randi(2, 5) * (1 + this.mapIdx));   // v1.6: kamas /5
     // Dofus eggs
@@ -949,6 +962,9 @@ class Run {
     const next = this.C.maps.slice(this.mapPos + 1).find(m => !m.hidden);
     if (next && !S.unlocked.includes(next.id)) { S.unlocked.push(next.id); this.unlockedNow.push(next); }
   }
+  // 1.05: Renvoi de dommages grows with the monsters: the HP multiplier (its max HP / its base HP: time, zone, Difficile,
+  // elite…) of the toughest monster on the map, bosses and the special ones (Tofuzmo, Jorbak, Coffre Animé…) left out; 1 at least
+  reflectK() { let k = 1; for (const m of this.mobs) if (!m.boss && !m.doom && !m.def.special && !m.dying && m.def.hp > 0) { const q = m.maxHp / m.def.hp; if (q > k) k = q; } return k; }
   damagePlayer(dmg, src, area) {   // area: a ground area hit (telegraphs, puddles, spins), which reaches an invisible Sram
     const P = this.player, st = this.stats;
     if (P.dead || this.over) return;
@@ -968,7 +984,8 @@ class Run {
     P.hp -= d; P.lastHit = this.time; if (this.time - (P._flashT || -9) > 0.6) { P.hitFlash = 1; P._flashT = this.time; } this.dmgTaken += d; this.juiceHurt(d);
     Prog.taken(this, d, src);
     if (st.reflect && src && src.def && !src.dying && !src.doom) { // Renvoi de dommages
-      this.damageMob(src, Math.min((d + 4) * (1 + st.reflect) * 1.5, 150 * Math.min(1, st.reflect / 5), src.maxHp * 0.5), { def: { id: 'renvoi' }, p: {} }, true);   // 0.37: at most 30 per level (150 at level 5) and half the monster's life
+      const cap = 30 * Math.min(st.reflect, 5) * this.reflectK() * (src.boss ? 0.25 : 1);   // (1.05: 30 a level x the toughest monster's HP multiplier, a quarter on a boss; was 150 flat)
+      this.damageMob(src, Math.min((d + 4) * (1 + st.reflect) * 1.5, cap, src.maxHp * 0.5), { def: { id: 'renvoi' }, p: {} }, true);   // 0.37: and half the monster's life
       if (src.dying) Prog.add('reflectKills');
       if (!src.boss) { const dx = src.x - P.x, dy = src.y - P.y, dd = Math.hypot(dx, dy) || 1; src.kx += dx / dd * 260; src.ky += dy / dd * 260; }
     }
@@ -1536,7 +1553,7 @@ class Run {
         }
         if (s.spell.p.boom) { // 0.98: the Boufcouls burst once, dead or gone: p.boom of their blows, p.boomR x their melee reach (16 + the monster's size)
           const r = s.spell.p.boomR * 16 * this.stats.area, d = this.summonBlow(s) * s.spell.p.boom;
-          for (const m of this.mobsInRadius(s.x, s.y, r)) this.damageMob(m, d, s.spell, true);
+          const kb = s.spell.p.boomBoss !== undefined ? s.spell.p.boomBoss : 1; for (const m of this.mobsInRadius(s.x, s.y, r)) this.damageMob(m, m.boss ? d * kb : d, s.spell, true);   // (1.05: p.boomBoss on a boss)
           this.rings.push({ x: s.x, y: s.y, r0: 6, r1: r, t0: T_, dur: 0.3, color: '#c9a27a', fill: 1 }); this.fxAt(2004, s.x, s.y, { fit: r }); Audio2.play('explosion', 0.3, rand(1.05, 1.25));
         }
         this.particles.push({ x: s.x, y: s.y - 10, vx: 0, vy: -30, t: 0, life: 0.5, c: '#fff', s: 6 });
@@ -1602,8 +1619,8 @@ class Run {
       if (p.t < 0.5 && (p.kind === 'fee' || p.kind === 'power' && PICK_LATE[p.v])) continue;   // (1.03: these can't be picked up in their first 0.5 s, a melee build would take them as they fall)
       if (!p.mag && p.kind !== 'chest' && d2 < ((p.kind === 'gem' || p.kind === 'kama') ? mr * mr : ir * ir)) { p.mag = true; p.mt = 0; }
       if (p.kind === 'chest' && d2 < 46 * 46 && !p.cine) {   // 0.26: a boss chest has its little show first (events.js)
-        if (p.boss) { p.cine = true; this.startCine('chest', { p }, () => { const k = this.pickups.indexOf(p); if (k >= 0) this.pickups.splice(k, 1); Game.openChest(p.v || 1); }); continue; }
-        this.pickups.splice(i, 1); Game.openChest(p.v || 1); continue;
+        if (p.boss && !p.quick) { p.cine = true; this.startCine('chest', { p }, () => { const k = this.pickups.indexOf(p); if (k >= 0) this.pickups.splice(k, 1); Game.openChest(p.v || 1); }); continue; }
+        this.pickups.splice(i, 1); Game.openChest(p.v || 1, p.quick); continue;
       }
       if (p.mag) {
         // speed grows with the time since the pull started (not the item's age: old gems/bread used to overshoot and jitter)

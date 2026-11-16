@@ -35,12 +35,14 @@ Object.assign(Run.prototype, {
     this.chat('✦ ' + T('sfusion_union') + ' ' + L(d.name), '#ffcf6a');
     // (0.61: made by a chest, the show waits for its window to close: it played unseen behind it)
     const big = this.chestN >= 3;   // (0.98: made by a boss chest: no slow motion after the show)
-    const show = () => this.startCine('union', { def: d, icons, names, kind: f.kind }, () => {
+    const after = () => {
       const P = this.player; if (!big) this.slowMo(0.9, 0.4); this.flash('255,240,200', 0.4, 0.5); this.shake(6);
       this.rings.push({ x: P.x, y: P.y, r0: 20, r1: 300, t0: this.time, dur: 0.7, color: '#ffcf6a', fill: 1 });
       if (d.fx2) this.fxAt(d.fx2, P.x, P.y - 10, { scale: 1.6 });
       for (const m of this.mobsInRadius(P.x, P.y, 260)) if (!m.boss) { const dx = m.x - P.x, dy = m.y - P.y, dd = Math.hypot(dx, dy) || 1; m.kx += dx / dd * 500; m.ky += dy / dd * 500; }
-    });
+    };
+    if (this.chestQuick) { after(); return; }   // (1.05: made by an Endless boss chest from 11:00: no show, the run goes on)
+    const show = () => this.startCine('union', { def: d, icons, names, kind: f.kind }, after);
     if (typeof UI !== 'undefined' && UI.modalOpen && UI.modalOpen()) this._pendingCine = show; else show();
   },
   // the fused spell's effect on every hit (sp.bare: the rider's own damage, no rider again)

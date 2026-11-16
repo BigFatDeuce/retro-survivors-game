@@ -165,7 +165,7 @@ const UI = {
     this.listen(document, 'click', closePop);
     const nach = Object.keys(S.ach || {}).length;
     const el = h('div', { class: 'screen main' },
-      this.logo(true), this.dofawaReady() ? btn(['★ ', T('dofawa_btn'), ' ★'], () => this.dofawaScene(), 'dofawa-btn') : null,   // 0.26 (ui_events.js)
+      this.logo(true), this.dofawaReady() ? btn(['★ ', T('dofawa_btn'), ' ★'], () => this.dofawaScene(), 'dofawa-btn') : this.slipReady() ? btn(['★ ', T('slip_btn'), ' ★'], () => this.dofawaScene('slip'), 'dofawa-btn') : null,   // 0.26 (ui_events.js; 1.05: the Slip de Trool)
       h('div', { class: 'menu-buttons' },
         btn([menuIc('play'), h('span', {}, T('play'))], () => this.playScreen(), 'big orange bloody'),
         h('div', { class: 'menu-row' }, btn([menuIc('sword'), h('span', {}, T('bestiary'))], () => this.bestiary(), 'bloody b2'), btn([menuIc('shield'), h('span', {}, T('armory'))], () => this.armory())),   // 0.28 (ui_armory.js)
@@ -907,7 +907,7 @@ const UI = {
         R.allies.some(a => a.kind === 'drago') ? h('div', { class: 'bitem evo', title: L(Game.C.drago.name) }, iconImg(Game.C.drago.icon, 30), h('small', {}, L(Game.C.drago.name))) : null),
       h('div', { class: 'brow' }, ...C.passives.filter(p => R.passives[p.id] && p.id !== R.bonusPassive).concat(C.passives.filter(p => p.id === R.bonusPassive)).map(p => h('div', { class: 'bitem' + (p.id === R.bonusPassive ? ' sp-blue' : ''), title: L(p.name) }, iconImg(p.icon, 28), h('span', {}, R.passives[p.id] + '/' + p.max)))),
       this.relicSummary(R),   // 0.85: what the relics give, between the characteristics and the Dofus
-      h('div', { class: 'brow' }, ...R.dofus.map(d => h('div', { class: 'bitem', title: L(d.name) + ' — ' + L(d.desc) }, iconImg('dofus_hd_' + d.icon, 30)))),
+      h('div', { class: 'brow' }, ...R.dofus.map(d => h('div', { class: 'bitem', title: L(d.name) + ' — ' + L(d.desc) }, iconImg('dofus_hd_' + d.icon, 30))), Store.data.dofawa && Game.C.dofawa ? h('div', { class: 'bitem', title: L(Game.C.dofawa.name) + ' — +' + Game.C.dofawa.hp + ' ' + T('stats_hp') }, iconImg(Game.C.dofawa.icon, 30)) : null, Store.data.slip && Game.C.slip ? h('div', { class: 'bitem', title: L(Game.C.slip.name) + ' — +' + Game.C.slip.hp + ' ' + T('stats_hp') }, iconImg(Game.C.slip.icon, 30)) : null),
       h('div', { class: 'brow sf-brow' }, ...(C.spellFusions || []).filter(f => sfusionOf(f, R.cls.id)).map(f => h('div', { class: 'bitem sf' + (R.sfused.has(f.id) ? ' done' : ''), title: L(C.spells[f.id].name) + ' — ' + L(C.spells[f.id].desc) }, ...sfRecipe(R, f), h('b', null, '→'), iconImg('sp_' + C.spells[f.id].icon, 28)))));   // 0.60: the spell fusions
     const st = R.stats;
     // two columns (the run on the left, the options on the right): the whole menu fits a 16:9 screen without scrolling
@@ -1230,7 +1230,10 @@ const UI = {
           h('span', { class: 'm-price' }, h('s', {}, fmtNum(o.it.price)), ' ', h('b', {}, fmtNum(o.price) + ' K'))], () => {
           if (M.sold[i]) return;
           if (!R.merchantBuySkin(o)) { msg.textContent = T('m_broke'); Audio2.blip('wrong'); return; }
-          M.sold[i] = 1; b.classList.add('disabled', 'sold'); wal.textContent = fmtNum(R.merchantWallet()) + ' K'; msg.textContent = T('m_kept');
+          M.sold[i] = 1; b.classList.add('disabled', 'sold'); wal.textContent = fmtNum(R.merchantWallet()) + ' K';
+          if (!R.canWear(o)) { msg.textContent = T('m_kept'); return; }
+          const ask = h('div', { class: 'start-row' }, btn(T('m_equip_yes'), () => { R.merchantWear(o); msg.textContent = T('m_kept'); }, 'orange'), btn(T('m_equip_no'), () => { msg.textContent = T('m_kept'); }));   // (1.05: no longer put on by itself)
+          msg.textContent = ''; msg.append(T('m_equip_q'), ask);
         }, 'merchant-offer skin' + (owned || R.merchantWallet() < o.price ? ' disabled' : ''));
         return b;
       })),
@@ -1575,7 +1578,7 @@ function PASSIVE_FMT(p) {
   const pc = x => (x >= 0 ? '+' : '') + (Math.round(x * 1000) / 10).toLocaleString(LANG) + ' %', nb = x => '+' + (Math.round(x * 100) / 100).toLocaleString(LANG);
   const LAB = { maxhp: ['ps_maxhp', pc], growth: ['ps_growth', pc], might: ['p_dmg', pc], area: ['p_radius', pc], luck: [null, pc], crit: ['p_crit', pc], cooldown: ['p_cd', pc],
     speed: ['p_speed', pc], projspeed: ['ps_projspeed', pc], amount: ['ps_amount', nb], regen: ['ps_regen', nb], magnet: ['ps_magnet', pc], armor: ['p_armorBuff', nb],
-    duration: ['p_duration', pc], leech: ['p_leech', x => pctLeech(x)], reflect: ['ps_reflect', x => '≤ ' + Math.round(30 * x)], evade: [null, pc] };
+    duration: ['p_duration', pc], leech: ['p_leech', x => pctLeech(x)], reflect: ['ps_reflect', x => '≤ ' + Math.round(30 * Math.min(x, 5) * (Game.run && Game.run.reflectK ? Game.run.reflectK() : 1))], evade: [null, pc] };
   const d = LAB[p.stat]; return d ? { lab: d[0] ? T(d[0]) : L(p.name), f: d[1] } : null;
 }
 // 0.53: a characteristic's real total before → after this level (the shop's levels included)
@@ -1586,7 +1589,7 @@ function passiveParts(p, lv) {
   const pc = x => (x >= 0 ? '+' : '') + (Math.round(x * 1000) / 10).toLocaleString(LANG) + ' %', nb = x => '+' + (Math.round(x * 100) / 100).toLocaleString(LANG);
   const LAB = { maxhp: ['ps_maxhp', pc], growth: ['ps_growth', pc], might: ['p_dmg', pc], area: ['p_radius', pc], luck: [null, pc], crit: ['p_crit', pc], cooldown: ['p_cd', pc],
     speed: ['p_speed', pc], projspeed: ['ps_projspeed', pc], amount: ['ps_amount', nb], regen: ['ps_regen', nb], magnet: ['ps_magnet', pc], armor: ['p_armorBuff', nb],
-    duration: ['p_duration', pc], leech: ['p_leech', x => pctLeech(x)], reflect: ['ps_reflect', x => '≤ ' + Math.round(30 * x)], evade: [null, pc] };
+    duration: ['p_duration', pc], leech: ['p_leech', x => pctLeech(x)], reflect: ['ps_reflect', x => '≤ ' + Math.round(30 * Math.min(x, 5) * (Game.run && Game.run.reflectK ? Game.run.reflectK() : 1))], evade: [null, pc] };
   const d = LAB[p.stat]; if (!d) return null;
   const E = (lab, val) => fxPart('bonus', lab, val, 'eff');   // (every characteristic line is a bonus: green)
   const lab = d[0] ? T(d[0]) : L(p.name), f = d[1], parts = [E(lab, `${lv > 1 ? f(v(lv - 1)) + ' → ' : ''}${f(v(lv))}`)];

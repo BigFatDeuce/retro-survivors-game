@@ -1884,8 +1884,9 @@ function drawHud(ctx, R) {
     outlinedText(ctx, String(lv), bx + ps - 2 * u, y + ps - 2 * u, lv >= p.max ? '#ffd24a' : '#fff', 9 * u, 'right');
   }
   // dofus eggs: a column on the right side, under the kamas
-  if (R.dofus.length) { const step = 34 * u; let dy = H / 2 - (R.dofus.length * step) / 2 + step / 2;
-    for (const d of R.dofus) { const x = W - 24 * u; ctx.drawImage(RCache.glow('rgba(255,230,150,0.45)'), x - 19 * u, dy - 19 * u, 38 * u, 38 * u); IC.drawFit(ctx, 'dofus_hd_' + d.icon, x, dy, 28 * u); dy += step; } }
+  { const col = R.dofus.map(d => 'dofus_hd_' + d.icon); if (Store.data.dofawa && Game.C.dofawa) col.push(Game.C.dofawa.icon); if (Store.data.slip && Game.C.slip) col.push(Game.C.slip.icon);   // (1.05: the Dofawa and the Slip de Trool with them)
+    if (col.length) { const step = 34 * u; let dy = H / 2 - (col.length * step) / 2 + step / 2;
+      for (const ic of col) { const x = W - 24 * u; ctx.drawImage(RCache.glow('rgba(255,230,150,0.45)'), x - 19 * u, dy - 19 * u, 38 * u, 38 * u); IC.drawFit(ctx, ic, x, dy, 28 * u); dy += step; } } }
   // 0.38: a relic just picked up: it rises in golden rays, with its bonus written in a frame.
   // (0.95: the caption hid the character — the relic in the middle, its message above it, smaller, lighter, shorter):
   // the relic springs out of the character and settles over its head (cy, 112 u above the screen's middle), the frame

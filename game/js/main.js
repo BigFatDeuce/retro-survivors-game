@@ -511,6 +511,7 @@ const Game = {
     // 0.98.2: the blessing (Run.bless), once a run in the chat, its own line once the help above is gone; on its end's card Dark
     // Vlad takes it away: his scene once, 5 s in, the first visit in Normal; the chat's line in every run until the zone is won in Normal
     if (bv && !run.aid) run.chat(T('bless_info', Object.assign({ g: L(G.name) }, bv)), '#ffe08a', 28);
+    else if (B && run.infinite && !run.daily && !run.hard && run.mapPos < B.maps) run.chat(T('bless_inf', { g: L(G.name) }), '#ffe08a', 28);   // (1.05: a blessed zone in Endless: he says it's Normal only)
     if (TA && run.map.id === TA.map && !run.hard && !run.infinite && !(Store.data.clearedNormal || {})[TA.map]) {
       const gone = () => { if (this.run === run && !run.over) run.chat(T('bless_end', { g: L(G.name), v: L(this.C.bosses.dark_vlad.name) }), '#ff8a7a', 28); };
       const S = Store.data, first = !(S.tuto || {}).taunt && (Prog.st().mapRuns || {})[TA.map] <= 1 && !this.debug.bot && (!this.debug.autostart || this.debug.tuto);   // (mapRuns counts this run: an old profile that already came here has no scene)
@@ -547,16 +548,16 @@ const Game = {
       UI.levelUpMaxed(R);
     } else UI.levelUpMenu(R, opts);
   },
-  openChest(n) {
+  openChest(n, quick) {   // (quick, 1.05: an Endless boss chest from 11:00, no window: what it improved pops over the character)
     const R = this.run; const got = []; const before = R.kamas;
     const count = n >= 5 ? (Math.random() < 0.3 * R.stats.luck ? 5 : 3) : n >= 3 ? 3 : 1;
-    R.chestN = n;   // (0.98: a fusion a big chest makes plays its show without the slow motion, sfusions.js)
+    R.chestN = n; R.chestQuick = !!quick;   // (0.98: a fusion a big chest makes plays its show without the slow motion, sfusions.js)
     for (let i = 0; i < count; i++) {
       const o = R.upgradeOptions(1, true)[0];   // chests only improve what was already picked
       if (o) { R.applyUpgrade(o); got.push(o); }
       else { const k = { kind: 'kamas', quiet: true }; R.applyUpgrade(k); got.push(k); }   // (1.03: quiet, the chest's whole sum shows once below)
     }
-    R.chestN = 0;
+    R.chestN = 0; R.chestQuick = false;
     R.addKamas(Math.max(randi(25, 35), randi(4, 12) * (1 + R.mapIdx) * (n >= 3 ? 2 : 1)));   // (1.03: 25-35 kamas at least, the richer chests as they were)
     if (R.ps) R.ps.chests++;
     R.text(R.player.x, R.player.y - 55, '+' + fmtNum(R.kamas - before) + ' K', '#ffd700', 18);   // (1.03: the real total; each kamas purse used to show its own +3 K alone)
@@ -564,11 +565,12 @@ const Game = {
     if (kamasOnly) { // nothing left to learn: no pop-up, just a line in the chat
       R.chat(T('chest_kamas', { n: fmtNum(R.kamas - before) }), '#ffd700'); Audio2.blip('coin'); return;
     }
-    if (n < 3) {   // 1.03: a small chest pauses nothing: what it improved pops over the character (icon, name, level)
-      const C = this.C, o = got.find(o => o.kind !== 'kamas'), sp = C.spells[o.id], w = o.kind === 'weapon' && weaponById(C, o.id), E = o.kind === 'wevo' && evoDef(o.id), ps = o.kind === 'passive' && C.passives.find(p => p.id === o.id);
+    if (n < 3 || quick) {   // 1.03: a small chest pauses nothing: what it improved pops over the character (icon, name, level)
+      const C = this.C;
+      got.filter(o => o.kind !== 'kamas').forEach((o, i) => { const sp = C.spells[o.id], w = o.kind === 'weapon' && weaponById(C, o.id), E = o.kind === 'wevo' && evoDef(o.id), ps = o.kind === 'passive' && C.passives.find(p => p.id === o.id);
       const [icon, name, lv] = sp && (o.kind === 'spell' || o.kind === 'sfusion') ? ['sp_' + sp.icon, L(sp.name), o.kind === 'spell' ? (R.spells.find(s => s.def.id === o.id) || {}).level : 0]
         : w ? [w.icon, L(w.name), R.weapon.level] : E ? [E.w.icon, L(E.e.name), R.weapon.evo[o.id] || 0] : ps ? [ps.icon, L(ps.name), R.passives[o.id]] : ['KamaSymbol', T('take_kamas'), 0];
-      const t = R.text(R.player.x, R.player.y - 95, name + (lv ? ' — ' + T('level') + ' ' + lv : ''), '#ffe9a0', 15, 1.8); if (t) t.icon = icon;
+      const t = R.text(R.player.x, R.player.y - 95 - 62 * i, name + (lv ? ' — ' + T('level') + ' ' + lv : ''), '#ffe9a0', 15, 1.8); if (t) t.icon = icon; });   // (one above the other)
       Audio2.play('stars', 0.7); return;   // (the event horn of the big chests grew tiresome on every small one)
     }
     Audio2.sfx('EVENT', 0.6);

@@ -77,7 +77,10 @@ Object.assign(Run.prototype, {
     if (!this._recShown && this._bestAtStart >= 25 && n === this._bestAtStart + 1) {
       this._recShown = true; const P = this.player; this.text(P.x, P.y - 146, T('combo_record'), '#5ad1ff', 19, 1.6); Audio2.comboSfx('record');
     }
-    if (m.boss && !m.doom) {   // a boss falls: freeze, slow motion, white flash, a fountain of gold (the zone's final boss: 3 s and a 'VICTOIRE !')
+    if (m.boss && !m.doom && m.endless && this.time >= (this.RUN.bossSlowT || 660)) {   // (1.05: Endless from 11:00, a wave of bosses: the gold and the ring, no freeze nor slow motion)
+      for (let i = 0; i < 20 && this.particles.length < 380; i++) { const a = rand(TAU), v = rand(120, 380); this.particles.push({ x: m.x, y: m.y - m.r * 1.5, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 160, t: 0, life: rand(0.6, 1.1), c: pick(['#ffd700', '#fff3a0', '#ffb02e']), s: rand(3, 5) }); }
+      this.rings.push({ x: m.x, y: m.y, r0: 20, r1: 200, t0: this.time, dur: 0.6, color: '#fff3a0' });
+    } else if (m.boss && !m.doom) {   // a boss falls: freeze, slow motion, white flash, a fountain of gold (the zone's final boss: 3 s and a 'VICTOIRE !')
       const fin = this.isFinalKill ? this.isFinalKill(m) : !!m.def.final, late = this.time >= (this.RUN.bossSlowT || 660) ? (this.RUN.bossSlowK || 0.25) : 1;   // (0.98: from 11:00 the slow motion lasts a quarter as long)
       this.hitStop(fin ? 220 : 140); this.slowMo((fin ? 3.0 : 1.5) * late, fin ? 0.25 : 0.3); this.flash('255,250,230', fin ? 0.7 : 0.45, 0.6); this._bossCA = performance.now();   // (0.98: its chromatic aberration)
       if (fin && !m.endless && !this.victoryShown) { this.victoryShown = true; this.startVictoryFx(); }

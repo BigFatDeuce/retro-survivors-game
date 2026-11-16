@@ -178,7 +178,7 @@ Object.assign(Run.prototype, {
       const I = this.C.infinite, c = Math.floor(this.time / I.cycle);
       if (c > this.cycle) {
         this.cycle = c; this.zoneMul = (this.baseZoneMul || (this.baseZoneMul = this.zoneMul)) * (1 + I.grow * c);
-        if (this.time < (I.bossT || 600)) for (const b of this.map.bosses || []) this.bossQueue.push({ t: this.time + b[0] * 60 * 0.5, id: b[1] });
+        for (const b of this.map.bosses || []) { const bt = this.time + b[0] * 60 * 0.5; if (bt < (I.bossT || 600)) this.bossQueue.push({ t: bt, id: b[1] }); }   // (1.05: only those due before the waves of 10:00: Cania's final boss came back at 12:00 on top of them)
         this.announce(T('lb_cycle_t', { n: c + 1 }), T('lb_cycle', { n: c + 1 }), '#ff8a65'); Audio2.sfx('EVENT', 0.8);
       }
       // 0.37: from 10:00 on, the zone's final boss comes back every minute, twice as many each time (2, 4, 8…)
@@ -189,7 +189,8 @@ Object.assign(Run.prototype, {
           if (!this.endlessWave) { this.announce(L(this.C.bosses[fb].name), T('lb_finals', { n: L(this.C.bosses[fb].name) }), '#ff3b3b'); this.shake(8); Audio2.playMusic(this.map.boss_music, 1.0); }
           this.endlessWave = w + 1; Audio2.sfx('EVENT', 0.8);
           const alive = this.mobs.filter(o => o.endless && !o.dying).length, n = Math.max(0, Math.min(2 ** (w + 1), (I.bossCap || 64) - alive));
-          for (let k = 0; k < n; k++) { const b = this.spawnBoss(fb); if (b) b.endless = true; }
+          const ks = 1 + (I.waveSpd || 0) * w;   // (1.05: each wave runs faster; their damage grows as before, with the cycles)
+          for (let k = 0; k < n; k++) { const b = this.spawnBoss(fb); if (b) { b.endless = true; b.speed *= ks; } }
         }
       }
     }
@@ -221,9 +222,13 @@ Object.assign(Run.prototype, {
     if (this.merchantWallet() < o.price) return false;
     const S = Store.data, fromRun = Math.min(this.kamas, o.price); this.kamas -= fromRun; S.kamas = (S.kamas || 0) - (o.price - fromRun); S.owned = S.owned || []; if (!S.owned.includes(o.it.id)) S.owned.push(o.it.id);
     Prog.add('kamasSpent', o.price); Store.save();
-    const cs = this.charSprite, no = o.slot === 'pet' ? this.cls.nopets : this.cls.nohats;   // worn at once when the class can
-    if (cs && !no) { cs[o.slot] = o.it.id; (S.equip = S.equip || {})[o.slot] = o.it.id; Store.save(); }
     Audio2.blip('coin'); Audio2.sfx('EVENT', 0.5); return true;
+  },
+  // 1.05: worn only if the player says so (UI.merchantMenu asks); false when the class can't wear it
+  canWear(o) { return !!this.charSprite && !(o.slot === 'pet' ? this.cls.nopets : this.cls.nohats); },
+  merchantWear(o) {
+    if (!this.canWear(o)) return; const S = Store.data;
+    this.charSprite[o.slot] = o.it.id; this.opts[o.slot] = o.it.id; (S.equip = S.equip || {})[o.slot] = o.it.id; Store.save(); this.recompute();   // (opts: its bonus counts at once)
   },
   merchantPrice(k) { const M = this.C.randEvents.merchant; return Math.round(M[k] * (1 + (M.perZone || 0) * this.mapIdx / 100)); },
   merchantBuy(k) {

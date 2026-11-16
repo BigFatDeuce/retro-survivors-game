@@ -504,7 +504,8 @@ Object.assign(Run.prototype, {
       Prog.add('coffres');
       let r = Math.random(), got = C.coffre.drops[C.coffre.drops.length - 1][0];
       for (const [k, p] of C.coffre.drops) { if (r < p) { got = k; break; } r -= p; }
-      if (got === 'manuel') this.collect({ kind: 'manuel' });
+      if (got === 'manuel' && !this.manuelOk()) got = C.coffre.drops.filter(d => d[0] !== 'manuel').sort((a, b) => b[1] - a[1])[0][0];   // (1.05: the run's Manuels are all out: its commonest stone instead)
+      if (got === 'manuel') { this.manuelGot(); this.collect({ kind: 'manuel' }); }
       else this.dropPickup('coffreit', m.x, m.y, got);   // (1.03: its stone falls on the ground, picked up for its kamas: Run.collect)
       Audio2.play('coffre', 0.8);
       const S = Store.data; S.coffres = (S.coffres || 0) + 1; Store.save();
@@ -606,13 +607,14 @@ Object.assign(Run.prototype, {
   // their only source). A dry spot of the map away from the character and from the other pickups; the arrow at the
   // screen's edge points to it, a message in the middle says it
   doomReward() {
+    if (!this.manuelOk()) return;   // (1.05: the run's Manuels are all out)
     const P = this.player, b = this.bounds, kind = 'manuel';
     let x = P.x, y = P.y;
     for (let k = 0; k < 60; k++) {
       x = rand(b.x0 + 100, b.x1 - 100); y = rand(b.y0 + 100, b.y1 - 100);
       if (Math.hypot(x - P.x, y - P.y) > 380 && !this.isWater(x, y) && !this.pickups.some(p => Math.hypot(p.x - x, p.y - y) < 60)) break;
     }
-    this.dropPickup(kind, x, y, 1).doomRw = 1;
+    this.dropPickup(kind, x, y, 1).doomRw = 1; this.manuelGot();
     const msg = T(kind === 'tmap' ? 'doom_rw_tmap' : 'doom_rw_manuel');
     this.announce(kind === 'tmap' ? T('tmap') : L(this.C.manuel.name), msg, kind === 'tmap' ? '#ffcf3a' : '#ff9cf0', { center: true, force: true });
     Audio2.sfx('EVENT', 0.6);

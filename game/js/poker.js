@@ -39,9 +39,9 @@ Object.assign(Run.prototype, {
 
 const Poker = {
   active: false,
-  async start(run, kind, done) {
+  async start(run, kind, done) {   // (1.05: lost / keep / gotIt reset too: a loss or a 'keep mine' of an earlier game came back on a win as '-100 K' / no weapon)
     const PK = Game.C.poker, deal = pick(PK.deals), pool = (Game.C.uniqueWeapons || []).filter(w => w.of === kind);
-    Object.assign(this, { run, kind, done, deal, prize: weighted(pool.map(w => [w, w.blood ? (Game.C.bloodW || 0.6) : 1])), active: true, t: 0, parts: [], timers: [], won: null, fly: null, glitch: 0, gNext: 1.5, trans: { t: 0, dir: 'in' } });
+    Object.assign(this, { run, kind, done, deal, prize: weighted(pool.map(w => [w, w.blood ? (Game.C.bloodW || 0.6) : 1])), active: true, t: 0, parts: [], timers: [], won: null, lost: 0, keep: false, gotIt: false, fly: null, glitch: 0, gNext: 1.5, trans: { t: 0, dir: 'in' } });
     Audio2.playMusic(PK.music, 1.2); Audio2.preload(['pages', 'stars', 'error', 'rapid_swishes_shorter']).catch(() => { });
     UI.clear();
     const loads = [MobSheets.load(PK.sprite).then(s => { this.npc = s; }), Assets.loadImg('assets/ui/poker/room.webp').then(b => { this.bg = b; }), Assets.loadImg('assets/ui/poker/cards.webp').then(c => { this.cards = c; })];

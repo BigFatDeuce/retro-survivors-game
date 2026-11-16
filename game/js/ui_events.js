@@ -52,6 +52,7 @@ Object.assign(UI, {
     return (S.unlocked || []).includes('goultard') || /^goultard$/i.test((Store.pname && Store.pname(Store.prof)) || '');
   },
   dofawaReady() { const S = Store.data, A = Game.C.achievements || []; return !!Game.C.dofawa && !S.dofawa && A.length && A.every(a => S.ach && S.ach[a.id]); },
+  slipReady() { const S = Store.data, K = (Game.C.ttg || {}).cards || []; return !!Game.C.slip && !S.slip && K.length > 0 && K.every(c => S.ttg && S.ttg[c.id]); },   // (1.05: every TTG card)
   // ------------------------------------------------ Musha l'Oni hands over a treasure map (and swears it's nothing)
   mushaScene(R, tm, m) {   // (0.48: R = null when the Armurerie replays it)
     const M = Game.C.tmap.musha, anims = [['bonusR'], ['staticR'], ['anim1R'], ['anim2R']];
@@ -283,22 +284,23 @@ Object.assign(UI, {
   },
   // ------------------------------------------------ the Dofawa ending: ToT on stage, one line at a time (each can be
   // skipped only after C.dofawa.skipDelay seconds), then the Dofawa takes the 'O' of the title
-  dofawaScene() {
-    const D = Game.C.dofawa; if (!this.dofawaReady()) return;
+  // (1.05: kind 'slip', the same scene for the Slip de Trool: C.slip, every TTG card collected)
+  dofawaScene(kind = 'dofawa') {
+    const D = Game.C[kind]; if (!(kind === 'slip' ? this.slipReady() : this.dofawaReady())) return;
     const stage = sheetStage(Game.C.totSprite, 300, 320, [['staticR'], ['walkR'], ['staticF'], ['runS'], ['staticR'], ['walkF']]);
     const bubble = h('div', { class: 'musha-bubble totb' }), egg = h('div', { class: 'dofawa-egg' }, iconImg(D.icon, 96));   // (0.97: 'totb', not 'tot': the ToT screen's '.tot { padding: 0 }' took the bubble's margins)
     const bar = h('i', { class: 'skip-bar' }), next = btn([T('dofawa_next'), bar], () => { if (!next.classList.contains('disabled')) say(i + 1); }, 'orange');
     let i = -1, timer = 0;
     const say = (n) => {
       if (n >= D.lines.length) {   // the reward: once per profile
-        Store.data.dofawa = Date.now(); Store.save(); stage._stage.stop(); this.closeModal(); Audio2.ui('level', 0.9); toast(T('dofawa_got')); this.mainMenu(); return;
+        Store.data[kind] = Date.now(); Store.save(); stage._stage.stop(); this.closeModal(); Audio2.ui('level', 0.9); toast(T(kind + '_got')); this.mainMenu(); return;
       }
       i = n; bubble.textContent = L(D.lines[i]); stage._stage.set(i); bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop');
-      egg.classList.toggle('show', i >= 3); if (i === 3) { Audio2.play('stars', 0.9); Audio2.sfx('EVENT', 0.8); } else Audio2.blip('click');
+      const ea = D.eggAt || 3; egg.classList.toggle('show', i >= ea); if (i === ea) { Audio2.play('stars', 0.9); Audio2.sfx('EVENT', 0.8); } else Audio2.blip('click');
       next.classList.add('disabled'); bar.style.transition = 'none'; bar.style.width = '0%'; void bar.offsetWidth; bar.style.transition = `width ${D.skipDelay}s linear`; bar.style.width = '100%';
       clearTimeout(timer); timer = setTimeout(() => next.classList.remove('disabled'), D.skipDelay * 1000);
     };
-    const el = h('div', { class: 'window modal dofawa' }, h('div', { class: 'title' }, '★ ', T('dofawa_btn')),
+    const el = h('div', { class: 'window modal dofawa' }, h('div', { class: 'title' }, '★ ', T(kind + '_btn')),
       h('div', { class: 'content' }, h('div', { class: 'musha-row' }, h('div', { class: 'tot-stage' }, stage, egg), h('div', { class: 'musha-side' }, bubble)), h('div', { class: 'start-row' }, next)));
     this.openModal(el); Audio2.sfx('EVENT', 0.7); say(0);
   },
