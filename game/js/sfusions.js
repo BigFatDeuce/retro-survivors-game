@@ -100,7 +100,7 @@ Object.assign(Run.prototype, {
     const P = this.player, once = (k, f) => { if (!c.fired[k]) { c.fired[k] = true; f(); } };
     const anim = (this.cls.casts && this.cls.casts[0]) || 'anim1', key = P.sprite.has(anim + 'R') ? anim + 'R' : null;
     if (key) { P.castAnim = key; P.castT = Math.min(c.t * 0.7, P.sprite.duration(key) * 0.45); }
-    once('riser', () => { Audio2.boosterSfx && Audio2.boosterSfx('riser'); });
+    if (c.t > 0.5) once('riser', () => { Audio2.boosterSfx && Audio2.boosterSfx('riser'); });   // (1.05: the spinning riser 0.5 s in, in time with the icons)
     if (c.t > U_HOLD && c.t < U_MEET && this.particles.length < 300) {   // sparks drawn in by the icons
       const a = rand(TAU), r = rand(90, 180); this.particles.push({ x: P.x + Math.cos(a) * r, y: P.y - 40 + Math.sin(a) * r * 0.6, vx: -Math.cos(a) * r * 1.4, vy: -Math.sin(a) * r * 0.9, g: 0, t: 0, life: 0.6, c: pick(['#ffe27a', '#fff6d0', '#c89cff']), s: rand(2, 4) });
     }

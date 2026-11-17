@@ -731,7 +731,7 @@ Run.prototype.draw = function (ctx) {
   });
   // 1.03: the merchant and the ??? NPC behind the scenery too
   if (this.merchant && this.merchantSprite && this.merchantSprite.ready) { const M = this.merchant; this.occludeAt(ctx, px, M.x - 70, M.y - 140, M.x + 70, M.y + 16, M.y, c => this.merchantSprite.draw(c, 'staticR', t, M.x, M.y, ES, M.x > P.x, { loop: true })); }
-  if (this.pokerNpc && this.pokerSheet) { const N = this.pokerNpc, sh = this.pokerSheet; this.occludeAt(ctx, px, N.x - 100, N.y - 230, N.x + 100, N.y + 16, N.y, c => sh.draw(c, sh.frameAt('staticR', t, true), N.x, N.y, ES * 1.6, N.x > P.x)); }
+  if (this.pokerNpc && this.pokerSheet) { const N = this.pokerNpc, sh = this.pokerSheet; this.occludeAt(ctx, px, N.x - 100, N.y - 230, N.x + 100, N.y + 16, N.y, c => sh.draw(c, sh.frameAt('staticR', 0, true), N.x, N.y, ES * 1.6, N.x > P.x)); }
   // orbiters
   for (const o of this.orbiters) nat('orb' + (o.spell.p.star ? 's' : o.spell.p.hourglass ? 'h' : o.spell.p.drawIcon ? 'i' : o.spell.def.weapon ? 'w' : 'f'), ctx => {
     if (o.spell.p.star) { drawAuraOrb(ctx, o, t, this); return; }   // Sagesse fusion (0.61: violet aura orbs, no more star icons)

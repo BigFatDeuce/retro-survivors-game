@@ -26,8 +26,8 @@ Object.assign(Run.prototype, {
   // drawn with the merchant (render.js): standing, a violet '???' over his hood
   drawPokerNpc(ctx, t) {
     const N = this.pokerNpc, sh = this.pokerSheet; if (!N || !sh) return;
-    sh.draw(ctx, sh.frameAt('staticR', t, true), N.x, N.y, ES * 1.6, N.x > this.player.x);   // (bigger than a monster: he must be found)
-    const bob = Math.sin(t * 3) * 3; outlinedText(ctx, T('pk_name'), N.x, N.y - 215 + bob, '#d9b8ff', 20, 'center');
+    sh.draw(ctx, sh.frameAt('staticR', 0, true), N.x, N.y, ES * 1.6, N.x > this.player.x);   // (bigger than a monster: he must be found; 1.05: one still frame, its 5 copies differ a little and flickered)
+    const bob = Math.sin(t * 3) * 3; outlinedText(ctx, T('pk_name'), N.x, N.y - 78 + bob, '#d9b8ff', 20, 'center');   // (1.05: just over his hood, ~64 above his feet; was 215)
   },
   // the prize: a unique weapon of that kind, at the current weapon's level (its evolutions and fusion kept within a kind)
   pokerWeapon(def) {
@@ -131,7 +131,7 @@ const Poker = {
       const s = Math.max(W / this.bg.width, H / this.bg.height); ctx.drawImage(this.bg, (W - this.bg.width * s) / 2, (H - this.bg.height * s) / 2, this.bg.width * s, this.bg.height * s);
       ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = '#c23a3a'; ctx.fillRect(0, 0, W, H); ctx.globalCompositeOperation = 'source-over';   // the red veil
       if (!this.vig || this.vigH !== H || this.vigW !== W) { this.vigW = W; this.vigH = H; this.vig = ctx.createRadialGradient(W / 2, H / 2, H * 0.25, W / 2, H / 2, H * 0.85); this.vig.addColorStop(0, 'rgba(0,0,0,0)'); this.vig.addColorStop(1, 'rgba(10,0,0,0.75)'); } ctx.fillStyle = this.vig; ctx.fillRect(0, 0, W, H);
-      if (this.npc) this.npc.draw(ctx, this.npc.frameAt('staticR', this.t, true), A.nx, A.gy, 5.6 * A.k, true);
+      if (this.npc) this.npc.draw(ctx, this.npc.frameAt('staticR', 0, true), A.nx, A.gy, 5.6 * A.k, true);   // (1.05: one still frame: its copies flickered)
       const P = this.run.charSprite; if (P) P.draw(ctx, 'staticR', this.t, A.px, A.gy, 3.6 * A.k, false, { loop: true });
       const glow = RCache.glow('rgba(255,70,20,0.7)');
       for (const p of this.parts) {   // black embers: a dark core in a soft red glow, flickering

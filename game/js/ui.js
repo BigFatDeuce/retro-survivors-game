@@ -15,7 +15,30 @@ function btn(label, onclick, cls = '') { return h('button', { class: 'btn ' + cl
 // item pictures are drawn at the pixel size they are shown at (menus are zoomed on big screens): never upscaled in the page
 // (0.60: drawn at the exact device size: the page never resamples the picture again)
 function iconPx(size) { const k = Math.min(4, Math.max(1, (Game._uiz || 1) * (window.devicePixelRatio || 1))); return Math.max(16, Math.round(size * k)); }
-function iconImg(name, size = 40, cls = '') { const im = h('img', { src: Game.icons.dataURL(name, iconPx(size)), width: size, height: size, class: 'ic ' + cls, draggable: 'false' }); return im; }
+function iconImg(name, size = 40, cls = '') { const px = iconPx(size), im = h('img', { src: Game.icons.dataURL(name, px), width: size, height: size, class: 'ic ' + cls, draggable: 'false' }); if (px > 96 && hdHas(name)) hdWhenSeen(im, name, px); return im; }
+// 1.05: an item shown over 96 screen px (1440p, 4K, dense screens) swaps its 180-px atlas picture for its 400-px one
+// (assets/ui/hd, SPR.iconsHD), reduced by halves then once to the exact size: sharp and in its true colours; below that,
+// the atlas only (nothing more loaded)
+const _hdIc = {}; let _hdSet = null, _hdObs = null;
+function hdHas(n) { _hdSet = _hdSet || new Set(SPR.iconsHD || []); return _hdSet.has(n); }
+// (only once the icon comes into view: a shop tab holds hundreds of them)
+function hdWhenSeen(im, n, px) {
+  if (typeof IntersectionObserver === 'undefined') { hdIcon(n, px).then(u => { if (u) im.src = u; }); return; }
+  _hdObs = _hdObs || new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) { _hdObs.unobserve(e.target); const [nn, pp] = e.target._hd; hdIcon(nn, pp).then(u => { if (u && e.target.isConnected) e.target.src = u; }); } }, { rootMargin: '200px' });
+  im._hd = [n, px]; _hdObs.observe(im);
+}
+function hdIcon(n, px) {
+  if (!hdHas(n)) return Promise.resolve(null);
+  const k = n + '@' + px; if (_hdIc[k]) return _hdIc[k];
+  const im = new Image(); im.src = vurl(`assets/ui/hd/${n}.webp`);   // (not Assets' cache: a shop page would keep hundreds of decoded 400-px pictures; this one is let go once drawn)
+  return (_hdIc[k] = im.decode().then(() => {
+    let src = im, w = im.width, hh = im.height;
+    while (Math.max(w, hh) > px * 0.92 * 2) { const c = document.createElement('canvas'); c.width = Math.ceil(w / 2); c.height = Math.ceil(hh / 2); const g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(src, 0, 0, c.width, c.height); src = c; w = c.width; hh = c.height; }
+    const c = document.createElement('canvas'); c.width = c.height = px; const g = c.getContext('2d'); g.imageSmoothingQuality = 'high';   // (0.92: the atlas pictures' margin, Atlas.canvas)
+    const s = px * 0.92 / Math.max(w, hh); g.drawImage(src, (px - w * s) / 2, (px - hh * s) / 2, w * s, hh * s);
+    return c.toDataURL();
+  }, () => null));
+}
 // 0.98.1 (the first level-up froze the game ~0.25 s: each card picture was made and PNG-encoded on the spot): the pictures a
 // level-up card of this run may show — its class's spells, the common spells, the fusions, the characteristics, the
 // weapons, at the sizes the cards show them (iconImg) — and the reroll die's sheets, made ahead in the idle moments of the
@@ -488,20 +511,18 @@ const UI = {
     const detail = h('div', { class: 'best-detail' }, h('div', { class: 'hint' }, T('bestiary_hint')));
     const list = h('div', { class: 'best-list' });
     const tabs = h('div', { class: 'tabs' });
-    const show = (d, isBoss, mapName) => {
+    const show = (d, isBoss, zone) => {
       const seen = S.seen[d.id];
       detail.innerHTML = '';
       if (!seen) { detail.append(h('div', { class: 'hint' }, T('unknown') + ' — ' + T('bestiary_hint'))); return; }
-      const drops = C.dofus.filter(x => x.from.includes(d.id));
-      const lore = d.lore || {};
+      const drops = C.dofus.filter(x => x.from.includes(d.id)), hp = bestHp(zone, d, isBoss);
       detail.append(...[   // (nulls filtered: Element.append writes them out as the text "null")
         h('h2', {}, L(d.name), isBoss ? h('span', { class: 'tag boss' }, d.final ? 'BOSS' : 'Mini-boss') : null),
         h('div', { class: 'art-wrap' }, artImg(d.art || ('a' + d.gfx), 'best-art')),
         d.flavor ? h('p', { class: 'flavor' }, '« ' + L(d.flavor) + ' »') : null,
         h('table', { class: 'stats' },
-          h('tr', {}, h('td', {}, T('zone')), h('td', {}, mapName)),
-          lore.lv ? h('tr', {}, h('td', {}, T('lvl_dofus')), h('td', {}, lore.lv[0] === lore.lv[1] ? lore.lv[0] : lore.lv[0] + ' - ' + lore.lv[1])) : null,
-          lore.hp ? h('tr', {}, h('td', {}, T('hp_dofus')), h('td', {}, lore.hp[0] === lore.hp[1] ? fmtNum(lore.hp[0]) : fmtNum(lore.hp[0]) + ' - ' + fmtNum(lore.hp[1]))) : null,
+          h('tr', {}, h('td', {}, T('zone')), h('td', {}, L(zone.name))),
+          hp ? h('tr', {}, h('td', {}, T(zone.hardOnly ? 'best_hp_hard' : 'best_hp')), h('td', {}, hp[0] === hp[1] ? fmtNum(hp[0]) : fmtNum(hp[0]) + ' - ' + fmtNum(hp[1]), hp[2] ? h('small', {}, ' (' + T('best_hp_lv') + ')') : null)) : null,   // (1.05: this game's HP, no longer the Retro level and HP)
           h('tr', {}, h('td', {}, T('attacks')), h('td', {}, (d.attacks || []).map(a => L(a)).join(', ') || '—')),
           h('tr', {}, h('td', {}, T('killed')), h('td', {}, fmtNum(S.kills[d.id] || 0))),
           drops.length ? h('tr', {}, h('td', {}, T('drops')), h('td', {}, ...drops.map(x => h('span', { class: 'drop' }, iconImg('dofus_hd_' + x.icon, 22), ' ', L(x.name))))) : null),
@@ -521,7 +542,7 @@ const UI = {
       { const J = C.jorbak, mu = J && C.monsters.jorbak && C.maps.indexOf(m) >= J.from ? C.monsters.jorbak : C.monsters.tofu_mutant; if (mu) bosses.unshift(mu); }
       const card = (d, isBoss) => {
         const seen = S.seen[d.id];
-        const c = h('div', { class: 'best-card' + (seen ? '' : ' unseen') + (isBoss ? ' boss' : ''), onclick: () => { list.querySelectorAll('.best-card').forEach(e => e.classList.remove('sel')); c.classList.add('sel'); show(d, isBoss, L(m.name)); Audio2.blip('click'); } },
+        const c = h('div', { class: 'best-card' + (seen ? '' : ' unseen') + (isBoss ? ' boss' : ''), onclick: () => { list.querySelectorAll('.best-card').forEach(e => e.classList.remove('sel')); c.classList.add('sel'); show(d, isBoss, m); Audio2.blip('click'); } },
           artImg(d.art || ('a' + d.gfx), '', 240), h('div', { class: 'bname' }, seen ? L(d.name) : '???'));
         return c;
       };
@@ -807,6 +828,7 @@ const UI = {
       // 0.95 (simple settings for low-end machines; the 'Renderer' row is gone: PixiJS always, the 2D canvas only
       // by itself when WebGL is missing or lost)
       this.pickRow('opt_fx', ['full', 'low', 'min'], Game.fxLevel(), v => Game.setFx(v), T('opt_fx_hint')),
+      check(T('crowd_fx'), 'crowdFx'),   // (1.06: Game.crowdFx)
       this.pickRow('opt_zoom', ['far', 'normal', 'close'], S.zoom || 'normal', v => Game.setZoom(v)),
       h('label', { class: 'opt' }, h('span', {}, T('lang')), langSel),
       h('label', { class: 'opt' }, h('span', {}, T('cb')), cbSel),
@@ -1076,7 +1098,7 @@ const UI = {
   levelUpMenu(R, opts, rolled) {
     this.levelUpOpen = true;
     if (R.rerolls > 0) ['ui603', 'ui611', 'ui605'].forEach(f => FxSheets.load(f));   // (0.95: the die ready before a reroll: an emoji die showed first)
-    let busy = false;
+    let busy = !!rolled;   // (1.05: no card taken while the new ones are dealt: a click or a button meant for the die picked one)
     const pick_ = (o) => { if (busy) return; busy = true; R.applyUpgrade(o); Audio2.blip('click'); this.closeModal(); };
     // 0.60: Bannir (C.banishes a run, shared by the spells, weapons and characteristics): the next card clicked never comes back this run, new cards are dealt; Passer (once a run)
     let banishing = false;
@@ -1111,7 +1133,7 @@ const UI = {
     if (rolled && this._luSize) { el.style.minWidth = this._luSize[0] + 'px'; el.style.minHeight = this._luSize[1] + 'px'; }   // 0.37: a dice roll never resizes the window
     this._luBack = () => { if (banishing) { setBanish(false); Audio2.blip('click'); } };   // (B / Échap: only out of the Bannir mode)
     this.openModal(el); fitCardsSoon(el);   // (0.62: no card text is ever cut)
-    if (rolled) { deckVars(el); el.classList.add('dealing'); setTimeout(() => el.classList.remove('dealing'), (1.1 + 0.09 * opts.length) * 1000 + 100); }   // (0.95: dealt from the deck, index.html cardDeal: 1.1 s each)
+    if (rolled) { deckVars(el); el.classList.add('dealing'); setTimeout(() => { el.classList.remove('dealing'); busy = false; }, (1.1 + 0.09 * opts.length) * 1000 + 100); }   // (0.95: dealt from the deck, index.html cardDeal: 1.1 s each)
     this._keyPick = null;
   },
   levelUpMaxed(R) {
@@ -1566,6 +1588,25 @@ function sfStats(f, cls) {
   return h('div', { class: 'sf-stats' }, ...fxNodes(parts), ...fx.map(t => h('span', { class: 'sf-heal fx-eff' }, t)));
 }
 // 0.60 (shop): one level of a characteristic in a run, at this shop level → the next one
+// 1.05: a monster's HP in this game for the bestiary: Normal (Difficile on a zone played only so), no help, not an elite,
+// from its first appearance in the zone (waves, events, rare ones the whole run) to its last, through Run's own formulas;
+// a boss at its time (+1 % a player level)
+function bestHp(m, d, isBoss) {
+  const C = Game.C, R = Object.assign(Object.create(Run.prototype), { C, RUN: C.run, map: m, hard: m.hardOnly ? C.hard : null, aid: null, daily: null, level: 0 });
+  if (R.hard) { const pw = Object.values(C.monsters).map(x => Math.log(x.hp * (1 + x.dmg / 10))); R.hardPw = [Math.min(...pw), Math.max(...pw)]; }   // (as Run's constructor)
+  R.mapPos = C.maps.indexOf(m); R.mapIdx = m.tier !== undefined ? m.tier : R.mapPos; R.zoneMul = m.hidden ? 1 : 0.8 + 0.025 * Math.min(6, Math.max(0, R.mapIdx));
+  if (d.id === 'tofu_mutant' || d.id === 'jorbak') { const v = d.id === 'jorbak' ? C.jorbak.hp : C.mutant.hp; return v ? [v, v] : null; }   // (events.js spawnMutant: a fixed life)
+  const at = t => { R.time = t * 60; return Math.round(isBoss ? R.roundHp(d.hp * (1 + 0.04 * R.em()) * R.zoneMul * (R.RUN.hpMul || 1) * (R.hard ? R.hard.bossHp : 1), true) : R.roundHp(d.hp * R.scaleHp() * R.norm()[0] * R.zoneMul * (R.RUN.hpMul || 1) * R.hardHp(d) * R.hpLateK())); };
+  const ts = [], end = m.waves.length ? m.waves[m.waves.length - 1][1] : 10;
+  if (isBoss) { for (const b of [...m.bosses, ...(m.secret ? [m.secret] : [])]) if (b[1] === d.id) ts.push(b[0]); }
+  else {
+    for (const w of m.waves) if (w[2].some(([id]) => id === d.id)) ts.push(w[0], w[1] - 1e-6);
+    for (const e of m.events) if (e[2] === d.id) ts.push(e[0]);
+    if ((m.rare || []).some(([id]) => id === d.id)) ts.push(0, end - 1e-6);
+  }
+  if (!ts.length) return null;
+  const v = ts.map(at); return [Math.min(...v), Math.max(...v), isBoss];
+}
 function passiveShopParts(p, lv, next) {
   const d = PASSIVE_FMT(p); if (!d) return [];
   const v = l => passivePer(Game.C, p, l);

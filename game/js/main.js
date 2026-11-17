@@ -237,7 +237,7 @@ const Game = {
       // half-size sheets and the lighter effects, and the adaptive resolution below still steps in on a slow machine)
       requestAnimationFrame(loop);   // (0.48: first, so that an error in one frame never stops the game)
       const raw = (now - last) / 1000, dt = Math.min(0.05, raw); last = now;
-      try { this.adapt(raw); this.frame(dt); } catch (e) { if (!this._frameErr) { this._frameErr = String((e && e.stack) || e); console.error(e); } }   // (tests read Game._frameErr)
+      try { this.adapt(raw); this.crowdFx(raw); this.frame(dt); } catch (e) { if (!this._frameErr) { this._frameErr = String((e && e.stack) || e); console.error(e); } }   // (tests read Game._frameErr)
     };
     requestAnimationFrame(loop);
   },
@@ -275,7 +275,7 @@ const Game = {
   setQuality(q) {
     if (!QUALITY[q] || q === this.quality()) return;
     Store.data.settings.quality = q; Store.data.settings.qualityUser = 1; Store.save();   // (0.93: the player's own choice from now on)
-    this.setFxFlags(); this.resScale = 1; this._cap = 1; this.resize();
+    this.setFxFlags(); this.resScale = 1; this._cap = 1; this._loadMap = null; this._kCap = 0; this.resize();   // (1.05: the loads remembered by adapt belong to the old quality)
     this.requality();
   },
   // 0.95 (simple options for low-end machines): the visual effects, apart from the picture quality — 'full' (the
@@ -287,7 +287,7 @@ const Game = {
     return ok(d) ? d : S && ok(S.fx) ? S.fx : 'full';
   },
   setFxFlags() { const l = this.fxLevel(); this.lowFx = this.Q().fx === 0 || l !== 'full'; this.minFx = l === 'min'; },
-  setFx(v) { Store.data.settings.fx = v; Store.save(); this.setFxFlags(); },
+  setFx(v) { Store.data.settings.fx = v; Store.save(); this._crowdMin = false; this.setFxFlags(); },   // (1.06: a crowd's minimum is looked at again)
   // 0.95: three camera distances in the options, 10 % further / the usual one / 10 % closer, eased in ~0.4 s
   zoomK() { const S = Store.data && Store.data.settings, z = S && S.zoom; return z === 'far' ? 0.8 : z === 'close' ? 1.2 : 1; },   // (0.97: ±20 %, was ±10 %)
   setZoom(v) { Store.data.settings.zoom = v; Store.save(); },
@@ -297,15 +297,23 @@ const Game = {
   // their sheet objects); the old sizes are freed
   async requality() {
     const k = lowK(), jobs = [], whites = {};
-    for (const key in MobSheets.c) {
-      const sh = MobSheets.c[key]; if (!sh || !sh.img || (sh.img._k || 1) === k) continue;
-      const u = MobSheets.url(key), old = sh.img._k || 1;
-      jobs.push(Assets.loadImg(u, k).then(img => { if (!img) return; sh.img = img; for (const n of Object.keys(sh)) if (n.startsWith('_tint')) delete sh[n]; sh.white = whites[u] || (whites[u] = MobSheets.whites[u] = whiteVersion(img, 0.5)); Assets.release(u, old); }));
+    const olds = [], mobJobs = [];
+    for (const key in MobSheets.c) {   // (1.05: a sheet may also change tier, economic <-> HQ: its picture, zoom and frames)
+      const sh = MobSheets.c[key]; if (!sh || !sh.img) continue;
+      const m = MobSheets.meta(key), u = MobSheets.url(key, m), ou = sh.u || u, old = sh.img._k || 1; if (u === ou && old === k) continue;
+      olds.push([ou, old]);
+      mobJobs.push(Assets.loadImg(u, k).then(img => {
+        if (!img) return; Object.assign(sh, { img, meta: m, zoom: m.zoom || 1, anims: m.anims || {}, u }); for (const n of Object.keys(sh)) if (n.startsWith('_tint')) delete sh[n];
+        if (u !== ou) { MobSheets.refs[u] = (MobSheets.refs[u] || 0) + 1; if (--MobSheets.refs[ou] <= 0) { delete MobSheets.refs[ou]; delete MobSheets.whites[ou]; } }
+        sh.white = whites[u] || (whites[u] = MobSheets.whites[u] = whiteVersion(img, 0.5));
+      }));
     }
-    for (const id in FxSheets.c) {
-      const sh = FxSheets.c[id]; if (!sh || !sh.img || (sh.img._k || 1) === k) continue;
-      const u = `assets/fx/${id}.webp`, old = sh.img._k || 1;
-      jobs.push(Assets.loadImg(u, k).then(img => { if (img) { sh.img = img; Assets.release(u, old); } }));
+    // the old pictures are let go once no sheet uses them any more (a pack's sheets without an HQ copy keep theirs)
+    jobs.push(Promise.all(mobJobs).then(() => { for (const [ou, old] of olds) if (!Object.values(MobSheets.c).some(sh => sh && sh.u === ou && sh.img && (sh.img._k || 1) === old)) Assets.release(ou, old); }));
+    for (const id in FxSheets.c) {   // (1.05: and its tier)
+      const sh = FxSheets.c[id]; if (!sh || !sh.img) continue;
+      const [m, u] = FxSheets.tier(id), ou = sh.u || u, old = sh.img._k || 1; if (u === ou && old === k) continue;
+      jobs.push(Assets.loadImg(u, k).then(img => { if (img) { Object.assign(sh, { img, meta: m, zoom: m.zoom || 1, anims: m.anims || {}, u }); Assets.release(ou, old); } }));
     }
     const now = performance.now();
     for (const cs of CharSprite.live) { if (now - (cs._seen || 0) > 8000) { CharSprite.live.delete(cs); continue; } jobs.push(cs.requality()); }
@@ -315,20 +323,66 @@ const Game = {
     await Promise.all(jobs);
     if (typeof _redGlyph !== 'undefined') _redGlyph.clear();
   },
+  // 1.05 (1440p / 4K on a modest graphics card, measured on a GTX 1050 at 1440p with ~300 monsters: 18 fps, frames up to
+  // 144 ms; the same with the sheets at 75 %: 26 fps, 65 ms — its memory, not the pixels): the monster and effect sheets
+  // decoded at 75 % from now on (lowK), one picture every 150 ms so that no frame takes them all — unlike a quality change
+  // in the options, which loads everything again at once. For the rest of the session (a quality change resets it)
+  async lighten() {
+    if (this._kCap || this.Q().k <= 0.75) return; this._kCap = 0.75; const k = lowK(), wait = () => new Promise(r => setTimeout(r, 150));
+    const byU = new Map();
+    for (const key in MobSheets.c) { const sh = MobSheets.c[key]; if (sh && sh.img && sh.u && (sh.img._k || 1) !== k) { if (!byU.has(sh.u)) byU.set(sh.u, []); byU.get(sh.u).push(sh); } }
+    for (const [u, shs] of byU) {
+      const old = shs[0].img._k || 1, img = await Assets.loadImg(u, k); if (this._kCap !== 0.75) return;
+      if (img) { const w = MobSheets.whites[u] = whiteVersion(img, 0.5); for (const sh of shs) { sh.img = img; sh.white = w; for (const n of Object.keys(sh)) if (n.startsWith('_tint')) delete sh[n]; } Assets.release(u, old); }
+      await wait();
+    }
+    for (const id in FxSheets.c) {
+      const sh = FxSheets.c[id]; if (!sh || !sh.img || !sh.u || (sh.img._k || 1) === k) continue;
+      const old = sh.img._k || 1, img = await Assets.loadImg(sh.u, k); if (this._kCap !== 0.75) return;
+      if (img) { sh.img = img; Assets.release(sh.u, old); } await wait();
+    }
+  },
+  // 1.06 (Options 'crowd_fx', on by default): the visual effects at their minimum while 120 monsters or more are on the
+  // screen, back to the player's own setting once fewer than 80 have stayed there 4 s. Measured at 1440p, Effects Low ->
+  // Minimum: ~200 monsters 15 -> 28 fps (worst frames 169 -> 89 ms), ~140: 27 -> 32, ~80: 18 -> 31. Nothing is loaded;
+  // the danger zones, shots and ranges are never cut (minFx); never above the player's own setting
+  crowdFx(raw) {
+    const R = this.run, S = Store.data && Store.data.settings, on = this._crowdMin;
+    if (this.state !== 'run' || !R || !S || S.crowdFx === false || this.fxLevel() === 'min') { if (on) this.crowdOff(); return; }
+    if ((this._cwT = (this._cwT || 0) + raw) < 0.25) return; const dt = this._cwT; this._cwT = 0;
+    const P = R.player, hw = this.viewW / 2 + 40, hh = this.viewH / 2 + 40; let n = 0;
+    for (const m of R.mobs) if (!m.dying && Math.abs(m.x - P.x) < hw && Math.abs(m.y - P.y) < hh) n++;
+    if (!on && n >= 120) { this._crowdMin = true; this._crowdLow = this.lowFx; this.lowFx = this.minFx = true; this._cwLow = 0; }
+    else if (on) { this._cwLow = n < 80 ? this._cwLow + dt : 0; if (this._cwLow >= 4) this.crowdOff(); }
+  },
+  crowdOff() { this._crowdMin = false; this.minFx = this.fxLevel() === 'min'; this.lowFx = !!this._crowdLow; },   // (what it was before the crowd; adapt steps in again if needed)
   adapt(raw) {
     const R = this.run;
     if (this.state !== 'run' || !R || this.paused || UI.modalOpen() || raw > 0.25 || document.hidden || this.debug.speed > 1) { this._adT = 0; return; }
     this._ft = this._ft * 0.94 + raw * 1000 * 0.06; this._adT += raw;
-    if (this._adT < 2.5) return;
-    const base = Math.min(2, window.devicePixelRatio || 1), minS = Math.max(0.7, 0.75 / base);   // (0.38: never blurrier than 70 %)
-    if (this._ft > 23 && (this.resScale > minS + 0.01 || !this.lowFx)) { // under ~43 fps: cheaper frames
+    // 1.05 (late waves at 1440p: the drop came seconds after the slowdown): the scene's load — monsters, shots, effects,
+    // particles, numbers — is remembered with the scale each step down needed; when the load climbs back to one that
+    // needed a lower scale (the next big wave), that scale is taken at once, before the frames slow down. Only the render
+    // buffer changes (no picture is loaded again, unlike a quality change in the options)
+    const L = R.mobs.length + R.projs.length + R.eprojs.length + R.effects.length + R.summons.length + R.particles.length * 0.25 + R.texts.length * 0.5;
+    const base = Math.min(2, window.devicePixelRatio || 1), minS = Math.max(0.75 / base, Math.min(0.7, 1080 / this.Q().h));   // (0.38: never blurrier than 70 %; 1.05: 4K down to 1080 lines)
+    const M = this._loadMap || (this._loadMap = []);
+    const need = M.reduce((m, e) => L >= e.L * 0.9 ? Math.min(m, e.s) : m, 1);
+    if ((this._ldT = (this._ldT || 0) + raw) > 0.5) {
+      this._ldT = 0;
+      if (need < this.resScale - 0.01) { this._cap = this.resScale; this.resScale = Math.max(minS, need); this.resize(); this._adT = 0; this._okT = 0; return; }
+    }
+    if (this._adT < 1.2) return;   // (was 2.5 s)
+    // 1.05: still slow at the lowest scale: the sheets lightened (lighten), the second step
+    if (this._ft > 21 && this.lowFx && this.resScale <= minS + 0.01 && !this._kCap && this.Q().k > 0.75) { this.lighten(); M.push({ L, s: this.resScale }); this._adT = 0; this._okT = 0; return; }
+    if (this._ft > 21 && (this.resScale > minS + 0.01 || !this.lowFx)) { // under ~48 fps (was 43): cheaper frames
       if (!this.lowFx) this.lowFx = true;
-      else { this._cap = this.resScale; this.resScale = Math.max(minS, this.resScale - 0.15); this.resize(); }
+      else { this._cap = this.resScale; this.resScale = Math.max(minS, this.resScale - 0.15); this.resize(); M.push({ L, s: this.resScale }); if (M.length > 12) M.shift(); }
       this._adT = 0; this._okT = 0;
     } else if (this._ft < 17.8) { // comfortably fast: climb back slowly, never above a level that was too slow before
       this._okT += raw;
       if (this._okT > 10) { this._okT = 0; this._adT = 0;
-        if (this.resScale < Math.min(1, this._cap - 0.01)) { this.resScale = Math.min(1, this._cap - 0.05, this.resScale + 0.1); this.resize(); }
+        if (this.resScale < Math.min(1, this._cap - 0.01) && need > this.resScale + 0.01) { this.resScale = Math.min(1, this._cap - 0.05, this.resScale + 0.1, need); this.resize(); }   // (1.05: not while — nor above what — this load still needs)
         else if (this.lowFx && this.resScale >= 0.99 && this.Q().fx > 0 && this.fxLevel() === 'full') this.lowFx = false;
         this._cap = Math.min(1, this._cap + 0.05);
       }

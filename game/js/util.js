@@ -81,7 +81,7 @@ const Store = {
     return {
       v: this.SAVE_V, kamas: 0, owned: [], equip: {}, unlocked: ['astrub'], best: {}, cleared: {}, clearedNormal: {}, tuto: {}, hardUnlocked: 0, mastery: {}, scrolls: {}, spellLv: {},
       seen: {}, kills: {}, dofus: {}, tot: 0, runs: 0, totalKills: 0,
-      settings: { music: 0.75, sfx: 0.75, lang: null, autoPick: null, dmgNumbers: true, shake: true, chat: true, quality: 'uhd', fx: 'full', zoom: 'normal' },   // (0.95: fx 'full' | 'low' | 'min', zoom 'far' | 'normal' | 'close')
+      settings: { music: 0.75, sfx: 0.75, lang: null, autoPick: null, dmgNumbers: true, shake: true, chat: true, quality: 'uhd', fx: 'full', zoom: 'normal', crowdFx: true },   // (1.06: crowdFx — minimum effects in big crowds, main.js Game.crowdFx)   // (0.95: fx 'full' | 'low' | 'min', zoom 'far' | 'normal' | 'close')
       lastClass: 'iop', lastSex: 0, lastMap: 'astrub', easter: {},
     };
   },

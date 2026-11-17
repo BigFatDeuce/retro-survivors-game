@@ -11,7 +11,7 @@ function sheetStage(key, w, h, anims, scale) {
     if (!c.isConnected && performance.now() - t0 > 3000) return;
     raf = requestAnimationFrame(step);
     if (!sh) return;
-    const t = (performance.now() - t0) / 1000, [a, mode] = anims[cur] || anims[0], an = sh.anims[a] ? a : 'staticR', f = sh.frameAt(an, t - ct, mode !== 'hold') || sh.frameAt('walkR', 0, true);   // (0.60: [anim, 'hold'] stops on its last frame)
+    const t = (performance.now() - t0) / 1000, [a, mode] = anims[cur] || anims[0], an = sh.anims[a] ? a : 'staticR', f = sh.frameAt(an, mode === 'still' ? 0 : t - ct, mode !== 'hold') || sh.frameAt('walkR', 0, true);   // (0.60: [anim, 'hold'] stops on its last frame)
     g.setTransform(k, 0, 0, k, 0, 0); g.clearRect(0, 0, w, h); if (f) sh.draw(g, f, w / 2, h - 12, scale, false);
   };
   raf = requestAnimationFrame(step); c._stage = st; return c;
@@ -24,7 +24,7 @@ Object.assign(UI, {
     const kinds = () => { body.replaceChildren(h('p', {}, T('pk_pick')), h('div', { class: 'pk-kinds' }, ...C.weapons.filter(w => C.uniqueWeapons.some(u => u.of === w.id)).map(w =>
       btn([iconImg(w.icon, 40), h('span', {}, L(w.name))], () => { this.closeModal(); R.pokerNpc = null; Game.enterPoker(w.id); }, 'pk-kind')))); };
     const body = h('div', {}, h('p', { class: 'pk-line' }, '« ' + T('pk_offer') + ' »'), h('div', { class: 'start-row' }, btn(T('pk_accept'), kinds, 'orange big'), btn(T('pk_refuse'), no, 'big')));
-    const el = h('div', { class: 'window modal pk-offer' }, h('div', { class: 'title' }, T('pk_name')), h('div', { class: 'content' }, sheetStage(C.poker.sprite, 200, 240, [['staticR']]), body));
+    const el = h('div', { class: 'window modal pk-offer' }, h('div', { class: 'title' }, T('pk_name')), h('div', { class: 'content' }, sheetStage(C.poker.sprite, 200, 240, [['staticR', 'still']]), body));
     this.openModal(el);
   },
   // 0.68: the title is the original picture (work/art068/83.webp cut out of its black background, upscaled by

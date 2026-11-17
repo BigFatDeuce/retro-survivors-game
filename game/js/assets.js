@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------- asset loading
 let SPR = null; // merged sprite metadata (data/sprites.json)
 // every data / image URL carries the build: a browser never mixes files of two versions from its cache
-const BUILD = '1.05';
+const BUILD = '1.06';
 const vurl = (u) => u + (u.includes('?') ? '&' : '?') + 'v=' + BUILD;
 // 0.93: a versioned file never changes: on the published web version (https, not this machine) the browser takes its
 // cached copy without asking the server again (one revalidation round trip per file at each start); at home (the local
@@ -527,39 +527,45 @@ function loadAcc() { return Promise.resolve([]); }   // (0.60: nothing to load u
 
 // 0.32 performance mode: monster and effect sheets decoded at half size (less video memory, faster drawing; the
 // files are the same, Sheet.draw scales the frames by img._k)
-function lowK() { return typeof Game !== 'undefined' && Game.Q ? Game.Q().k : 1; }   // (0.44: SD 0.5, HD 0.75, UHD 1)
+function lowK() { return typeof Game !== 'undefined' && Game.Q ? Math.min(Game.Q().k, Game._kCap || 1) : 1; }   // (0.44: SD 0.5, HD 0.75, UHD 1; 1.05: Game.lighten's cap)
 // Monster sheets cache
 // v2.0: several monsters can share one image (SPR.mobs[key].src = a pack of the monsters of a zone): the image and its
 // white flash copy are shared and freed when the last monster using them is dropped
 const MobSheets = {
   c: {}, p: {}, refs: {}, whites: {},
-  url(key) { const m = SPR.mobs[key]; return m && m.src ? `assets/${m.src}` : `assets/mobs/${key}.webp`; },
+  // 1.05: two tiers — the economic sheets (SPR.mobs, assets/mobs) and the HQ ones (SPR.mobsHQ, assets/mobs_hq, rendered for
+  // 4K: tools/assets/hq_mobs105.py), only for the 4K quality, or 1440p for the sheets it would blow up (uhd); absent from
+  // the APK (no SPR.mobsHQ there)
+  meta(key) { const H = SPR.mobsHQ && SPR.mobsHQ[key], q = typeof Game !== 'undefined' && Game.quality ? Game.quality() : 'hd'; return H && (q === 'k4' || (q === 'uhd' && H.uhd)) ? H : SPR.mobs[key]; },
+  url(key, m) { m = m || this.meta(key); return m && m.src ? `assets/${m.src}` : `assets/mobs/${key}.webp`; },
   load(key) {
     if (this.c[key]) return Promise.resolve(this.c[key]);
     if (this.p[key]) return this.p[key];
-    const meta = SPR.mobs[key]; if (!meta) { console.warn('no mob', key); return Promise.resolve(null); }
-    const u = this.url(key); this.refs[u] = (this.refs[u] || 0) + 1;
+    const meta = this.meta(key); if (!meta) { console.warn('no mob', key); return Promise.resolve(null); }
+    const u = this.url(key, meta); this.refs[u] = (this.refs[u] || 0) + 1;
     return (this.p[key] = Assets.loadImg(u, lowK()).then(img => {
       delete this.p[key];
-      const sh = new Sheet(img, meta);
+      const sh = new Sheet(img, meta); sh.u = u;
       if (img) { if (!this.whites[u]) this.whites[u] = whiteVersion(img, 0.5); sh.white = this.whites[u]; }
       return (this.c[key] = sh);
     }));
   },
   drop(key) {
     const sh = this.c[key]; delete this.c[key]; if (!sh) return;
-    const u = this.url(key); this.refs[u] = (this.refs[u] || 1) - 1; sh.white = null;
+    const u = sh.u || this.url(key); this.refs[u] = (this.refs[u] || 1) - 1; sh.white = null;
     if (this.refs[u] <= 0) { delete this.refs[u]; delete this.whites[u]; Assets.release(u); }
   },
 };
 const FxSheets = {
   c: {},
+  // 1.05: the 4K quality draws the HQ copy (SPR.fxHQ, assets/fx_hq: tools/assets/hq_tier105.py fx) when there is one
+  tier(id) { const H = SPR.fxHQ && SPR.fxHQ[id]; return H && typeof Game !== 'undefined' && Game.quality && Game.quality() === 'k4' ? [H, `assets/fx_hq/${id}.webp`] : [SPR.fx[id], `assets/fx/${id}.webp`]; },
   async load(id) {
     if (this.c[id] !== undefined) return this.c[id];
-    const meta = SPR.fx[id];
+    const [meta, u] = this.tier(id);
     if (!meta) { this.c[id] = null; return null; }
-    const img = await Assets.loadImg(`assets/fx/${id}.webp`, lowK());
-    this.c[id] = img ? new Sheet(img, meta) : null;
+    const img = await Assets.loadImg(u, lowK());
+    this.c[id] = img ? new Sheet(img, meta) : null; if (this.c[id]) this.c[id].u = u;
     return this.c[id];
   },
   get(id) { return this.c[id] || null; },
