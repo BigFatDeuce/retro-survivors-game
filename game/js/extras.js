@@ -13,6 +13,9 @@ Object.assign(Run.prototype, {
       const kinds = shuffle(E.list.filter(k => !(k === 'kamarain' && this.map.noKamas))).slice(0, E.n);   // (0.68: no kama rain on Nowel)
       kinds.forEach((k, i) => this.randEvents.push({ kind: k, t: rand(E.t0 + i * (E.t1 - E.t0) / E.n, E.t0 + (i + 1) * (E.t1 - E.t0) / E.n), done: false }));
     } else if (E) this.nextRandEvent = rand(E.t0, E.t0 + 120);
+    // 1.07: the Maîtres Corbacs killed before this run (rank S, updateExtras)
+    const RS = C.rankS, K = typeof Store !== 'undefined' && Store.data && Store.data.kills;
+    this.corbac0 = RS && K ? RS.bosses.reduce((n, id) => n + (K[id] || 0), 0) : 0;
   },
   // sheets the extras may need (loaded with the run)
   extraKeys(keys) {
@@ -20,6 +23,7 @@ Object.assign(Run.prototype, {
     if (C.monsters.bwork) keys.add(C.monsters.bwork.sprite);
     keys.add(C.monsters.tofu.sprite);
     if (C.spells.cawotte) keys.add('1277_z48');   // (0.73: the Cawotte global spell's own sprite, any class may get it)
+    for (const s of Object.values(C.spells)) if (s.glob && s.t === 'summon' && s.base.spriteKey) keys.add(s.base.spriteKey);   // (1.07: the global summons' sheets, Tofus Kamikazes' Tofu Mutant: they came with the Tofu monster's)
   },
   async loadExtras() { this.merchantSprite = new CharSprite(30, [[150, 110, 40], [90, 60, 20], [230, 200, 120]], null, null, null); await this.merchantSprite.load(); },
 
@@ -175,6 +179,13 @@ Object.assign(Run.prototype, {
     }
     // Endless: the bosses come back every cycle, stronger
     if (this.infinite) {
+      // 1.07: rank S = C.rankS.t reached in Endless (not the daily challenge) without dying (a Phoenix revive counts as a death),
+      // with C.rankS.n Maîtres Corbacs killed in earlier runs
+      const RS = this.C.rankS;
+      if (RS && !this.rankS && !this.daily && this.time >= RS.t && !this.revived && !P.dead && this.corbac0 >= RS.n) {
+        this.rankS = true; this.announce(T('rank_s_t'), T('rank_s'), '#ff8af0', { force: true, center: true, hold: 3 }); this.shake(6);
+        Audio2.jingle('rank_s', { fx: true }); this.rankSFx = { t0: performance.now(), conf: makeConfetti() };   // (confetti: juice.js)
+      }
       const I = this.C.infinite, c = Math.floor(this.time / I.cycle);
       if (c > this.cycle) {
         this.cycle = c; this.zoneMul = (this.baseZoneMul || (this.baseZoneMul = this.zoneMul)) * (1 + I.grow * c);

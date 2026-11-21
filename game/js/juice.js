@@ -150,6 +150,7 @@ Object.assign(Run.prototype, {
         if (!this.map.noKamas) { this.kamaRainUntil = Math.max(this.kamaRainUntil || 0, this.time + 2 * this.C.randEvents.kamarain.dur); this.chat(T('ev_kamarain'), '#ffd27a'); } }
       if (e > 3.9) this.victoryFx = null; else drawVictory(ctx, W, H, e, T('victory_big'), V.conf); }
     if (this.critFx) { const e = (performance.now() - this.critFx.t0) / 1000; if (e < 2.6) drawConfetti(ctx, W, H, e, this.critFx.conf, e > 2 ? Math.max(0, 1 - (e - 2) / 0.6) : 1); }   // (0.98: a critical summon's confetti)
+    if (this.rankSFx) { const e = (performance.now() - this.rankSFx.t0) / 1000; if (e < 4) drawConfetti(ctx, W, H, e, this.rankSFx.conf, e > 3.2 ? Math.max(0, 1 - (e - 3.2) / 0.8) : 1); else this.rankSFx = null; }   // (1.07: rank S earned)
     if (this.deathFx) drawDeath(ctx, this, W, H, this.deathE());
     const P = this.player; if (!P || P.dead || this.over) return;
     const low = P.hp / this.stats.maxHp;

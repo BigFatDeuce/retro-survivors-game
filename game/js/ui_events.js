@@ -16,6 +16,26 @@ function sheetStage(key, w, h, anims, scale) {
   };
   raf = requestAnimationFrame(step); c._stage = st; return c;
 }
+// 1.07: a small Arakne (client sprite 1564) wandering along the bottom of a window: walks to a random spot, waits,
+// sometimes bites the air; the canvas fills its CSS box (.arakne-wander) and stops with its screen
+function arakneWander() {
+  const c = document.createElement('canvas'); c.className = 'arakne-wander';
+  const g = c.getContext('2d'); let sh = null, sc = 1, x = -1, tx = 0, wait = 0.8, flip = false, anim = 'walkR', at = 0, last = performance.now();
+  MobSheets.load('1564_z32').then(s => { sh = s; const f = s && s.frameAt('walkR', 0, true); if (f) sc = 40 / (f[3] / s.zoom); });
+  const step = now => {
+    if (!c.isConnected && now - last > 3000) return;
+    requestAnimationFrame(step); const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    const k = Math.min(3, window.devicePixelRatio || 1) * ((typeof Game !== 'undefined' && Game._uiz) || 1), W = c.clientWidth, H = c.clientHeight; if (!sh || !W || !H) return;
+    if (c.width !== Math.round(W * k) || c.height !== Math.round(H * k)) { c.width = Math.round(W * k); c.height = Math.round(H * k); }
+    if (x < 0) x = tx = 30 + Math.random() * (W - 60);
+    at += dt;
+    if (wait > 0) { if ((wait -= dt) <= 0) { tx = 30 + Math.random() * (W - 60); anim = 'walkR'; at = 0; } }
+    else { const d = tx - x; flip = d < 0; x += Math.sign(d) * Math.min(Math.abs(d), 42 * dt); if (Math.abs(d) < 1) { wait = 1.2 + Math.random() * 2.5; if (Math.random() < 0.4) { anim = 'atkR'; at = 0; } } }
+    const still = wait > 0 && (anim !== 'atkR' || at > sh.duration('atkR')), f = still ? sh.frameAt('walkR', 0, true) : sh.frameAt(anim, at, anim === 'walkR');
+    g.setTransform(k, 0, 0, k, 0, 0); g.clearRect(0, 0, W, H); if (f) sh.draw(g, f, x, H - 4, sc, flip);
+  };
+  requestAnimationFrame(step); return c;
+}
 Object.assign(UI, {
   // 1.03: the ??? NPC's offer (poker.js): his picture, his line, then the kinds of weapon; a refusal lets him wait
   pokerOffer(R, N) {

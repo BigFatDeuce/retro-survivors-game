@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Retro Survivors</title>
 <link rel="icon" type="image/png" href="assets/ui/favicon.png">
+<link rel="apple-touch-icon" href="assets/ui/apple-touch-icon.png">
 <meta name="description" content="Retro Survivors — fan-game de survie non officiel.">
 <style>
 /* the client's font is Verdana: the system's own (hinted, crisp) Verdana is used when present, else the embedded auto-hinted copy.
@@ -1378,10 +1379,21 @@ body.endgame.menu-bg::after { content: ''; position: fixed; inset: 0; z-index: 1
 body.endgame.endname.menu-bg::before { filter: brightness(.52) saturate(.95); }   /* (0.73: Goultard by the profile's name: a darker wasteland) */
 .main .menu-buttons .btn { justify-content: center !important; }
 .ov-grade .ov-rank { width: 84px; height: 84px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,.5)); }
+/* 1.07: rank S, much more alive than the others: slams in from further, a bigger medallion that breathes, pink-gold rays turning behind it, sparks circling, a light sweeping over it, the columns shaken once */
+.ov-grade.gS { transform: scale(5) rotate(-40deg); } .ov-grade.gS.on { animation: ovstampS .8s cubic-bezier(.2,1.7,.4,1) forwards; } @keyframes ovstampS { 60% { opacity: 1; } to { opacity: 1; transform: scale(1) rotate(-8deg); } }
+.gs-wrap { position: relative; display: grid; place-items: center; width: 124px; height: 124px; flex: none; }
+.gs-wrap .ov-rank { width: 124px; height: 124px; position: relative; z-index: 1; animation: gsBreath 1.6s ease-in-out infinite; filter: drop-shadow(0 0 14px rgba(255,120,240,.9)) drop-shadow(0 4px 6px rgba(0,0,0,.5)); } @keyframes gsBreath { 50% { transform: scale(1.07); filter: drop-shadow(0 0 26px rgba(255,200,90,1)) drop-shadow(0 4px 6px rgba(0,0,0,.5)); } }
+.gs-rays { position: absolute; inset: -80px; border-radius: 50%; pointer-events: none; background: repeating-conic-gradient(from 0deg, rgba(255,140,240,.6) 0 7deg, transparent 7deg 18deg, rgba(255,214,90,.55) 18deg 25deg, transparent 25deg 36deg); -webkit-mask: radial-gradient(closest-side, #000 30%, transparent 100%); mask: radial-gradient(closest-side, #000 30%, transparent 100%); animation: fspin 7s linear infinite; }
+.gs-sheen { position: absolute; inset: 10px; border-radius: 50%; overflow: hidden; z-index: 2; pointer-events: none; } .gs-sheen::before { content: ''; position: absolute; inset: -20% auto -20% -60%; width: 40%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.75), transparent); transform: skewX(-20deg); animation: gsSheen 2.4s ease-in-out infinite; } @keyframes gsSheen { 0%, 40% { left: -60%; } 80%, 100% { left: 130%; } }
+.gs-wrap > i { position: absolute; left: 50%; top: 50%; width: 9px; height: 9px; margin: -4.5px; z-index: 3; pointer-events: none; background: #fff; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); filter: drop-shadow(0 0 4px #ffd25a); animation: gsOrbit 3.2s linear infinite, gsTwinkle .9s ease-in-out infinite alternate; animation-delay: calc(var(--i) * -.32s), calc(var(--i) * -.17s); }
+@keyframes gsOrbit { from { transform: rotate(0deg) translateX(72px) rotate(0deg); } to { transform: rotate(360deg) translateX(72px) rotate(-360deg); } } @keyframes gsTwinkle { from { opacity: .3; } to { opacity: 1; } }
+.ov-cols.gs-shake { animation: gsShake .5s .2s; } @keyframes gsShake { 20% { transform: translate(-6px, 3px); } 40% { transform: translate(5px, -4px); } 60% { transform: translate(-4px, 2px); } 80% { transform: translate(2px, -1px); } }
+@media (prefers-reduced-motion: reduce) { .gs-rays, .gs-wrap > i, .gs-sheen::before, .gs-wrap .ov-rank, .ov-cols.gs-shake { animation: none; } }
 .main .menu-buttons .btn { isolation: isolate; }   /* (0.76: the blood stays inside the button's own layer, under the other windows) */
 .up-cards .up-card > .up-icon { width: var(--upic); height: var(--upic); }   /* (0.78: one circle size on every level-up card, the biggest that lets every text fit: --upic / --upk) */
 .up-cards .up-card > .up-icon img { max-width: calc(var(--upic) * .76); max-height: calc(var(--upic) * .76); } .up-cards .up-card > .up-icon .fusion-ic, .up-cards .up-card > .up-icon .sf-ic, .up-cards .up-card > .up-icon .evo-ic { transform: scale(var(--upk)); }
 .credits h3 { font-family: 'Lilita', 'DofusBold', sans-serif; font-size: 22px; color: #8a4a0a; margin: 18px 0 6px; letter-spacing: .4px; } .credits h3:first-of-type { margin-top: 4px; }   /* (0.79: the) */
+.arakne-wander { position: absolute; left: 18px; right: 18px; bottom: 8px; height: 56px; width: calc(100% - 36px); pointer-events: none; z-index: 4; } .credits .window > .content { padding-bottom: 56px; }   /* (1.07: ui_events.js arakneWander, the text scrolls clear of it) */ .credits p b, .credits p i { font-family: inherit; }   /* (1.07: the bold 'Konami Code' took the global b's DofusBold) */
 .credits p { margin: 0 auto 9px; max-width: 900px; } .credits h3 { max-width: 900px; margin-left: auto; margin-right: auto; } .credits p:nth-of-type(2)::first-letter { all: unset; } .credits p.konami { margin-top: 18px; text-align: center; color: #6a3a0a; } body.dark .credits h3, body.dark .credits p.konami { color: #f0b860; }
 /* 0.85 (no content that jumps when a scrollbar comes or goes): the lists that may scroll keep their scrollbar's room */
 .maps, .arm-list, .ach-grid, .stat-grid, .best-list, .best-detail, .shop-grid, .arm-detail, .ttg-grid, .soul-grid, .tmap-list, .lb-body, .merchant-offers, .over .content { scrollbar-gutter: stable; }
@@ -1478,35 +1490,35 @@ body.dark .pk-prize { background: linear-gradient(var(--parch2), var(--parch)); 
 </defs></svg>
 <canvas id="game"></canvas>
 <div id="ui"></div>
-<script src="js/util.js?v=1.06"></script>
-<script src="js/cursor.js?v=1.06"></script>
-<script src="js/assets.js?v=1.06"></script>
-<script src="js/audio.js?v=1.06"></script>
-<script src="js/spells.js?v=1.06"></script>
-<script src="js/game.js?v=1.06"></script>
-<script src="js/extras.js?v=1.06"></script>
-<script src="js/gspells.js?v=1.06"></script>
-<script src="js/croco.js?v=1.06"></script>
-<script src="js/weapons.js?v=1.06"></script>
-<script src="js/events.js?v=1.06"></script>
-<script src="js/bosses.js?v=1.06"></script>
-<script src="js/juice.js?v=1.06"></script>
-<script src="js/sfusions.js?v=1.06"></script>
-<script src="js/render.js?v=1.06"></script>
-<script src="js/pixi_render.js?v=1.06"></script>
-<script src="js/progress.js?v=1.06"></script>
-<script src="js/nav.js?v=1.06"></script>
-<script src="js/ui.js?v=1.06"></script>
-<script src="js/ui_events.js?v=1.06"></script>
-<script src="js/nowel.js?v=1.06"></script>
-<script src="js/ui_armory.js?v=1.06"></script>
-<script src="js/ui_controls.js?v=1.06"></script>
-<script src="js/ui_update.js?v=1.06"></script>
-<script src="js/ui_cloth.js?v=1.06"></script>
-<script src="js/ui_elliot.js?v=1.06"></script>
-<script src="js/daily.js?v=1.06"></script>
-<script src="js/tot.js?v=1.06"></script>
-<script src="js/poker.js?v=1.06"></script>
-<script src="js/main.js?v=1.06"></script>
+<script src="js/util.js?v=1.07"></script>
+<script src="js/cursor.js?v=1.07"></script>
+<script src="js/assets.js?v=1.07"></script>
+<script src="js/audio.js?v=1.07"></script>
+<script src="js/spells.js?v=1.07"></script>
+<script src="js/game.js?v=1.07"></script>
+<script src="js/extras.js?v=1.07"></script>
+<script src="js/gspells.js?v=1.07"></script>
+<script src="js/croco.js?v=1.07"></script>
+<script src="js/weapons.js?v=1.07"></script>
+<script src="js/events.js?v=1.07"></script>
+<script src="js/bosses.js?v=1.07"></script>
+<script src="js/juice.js?v=1.07"></script>
+<script src="js/sfusions.js?v=1.07"></script>
+<script src="js/render.js?v=1.07"></script>
+<script src="js/pixi_render.js?v=1.07"></script>
+<script src="js/progress.js?v=1.07"></script>
+<script src="js/nav.js?v=1.07"></script>
+<script src="js/ui.js?v=1.07"></script>
+<script src="js/ui_events.js?v=1.07"></script>
+<script src="js/nowel.js?v=1.07"></script>
+<script src="js/ui_armory.js?v=1.07"></script>
+<script src="js/ui_controls.js?v=1.07"></script>
+<script src="js/ui_update.js?v=1.07"></script>
+<script src="js/ui_cloth.js?v=1.07"></script>
+<script src="js/ui_elliot.js?v=1.07"></script>
+<script src="js/daily.js?v=1.07"></script>
+<script src="js/tot.js?v=1.07"></script>
+<script src="js/poker.js?v=1.07"></script>
+<script src="js/main.js?v=1.07"></script>
 </body>
 </html>

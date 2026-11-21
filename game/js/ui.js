@@ -916,7 +916,8 @@ const UI = {
     const link = x => x.split(/(https?:\/\/\S+)/).map(u => /^https?:\/\//.test(u) ? h('a', { href: u, target: '_blank', rel: 'noopener' }, u.replace(/^https?:\/\//, '')) : u);   // (0.91: the Discord link, clickable)
     const md = s => s.split('\n').flatMap((ln, i) => [i ? h('br') : null, ...ln.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/).flatMap(x => /^\*\*/.test(x) ? [h('b', {}, x.slice(2, -2))] : /^\*.+\*$/.test(x) ? [h('i', {}, x.slice(1, -1))] : link(x))]).filter(x => x !== null && x !== '');
     const body = (Game.C.credits || []).map(([k, s]) => k === 'h' ? h('h3', {}, ...md(L(s))) : h('p', { class: k === 'k' ? 'konami' : null }, ...md(L(s))));
-    this.rootEl.append(h('div', { class: 'screen credits' }, this.panel(T('credits'), ...body)));
+    const win = this.panel(T('credits'), ...body); win.append(arakneWander());   // (1.07: an Arakne wandering in the frame, ui_events.js)
+    this.rootEl.append(h('div', { class: 'screen credits' }, win));
   },
   // ------------------------------------------------ in-run modals
   pauseMenu() {
@@ -1298,7 +1299,7 @@ const UI = {
     const C = Game.C, S = Store.data, ps = R.ps || {}, earned = R.kamas + (R.bonusKamas || 0);
     const ul = Array.isArray(unlocked) ? unlocked : unlocked ? [unlocked] : [];
     const allBoss = (R.map.bosses || []).every(([, id]) => (R.bossesDown || new Set()).has ? R.bossesDown.has(id) : true);
-    const grade = victory ? (R.hard && allBoss ? 'A' : 'B') : R.time >= 480 ? 'C' : R.time >= 240 ? 'D' : R.time >= 120 ? 'E' : 'F';   // (0.73: A to F, the)
+    const grade = R.rankS ? 'S' : victory ? (R.hard && allBoss ? 'A' : 'B') : R.time >= 480 ? 'C' : R.time >= 240 ? 'D' : R.time >= 120 ? 'E' : 'F';   // (0.73: A to F, the)
     const ach = (C.achievements || []).filter(a => S.ach[a.id] && S.ach[a.id] >= (R._startedAt || Date.now()));
     // the damage by spell / weapon (fused spells and Soifs de Sang in their colours)
     const rows = Object.entries(R.dmgBy || {}).map(([k, v]) => { const d = C.spells[k] || weaponById(C, k); return d && v > 0 ? { d, v, k } : null; }).filter(Boolean).sort((a, b) => b.v - a.v).slice(0, 8);
@@ -1321,7 +1322,9 @@ const UI = {
       ach.length ? h('div', { class: 'ov-ach' }, h('small', null, T('ov_ach')), ...ach.map(a => h('span', { class: 'ov-a' }, iconImg(a.icon, 24), L(a.name)))) : null);
     // (1.02: the medallion's gradients could stay black once its stamp animation ended — GPU raster, nothing repainted it
     // with a gamepad until a click: animationend paints a fresh copy)
-    const stamp = h('div', { class: 'ov-grade g' + grade }, rankMedal(grade), h('small', null, T('ov_grade_' + grade)));
+    // 1.07: rank S (Endless, extras.js): a bigger medallion with rays turning behind it, sparks circling it, a light sweeping it
+    const medal = grade === 'S' ? h('span', { class: 'gs-wrap' }, h('span', { class: 'gs-rays' }), rankMedal(grade), h('span', { class: 'gs-sheen' }), ...Array.from({ length: 10 }, (_, i) => h('i', { style: { '--i': i } }))) : rankMedal(grade);
+    const stamp = h('div', { class: 'ov-grade g' + grade }, medal, h('small', null, T('ov_grade_' + grade)));
     const head = victory ? h('div', { class: 'ov-head win' }, h('div', { class: 'ov-title' }, T('victory_big')))   // (0.98: written in Verdance, verdant; was the banner picture)
       : h('div', { class: 'ov-head lose' }, iconImg('phoenix_statue', 130), h('div', { class: 'ov-title' }, T(R.cancelled ? 'run_cancelled' : 'dead_title')));   // (0.79: given up before 20 s)
     // 0.61: no 'Rejouer' after a victory; the buttons stay at the bottom of the window, its content scrolls
@@ -1329,7 +1332,7 @@ const UI = {
     // 0.98: behind a victory's whole window, rays turning round the title and leaves drifting (under the content: .ov-sky)
     const sky = victory ? h('div', { class: 'ov-sky' }, h('div', { class: 'ov-rays' }), ...Array.from({ length: 16 }, (_, i) => h('i', { class: 'ov-leaf', style: { '--i': i, left: (4 + (i * 37) % 92) + '%', top: (6 + (i * 53) % 86) + '%' } }))) : null;
     const el = h('div', { class: 'window modal over ' + (victory ? 'win' : 'lose') }, sky, h('div', { class: 'title' }, L(R.cls.name) + ' — ' + L(R.map.name)),
-      h('div', { class: 'content' }, victory ? h('div', { class: 'ov-confetti' }, ...Array.from({ length: 36 }, (_, i) => h('i', { style: { '--x': ((i * 37) % 100) + '%', '--c': FW_COLS[i % FW_COLS.length], '--d': ((i % 9) * 0.23) + 's', '--r': (i * 47 % 360) + 'deg' } }))) : null,
+      h('div', { class: 'content' }, victory || grade === 'S' ? h('div', { class: 'ov-confetti' }, ...Array.from({ length: 36 }, (_, i) => h('i', { style: { '--x': ((i * 37) % 100) + '%', '--c': FW_COLS[i % FW_COLS.length], '--d': ((i % 9) * 0.23) + 's', '--r': (i * 47 % 360) + 'deg' } }))) : null,
         head, h('p', { class: 'sub' }, victory ? (R.doom ? T('victory_doom') : T('victory_sub')) : T(R.cancelled ? 'run_cancelled_sub' : 'dead_sub')),
         h('div', { class: 'ov-cols' }, h('div', { class: 'ov-left' }, R.cancelled ? null : stamp, R.newBest && !R.infinite ? h('p', { class: 'unlock ov-record' }, '🏅 ' + T('new_record') + ' ' + fmtTime(R.time)) : null, stats), h('div', { class: 'ov-right' }, rows.length ? h('h3', null, T('ov_dmg')) : null, bars, loot))),
       h('div', { class: 'start-row ov-buttons' }, replay, btn(T('main_menu'), () => { this.closeModal(); Game.toMenu(); }, victory ? 'orange big' : R.abandoned ? 'big sel' : 'big')));
@@ -1342,7 +1345,8 @@ const UI = {
       const k = Math.min(1, (performance.now() - t0) / 1300), e = 1 - Math.pow(1 - k, 3);
       for (const n of nums) n.textContent = n._f(Math.round(+n.dataset.v * e));
       if (k < 1) { if (performance.now() - lastTick > 90) { lastTick = performance.now(); Audio2.blip('click'); } requestAnimationFrame(step); }
-      else { Audio2.blip('coin'); setTimeout(() => { if (!el.isConnected || R.cancelled) return; stamp.classList.add('on'); stamp.addEventListener('animationend', () => { const m = $('.ov-rank', stamp); if (m) m.replaceWith(m.cloneNode(true)); }, { once: true }); Audio2.play('impact_lourd', 0.7, grade === 'A' ? 0.85 : 1); if (grade === 'A' || grade === 'B') Audio2.play('stars', 0.7); }, 250); }
+      else { Audio2.blip('coin'); setTimeout(() => { if (!el.isConnected || R.cancelled) return; stamp.classList.add('on'); stamp.addEventListener('animationend', () => { const m = $('.ov-rank', stamp); if (m) m.replaceWith(m.cloneNode(true)); }, { once: true }); Audio2.play('impact_lourd', 0.7, grade === 'A' || grade === 'S' ? 0.85 : 1); if ('SAB'.includes(grade)) Audio2.play('stars', 0.7);
+        if (grade === 'S') { Audio2.jingle('rank_s', { fx: true }); const c = $('.ov-cols', el); if (c) c.classList.add('gs-shake'); } }, 250); }
     };
     requestAnimationFrame(step);
   },
@@ -1724,7 +1728,7 @@ function fitWidth(el, min = 11) {
 // 0.85 (the grade medallions were blurry): the end screen's grade drawn as a vector medallion in the look of the
 // original pictures (assets/ui/rank_<L>.webp, kept as the reference): a segmented gold ring with a dark rim, a coloured
 // disc with brushed shading, the cream letter in Lilita with a thick dark outline and a carved shadow. Sharp at any size.
-const RANK_COL = { A: ['#ffd25a', '#e39a14', '#8a5208'], B: ['#5aa6e8', '#2a68b4', '#123a70'], C: ['#6ccc4a', '#2f8a2a', '#145018'], D: ['#a46ad8', '#6a2f9a', '#381454'], E: ['#ec6a52', '#b8322a', '#661410'], F: ['#8a8a8a', '#4e4e4e', '#262626'] };
+const RANK_COL = { S: ['#ffb0f4', '#d24ae8', '#5a1080'], A: ['#ffd25a', '#e39a14', '#8a5208'], B: ['#5aa6e8', '#2a68b4', '#123a70'], C: ['#6ccc4a', '#2f8a2a', '#145018'], D: ['#a46ad8', '#6a2f9a', '#381454'], E: ['#ec6a52', '#b8322a', '#661410'], F: ['#8a8a8a', '#4e4e4e', '#262626'] };
 function rankMedal(g) {
   const c = RANK_COL[g] || RANK_COL.F, id = 'rk' + g + Math.floor(Math.random() * 1e6);
   let notches = ''; for (let i = 0; i < 7; i++) { const a = (i / 7) * Math.PI * 2 + 0.4, x1 = 50 + Math.cos(a) * 38.5, y1 = 50 + Math.sin(a) * 38.5, x2 = 50 + Math.cos(a) * 46.5, y2 = 50 + Math.sin(a) * 46.5; notches += `<line x1='${x1.toFixed(1)}' y1='${y1.toFixed(1)}' x2='${x2.toFixed(1)}' y2='${y2.toFixed(1)}' stroke='#7a4a0c' stroke-width='1.3' opacity='.75'/>`; }

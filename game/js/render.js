@@ -680,8 +680,9 @@ Run.prototype.draw = function (ctx) {
     nat('pk' + p.kind, ctx => drawPickup(ctx, p, t));
   }
   // 1.03: objects on the ground behind the scenery, as the characters (gems and kamas excepted: too many, too small)
+  // (1.07.1: a Dofus always, past the cap: in a big wave a temporary Dofus under a tree stayed hidden)
   { let n = 0; const nMax = Game.lowFx ? 4 : 10;
-    for (const p of this.pickups) { if (n >= nMax || p.kind === 'gem' || p.kind === 'kama' || !inView(p.x, p.y, 20)) continue; const g = p.kind === 'coffreit' ? 1.6 : 1; if (this.occludeAt(ctx, px, p.x - 50 * g, p.y - 100 * g, p.x + 50 * g, p.y + 20, p.y, c => drawPickup(c, p, t))) n++; } }
+    for (const p of this.pickups) { if ((n >= nMax && p.kind !== 'dofus' && p.kind !== 'tdofus') || p.kind === 'gem' || p.kind === 'kama' || !inView(p.x, p.y, 20)) continue; const g = p.kind === 'coffreit' ? 1.6 : 1; if (this.occludeAt(ctx, px, p.x - 50 * g, p.y - 100 * g, p.x + 50 * g, p.y + 20, p.y, c => drawPickup(c, p, t))) n++; } }
   // Roublard walls of fire between bombs
   if (this.walls.length) nat(null, ctx => { for (const [A, B] of this.walls) drawFireWall(ctx, A, B, t); });
   // entities sorted by y
@@ -714,6 +715,8 @@ Run.prototype.draw = function (ctx) {
     if (px) PX.mob(e, t, frozen); else drawMob(ctx, e, t, frozen);
   }
   nat(null, ctx => {
+  // 1.07: the summons' life, a bar a little smaller than an elite's (36 x 4, orange), in cyan (not a kamikaze with 1 HP)
+  for (const s of this.summons) { const mx = s.spell && s.spell.p.hp; if (!(mx > 1) || s.hp <= 0) continue; const w = 28; ctx.fillStyle = '#000a'; ctx.fillRect(s.x - w / 2, s.y + 6, w, 3); ctx.fillStyle = '#4fd8ff'; ctx.fillRect(s.x - w / 2, s.y + 6, w * clamp(s.hp / mx, 0, 1), 3); }
   // the Enutrof merchant (random event): standing, with a sign
   if (this.merchant && this.merchantSprite && this.merchantSprite.ready) {
     const M = this.merchant; this.merchantSprite.draw(ctx, 'staticR', t, M.x, M.y, ES, M.x > P.x, { loop: true });
@@ -722,9 +725,9 @@ Run.prototype.draw = function (ctx) {
   }
   this.drawPokerNpc(ctx, t);   // (1.03: the ??? NPC, poker.js)
   // a dropped Dofus: a big animated red arrow above it, drawn over the monsters
-  for (const q of this.pickups) if (q.kind === 'dofus') {
+  for (const q of this.pickups) if (q.kind === 'dofus' || q.kind === 'tdofus') {   // (1.07: a temporary Dofus's arrow is blue)
     const by = q.y - 62 - Math.abs(Math.sin(t * 5)) * 14;
-    ctx.save(); ctx.translate(q.x, by); ctx.fillStyle = '#ff2a2a'; ctx.strokeStyle = '#3a0000'; ctx.lineWidth = 3; ctx.lineJoin = 'round';
+    ctx.save(); ctx.translate(q.x, by); const tq = q.kind === 'tdofus'; ctx.fillStyle = tq ? '#2a9dff' : '#ff2a2a'; ctx.strokeStyle = tq ? '#00183a' : '#3a0000'; ctx.lineWidth = 3; ctx.lineJoin = 'round';
     ctx.beginPath(); ctx.moveTo(-9, -26); ctx.lineTo(9, -26); ctx.lineTo(9, -6); ctx.lineTo(19, -6); ctx.lineTo(0, 14); ctx.lineTo(-19, -6); ctx.lineTo(-9, -6); ctx.closePath(); ctx.stroke(); ctx.fill();
     ctx.restore();
   }
@@ -1081,6 +1084,8 @@ function drawPickup(ctx, p, t) {
     case 'relic': { const r = Game.C.relics.find(r => r.id === p.v); glow(r && r.rare ? 'rgba(180,100,255,0.85)' : 'rgba(255,200,60,0.85)', 34 + Math.sin(t * 6) * 4);   // (0.99: a rare one glows violet)
       if (r) IC.drawFit(ctx, r.icon, p.x, p.y - 16 + bob, 44);
       for (let i = 0; i < 4; i++) { const a = t * 2.5 + i * TAU / 4; IC.draw(ctx, 'Star', p.x + Math.cos(a) * 30, p.y - 18 + Math.sin(a) * 10 + bob, 0.25); } } break;
+    case 'tdofus': { const d = (Game.C.tdofus || []).find(o => o.id === p.v); glow('rgba(160,230,255,0.8)', 32 + Math.sin(t * 6) * 4);   // (1.07: a temporary Dofus: its egg in a turning dashed ring)
+      if (d) IC.drawFit(ctx, 'dofus_hd_' + d.icon, p.x, p.y - 16 + bob, 40); tempRing(ctx, p.x, p.y - 16 + bob, 26, t); } break;
     case 'plumec': glow('rgba(190,140,255,0.8)', 30); IC.drawFit(ctx, 'it_53_362', p.x, p.y - 14 + bob, 40); break;
     case 'fee': glow('rgba(255,120,220,0.75)', 28); IC.drawFit(ctx, 'it_74_30', p.x, p.y - 15 + bob, 46); break;
     case 'houx': glow('rgba(120,230,140,0.7)', 28); IC.drawFit(ctx, Game.C.houx.item, p.x, p.y - 15 + bob, 44); break;   // 0.97: the Bague Houx: one more reroll
@@ -1563,6 +1568,12 @@ function drawCombo(ctx, R, W, u) {
     ctx.save(); ctx.globalAlpha = (1 - ee / 0.9) * 0.9; outlinedText(ctx, '×' + E.n, x, y + ee * 26 * u, '#b8a67e', Math.round(21 * u * (1 - 0.2 * ee)), 'right'); ctx.restore();
   }
 }
+// 1.07: what marks a temporary Dofus (on the ground and in the HUD's column): a pale blue dashed ring turning round it,
+// breathing (strokes: PixiJS draws them itself)
+function tempRing(ctx, x, y, r, t, u = 1) {
+  ctx.save(); ctx.globalAlpha *= 0.65 + 0.35 * Math.sin(t * 4); ctx.strokeStyle = '#bdf0ff'; ctx.lineWidth = 2 * u; ctx.setLineDash([5 * u, 4 * u]); ctx.lineDashOffset = -t * 18 * u;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.stroke(); ctx.restore();
+}
 function hexRgb(h) { const n = parseInt(h.slice(1), 16); return `${n >> 16 & 255},${n >> 8 & 255},${n & 255}`; }
 // 0.98.3: a thrown shovel (spell `coins`), lost among the effects: a halo of gold under it and kamas turning round it, on
 // a ring wider than the shovel so none hides it; its own wake of gold is in game.js. The sprite is drawn bigger, a gold rim round it
@@ -1592,16 +1603,18 @@ function drawProj(ctx, p, t) {
   }
   if (p.drawIcon) { // spinning object (rolling shovel, thrown hatchet)
     if (p.col) { const r = p.size * 2.2; ctx.drawImage(RCache.glow(p.col), -r, -r, r * 2, r * 2); }   // (0.91: the Otomaï's flask glows)
-    ctx.rotate(p.rot || t * 10); Game.icons.drawFit(ctx, p.drawIcon, 0, 0, p.size * (p.coins ? 3.4 : 2.6)); ctx.restore(); return;
+    ctx.rotate(p.rot || t * 10); Game.icons.drawFit(ctx, p.drawIcon, 0, 0, p.size * (p.coins ? 3.4 : 2.6) * (p.iconK || 1)); ctx.restore(); return;   // (1.07: iconK = the picture's size alone, the hit box stays p.size)
   }
   if (p.fireball || (p.col && !p.arrow && !(fx && fx.anims.move))) { // coloured magic orb
     const r = p.size * 1.8; ctx.drawImage(RCache.glow(p.col), -r, -r, r * 2, r * 2); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(0, 0, p.size * 0.45, 0, TAU); ctx.fill(); ctx.restore(); return;
   }
-  if (p.spell.def.id === 'aiguille') { // Xélor's needle: a golden clock hand with a blue time trail, along its path
+  if (p.spell.def.id === 'aiguille' || p.spell.def.id === 'fu_xel_aiguille') { // Xélor's needle: a clock hand with a blue time trail, along its path
     ctx.rotate(ang); const L = 34, g = ctx.createLinearGradient(-L * 1.6, 0, 0, 0);
     g.addColorStop(0, 'rgba(120,200,255,0)'); g.addColorStop(1, 'rgba(140,215,255,0.75)');
     ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(-L * 1.6, 0); ctx.lineTo(-4, -5); ctx.lineTo(-4, 5); ctx.closePath(); ctx.fill();
     const r = 15; ctx.drawImage(RCache.glow('rgba(120,200,255,0.55)'), -r, -r, r * 2, r * 2);
+    const N = FxSheets.get('aig1154'), nm = N && N.anims.move;   // (1.07: the client's Aiguille, sprite 1154 seen from above — build_fx060 needle —, drawn pointing down-right)
+    if (nm) { ctx.rotate(-nm.a0); N.draw(ctx, nm.f[0], 0, 0, 1); ctx.restore(); return; }
     ctx.fillStyle = '#ffd86a'; ctx.strokeStyle = '#5a3a08'; ctx.lineWidth = 1.6;
     ctx.beginPath(); ctx.moveTo(L * 0.55, 0); ctx.lineTo(0, -4.5); ctx.lineTo(-L * 0.45, -1.6); ctx.lineTo(-L * 0.45, 1.6); ctx.lineTo(0, 4.5); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.fillStyle = '#fff6c8'; ctx.beginPath(); ctx.moveTo(L * 0.5, 0); ctx.lineTo(0, -1.6); ctx.lineTo(0, 1.6); ctx.closePath(); ctx.fill();
@@ -1884,9 +1897,9 @@ function drawHud(ctx, R) {
     outlinedText(ctx, String(lv), bx + ps - 2 * u, y + ps - 2 * u, lv >= p.max ? '#ffd24a' : '#fff', 9 * u, 'right');
   }
   // dofus eggs: a column on the right side, under the kamas
-  { const col = R.dofus.map(d => 'dofus_hd_' + d.icon); if (Store.data.dofawa && Game.C.dofawa) col.push(Game.C.dofawa.icon); if (Store.data.slip && Game.C.slip) col.push(Game.C.slip.icon);   // (1.05: the Dofawa and the Slip de Trool with them)
+  { const col = R.dofus.map(d => 'dofus_hd_' + d.icon); if (R.tdofus) col.push('dofus_hd_' + R.tdofus.icon); if (Store.data.dofawa && Game.C.dofawa) col.push(Game.C.dofawa.icon); if (Store.data.slip && Game.C.slip) col.push(Game.C.slip.icon);   // (1.05: the Dofawa and the Slip de Trool with them)
     if (col.length) { const step = 34 * u; let dy = H / 2 - (col.length * step) / 2 + step / 2;
-      for (const ic of col) { const x = W - 24 * u; ctx.drawImage(RCache.glow('rgba(255,230,150,0.45)'), x - 19 * u, dy - 19 * u, 38 * u, 38 * u); IC.drawFit(ctx, ic, x, dy, 28 * u); dy += step; } } }
+      for (const ic of col) { const x = W - 24 * u, tmp = R.tdofus && ic === 'dofus_hd_' + R.tdofus.icon; ctx.drawImage(RCache.glow(tmp ? 'rgba(150,225,255,0.55)' : 'rgba(255,230,150,0.45)'), x - 19 * u, dy - 19 * u, 38 * u, 38 * u); IC.drawFit(ctx, ic, x, dy, 28 * u); if (tmp) tempRing(ctx, x, dy, 17 * u, R.time, u); dy += step; } } }
   // 0.38: a relic just picked up: it rises in golden rays, with its bonus written in a frame.
   // (0.95: the caption hid the character — the relic in the middle, its message above it, smaller, lighter, shorter):
   // the relic springs out of the character and settles over its head (cy, 112 u above the screen's middle), the frame
@@ -1897,21 +1910,22 @@ function drawHud(ctx, R) {
     const e1 = 1 - Math.pow(1 - Math.min(1, k / 0.42), 3), out = Math.max(0, k - (D - 0.4)) / 0.4 * 10 * u;   // e1: the rise; out: a small lift as it fades
     const maxW = Math.min(W * 0.9, 600 * u) - 44 * u, f1 = 14 * u; let f2 = 20 * u; ctx.font = BAN_FONT(f2); const nw = ctx.measureText(L(r.name)).width; if (nw > maxW) f2 *= maxW / nw;   // (0.98.1: its name in the chat's lettering, BAN_FONT)
     const f3 = 15 * u, F3 = px_ => `${px_}px Lilita, DofusBold, sans-serif`; ctx.font = F3(f3); const dl = wrapLines(ctx, L(r.desc), maxW), d3 = f3 * 1.22;   // (0.98: the bonus in Lilita: rounder, easier to read than the announcements' font)
-    ctx.font = BAN_FONT(f1); const w1 = ctx.measureText(T(r.rare ? 'relic_rare' : 'relic_got')).width; ctx.font = BAN_FONT(f2); const w2 = ctx.measureText(L(r.name)).width; ctx.font = F3(f3);
+    ctx.font = BAN_FONT(f1); const td = R.relicShow.td, word = T(td ? 'td_word' : r.rare ? 'relic_rare' : 'relic_got'), w1 = ctx.measureText(word).width; ctx.font = BAN_FONT(f2); const w2 = ctx.measureText(L(r.name)).width; ctx.font = F3(f3);   // (1.07: td = a temporary Dofus, poker.js gotTDofus: blue, its ring)
     const bw = Math.min(W * 0.94, Math.max(w1, w2, ...dl.map(l => ctx.measureText(l).width)) + 44 * u), gap = 5 * u, h1 = f1 * 1.15, h2 = f2 * 1.2, h3 = dl.length * d3, pad = 9 * u, bh = pad * 2 + h1 + h2 + gap + h3;
     const top = Math.max(H / 2 - 112 * u - 40 * u - bh, R.bannerMsg && R._banBot ? R._banBot + 6 * u : 0, 8 * u), cy = top + bh + 40 * u - out;
     const py0 = (R.player.y - 30 - R.cam.y) * Game.zoom + H / 2, ry = lerp(py0, cy, e1);   // the relic's height: from the character to its place
     ctx.save(); ctx.globalAlpha = a * e1; ctx.translate(cx, ry); ctx.rotate(k * 0.6);
-    for (let i = 0; i < 12; i++) { ctx.rotate(TAU / 12); ctx.fillStyle = i % 2 ? 'rgba(255,230,130,0.26)' : 'rgba(170,240,90,0.26)'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-13 * u, -62 * u); ctx.lineTo(13 * u, -62 * u); ctx.closePath(); ctx.fill(); }
+    for (let i = 0; i < 12; i++) { ctx.rotate(TAU / 12); ctx.fillStyle = td ? (i % 2 ? 'rgba(190,240,255,0.3)' : 'rgba(70,160,255,0.3)') : i % 2 ? 'rgba(255,230,130,0.26)' : 'rgba(170,240,90,0.26)'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-13 * u, -62 * u); ctx.lineTo(13 * u, -62 * u); ctx.closePath(); ctx.fill(); }
     ctx.restore(); ctx.save(); ctx.globalAlpha = a;
-    ctx.drawImage(RCache.glow('rgba(255,230,140,0.85)'), cx - 50 * u, ry - 50 * u, 100 * u, 100 * u);
+    ctx.drawImage(RCache.glow(td ? 'rgba(140,210,255,0.85)' : 'rgba(255,230,140,0.85)'), cx - 50 * u, ry - 50 * u, 100 * u, 100 * u);
     IC.drawFit(ctx, IC.get('relic_hd_' + r.icon) ? 'relic_hd_' + r.icon : r.icon, cx, ry - Math.sin(Math.min(1, k * 2) * Math.PI) * 6 * u, 58 * u * sc);   // (0.61: its 400-px picture, build_iconhd091 relics)
+    if (td) tempRing(ctx, cx, ry - Math.sin(Math.min(1, k * 2) * Math.PI) * 6 * u, 40 * u * sc, performance.now() / 1000, u);
     // (0.95: 'RELIQUE' over the relic's name, not beside it, all centred in a frame): three blocks in a banner's
     // frame — the word, the name (bigger, shrunk to fit), the bonus (wrapped), all in the announcements' font —, each centred by its ink
     const e2 = 1 - Math.pow(1 - Math.min(1, k / 0.3), 2), bx = cx - bw / 2, byy = top - (1 - e2) * 12 * u - out;
     ctx.globalAlpha = a * e2 * 0.6; annPanel(ctx, bx, byy, bw, bh, u, performance.now() / 1000, 'relic'); ctx.globalAlpha = a * e2;   // (see-through, not its sparks)
     ctx.textAlign = 'center'; let yy = byy + pad;
-    annLine(ctx, T(r.rare ? 'relic_rare' : 'relic_got'), cx, yy + h1 / 2 + annInk('H', f1, 700, BAN_FONT(100)).dy, f1, ANN.plate, BAN_FONT); yy += h1;   // (0.98.2: the victory's gold, the chat's lettering)
+    annLine(ctx, word, cx, yy + h1 / 2 + annInk('H', f1, 700, BAN_FONT(100)).dy, f1, ANN.plate, BAN_FONT); yy += h1;   // (0.98.2: the victory's gold, the chat's lettering)
     { const ny = yy + h2 / 2 + annInk('H', f2, 700, BAN_FONT(100)).dy;
       annLine(ctx, L(r.name), cx, ny, f2, ANN.plate, BAN_FONT); } yy += h2 + gap;
     const i3 = annInk('H', f3, 700, F3(100)).dy; ctx.font = F3(f3); ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = Math.max(2, f3 * 0.24); ctx.strokeStyle = 'rgba(30,8,0,0.92)';
@@ -2024,8 +2038,8 @@ function drawHud(ctx, R) {
     const k = mw / R.world.w;
     ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 1; ctx.strokeRect(mx + (R.cam.x - Game.viewW / 2) * k, my + (R.cam.y - Game.viewH / 2) * k, Game.viewW * k, Game.viewH * k);
     for (const b of R.bossAlive) { ctx.fillStyle = '#ff3030'; ctx.beginPath(); ctx.arc(mx + b.x * k, my + b.y * k, 4 * u, 0, TAU); ctx.fill(); }
-    for (const q of R.pickups) if ((q.kind === 'chest' && q.boss) || q.kind === 'dofus' || (q.kind === 'relic' && q.endless)) {   // (0.99: an Endless relic too)   // the boss chests and dropped Dofus, blinking
-      const bl = 0.6 + 0.4 * Math.sin(R.time * 8); ctx.fillStyle = q.kind === 'dofus' ? `rgba(255,60,60,${bl})` : `rgba(255,200,40,${bl})`;
+    for (const q of R.pickups) if ((q.kind === 'chest' && q.boss) || q.kind === 'dofus' || q.kind === 'tdofus' || (q.kind === 'relic' && q.endless)) {   // (0.99: an Endless relic too)   // the boss chests and dropped Dofus, blinking
+      const bl = 0.6 + 0.4 * Math.sin(R.time * 8); ctx.fillStyle = q.kind === 'dofus' ? `rgba(255,60,60,${bl})` : q.kind === 'tdofus' ? `rgba(120,220,255,${bl})` : `rgba(255,200,40,${bl})`;
       ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(mx + q.x * k, my + q.y * k, 4.5 * u, 0, TAU); ctx.fill(); ctx.stroke();
     }
     for (const q of R.pickups) if (q.kind === 'booster' || q.kind === 'relic' || q.kind === 'gladia') {   // 0.37: the TTG booster (green) and the relics (orange), on the minimap too
@@ -2174,7 +2188,14 @@ function drawChaosBall(ctx, p, t, ang) {
     const L = s * (back ? 1.55 : 1.0) * fl, W = s * (back ? 0.46 : 0.55) * fl;
     ctx.save(); ctx.rotate(an); ctx.globalAlpha = back ? 0.7 : 0.8; ctx.drawImage(i % 4 < 2 ? GL : GD, s * 0.2, -W / 2, L, W); ctx.restore();
   }
-  const B = s * 1.1; ctx.globalAlpha = 0.95; ctx.drawImage(GL, -B, -B, B * 2, B * 2);   // the blaze
+  const B = s * 1.1, sh = FxSheets.get(2055), mv = sh && sh.anims.move;
+  if (mv) {   // (1.07: the client's chaos sphere, clip 2055 — build_fx060: its glass ball still, its swirl turning inside it)
+    const k = B / (mv.r / sh.zoom); ctx.globalAlpha = 1; sh.draw(ctx, mv.f[0], 0, 0, k);   // (mv.r: the sphere's radius in the sheet)
+    ctx.save(); ctx.rotate(e * 5); sh.draw(ctx, mv.f[1], 0, 0, k); ctx.restore();
+    ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.35 + 0.15 * Math.sin(e * 9); ctx.drawImage(RCache.glow('rgba(214,170,255,0.9)'), -B * 0.7, -B * 0.7, B * 1.4, B * 1.4);
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; return;
+  }
+  ctx.globalAlpha = 0.95; ctx.drawImage(GL, -B, -B, B * 2, B * 2);   // the blaze
   ctx.globalAlpha = 0.9; ctx.drawImage(GD, -B * 0.8, -B * 0.8, B * 1.6, B * 1.6);
   const V = s * 0.6 * (1 + 0.05 * Math.sin(e * 17)); ctx.globalAlpha = 0.9; ctx.drawImage(RCache.glow('rgba(20,0,40,0.98)'), -V, -V, V * 2, V * 2);   // the void inside
   ctx.globalAlpha = 0.6 + 0.25 * Math.sin(e * 9); ctx.strokeStyle = '#e6c6ff'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(0, 0, s * 0.48, 0, TAU); ctx.stroke();   // its bright rim
@@ -2313,7 +2334,7 @@ function drawFireWall(ctx, A, B, t) {
 }
 // screen-edge arrows (in-game arrow textures) pointing at off-screen special monsters and items
 const ARROW_SPECIAL_MOBS = new Set(['bandit_manchot', 'wabbit_gm', 'tiwabbit_kiafin', 'tofu_mutant', 'coffre_anime', 'jorbak']);
-const ARROW_ITEMS = new Set(['coffreit', 'chest', 'dofus', 'power', 'fee', 'sablier', 'rappel', 'kamaboost', 'booster', 'tmap', 'relic', 'nowelgift', 'trool', 'gladia', 'manuel', 'houx']);   // (0.92: the Manuel too, the Maîtres Corbacs' rewards fall anywhere)
+const ARROW_ITEMS = new Set(['coffreit', 'chest', 'dofus', 'tdofus', 'power', 'fee', 'sablier', 'rappel', 'kamaboost', 'booster', 'tmap', 'relic', 'nowelgift', 'trool', 'gladia', 'manuel', 'houx']);   // (0.92: the Manuel too, the Maîtres Corbacs' rewards fall anywhere)
 function drawEdgeArrows(ctx, R, W, H, u) {
   const IC = Game.icons, z = Game.zoom;
   const one = (wx, wy, icon, scale, base, col, pulse) => {
@@ -2336,7 +2357,7 @@ function drawEdgeArrows(ctx, R, W, H, u) {
   }
   if (R.merchant) one(R.merchant.x, R.merchant.y - 40, ARROW_SMALL, 1.3, ARROW_SMALL_BASE, '#ffd24a', true);
   if (R.pokerNpc) one(R.pokerNpc.x, R.pokerNpc.y - 40, ARROW_SMALL, 1.3, ARROW_SMALL_BASE, '#c9a0ff', true);
-  for (const p of R.pickups) if (ARROW_ITEMS.has(p.kind)) one(p.x, p.y, ARROW_SMALL, 1.1, ARROW_SMALL_BASE, '#ffe9a8', p.kind === 'dofus');
+  for (const p of R.pickups) if (ARROW_ITEMS.has(p.kind)) one(p.x, p.y, ARROW_SMALL, 1.1, ARROW_SMALL_BASE, '#ffe9a8', p.kind === 'dofus' || p.kind === 'tdofus');   // (1.07.1: the temporary Dofus too: off screen it had no arrow, players lost it)
 }
 
 // Féca glyph: lit cells on the ground, like the glyphs of the client

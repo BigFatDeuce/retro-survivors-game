@@ -9,7 +9,7 @@
 Object.assign(Run.prototype, {
   updatePoker() {
     const PK = this.C.poker; if (!PK) return;
-    if (!this.pokerDone && this.time >= PK.t && !this.over && !this.portalRun && !this.map.noMerchant && ((Store.data.unlocked || []).includes(PK.fromMap))) { this.pokerDone = true; this.spawnPoker(); }
+    if (!this.pokerDone && this.time >= PK.t && !this.over && !this.portalRun && !this.map.noMerchant && ((Store.data.unlocked || []).includes(PK.fromMap))) { this.pokerDone = true; if (Math.random() < (PK.chance === undefined ? 1 : PK.chance)) this.spawnPoker(); else this.dropTDofus(); }   // (1.07: half the runs; the others, a temporary Dofus)
     const N = this.pokerNpc, P = this.player; if (!N) return;
     const d = Math.hypot(P.x - N.x, P.y - N.y);
     if (this.time > N.until && !N.open) { this.fxAt(1100, N.x, N.y, {}); this.pokerNpc = null; return; }
@@ -22,6 +22,28 @@ Object.assign(Run.prototype, {
     this.pokerNpc = { x, y, until: this.time + PK.stay, open: false };
     MobSheets.load(PK.sprite).then(sh => { this.pokerSheet = sh; });
     this.announce(T('pk_ev_t'), T('pk_ev'), '#c9a0ff'); Audio2.sfx('EVENT', 0.6);
+  },
+  // 1.07: a temporary Dofus (C.tdofus, one at random) where the ??? stranger did not come: somewhere dry, far from the
+  // character, on the minimap; picked up, its bonus lasts the run (Run.tdofus: recompute, damagePlayer, the HUD's column)
+  dropTDofus() {
+    const L_ = this.C.tdofus; if (!L_ || !L_.length) return;
+    const d = pick(L_), b = this.bounds, P = this.player; let x, y, n = 0;
+    do { x = rand(b.x0 + 80, b.x1 - 80); y = rand(b.y0 + 80, b.y1 - 80); } while (++n < 40 && (Math.hypot(x - P.x, y - P.y) < 500 || (this.isWater && this.isWater(x, y))));
+    this.dropPickup('tdofus', x, y, d.id); this.announce(L(d.name), T('td_here'), d.color); Audio2.sfx('EVENT', 0.6);
+  },
+  gotTDofus(id) {
+    const d = (this.C.tdofus || []).find(o => o.id === id); if (!d || this.tdofus) return;
+    this.tdofus = d; this.recompute(); this.chat(T('td_got', { n: L(d.name) }) + ' ' + L(d.desc), d.color, 28);
+    // shown like a relic (render.js relicShow), in blue with the temporary ring: its own rays, word and burst
+    Audio2.fanfare(0.8); Audio2.relicSfx(); this.shake(4); this.slowMo(1.0, 0.45); this.flash('150,215,255', 0.35, 0.3);
+    this.relicShow = { r: { name: d.name, desc: d.desc, icon: 'dofus_hd_' + d.icon }, td: 1, t0: performance.now(), sp: this.bossFight() ? 2 : 1 };
+    const P = this.player; for (let k = 0; k < 3; k++) this.rings.push({ x: P.x, y: P.y - 30, r0: 10, r1: 90 + k * 50, t0: this.time + k * 0.12, dur: 0.6, color: '#7fd0ff' });
+    for (let k = 0; k < 40; k++) { const a = rand(TAU), v = rand(120, 320); this.particles.push({ x: P.x, y: P.y - 40, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 80, t: 0, life: rand(0.6, 1.1), s: rand(3, 6), c: pick(['#bdf0ff', '#7fd0ff', '#ffffff']) }); }
+  },
+  // the Jyfus: hit, the character lets out a cloud of poison (once a cd at most)
+  tdofusHit() {
+    const H = this.tdofus && this.tdofus.poisonHit, P = this.player; if (!H || this.time - (this._jyT || -9) < H.cd) return;
+    this._jyT = this.time; this.poisonCloud(P.x, P.y, H.r * this.stats.area, H.dps, H.dur, 0.6, { def: { id: 'jyfus' }, p: {} });   // (the Piège Empoisonné's gas colour: the Jyfus's light green vanished on grass)
   },
   // drawn with the merchant (render.js): standing, a violet '???' over his hood
   drawPokerNpc(ctx, t) {

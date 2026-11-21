@@ -61,9 +61,14 @@ Object.assign(Run.prototype, {
     this.boosterSpot = pick(corners); this.boosterAt = rand(180, 360);
   },
   // 0.38: the pack's look: every design comes once before any comes again (a shuffled bag kept in the profile)
+  // 1.07: a pack whose every card is owned is no longer dealt, until every pack is complete (then they all come back)
   nextPack() {
-    const n = SPR.boosters.n, S = Store.data;
-    if (!Array.isArray(S.packBag) || !S.packBag.length || S.packBag.some(i => i >= n)) { S.packBag = shuffle([...Array(n).keys()]); if (S.packBag[0] === S.lastPack) S.packBag.push(S.packBag.shift()); }
+    const n = SPR.boosters.n, S = Store.data, own = S.ttg || {}, all = [...Array(n).keys()];
+    const done = i => { const nm = SPR.boosters.names[i], rk = /^r\d$/.test(nm) ? +nm[1] : -1; return this.C.ttg.cards.every(c => (rk >= 0 ? (c.r || 0) !== rk : c.fam !== nm) || own[c.id] > 0); };
+    const open = all.filter(i => !done(i)), deal = open.length ? open : all;
+    if (!Array.isArray(S.packBag) || S.packBag.some(i => i >= n)) S.packBag = [];
+    S.packBag = S.packBag.filter(i => deal.includes(i));
+    if (!S.packBag.length) { S.packBag = shuffle(deal.slice()); if (S.packBag.length > 1 && S.packBag[0] === S.lastPack) S.packBag.push(S.packBag.shift()); }
     const i = S.packBag.shift(); S.lastPack = i; Store.save(); return i;
   },
   dropBooster() {

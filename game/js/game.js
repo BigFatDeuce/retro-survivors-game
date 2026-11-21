@@ -435,6 +435,7 @@ class Run {
       st.maxHp *= 1 + a; st.might += a; st.speed += a * 0.5; st.area += a; st.luck += a; st.growth += a; st.armor += a * 10; st.cooldown *= 1 - a * 0.5;
       for (const k in bo) if (k !== 'all') { if (k === 'maxhp') st.maxHp *= 1 + bo[k]; else if (k === 'cooldown') st.cooldown *= 1 + bo[k]; else st[k] = (st[k] || 0) + bo[k]; }
     }
+    if (this.tdofus) for (const k in this.tdofus.bonus) st[k] = (st[k] || 0) + this.tdofus.bonus[k];   // (1.07: a temporary Dofus, poker.js)
     this.relicStats(st); this.fusionStats(st);
     if (Store.data && Store.data.dofawa && this.C.dofawa) st.maxHp += this.C.dofawa.hp;   // the Dofawa (every achievement)
     if (Store.data && Store.data.slip && this.C.slip) st.maxHp += this.C.slip.hp;   // (1.05: the Slip de Trool, every TTG card)
@@ -620,11 +621,11 @@ class Run {
   // 0.84: while a boss fights (its bar at the top of the screen) no message in the middle of the screen: it goes
   // to the chat only (chat() drops the caller's own copy). force = the boss's own arrival.
   bossFight() { return this.bossAlive.some(b => !b.dying && b.hp > 0); }
-  banner(text, color, center, force, kind, o) { if (!force && this.bossFight()) { if (!(o && o.said)) this.chat(text, color); return; } this.bannerMsg = { text, color, t: 0, center: !!center, kind, pre: o && o.pre }; }   // (kind 'boss': its frame, render.js annPanel)
+  banner(text, color, center, force, kind, o) { const B = this.bannerMsg; if ((!force && this.bossFight()) || (B && B.hold > B.t)) { if (!(o && o.said)) this.chat(text, color); return; } this.bannerMsg = { text, color, t: 0, center: !!center, kind, pre: o && o.pre, hold: o && o.hold }; }   // (1.07: hold = seconds no other banner replaces it)   // (kind 'boss': its frame, render.js annPanel)
   // 0.98.1: an announcement — its name alone in the middle of the screen (banner), what it does in the chat, twice as long
   // as a line (28 s); o: the banner's center / force / kind, pre = [text, colour] before the name on its line (a critical
   // summon's red word)
-  announce(title, text, color, o = {}) { this.chat(text, color, 28); this.banner(title, color, o.center, o.force, o.kind, { pre: o.pre, said: 1 }); }
+  announce(title, text, color, o = {}) { this.chat(text, color, 28); this.banner(title, color, o.center, o.force, o.kind, { pre: o.pre, said: 1, hold: o.hold }); }
   seen(id) { const s = Store.data.seen; if (!s[id]) { s[id] = 1; } }
   spawner(dt) {
     const tm = this.time / 60;
@@ -742,7 +743,7 @@ class Run {
     if (st.burn && Math.random() < st.burn && !m.dying) { m.burnUntil = this.time + 3; m.burnDps = Math.max(m.burnDps || 0, dmg * 0.25); }   // Kwakanneau de Flammes
     { const sc = Math.floor(this.time); if (sc !== this._dpsSec) { this.bestDps = Math.max(this.bestDps || 0, this._dpsCur || 0); this._dpsSec = sc; this._dpsCur = 0; } this._dpsCur += real; }   // DPS record (best single second)
     Prog.dealt(this, src, real, crit);
-    if (st.leech && !this.player.dead && (this._leechN = (this._leechN || 0) + 1) <= 10) { this.player.leechHeal(real * st.leech); this.drainFx(m); }   // 0.22: 10 monsters per blow at most
+    if (st.leech && !this.player.dead && (this._leechN = (this._leechN || 0) + 1) <= 10) { this.player.leechHeal(real * st.leech * (src && src.def && src.def.t === 'summon' ? (this.RUN.summonLeech || 1) : 1)); this.drainFx(m); }   // 0.22: 10 monsters per blow at most; 1.07: a summon's blows steal C.run.summonLeech of it
     // tiny original hit sound (throttled); 0.84: projectiles, spinning spells and charges play their own (hitSfx)
     if (!(src && src._hitKind) && this.time - (this._hitSnd || -9) > 0.085 && (!quiet || Math.random() < 0.25)) { this._hitSnd = this.time; Audio2.play(pick(this.C.hitSnd || ['pok']), 0.184, rand(0.85, 1.25)); }
     m.hp -= dmg; m.flash = 1;
@@ -982,7 +983,7 @@ class Run {
     const d = Math.max(1, dmg - armor);
     if (st.thorns && src && src.def && !src.dying && !src.proj) this.damageMob(src, d * st.thorns, null, true);   // Ceinture du Prespic
     P.hp -= d; P.lastHit = this.time; if (this.time - (P._flashT || -9) > 0.6) { P.hitFlash = 1; P._flashT = this.time; } this.dmgTaken += d; this.juiceHurt(d);
-    Prog.taken(this, d, src);
+    Prog.taken(this, d, src); if (this.tdofus) this.tdofusHit();
     if (st.reflect && src && src.def && !src.dying && !src.doom) { // Renvoi de dommages
       const cap = 30 * Math.min(st.reflect, 5) * this.reflectK() * (src.boss ? 0.25 : 1);   // (1.05: 30 a level x the toughest monster's HP multiplier, a quarter on a boss; was 150 flat)
       this.damageMob(src, Math.min((d + 4) * (1 + st.reflect) * 1.5, cap, src.maxHp * 0.5), { def: { id: 'renvoi' }, p: {} }, true);   // 0.37: and half the monster's life
@@ -1662,6 +1663,7 @@ class Run {
       case 'nowelgift': this.nowelGift(); break;   // (0.68: nowel.js)
       case 'trool': this.troolTicket(); break;
       case 'gladia': this.gladiaToken(); break;   // (0.98.3: gspells.js)
+      case 'tdofus': this.gotTDofus(p.v); break;   // (1.07: poker.js)
       case 'booster': this.openBooster(p.pk || 0); break;
       case 'plumec': { Store.data.plumes = (Store.data.plumes || 0) + 1; Store.save(); this.chat(T('plumec', { n: Store.data.plumes }), '#c9a0ff'); Audio2.ui('item', 0.8); Prog.check(this); } break;
       case 'manuel': {
@@ -2036,7 +2038,7 @@ const SFX_DIE = {
   tikokoko: 'Palmifleur_Die', kokoko: 'Palmifleur_Die', nodkoko: 'Palmifleur_Die', boomba: 'Musafa_Die', nakunbra: 'Sergent_Zoth_Die', canon: 'Tonneau_Die', coffre: 'Tonneau_Die',
 };
 // 0.92: a drop's room on the ground (world px, its picture's half-size), Run.placeDrop
-const DROP_R = { kama: 8, bread: 11, chest: 22, nowelgift: 30, booster: 18, manuel: 18, tmap: 16, dofus: 16, relic: 16, power: 13, plumec: 14, trool: 16, gladia: 20, kamaboost: 13, coffreit: 16, rappel: 13, fee: 13, sablier: 13, houx: 13 };
+const DROP_R = { kama: 8, bread: 11, chest: 22, nowelgift: 30, booster: 18, manuel: 18, tmap: 16, dofus: 16, tdofus: 16, relic: 16, power: 13, plumec: 14, trool: 16, gladia: 20, kamaboost: 13, coffreit: 16, rappel: 13, fee: 13, sablier: 13, houx: 13 };
 const SFX_BOSS_DIE = { le_chouque: 'Le_Flib_Die', flib_capitaine: 'Le_Flib_Die', boombata: 'Musafa_Die', chene_mou: 'Fecorce_Die', minotoror: 'Kimbo_Die', minotot: 'Kimbo_Die', dark_vlad: 'Tynril_Die', wa_wabbit: 'Rasboul_Majeur_Die', dragon_cochon: 'Kimbo_Die', bouftou_royal: 'Bitouf_Des_Plaines_Die' };
 const SFX_DIE_ALL = [...new Set([...Object.values(SFX_DIE), ...Object.values(SFX_BOSS_DIE), 'Kralamour_Die', 'Tynril_Die'])];
 // 1.02: a ground area (warnings, puddles, blasts) is drawn as an ellipse of height 0.62 x its width: hits follow it
