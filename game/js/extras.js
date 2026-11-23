@@ -101,8 +101,12 @@ Object.assign(Run.prototype, {
   // the character, who glows too (drawn by render.js: drawDrainMob / drawDrainPlayer / drawDrains)
   drainFx(m) {
     if (!m || m.dying) return; const t = this.time;
-    if (t - (m.drainT || -9) < 0.3) return; m.drainT = t; this.player.drainT = t;
-    if ((this.drains || (this.drains = [])).length < 14) this.drains.push({ m, t0: t, seed: rand(-1, 1) });
+    if (t - (m.drainT || -9) < 0.3) return; this.player.drainT = t;
+    // 1.08: in reduced effects (a crowd) only the drains drawn (4 / 8) light their monster: each glow is a 2D proxy, life
+    // steal on a crowd lit dozens of them a frame
+    const D = this.drains || (this.drains = []), G = typeof Game !== 'undefined' ? Game : {}, cap = G.minFx ? 4 : G.lowFx ? 8 : 14;
+    if (D.length >= cap) { if (!G.lowFx) m.drainT = t; return; }
+    m.drainT = t; D.push({ m, t0: t, seed: rand(-1, 1) });
   },
   // 0.53: Sagesse: a chance to block a monster's ranged spell (projectiles, thrown spells; not arrows nor blows)
   blockSpell() {

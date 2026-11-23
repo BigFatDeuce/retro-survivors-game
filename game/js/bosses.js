@@ -98,7 +98,7 @@ Object.assign(Run.prototype, {
   cleansed() { return (this.cleanUntil || 0) > this.time; },
   // the Doom's Maîtres Corbacs call corbacs: real monsters, with the life of the end-of-zone elites
   doomCrows(m, a, dx, dy, RNG) {
-    const ramp = 1 + 0.12 * Math.max(0, this.time - (this.C.doom ? this.C.doom.t : 600));
+    const ramp = 1 + 0.12 * Math.max(0, this.time - (this.infinite && this.doom ? this.doom.t0 : this.C.doom ? this.C.doom.t : 600));   // (1.08: Endless: from their arrival, 20:00)
     if (this.mobs.filter(o => o.doomCrow && !o.dying).length > (a.max || 24)) return;
     if (a.range && Math.hypot(dx, dy) > a.range) return;   // 0.37: they call their corbacs only from that close
     for (let k = 0; k < (a.count || 1); k++) {

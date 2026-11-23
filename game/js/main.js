@@ -342,8 +342,8 @@ const Game = {
       if (img) { sh.img = img; Assets.release(sh.u, old); } await wait();
     }
   },
-  // 1.06 (Options 'crowd_fx', on by default): the visual effects at their minimum while 120 monsters or more are on the
-  // screen, back to the player's own setting once fewer than 80 have stayed there 4 s. Measured at 1440p, Effects Low ->
+  // 1.06 (Options 'crowd_fx', on by default): the visual effects at their minimum while 90 monsters or more are on the
+  // screen (1.08: was 120 / 80; a boss counts 10, an elite 2), back to the player's own setting once fewer than 60 have stayed there 4 s. Measured at 1440p, Effects Low ->
   // Minimum: ~200 monsters 15 -> 28 fps (worst frames 169 -> 89 ms), ~140: 27 -> 32, ~80: 18 -> 31. Nothing is loaded;
   // the danger zones, shots and ranges are never cut (minFx); never above the player's own setting
   crowdFx(raw) {
@@ -351,9 +351,9 @@ const Game = {
     if (this.state !== 'run' || !R || !S || S.crowdFx === false || this.fxLevel() === 'min') { if (on) this.crowdOff(); return; }
     if ((this._cwT = (this._cwT || 0) + raw) < 0.25) return; const dt = this._cwT; this._cwT = 0;
     const P = R.player, hw = this.viewW / 2 + 40, hh = this.viewH / 2 + 40; let n = 0;
-    for (const m of R.mobs) if (!m.dying && Math.abs(m.x - P.x) < hw && Math.abs(m.y - P.y) < hh) n++;
-    if (!on && n >= 120) { this._crowdMin = true; this._crowdLow = this.lowFx; this.lowFx = this.minFx = true; this._cwLow = 0; }
-    else if (on) { this._cwLow = n < 80 ? this._cwLow + dt : 0; if (this._cwLow >= 4) this.crowdOff(); }
+    for (const m of R.mobs) if (!m.dying && Math.abs(m.x - P.x) < hw && Math.abs(m.y - P.y) < hh) n += m.boss ? 10 : m.elite ? 2 : 1;   // (1.08: a boss weighs 10 — big sheet, its own effects — an elite 2)
+    if (!on && n >= 90) { this._crowdMin = true; this._crowdLow = this.lowFx; this.lowFx = this.minFx = true; this._cwLow = 0; }   // (1.08: 90 / 60, was 120 / 80: the frames dropped before it stepped in)
+    else if (on) { this._cwLow = n < 60 ? this._cwLow + dt : 0; if (this._cwLow >= 4) this.crowdOff(); }
   },
   crowdOff() { this._crowdMin = false; this.minFx = this.fxLevel() === 'min'; this.lowFx = !!this._crowdLow; },   // (what it was before the crowd; adapt steps in again if needed)
   adapt(raw) {
@@ -635,6 +635,11 @@ const Game = {
     // once his Dofus was won (in any run), ToT also offers a shortcut: his bonus at once, with a 30 s slap (-50% damage)
     const won = ((Store.data.dofus || {}).ocre || 0) > 0;
     UI.doorMenu(() => { this.run.door = null; this.run.doorDone = true; this.enterTot(); }, won ? () => { this.run.door = null; this.run.doorDone = true; this.totShortcut(); } : null);
+  },
+  // 1.08: the zaap of a cleared zone (events.js): leave now with its purse, or stay (asked again on coming back)
+  zaapPrompt() {
+    if (this.debug.bot) return;   // (the tests' bot plays the run to its end)
+    UI.zaapMenu(this.run, () => this.run.leaveByZaap());
   },
   totShortcut() {
     const R = this.run, C = this.C, buff = pick(C.totBuffs || [{ id: 'degats', stat: 'might', v: 0.1, icon: 'Icon_33', name: 'Dégâts' }]);

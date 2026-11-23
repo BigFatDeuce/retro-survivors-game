@@ -1162,6 +1162,16 @@ const UI = {
     this.openModal(el);
     const j = Audio2.jingle('cls_roublard'); if (j) { j.loop = true; this._doorJ = true; }
   },
+  // 1.08: the zaap of a cleared zone (Game.zaapPrompt): its purse, Stay / Leave
+  zaapMenu(R, onLeave) {
+    this.levelUpOpen = true;
+    const k = fmtNum((Game.C.zaap || {}).kamas || 0), go = (f) => { this.closeModal(); if (f) f(); };
+    this._luBack = () => go();   // (B / Échap = stay)
+    const el = h('div', { class: 'window modal door zaap' }, h('div', { class: 'title' }, T('zaap')), h('div', { class: 'content' },
+      h('p', { class: 'sub' }, T('zaap_text', { k })),
+      h('div', { class: 'start-row' }, btn(T('zaap_stay'), () => go()), btn(T('zaap_leave', { k }), () => go(onLeave), 'orange big'))));
+    this.openModal(el);
+  },
   chestMenu(R, got, kamas) {
     this.levelUpOpen = true;
     const C = Game.C;

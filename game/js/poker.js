@@ -9,7 +9,10 @@
 Object.assign(Run.prototype, {
   updatePoker() {
     const PK = this.C.poker; if (!PK) return;
-    if (!this.pokerDone && this.time >= PK.t && !this.over && !this.portalRun && !this.map.noMerchant && ((Store.data.unlocked || []).includes(PK.fromMap))) { this.pokerDone = true; if (Math.random() < (PK.chance === undefined ? 1 : PK.chance)) this.spawnPoker(); else this.dropTDofus(); }   // (1.07: half the runs; the others, a temporary Dofus)
+    // 1.08: every run gets one or the other — the ??? where he can come (half the runs), a temporary Dofus everywhere else;
+    // and the Dofus at C.poker.tdLate (15:00) if neither came by then (a run started late, a path that skipped the draw)
+    if (!this.pokerDone && this.time >= PK.t && !this.over) { this.pokerDone = true; const can = !this.portalRun && !this.map.noMerchant && (Store.data.unlocked || []).includes(PK.fromMap); if (can && Math.random() < (PK.chance === undefined ? 1 : PK.chance)) this.spawnPoker(); else this.dropTDofus(); }
+    if (!this.pokerCame && !this.tdDropped && !this.over && this.time >= (PK.tdLate || 900)) this.dropTDofus();
     const N = this.pokerNpc, P = this.player; if (!N) return;
     const d = Math.hypot(P.x - N.x, P.y - N.y);
     if (this.time > N.until && !N.open) { this.fxAt(1100, N.x, N.y, {}); this.pokerNpc = null; return; }
@@ -19,7 +22,7 @@ Object.assign(Run.prototype, {
   spawnPoker() {
     const PK = this.C.poker, b = this.bounds, P = this.player; let x, y, n = 0;
     do { x = rand(b.x0 + 80, b.x1 - 80); y = rand(b.y0 + 80, b.y1 - 80); } while (++n < 40 && (Math.hypot(x - P.x, y - P.y) < 500 || (this.isWater && this.isWater(x, y))));
-    this.pokerNpc = { x, y, until: this.time + PK.stay, open: false };
+    this.pokerCame = true; this.pokerNpc = { x, y, until: this.time + PK.stay, open: false };
     MobSheets.load(PK.sprite).then(sh => { this.pokerSheet = sh; });
     this.announce(T('pk_ev_t'), T('pk_ev'), '#c9a0ff'); Audio2.sfx('EVENT', 0.6);
   },
@@ -29,7 +32,7 @@ Object.assign(Run.prototype, {
     const L_ = this.C.tdofus; if (!L_ || !L_.length) return;
     const d = pick(L_), b = this.bounds, P = this.player; let x, y, n = 0;
     do { x = rand(b.x0 + 80, b.x1 - 80); y = rand(b.y0 + 80, b.y1 - 80); } while (++n < 40 && (Math.hypot(x - P.x, y - P.y) < 500 || (this.isWater && this.isWater(x, y))));
-    this.dropPickup('tdofus', x, y, d.id); this.announce(L(d.name), T('td_here'), d.color); Audio2.sfx('EVENT', 0.6);
+    this.tdDropped = true; this.dropPickup('tdofus', x, y, d.id); this.announce(L(d.name), T('td_here'), d.color); Audio2.sfx('EVENT', 0.6);
   },
   gotTDofus(id) {
     const d = (this.C.tdofus || []).find(o => o.id === id); if (!d || this.tdofus) return;

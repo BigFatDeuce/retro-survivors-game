@@ -1399,7 +1399,7 @@ body.endgame.endname.menu-bg::before { filter: brightness(.52) saturate(.95); } 
 .maps, .arm-list, .ach-grid, .stat-grid, .best-list, .best-detail, .shop-grid, .arm-detail, .ttg-grid, .soul-grid, .tmap-list, .lb-body, .merchant-offers, .over .content { scrollbar-gutter: stable; }
 /* 0.85: the relics' bonuses in the pause menu (UI.relicSummary): one chip per stat, as many columns as fit */
 .relic-sum { margin: 2px 0 8px; padding: 6px 8px; background: rgba(255,207,58,.12); border: 1px solid #d9b25a; border-radius: 6px; }
-.relic-sum .rb-head { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-family: 'DofusBold'; color: #7a4a08; font-size: 13px; } .relic-sum .rb-icons { display: flex; gap: 3px; }
+.relic-sum .rb-head { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-family: 'DofusBold'; color: #7a4a08; font-size: 13px; } .relic-sum .rb-icons { display: flex; flex-wrap: wrap; gap: 3px; flex: 1; min-width: 0; }   /* (1.08: 25+ relics ran out of the pause screen) */
 .relic-sum .rb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 4px 14px; }
 .rb-chip { display: flex; align-items: center; gap: 5px; font-size: 12px; min-width: 0; } .rb-chip .rb-n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); }
 .rb-chip b { font-family: 'DofusBold'; color: #2e7d1e; } .rb-chip .rb-dot { width: 8px; height: 8px; border-radius: 50%; background: #d9b25a; margin: 0 6px; flex: none; }
@@ -1490,35 +1490,35 @@ body.dark .pk-prize { background: linear-gradient(var(--parch2), var(--parch)); 
 </defs></svg>
 <canvas id="game"></canvas>
 <div id="ui"></div>
-<script src="js/util.js?v=1.07"></script>
-<script src="js/cursor.js?v=1.07"></script>
-<script src="js/assets.js?v=1.07"></script>
-<script src="js/audio.js?v=1.07"></script>
-<script src="js/spells.js?v=1.07"></script>
-<script src="js/game.js?v=1.07"></script>
-<script src="js/extras.js?v=1.07"></script>
-<script src="js/gspells.js?v=1.07"></script>
-<script src="js/croco.js?v=1.07"></script>
-<script src="js/weapons.js?v=1.07"></script>
-<script src="js/events.js?v=1.07"></script>
-<script src="js/bosses.js?v=1.07"></script>
-<script src="js/juice.js?v=1.07"></script>
-<script src="js/sfusions.js?v=1.07"></script>
-<script src="js/render.js?v=1.07"></script>
-<script src="js/pixi_render.js?v=1.07"></script>
-<script src="js/progress.js?v=1.07"></script>
-<script src="js/nav.js?v=1.07"></script>
-<script src="js/ui.js?v=1.07"></script>
-<script src="js/ui_events.js?v=1.07"></script>
-<script src="js/nowel.js?v=1.07"></script>
-<script src="js/ui_armory.js?v=1.07"></script>
-<script src="js/ui_controls.js?v=1.07"></script>
-<script src="js/ui_update.js?v=1.07"></script>
-<script src="js/ui_cloth.js?v=1.07"></script>
-<script src="js/ui_elliot.js?v=1.07"></script>
-<script src="js/daily.js?v=1.07"></script>
-<script src="js/tot.js?v=1.07"></script>
-<script src="js/poker.js?v=1.07"></script>
-<script src="js/main.js?v=1.07"></script>
+<script src="js/util.js?v=1.08"></script>
+<script src="js/cursor.js?v=1.08"></script>
+<script src="js/assets.js?v=1.08"></script>
+<script src="js/audio.js?v=1.08"></script>
+<script src="js/spells.js?v=1.08"></script>
+<script src="js/game.js?v=1.08"></script>
+<script src="js/extras.js?v=1.08"></script>
+<script src="js/gspells.js?v=1.08"></script>
+<script src="js/croco.js?v=1.08"></script>
+<script src="js/weapons.js?v=1.08"></script>
+<script src="js/events.js?v=1.08"></script>
+<script src="js/bosses.js?v=1.08"></script>
+<script src="js/juice.js?v=1.08"></script>
+<script src="js/sfusions.js?v=1.08"></script>
+<script src="js/render.js?v=1.08"></script>
+<script src="js/pixi_render.js?v=1.08"></script>
+<script src="js/progress.js?v=1.08"></script>
+<script src="js/nav.js?v=1.08"></script>
+<script src="js/ui.js?v=1.08"></script>
+<script src="js/ui_events.js?v=1.08"></script>
+<script src="js/nowel.js?v=1.08"></script>
+<script src="js/ui_armory.js?v=1.08"></script>
+<script src="js/ui_controls.js?v=1.08"></script>
+<script src="js/ui_update.js?v=1.08"></script>
+<script src="js/ui_cloth.js?v=1.08"></script>
+<script src="js/ui_elliot.js?v=1.08"></script>
+<script src="js/daily.js?v=1.08"></script>
+<script src="js/tot.js?v=1.08"></script>
+<script src="js/poker.js?v=1.08"></script>
+<script src="js/main.js?v=1.08"></script>
 </body>
 </html>

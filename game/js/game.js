@@ -681,7 +681,8 @@ class Run {
     if (this.door && this.time > this.RUN.doorEnd) { this.door = null; this.doorDone = true; }
     // the Doom (0.22): the Maîtres Corbacs come at 11:00 (DM.t), or at 10:00 (DM.tWon) once the zone's final boss is down;
     // a wave every DM.every s, half as many each time (1, 1, 2, 4…); they can be killed now (hp of the strongest boss)
-    const DM = this.infinite ? null : this.C.doom, doomT = this.finalKilled ? (DM && DM.tWon) || 600 : (DM && DM.t) || 660;
+    // (1.08: in Endless they come at C.infinite.doomT, 20:00, on top of the waves of bosses)
+    const ID = this.infinite && (this.C.infinite || {}).doomT, DM = this.infinite && !ID ? null : this.C.doom, doomT = ID || (this.finalKilled ? (DM && DM.tWon) || 600 : (DM && DM.t) || 660);
     if (DM) {
       if (!this.doomWarned && this.time >= doomT - 30) { this.doomWarned = true; this.chat(T('doom_soon', { t: fmtTime(doomT) }), '#ff8a65'); }   // (0.96: their real time: it said 10:00 at 10:30 when they come at 11:00)
       if (this.time >= doomT) {
@@ -699,7 +700,7 @@ class Run {
         }
         // 0.92: every minute of the Maîtres Corbacs (11:00, 12:00…, run time: pauses and slow frames change nothing),
         // a Manuel du Tailleur somewhere on the map (events.js doomReward; 0.95: no more maps, Jorbak gives them); one per minute mark
-        if (this.doom.rwNext === undefined) this.doom.rwNext = Math.max(660, Math.ceil((this.doom.t0 - 0.5) / 60) * 60);   // (they come at 11:00: the first one then)
+        if (this.doom.rwNext === undefined) this.doom.rwNext = Math.max(ID ? this.doom.t0 + 60 : 660, Math.ceil((this.doom.t0 - 0.5) / 60) * 60);   // (Endless: a minute after they came)   // (they come at 11:00: the first one then)
         if (this.time >= this.doom.rwNext) { this.doom.rwNext = Math.floor(this.time / 60) * 60 + 60; this.doomReward(); }
       }
     }
@@ -888,6 +889,7 @@ class Run {
       // zone cleared: the rewards are secured now, and the run goes on until the end (10:00 brings the Maîtres Corbacs)
       this.finalKilled = true;
       this.claimVictory();
+      if (!this.infinite) this.spawnZaap();   // (1.08: a zaap in the middle of the map to leave with a purse, events.js)
       if (this.map.troolTicket) this.dropPickup('trool', m.x, m.y, 1);   // (0.68: Nowel's final boss drops the Trool fair ticket)
       this.chat(T('final_down'), '#ffe066');   // (0.60: the big 'VICTOIRE !' is drawn by juice.js during the slow motion)
       Audio2.sfx('EVENT', 0.9);
@@ -1132,6 +1134,7 @@ class Run {
     this.updatePickups(dt);
     this.updateFx(dt);
     if (this.fw) this.updateFireworks();
+    if (this.zaap && !P.dead) this.updateZaap();   // (1.08: events.js)
     // door
     if (this.door && !P.dead) {
       const near = dist2(P.x, P.y, this.door.x, this.door.y) < 42 * 42;
@@ -1288,7 +1291,7 @@ class Run {
         case 'beam': { const an = Math.atan2(dy, dx); const x0 = m.x, y0 = m.y - m.r; this.teles.push({ boss: 1, kind: 'line', x: x0, y: y0, a: an, len: a.length, w: a.width, t0: this.time, dur: 1.0, cb: () => { this.lineHitPlayer(x0, y0, an, a.length, a.width, a.dmg * RNG); this.beams.push({ x: x0, y: y0, a: an, len: a.length, w: a.width, until: this.time + 0.4, dmg: 0, color: a.color, hostile: true, done: true }); this.shake(5); } }); return [0, 0, 0]; }
         case 'crow': this.doomCrows(m, a, dx, dy, RNG); break;   // 0.27: real corbacs with the life of the elites (bosses.js)
         case 'crow_old': { // (0.22: thrown corbacs that home in on you)
-          const ramp = 1 + 0.12 * Math.max(0, this.time - (this.C.doom ? this.C.doom.t : 600));
+          const ramp = 1 + 0.12 * Math.max(0, this.time - (this.infinite && this.doom ? this.doom.t0 : this.C.doom ? this.C.doom.t : 600));   // (1.08: Endless: from their arrival, 20:00)
           for (let k = 0; k < (a.count || 1); k++) { const an = Math.atan2(dy, dx) + rand(-0.6, 0.6); this.eprojs.push({ x: m.x, y: m.y - m.r * 1.6, vx: Math.cos(an) * a.speed, vy: Math.sin(an) * a.speed, sp: a.speed, homing: a.homing, dmg: a.dmg * RNG * ramp, life: 4.5, size: 11, crow: true, t0: this.time, src: m }); }
         } break;
         default: this.bossAbility(m, a, d, dx, dy, MEL, RNG); break;   // 0.27: rain, ring, fissure, roar, puddle, pull (bosses.js)

@@ -670,7 +670,37 @@ Object.assign(Run.prototype, {
     if (typeof UI !== 'undefined' && UI.boosterOpen) UI.boosterOpen(this, card, n, pk);
     else this.chat(n > 1 ? T('ttg_dup', { c: n }) : T('ttg_new', { n: L(card.name) }), '#9cff6a');
   },
+  // 1.08: the zaap (C.zaap) — once the zone's final boss is down in Normal / Hard, a zaap stands right of the middle of the map
+  // (on dry ground); stepping on it offers to leave with a purse of C.zaap.kamas (Game.zaapPrompt). Big on the minimap
+  // (render.js), an arrow at the screen's edge, a line in the chat
+  spawnZaap() {
+    const Z = this.C.zaap; if (!Z || this.zaap) return; const c = { x: this.center.x + 240, y: this.center.y }; let x = c.x, y = c.y;   // (right of the middle: the Coffre Animé comes in the middle)
+    for (let r = 0, n = 0; r <= 600 && this.isWater(x, y); r += 30) for (let a = 0; a < TAU && this.isWater(x, y); a += 0.5, n++) { x = c.x + Math.cos(a) * r; y = c.y + Math.sin(a) * r * 0.75; }
+    const P = this.player; this.zaap = { x, y, t0: this.time, asked: dist2(P.x, P.y, x, y) < 100 * 100 };   // (standing there already: it asks once the character came back)
+    this.chat(T('zaap_here', { k: fmtNum(Z.kamas) }), '#7fe8ff', 30);
+  },
+  updateZaap() {
+    const Z = this.zaap, P = this.player, d2 = dist2(P.x, P.y, Z.x, Z.y);
+    if (d2 < 46 * 46 && !Z.asked && !UI.modalOpen()) { Z.asked = true; Game.zaapPrompt(); }
+    if (d2 > 100 * 100) Z.asked = false;   // (after 'Stay': it asks again once the character came back)
+  },
+  leaveByZaap() {
+    const Z = this.C.zaap || { kamas: 0 }; if (this.over) return;
+    this.kamas += Z.kamas; this.zaapLeft = true; this.chat(T('zaap_took', { k: fmtNum(Z.kamas) }), '#ffd27a');
+    Audio2.play('saut', 0.7, 1.2); this.endRun();
+  },
 });
+// 1.08: the zaap to leave a cleared zone: the client's zaap (zaap_hd), a soft cyan glow on the ground, a pulsing ring
+function drawZaap(ctx, x, y, t) {
+  const Hh = 170, zf = Game.icons.get('zaap_hd'), Ww = zf ? Hh * zf[2] / zf[3] : 150, p = 0.5 + 0.5 * Math.sin(t * 3);   // (a little smaller than ToT's door: 190)
+  ctx.save(); ctx.globalAlpha = 0.5 + 0.25 * p; ctx.drawImage(RCache.glow('rgba(110,230,255,0.75)'), x - 130, y - 44, 260, 80);
+  ctx.globalAlpha = 0.8 * (1 - (t % 1.6) / 1.6); ctx.strokeStyle = '#9ff0ff'; ctx.lineWidth = 3; const rr = 40 + 50 * ((t % 1.6) / 1.6);
+  ctx.beginPath(); ctx.ellipse(x, y, rr, rr * 0.45, 0, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1;
+  const zi = zf && Game.icons.src('zaap_hd'), oy = y - Hh + 18; if (zi) ctx.drawImage(zi, zf[0], zf[1], zf[2], zf[3], x - Ww / 2, oy, Ww, Hh);
+  ctx.font = 'bold 13px DofusBold, Verdana'; ctx.textAlign = 'center'; ctx.lineWidth = 3; ctx.strokeStyle = '#000';
+  ctx.strokeText(T('zaap'), x, oy - 10); ctx.fillStyle = '#aef4ff'; ctx.fillText(T('zaap'), x, oy - 10);
+  ctx.restore();
+}
 // ToT's door, as a time portal (0.56: the client's zaap, map object 7000 in HD (tools/assets/build_zaap56.py), its opening
 // filled with a turning violet / blue vortex, a Xélor clock face and sparks, a glow on the ground)
 function drawTimePortal(ctx, x, y, t) {

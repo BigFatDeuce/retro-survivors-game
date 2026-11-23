@@ -673,6 +673,7 @@ Run.prototype.draw = function (ctx) {
     ctx.restore();
   }
   if (this.door) drawTimePortal(ctx, this.door.x, this.door.y, t);   // 0.26: ToT's door is a Xélor time portal (events.js)
+  if (this.zaap) drawZaap(ctx, this.zaap.x, this.zaap.y, t);   // (1.08: the zaap of a cleared zone, events.js)
   });
   // pickups
   for (const p of this.pickups) {
@@ -2046,6 +2047,11 @@ function drawHud(ctx, R) {
       const x = mx + q.x * k, y = my + q.y * k, r = 4.5 * u + Math.sin(R.time * 6); ctx.fillStyle = q.kind === 'booster' ? '#9cff6a' : q.kind === 'gladia' ? '#6fa0ff' : '#ffb03a'; ctx.strokeStyle = '#000'; ctx.lineWidth = 1.5;
       if (q.kind === 'booster') { ctx.fillRect(x - r * 0.7, y - r, r * 1.4, r * 2); ctx.strokeRect(x - r * 0.7, y - r, r * 1.4, r * 2); } else { ctx.beginPath(); ctx.moveTo(x, y - r); ctx.lineTo(x + r, y); ctx.lineTo(x, y + r); ctx.lineTo(x - r, y); ctx.closePath(); ctx.fill(); ctx.stroke(); }
     }
+    if (R.zaap) {   // 1.08: the zaap, big: its picture on a pulsing cyan disc
+      const x = mx + R.zaap.x * k, y = my + R.zaap.y * k, r = 13 * u + 2 * u * Math.sin(R.time * 5), zf = IC.get('zaap_hd'), zi = zf && IC.src('zaap_hd');
+      ctx.fillStyle = 'rgba(110,230,255,0.45)'; ctx.strokeStyle = '#e8fdff'; ctx.lineWidth = 2 * u; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill(); ctx.stroke();
+      if (zi) { const hh = 32 * u, ww = hh * zf[2] / zf[3]; ctx.drawImage(zi, zf[0], zf[1], zf[2], zf[3], x - ww / 2, y - hh * 0.62, ww, hh); }
+    }
     if (R.door) { ctx.fillStyle = '#d7a6ff'; ctx.beginPath(); ctx.arc(mx + R.door.x * k, my + R.door.y * k, 4 * u + Math.sin(R.time * 6), 0, TAU); ctx.fill(); }
     // 0.26: the Tofu Mutant, the Coffre Animé (green / red dots) and the cross of a treasure map
     for (const m of R.mobs) if (m.def.special && !m.dying) { ctx.fillStyle = m.def.id === 'coffre_anime' ? '#ff6a4a' : '#9cff6a'; ctx.beginPath(); ctx.arc(mx + m.x * k, my + m.y * k, 4 * u + Math.sin(R.time * 8), 0, TAU); ctx.fill(); }
@@ -2055,14 +2061,14 @@ function drawHud(ctx, R) {
     ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.beginPath(); ctx.arc(mx + P.x * k, my + P.y * k, 3.5 * u, 0, TAU); ctx.fill(); ctx.stroke();
   }
   drawEdgeArrows(ctx, R, W, H, u);
-  // door arrow indicator
-  if (R.door) {
-    const dx = (R.door.x - R.cam.x) * Game.zoom, dy = (R.door.y - R.cam.y) * Game.zoom;
+  // door arrow indicator (1.08: the zaap's too, cyan)
+  for (const D of [R.door, R.zaap]) if (D) {
+    const dx = (D.x - R.cam.x) * Game.zoom, dy = (D.y - R.cam.y) * Game.zoom;
     if (Math.abs(dx) > W / 2 - 40 || Math.abs(dy) > H / 2 - 40) {
       const a = Math.atan2(dy, dx); const rx = W / 2 - 50 * u, ry = H / 2 - 50 * u;
       const k = Math.min(rx / Math.abs(Math.cos(a) || 1e-6), ry / Math.abs(Math.sin(a) || 1e-6));
       const ax = W / 2 + Math.cos(a) * k, ay = H / 2 + Math.sin(a) * k;
-      ctx.save(); ctx.translate(ax, ay); ctx.rotate(a); ctx.fillStyle = '#d7a6ff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
+      ctx.save(); ctx.translate(ax, ay); ctx.rotate(a); ctx.fillStyle = D === R.zaap ? '#7fe8ff' : '#d7a6ff'; ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(18 * u, 0); ctx.lineTo(-10 * u, -12 * u); ctx.lineTo(-4 * u, 0); ctx.lineTo(-10 * u, 12 * u); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
     }
   }

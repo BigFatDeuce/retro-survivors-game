@@ -3,8 +3,9 @@
 </p>
 
 <p align="center">
-  <b>Survive ten minutes in the World of Twelve.</b><br>
-  A free <i>Vampire Survivors</i>-like fan game built from the art, sounds and monsters of <b>Dofus Retro</b>.
+  <b>One character, hundreds of monsters, ten minutes to survive.</b><br>
+  A free <i>Vampire Survivors</i>-like fan game set in the world of <b>Dofus Retro</b>, with its classes, monsters, spells and music.<br>
+  Play it in your browser, or on Windows, Linux and Android. No ads, no account, nothing to buy.
 </p>
 
 <p align="center">
@@ -17,7 +18,7 @@
   <img alt="License: MIT (code)" src="https://img.shields.io/badge/code-MIT-green">
   <img alt="Languages" src="https://img.shields.io/badge/languages-7-blue">
   <img alt="Made with" src="https://img.shields.io/badge/made%20with-JavaScript%20%2B%20PixiJS-yellow">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.07-brightgreen">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.08-brightgreen">
 </p>
 
 <p align="center">
@@ -28,13 +29,19 @@
 
 ## The game
 
-Pick a class, pick a zone, and hold out for **ten minutes** against ever-growing waves of Dofus monsters. Your spells
-cast themselves — you move, dodge, pick up experience, and choose an upgrade at every level. Get strong enough, fast
-enough, to face the bosses, the Archmonsters and the events the zone throws at you… or die trying, and come back with
-the kamas you earned to grow stronger for the next run.
+You know these monsters. You have never seen this many at once.
 
-Everything you see and hear comes from the Dofus Retro client: the classes' animations, the monsters, the maps, the
-spells' effects, the sounds and the music. The Dofus music is by **Guillaume Pladys**.
+Pick one of the **16 classes**, choose a zone and hold out for **ten minutes**. Your spells cast themselves: you move,
+dodge, gather experience and pick an upgrade at every level. Combine the right spells, weapons and characteristics and
+they **fuse** into something far stronger, just in time for the bosses, the Archmonsters and whatever else the zone
+throws at you.
+
+You will die. Your kamas stay with you, so the next run starts stronger: new spells, masteries, scrolls, zones and more
+than a thousand cosmetics. Once ten minutes are no longer enough, there is **Hard mode**, **Endless mode**, a **daily
+challenge**… and secrets nobody will point out to you.
+
+The classes' animations, the monsters, the scenery and most of the effects and sounds come from the Dofus Retro client.
+The Dofus music is by **Guillaume Pladys**.
 
 | | |
 |:---:|:---:|
@@ -53,27 +60,39 @@ spells' effects, the sounds and the music. The Dofus music is by **Guillaume Pla
 
 ## What's inside
 
-- **16 classes** — Feca, Osamodas, Enutrof, Sram, Xelor, Ecaflip, Eniripsa, Iop, Cra, Sadida, Sacrier, Pandawa, Rogue,
-  Imp, Otomai and Crocoburio — each with its own spells, class bonus and playstyle (**157 spells** in all, fusions included).
-- **20 zones**, from Astrub's plains to Pandala, Otomai's island, the Minotoror's labyrinth and beyond, each with its own
-  monsters, bosses and music; **234 monsters**, **67 bosses** and **142 Archmonsters** to hunt.
-- **50 spell fusions** with weapons, class spells and common spells, **11 global spells**, **40 unique weapons**,
-  **24 relics** (4 of them rare and mythical), the **6 Dofus** to find, scrolls and characteristics to raise between runs.
-- **The Gladiatrool's token**: at 7:30 it appears somewhere on the map, and its wheel grants a sixth characteristic on
-  top of your usual five.
-- **A hooded stranger**: in some runs a mysterious ??? waits on the map and takes you to his sanctuary for a game of
-  cards — find the best poker hand and win a unique weapon, or lose a few kamas.
-- **Random events**: eclipses, invasions, kama rains, time stops… and rare visitors such as the Tofuzmo or Jorbak, the
-  kleptomaniac with a bag of stolen kamas (and, sometimes, a treasure map).
-- **Treasure maps** to dig up, the **Living Chest**, ToT's quizzes, **100 achievements**, and the **464 official TTG
-  cards** to collect from **48 official packs**, each with its theme.
-- **A shop** of more than **1,000 cosmetics** — 369 hats, 272 capes, 241 shields and 172 pets — with a live preview.
-- **A daily challenge**: every day at noon, a zone, a class and three maluses to survive in Endless mode, for kamas.
-- **Keyboard, gamepad or touch**; a bestiary, an armoury, statistics, leaderboards, a hard mode, an endless mode and a
-  colour-blind mode.
+**Build your character**
+- **16 classes**: Feca, Osamodas, Enutrof, Sram, Xelor, Ecaflip, Eniripsa, Iop, Cra, Sadida, Sacrier, Pandawa, Rogue,
+  Imp, Otomai and Crocoburio, each with its own spells, class bonus and playstyle.
+- **157 spells**, fusions included: **50 spell fusions** to discover among class spells, common spells and weapons.
+- **40 unique weapons**, **24 relics** (4 of them rare and mythical), **11 global spells**, and scrolls and
+  characteristics to raise between runs.
+- The **6 Dofus** to find, and **temporary Dofus** that lend you their power for one run.
+
+**Explore and fight**
+- **20 zones**, from Astrub's plains to Pandala, Frigost, Otomai's island and the Minotoror's labyrinth, with their own
+  monsters and bosses.
+- **234 monsters**, **67 bosses** and **142 Archmonsters** to hunt.
+- **Events** mid-run: eclipses, Bwork invasions, Tofu and kama rains, the Tofuzmo on the loose, a travelling merchant,
+  or Jorbak, the kleptomaniac with a bag of stolen kamas.
+
+**Take your chances**
+- **The Gladiatrool's token**: at 7:30 it appears on the map, and its wheel grants a sixth characteristic on top of your
+  usual five.
+- **A hooded stranger**: in some runs, a mysterious ??? takes you to his sanctuary for a game of cards. Find the best
+  poker hand and win a unique weapon, or lose a few kamas.
+- **ToT's quiz**, **treasure maps** to dig up and the **Living Chest**.
+
+**Keep coming back**
+- **Hard mode**, **Endless mode** with its local leaderboards and its **rank S**, and a **daily challenge**: every day at
+  noon, a zone, a class and three maluses, for kamas.
+- **100 achievements**, and the **464 official TTG cards** to collect from **48 packs**.
+- **More than 1,000 cosmetics**: 369 hats, 272 capes, 241 shields and 172 pets, with a live preview in the shop.
+
+**Play your way**
+- **Keyboard, gamepad or touch**, a colour-blind mode, and sharper pictures for 1440p and 4K screens.
 - **7 languages**: English, Français, Deutsch, Español, Italiano, Nederlands, Português.
-- **A lot of content, and a lot of secrets**: hidden zones, rare encounters and Easter eggs everywhere — some of them
-  you will only find by looking where nobody looks.
+- **A lot of secrets**: hidden zones, rare encounters and Easter eggs, some of them only found by looking where nobody
+  looks.
 
 <p align="center">
   <img src="media/classes.jpg" alt="Choose your class: 16 classes, 20 zones, the daily challenge" width="49%">
@@ -83,7 +102,8 @@ spells' effects, the sounds and the music. The Dofus music is by **Guillaume Pla
 ## Play
 
 - **In your browser**: <https://retro-survivors.pages.dev> — nothing to install, works on phones too.
-- **Windows, Linux and Android**: see the [Releases](https://github.com/BigFatDeuce/retro-survivors-game/releases) page.
+- **Windows, Linux and Android**: see the [Releases](https://github.com/BigFatDeuce/retro-survivors-game/releases) page,
+  with the player's manual in English, French and Spanish.
 - **From these sources**: clone the repository, then double-click `play_local.bat` (Windows) or run `./play_local.sh`
   (Linux, macOS). It only needs [Python 3](https://www.python.org/downloads/); any static web server serving the `game/`
   folder works as well.
