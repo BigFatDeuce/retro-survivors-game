@@ -134,7 +134,7 @@ const Store = {
   // 0.68 (much shorter codes): 'rs2' = the profile made compact before deflate — the skins as sorted gaps per kind
   // ('16_242' → 16: [..]), the monsters seen only when not already in the kills, the TTG cards / souls as sorted gaps +
   // counts — then 8 bytes = 11 characters of [0-9A-Za-z] (rs1: 5 bytes = 8 base-36 characters). A full profile:
-  // 12 700 → see CLAUDE.md 0.68 notes. Codes are case-sensitive now; rs1 codes are still read.
+  // 12 700. Codes are case-sensitive now; rs1 codes are still read.
   packSave(d) {
     const o = Object.assign({}, d), gaps = a => a.map((v, i) => i ? v - a[i - 1] : v), byNum = m => Object.keys(m || {}).every(k => /^\d+$/.test(k));
     if (Array.isArray(o.owned)) { const g = {}, other = []; for (const id of o.owned) { const m = /^(\d+)_(\d+)$/.exec(id); if (m) (g[m[1]] = g[m[1]] || []).push(+m[2]); else other.push(id); } for (const k in g) g[k] = gaps(g[k].sort((a, b) => a - b)); o.owned = { g, o: other }; }

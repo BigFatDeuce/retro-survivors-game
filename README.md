@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <img alt="License: MIT (code)" src="https://img.shields.io/badge/code-MIT-green">
+  <img alt="License: GPL-3.0-or-later (code)" src="https://img.shields.io/badge/code-GPL--3.0--or--later-blue">
   <img alt="Languages" src="https://img.shields.io/badge/languages-7-blue">
   <img alt="Made with" src="https://img.shields.io/badge/made%20with-JavaScript%20%2B%20PixiJS-yellow">
   <img alt="Version" src="https://img.shields.io/badge/version-1.08-brightgreen">
@@ -130,8 +130,8 @@ an issue here.
   by Ankama.
 - **Dofus**, **Dofus Retro**, their universe, characters, pictures, sounds and music are © **Ankama Games**. The Dofus
   music was composed by **Guillaume Pladys**.
-- The **code** of this repository is released under the [MIT licence](LICENSE). The licence does not cover Ankama's
-  assets found in `game/`.
+- © 2026 BigFatDeuce. The game's code is free software under the [GPL-3.0-or-later](LICENSE). Third-party components
+  keep their own licences. Dofus Retro assets belong to Ankama and are not covered.
 - [PixiJS](https://github.com/pixijs/pixijs) (MIT), the [Cinzel](https://fonts.google.com/specimen/Cinzel) and
   [Lilita One](https://fonts.google.com/specimen/Lilita+One) fonts (SIL Open Font License); the Verdance font was made for this game and is free of rights.
 - The playing cards of the ??? NPC's game: [Vecteezy.com](https://www.vecteezy.com) (free licence, attribution).
